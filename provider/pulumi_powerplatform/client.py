@@ -20,6 +20,13 @@ class PowerPlatformClient:
     Supports authentication via:
     - Explicit client secret credentials (tenant_id, client_id, client_secret)
     - DefaultAzureCredential (environment variables, managed identity, Azure CLI, etc.)
+
+    .. note::
+
+        TODO: Add retry/exponential backoff for transient failures and API rate
+        limiting (HTTP 429).  A decorator or wrapper on the ``HttpxRequestAdapter``
+        would allow transparent retries without changing individual resource
+        handlers.  See the research report's risk matrix for details.
     """
 
     def __init__(

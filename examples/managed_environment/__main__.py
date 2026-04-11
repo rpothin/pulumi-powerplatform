@@ -1,16 +1,12 @@
 """Example: Enable a Managed Environment in Power Platform."""
 
 import pulumi
+import pulumi_powerplatform as pp
 
-# Enable managed environment governance on an existing environment.
-managed_env = pulumi.CustomResource(
+managed_env = pp.ManagedEnvironment(
     "my-managed-env",
-    "powerplatform:index:ManagedEnvironment",
-    {
-        "environmentId": "00000000-0000-0000-0000-000000000000",
-    },
+    environment_id="00000000-0000-0000-0000-000000000000",
 )
 
-# Export the managed environment details
 pulumi.export("managedEnvId", managed_env.id)
-pulumi.export("environmentId", managed_env["environmentId"])
+pulumi.export("environmentId", managed_env.environment_id)

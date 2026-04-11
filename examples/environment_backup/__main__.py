@@ -1,17 +1,13 @@
 """Example: Create a Power Platform Environment Backup."""
 
 import pulumi
+import pulumi_powerplatform as pp
 
-# Create a manual backup of a Power Platform environment.
-backup = pulumi.CustomResource(
+backup = pp.EnvironmentBackup(
     "my-env-backup",
-    "powerplatform:index:EnvironmentBackup",
-    {
-        "environmentId": "00000000-0000-0000-0000-000000000000",
-        "label": "pre-release-backup",
-    },
+    environment_id="00000000-0000-0000-0000-000000000000",
+    label="pre-release-backup",
 )
 
-# Export the backup details
 pulumi.export("backupId", backup.id)
-pulumi.export("backupLabel", backup["label"])
+pulumi.export("backupLabel", backup.label)

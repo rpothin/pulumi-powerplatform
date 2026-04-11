@@ -1,18 +1,14 @@
 """Example: Create a Power Platform ISV Contract."""
 
 import pulumi
+import pulumi_powerplatform as pp
 
-# Create an ISV contract for Power Platform licensing.
-isv_contract = pulumi.CustomResource(
+isv_contract = pp.IsvContract(
     "my-isv-contract",
-    "powerplatform:index:IsvContract",
-    {
-        "name": "Contoso ISV Contract",
-        "geo": "unitedstates",
-        "status": "Enabled",
-    },
+    name="Contoso ISV Contract",
+    geo="unitedstates",
+    status="Enabled",
 )
 
-# Export the ISV contract details
 pulumi.export("isvContractId", isv_contract.id)
-pulumi.export("isvContractName", isv_contract["name"])
+pulumi.export("isvContractName", isv_contract.name)

@@ -1,19 +1,15 @@
 """Example: Create a Power Platform Role Assignment."""
 
 import pulumi
+import pulumi_powerplatform as pp
 
-# Assign a role to a user at the tenant scope.
-role_assignment = pulumi.CustomResource(
+role_assignment = pp.RoleAssignment(
     "my-role-assignment",
-    "powerplatform:index:RoleAssignment",
-    {
-        "principalObjectId": "00000000-0000-0000-0000-000000000000",
-        "principalType": "User",
-        "roleDefinitionId": "00000000-0000-0000-0000-000000000001",
-        "scope": "/providers/Microsoft.PowerPlatform",
-    },
+    principal_object_id="00000000-0000-0000-0000-000000000000",
+    principal_type="User",
+    role_definition_id="00000000-0000-0000-0000-000000000001",
+    scope="/providers/Microsoft.PowerPlatform",
 )
 
-# Export the role assignment details
 pulumi.export("roleAssignmentId", role_assignment.id)
-pulumi.export("principalType", role_assignment["principalType"])
+pulumi.export("principalType", role_assignment.principal_type)
