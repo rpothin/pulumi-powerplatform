@@ -1,0 +1,11 @@
+name: isv-contract-example
+runtime: python
+description: Example of creating a Power Platform ISV Contract
+config:
+  powerplatform:tenantId:
+    description: Azure AD Tenant ID
+  powerplatform:clientId:
+    description: Azure AD Client ID
+  powerplatform:clientSecret:
+    secret: true
+    description: Azure AD Client Secret

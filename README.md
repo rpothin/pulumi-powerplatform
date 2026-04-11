@@ -18,12 +18,20 @@ This provider enables managing Microsoft Power Platform resources using [Pulumi]
 |----------|-----------|--------|
 | Environment Group | `powerplatform:index:EnvironmentGroup` | ✅ Full CRUD |
 | DLP Policy | `powerplatform:index:DlpPolicy` | ✅ Full CRUD |
+| Billing Policy | `powerplatform:index:BillingPolicy` | ✅ Full CRUD |
+| Managed Environment | `powerplatform:index:ManagedEnvironment` | ✅ Enable/Disable |
+| Environment Backup | `powerplatform:index:EnvironmentBackup` | ✅ Create/Read/Delete |
+| Role Assignment | `powerplatform:index:RoleAssignment` | ✅ Create/Read/Delete |
+| ISV Contract | `powerplatform:index:IsvContract` | ✅ Full CRUD |
 
 ## Data Sources (Functions)
 
 | Function | Token | Status |
 |----------|-------|--------|
 | Get Environments | `powerplatform:index:getEnvironments` | ✅ Available |
+| Get Connectors | `powerplatform:index:getConnectors` | ✅ Available |
+| Get Apps | `powerplatform:index:getApps` | ✅ Available |
+| Get Flows | `powerplatform:index:getFlows` | ✅ Available |
 
 ## Prerequisites
 
@@ -102,6 +110,99 @@ dlp_policy = pulumi.CustomResource(
 pulumi.export("policyId", dlp_policy.id)
 ```
 
+### Billing Policy
+
+```python
+import pulumi
+
+billing_policy = pulumi.CustomResource(
+    "my-billing-policy",
+    "powerplatform:index:BillingPolicy",
+    {
+        "name": "Production Billing",
+        "location": "unitedstates",
+        "status": "Enabled",
+        "billingInstrument": {
+            "id": "/subscriptions/00000000-0000-0000-0000-000000000000",
+            "resourceGroup": "rg-powerplatform",
+            "subscriptionId": "00000000-0000-0000-0000-000000000000",
+        },
+    },
+)
+
+pulumi.export("billingPolicyId", billing_policy.id)
+```
+
+### Managed Environment
+
+```python
+import pulumi
+
+managed_env = pulumi.CustomResource(
+    "my-managed-env",
+    "powerplatform:index:ManagedEnvironment",
+    {
+        "environmentId": "00000000-0000-0000-0000-000000000000",
+    },
+)
+
+pulumi.export("managedEnvId", managed_env.id)
+```
+
+### Environment Backup
+
+```python
+import pulumi
+
+backup = pulumi.CustomResource(
+    "my-env-backup",
+    "powerplatform:index:EnvironmentBackup",
+    {
+        "environmentId": "00000000-0000-0000-0000-000000000000",
+        "label": "pre-release-backup",
+    },
+)
+
+pulumi.export("backupId", backup.id)
+```
+
+### Role Assignment
+
+```python
+import pulumi
+
+role_assignment = pulumi.CustomResource(
+    "my-role-assignment",
+    "powerplatform:index:RoleAssignment",
+    {
+        "principalObjectId": "00000000-0000-0000-0000-000000000000",
+        "principalType": "User",
+        "roleDefinitionId": "00000000-0000-0000-0000-000000000001",
+        "scope": "/providers/Microsoft.PowerPlatform",
+    },
+)
+
+pulumi.export("roleAssignmentId", role_assignment.id)
+```
+
+### ISV Contract
+
+```python
+import pulumi
+
+isv_contract = pulumi.CustomResource(
+    "my-isv-contract",
+    "powerplatform:index:IsvContract",
+    {
+        "name": "Contoso ISV Contract",
+        "geo": "unitedstates",
+        "status": "Enabled",
+    },
+)
+
+pulumi.export("isvContractId", isv_contract.id)
+```
+
 ## Development
 
 ### Setup
@@ -139,11 +240,39 @@ pulumi-powerplatform/
 │       ├── client.py                # SDK client factory (auth)
 │       ├── resources/
 │       │   ├── environment_group.py # Environment Group CRUD
-│       │   └── dlp_policy.py        # DLP Policy CRUD
+│       │   ├── dlp_policy.py        # DLP Policy CRUD
+│       │   ├── billing_policy.py    # Billing Policy CRUD
+│       │   ├── managed_environment.py # Managed Environment Enable/Disable
+│       │   ├── environment_backup.py  # Environment Backup Create/Read/Delete
+│       │   ├── role_assignment.py     # Role Assignment Create/Read/Delete
+│       │   └── isv_contract.py        # ISV Contract CRUD
 │       └── functions/
-│           └── get_environments.py  # List environments
+│           ├── get_environments.py  # List environments
+│           ├── get_connectors.py    # List connectors
+│           ├── get_apps.py          # List apps
+│           └── get_flows.py         # List flows
+├── sdk/
+│   └── python/
+│       ├── pulumi_powerplatform/    # End-user Python SDK
+│       │   ├── __init__.py          # Package exports
+│       │   ├── provider.py          # Provider resource
+│       │   ├── environment_group.py # EnvironmentGroup resource
+│       │   ├── dlp_policy.py        # DlpPolicy resource
+│       │   ├── billing_policy.py    # BillingPolicy resource
+│       │   ├── managed_environment.py # ManagedEnvironment resource
+│       │   ├── environment_backup.py  # EnvironmentBackup resource
+│       │   ├── role_assignment.py     # RoleAssignment resource
+│       │   ├── isv_contract.py        # IsvContract resource
+│       │   ├── get_environments.py  # getEnvironments function
+│       │   ├── get_connectors.py    # getConnectors function
+│       │   ├── get_apps.py          # getApps function
+│       │   └── get_flows.py         # getFlows function
+│       └── pyproject.toml           # SDK package config
 ├── examples/                        # Usage examples
 ├── tests/                           # Unit tests
+├── .github/
+│   └── workflows/
+│       └── ci.yaml                  # CI/CD pipeline
 ├── schema.json                      # Pulumi Package Schema
 ├── PulumiPlugin.yaml                # Plugin metadata
 ├── pyproject.toml                   # Python project config
@@ -152,33 +281,33 @@ pulumi-powerplatform/
 
 ## Roadmap
 
-### Phase 1: Foundation (Current — MVP) ✅
+### Phase 1: Foundation (MVP) ✅
 - Provider skeleton with authentication
 - Environment Group — Full CRUD
 - DLP Policy — Full CRUD
 - Data source: getEnvironments
 
-### Phase 2: Core Resources
-- Environment — Full CRUD (via raw REST API for creation)
-- Environment Settings — Create/Read/Update
+### Phase 2: Core Resources ✅
 - Billing Policy — Full CRUD
 - Managed Environment — Enable/Disable
 - Environment Backup — Create/Read/Delete
-- Data sources: connectors, connections, apps, flows
+- Data sources: getConnectors, getApps, getFlows
 
-### Phase 3: Extended Resources
-- Power Pages Website — Create/Read/Delete + operations
+### Phase 3: Extended Resources ✅
 - ISV Contract — Full CRUD
-- DLP Policy Assignment — Create/Read
 - Role Assignment — Create/Read/Delete
-- Dynamics FinOps Settings — Read/Update
 
-### Phase 4: Polish & Distribution
-- Generated SDK for end-user consumption (Python, TypeScript, Go, C#)
+### Phase 4: Polish & Distribution ✅
+- Python SDK for end-user consumption (`sdk/python/`)
+- Examples for all resources
+- CI/CD pipeline (lint, test, schema validation)
+
+### Phase 5: Future
+- Generated SDKs for TypeScript, Go, C#
 - PyPI publication
 - Pulumi Registry listing
-- CI/CD pipeline
 - Import support
+- Additional resources (Power Pages Website, DLP Policy Assignment, etc.)
 
 ## License
 
