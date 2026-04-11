@@ -1,0 +1,241 @@
+{
+    "name": "powerplatform",
+    "displayName": "Power Platform",
+    "description": "A Pulumi provider for managing Microsoft Power Platform resources.",
+    "version": "0.1.0",
+    "publisher": "rpothin",
+    "homepage": "https://github.com/rpothin/pulumi-powerplatform",
+    "repository": "https://github.com/rpothin/pulumi-powerplatform",
+    "license": "MIT",
+    "config": {
+        "variables": {
+            "tenantId": {
+                "type": "string",
+                "description": "The Azure AD Tenant ID for authenticating with Power Platform. Can also be set with the AZURE_TENANT_ID environment variable."
+            },
+            "clientId": {
+                "type": "string",
+                "description": "The Azure AD Application (Client) ID. Can also be set with the AZURE_CLIENT_ID environment variable."
+            },
+            "clientSecret": {
+                "type": "string",
+                "description": "The Azure AD Client Secret. Can also be set with the AZURE_CLIENT_SECRET environment variable.",
+                "secret": true
+            }
+        }
+    },
+    "types": {
+        "powerplatform:index:RuleSet": {
+            "type": "object",
+            "description": "A rule set for a DLP policy, defining data loss prevention rules.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the rule set."
+                },
+                "version": {
+                    "type": "string",
+                    "description": "The version of the rule set."
+                },
+                "inputs": {
+                    "type": "object",
+                    "description": "The inputs for the rule set, which may vary based on the rule.",
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    }
+                }
+            }
+        },
+        "powerplatform:index:EnvironmentSummary": {
+            "type": "object",
+            "description": "Summary information about a Power Platform environment.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the environment."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the environment."
+                },
+                "domainName": {
+                    "type": "string",
+                    "description": "The domain name of the Dataverse database."
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The current state of the environment."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "The type (SKU) of the environment."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "The URL of the Dataverse database."
+                },
+                "geo": {
+                    "type": "string",
+                    "description": "The geographical region of the environment."
+                },
+                "azureRegion": {
+                    "type": "string",
+                    "description": "The Azure region of the environment."
+                },
+                "securityGroupId": {
+                    "type": "string",
+                    "description": "The security group that controls access."
+                },
+                "tenantId": {
+                    "type": "string",
+                    "description": "The tenant that the environment belongs to."
+                },
+                "environmentGroupId": {
+                    "type": "string",
+                    "description": "The environment group to which this environment belongs."
+                },
+                "dataverseId": {
+                    "type": "string",
+                    "description": "The Dataverse organization ID."
+                },
+                "version": {
+                    "type": "string",
+                    "description": "The version of the Dataverse database."
+                }
+            }
+        }
+    },
+    "resources": {
+        "powerplatform:index:EnvironmentGroup": {
+            "description": "Manages a Power Platform environment group. Environment groups allow you to organize environments and apply policies at a group level.",
+            "inputProperties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name for the environment group."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the environment group."
+                },
+                "parentGroupId": {
+                    "type": "string",
+                    "description": "The ID of the parent environment group, if this is a nested group."
+                }
+            },
+            "requiredInputs": [
+                "displayName"
+            ],
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the environment group."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the environment group."
+                },
+                "parentGroupId": {
+                    "type": "string",
+                    "description": "The ID of the parent environment group."
+                },
+                "createdTime": {
+                    "type": "string",
+                    "description": "The timestamp when the group was created."
+                },
+                "lastModifiedTime": {
+                    "type": "string",
+                    "description": "The timestamp when the group was last modified."
+                }
+            },
+            "required": [
+                "displayName"
+            ]
+        },
+        "powerplatform:index:DlpPolicy": {
+            "description": "Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data.",
+            "inputProperties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the DLP policy."
+                },
+                "ruleSets": {
+                    "type": "array",
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    }
+                }
+            },
+            "requiredInputs": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the DLP policy."
+                },
+                "ruleSets": {
+                    "type": "array",
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    }
+                },
+                "tenantId": {
+                    "type": "string",
+                    "description": "The tenant ID that owns the policy."
+                },
+                "lastModified": {
+                    "type": "string",
+                    "description": "The timestamp when the policy was last modified."
+                },
+                "ruleSetCount": {
+                    "type": "integer",
+                    "description": "The number of rule sets in the policy."
+                }
+            },
+            "required": [
+                "name"
+            ]
+        }
+    },
+    "functions": {
+        "powerplatform:index:getEnvironments": {
+            "description": "Retrieves a list of Power Platform environments available for the authenticated user.",
+            "inputs": {
+                "properties": {
+                    "filter": {
+                        "type": "string",
+                        "description": "An OData filter expression. Supported properties: dataverseId, type, geo, state, environmentGroupId, domainName."
+                    },
+                    "top": {
+                        "type": "integer",
+                        "description": "Maximum number of environments to return."
+                    }
+                }
+            },
+            "outputs": {
+                "properties": {
+                    "environments": {
+                        "type": "array",
+                        "description": "The list of environments.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:EnvironmentSummary"
+                        }
+                    }
+                },
+                "required": [
+                    "environments"
+                ]
+            }
+        }
+    },
+    "language": {
+        "python": {
+            "packageName": "pulumi_powerplatform",
+            "requires": {
+                "pulumi": ">=3.0.0,<4.0.0"
+            }
+        }
+    }
+}

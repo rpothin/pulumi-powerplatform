@@ -1,0 +1,11 @@
+name: dlp-policy-example
+runtime: python
+description: Example of creating a Power Platform DLP Policy
+config:
+  powerplatform:tenantId:
+    description: Azure AD Tenant ID
+  powerplatform:clientId:
+    description: Azure AD Client ID
+  powerplatform:clientSecret:
+    secret: true
+    description: Azure AD Client Secret
