@@ -1,0 +1,75 @@
+name: Generate Multi-Language SDKs
+
+on:
+  pull_request:
+    types: [ready_for_review]
+  push:
+    branches: [main]
+
+jobs:
+  generate-sdks:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-actions[bot]'
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || '' }}
+
+      - name: Skip if PR is still a draft
+        if: github.event_name == 'pull_request' && github.event.pull_request.draft == true
+        run: |
+          echo "PR is still a draft — skipping SDK generation."
+          exit 0
+
+      - name: Install Pulumi CLI
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+
+      - name: Detect whether schema.json changed
+        id: schema_changed
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            CHANGED=$(git diff --name-only "$BASE_SHA" HEAD)
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          echo "Changed files:"
+          echo "$CHANGED"
+          if echo "$CHANGED" | grep -q "^schema\.json$"; then
+            echo "schema_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "schema_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate non-Python SDKs
+        if: steps.schema_changed.outputs.schema_changed == 'true'
+        run: |
+          pulumi package gen-sdk schema.json nodejs --out sdk/nodejs
+          pulumi package gen-sdk schema.json go     --out sdk/go
+          pulumi package gen-sdk schema.json dotnet --out sdk/dotnet
+
+      - name: Check if SDK files changed
+        if: steps.schema_changed.outputs.schema_changed == 'true'
+        id: sdk_diff
+        run: |
+          if git diff --quiet sdk/nodejs sdk/go sdk/dotnet; then
+            echo "SDKs already up to date."
+            echo "sdk_changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "sdk_changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push regenerated SDKs
+        if: steps.schema_changed.outputs.schema_changed == 'true' && steps.sdk_diff.outputs.sdk_changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add sdk/nodejs sdk/go sdk/dotnet
+          git commit -m "chore: regenerate non-Python SDKs from schema.json [skip ci]"
+          git push
