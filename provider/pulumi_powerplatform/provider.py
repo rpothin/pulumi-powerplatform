@@ -78,20 +78,20 @@ class PowerPlatformProvider(Provider):
     to raw REST calls for operations not exposed by the SDK.
     """
 
-    _client: Optional[PowerPlatformClient] = None
-
-    # Lazy-loaded resource/function handlers (created after configure).
-    _env_group: Optional[EnvironmentGroupResource] = None
-    _dlp_policy: Optional[DlpPolicyResource] = None
-    _billing_policy: Optional[BillingPolicyResource] = None
-    _managed_env: Optional[ManagedEnvironmentResource] = None
-    _env_backup: Optional[EnvironmentBackupResource] = None
-    _role_assignment: Optional[RoleAssignmentResource] = None
-    _isv_contract: Optional[IsvContractResource] = None
-    _get_envs: Optional[GetEnvironmentsFunction] = None
-    _get_connectors: Optional[GetConnectorsFunction] = None
-    _get_apps: Optional[GetAppsFunction] = None
-    _get_flows: Optional[GetFlowsFunction] = None
+    def __init__(self) -> None:
+        super().__init__()
+        self._client: Optional[PowerPlatformClient] = None
+        self._env_group: Optional[EnvironmentGroupResource] = None
+        self._dlp_policy: Optional[DlpPolicyResource] = None
+        self._billing_policy: Optional[BillingPolicyResource] = None
+        self._managed_env: Optional[ManagedEnvironmentResource] = None
+        self._env_backup: Optional[EnvironmentBackupResource] = None
+        self._role_assignment: Optional[RoleAssignmentResource] = None
+        self._isv_contract: Optional[IsvContractResource] = None
+        self._get_envs: Optional[GetEnvironmentsFunction] = None
+        self._get_connectors: Optional[GetConnectorsFunction] = None
+        self._get_apps: Optional[GetAppsFunction] = None
+        self._get_flows: Optional[GetFlowsFunction] = None
 
     # ---- Schema ----
 

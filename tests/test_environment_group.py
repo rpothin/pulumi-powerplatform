@@ -73,6 +73,23 @@ class TestEnvironmentGroupCheck:
         assert response.failures is not None
         assert len(response.failures) == 1
 
+    @pytest.mark.asyncio
+    async def test_check_invalid_parent_group_id(self, env_group_handler):
+        """An invalid parentGroupId should produce a check failure."""
+        request = CheckRequest(
+            urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
+            old_inputs={},
+            new_inputs={
+                "displayName": PropertyValue("Test Group"),
+                "parentGroupId": PropertyValue("not-a-uuid"),
+            },
+            random_seed=b"",
+        )
+        response = await env_group_handler.check(request)
+        assert response.failures is not None
+        assert len(response.failures) == 1
+        assert response.failures[0].property == "parentGroupId"
+
 
 class TestEnvironmentGroupDiff:
     """Tests for the EnvironmentGroup diff method."""

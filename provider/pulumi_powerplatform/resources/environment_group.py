@@ -42,6 +42,15 @@ class EnvironmentGroupResource:
         if not display_name:
             failures.append(CheckFailure(property="displayName", reason="displayName is required and cannot be empty."))
 
+        parent_id = _pv_str(inputs.get("parentGroupId"))
+        if parent_id:
+            try:
+                UUID(parent_id)
+            except ValueError:
+                failures.append(
+                    CheckFailure(property="parentGroupId", reason="parentGroupId must be a valid UUID.")
+                )
+
         return CheckResponse(inputs=inputs, failures=failures if failures else None)
 
     async def diff(self, request: DiffRequest) -> DiffResponse:

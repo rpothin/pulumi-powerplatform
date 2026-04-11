@@ -30,6 +30,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import pv_to_comparable as _pv_to_comparable
 
 
 class BillingPolicyResource:
@@ -66,7 +67,7 @@ class BillingPolicyResource:
         for prop in ("location", "billingInstrument"):
             old_val = old.get(prop)
             new_val = new.get(prop)
-            if old_val != new_val:
+            if _pv_to_comparable(old_val) != _pv_to_comparable(new_val):
                 diffs.append(prop)
                 detailed[prop] = PropertyDiff(kind=PropertyDiffKind.UPDATE_REPLACE, input_diff=True)
                 replaces.append(prop)

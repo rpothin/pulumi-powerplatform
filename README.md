@@ -291,14 +291,7 @@ pulumi-powerplatform/
 - ❌ Pulumi Registry listing
 - ❌ Multi-language SDK generation (TypeScript, Go, C#)
 - ❌ Import support
-
-### Phase 5: Future
-- Generated SDKs for TypeScript, Go, C#
-- PyPI publication
-- Pulumi Registry listing
-- Import support
-- Retry/exponential backoff for transient failures
-- Additional resources (see Phase 2/3 gaps above)
+- ❌ Retry/exponential backoff for transient failures
 
 ## Known Limitations
 
@@ -306,6 +299,7 @@ pulumi-powerplatform/
 - **ISV Contract `geo`**: Immutable after creation — changing `geo` triggers a resource replacement.
 - **No retry logic**: API rate limiting (HTTP 429) and transient failures are not yet handled. This is planned as future work.
 - **No raw REST API**: The `raw_api/` module is currently a scaffold. It will be implemented when the first resource requires direct REST access (e.g., Environment creation).
+- **SDK / provider package name collision**: The provider source (`provider/pulumi_powerplatform/`) and the end-user Python SDK (`sdk/python/pulumi_powerplatform/`) share the same package name. Do not install both in the same Python environment. This will be resolved when the provider is published to PyPI with a dedicated package name.
 
 ## Contributing
 

@@ -9,8 +9,8 @@ class BillingPolicy(pulumi.CustomResource):
 
     name: pulumi.Output[str]
     location: pulumi.Output[str]
-    status: pulumi.Output[Optional[str]]
-    billing_instrument: pulumi.Output[Optional[Any]]
+    status: pulumi.Output[str]
+    billing_instrument: pulumi.Output[Any]
     created_on: pulumi.Output[str]
     last_modified_on: pulumi.Output[str]
 

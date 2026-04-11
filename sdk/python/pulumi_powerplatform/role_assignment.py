@@ -10,7 +10,7 @@ class RoleAssignment(pulumi.CustomResource):
     principal_object_id: pulumi.Output[str]
     principal_type: pulumi.Output[str]
     role_definition_id: pulumi.Output[str]
-    scope: pulumi.Output[Optional[str]]
+    scope: pulumi.Output[str]
     created_on: pulumi.Output[str]
 
     def __init__(

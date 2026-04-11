@@ -9,7 +9,7 @@ class IsvContract(pulumi.CustomResource):
 
     name: pulumi.Output[str]
     geo: pulumi.Output[str]
-    status: pulumi.Output[Optional[str]]
+    status: pulumi.Output[str]
     created_on: pulumi.Output[str]
     last_modified_on: pulumi.Output[str]
 

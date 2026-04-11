@@ -8,7 +8,7 @@ class DlpPolicy(pulumi.CustomResource):
     """Manages a Power Platform Data Loss Prevention (DLP) policy."""
 
     name: pulumi.Output[str]
-    rule_sets: pulumi.Output[Optional[Sequence[Any]]]
+    rule_sets: pulumi.Output[Sequence[Any]]
     tenant_id: pulumi.Output[str]
     last_modified: pulumi.Output[str]
     rule_set_count: pulumi.Output[int]

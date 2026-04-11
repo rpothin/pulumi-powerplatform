@@ -8,8 +8,8 @@ class EnvironmentGroup(pulumi.CustomResource):
     """Manages a Power Platform environment group."""
 
     display_name: pulumi.Output[str]
-    description: pulumi.Output[Optional[str]]
-    parent_group_id: pulumi.Output[Optional[str]]
+    description: pulumi.Output[str]
+    parent_group_id: pulumi.Output[str]
     created_time: pulumi.Output[str]
     last_modified_time: pulumi.Output[str]
 

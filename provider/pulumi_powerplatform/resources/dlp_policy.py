@@ -28,6 +28,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import pv_to_comparable as _pv_to_comparable
 
 
 def _pv_to_rule_sets(pv: Optional[PropertyValue]) -> Optional[list[RuleSet]]:
@@ -114,7 +115,7 @@ class DlpPolicyResource:
         # Rule sets are always diffed as a whole (complex structure).
         old_rs = old.get("ruleSets")
         new_rs = new.get("ruleSets")
-        if old_rs != new_rs:
+        if _pv_to_comparable(old_rs) != _pv_to_comparable(new_rs):
             diffs.append("ruleSets")
             detailed["ruleSets"] = PropertyDiff(kind=PropertyDiffKind.UPDATE, input_diff=True)
 

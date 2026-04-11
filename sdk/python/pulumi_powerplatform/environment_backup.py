@@ -9,8 +9,8 @@ class EnvironmentBackup(pulumi.CustomResource):
 
     environment_id: pulumi.Output[str]
     label: pulumi.Output[str]
-    backup_point_date_time: pulumi.Output[Optional[str]]
-    backup_expiry_date_time: pulumi.Output[Optional[str]]
+    backup_point_date_time: pulumi.Output[str]
+    backup_expiry_date_time: pulumi.Output[str]
 
     def __init__(
         self,
