@@ -1,8 +1,8 @@
 """Raw REST API module for Power Platform SDK gaps.
 
-This module provides direct HTTP access via the Kiota ``HttpxRequestAdapter`` for
-operations not yet exposed by the ``powerplatform-management`` SDK.  Known gaps
-include:
+This module provides direct HTTP access to the Power Platform BAP admin API
+for operations not yet exposed by the ``powerplatform-management`` SDK.  Known
+gaps include:
 
 - Environment creation / lifecycle management
 - Environment update (properties, settings)
