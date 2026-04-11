@@ -33,6 +33,64 @@ jobs:
       - run: pip install -e ".[dev]"
       - run: python -m pytest tests/ -v
 
+  sdk-sync-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect whether schema.json changed
+        id: schema_changed
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_SHA="${{ github.event.pull_request.base.sha }}"
+            CHANGED=$(git diff --name-only "$BASE_SHA" HEAD)
+          else
+            CHANGED=$(git diff --name-only HEAD~1 HEAD)
+          fi
+          echo "Changed files:"
+          echo "$CHANGED"
+          if echo "$CHANGED" | grep -q "^schema\.json$"; then
+            echo "schema_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "schema_changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install Pulumi CLI
+        if: steps.schema_changed.outputs.schema_changed == 'true'
+        run: |
+          curl -fsSL https://get.pulumi.com | sh
+          echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
+
+      - name: Verify non-Python SDKs are up to date
+        if: steps.schema_changed.outputs.schema_changed == 'true'
+        run: |
+          GEN_DIR=$(mktemp -d)
+          pulumi package gen-sdk schema.json nodejs --out "$GEN_DIR/nodejs"
+          pulumi package gen-sdk schema.json go     --out "$GEN_DIR/go"
+          pulumi package gen-sdk schema.json dotnet --out "$GEN_DIR/dotnet"
+
+          STALE=""
+          for lang in nodejs go dotnet; do
+            if ! diff -rq "$GEN_DIR/$lang" "sdk/$lang" > /dev/null 2>&1; then
+              STALE="$STALE\n  - sdk/$lang"
+            fi
+          done
+
+          if [ -n "$STALE" ]; then
+            echo "ERROR: The following non-Python SDKs are out of sync with schema.json:"
+            printf "$STALE\n"
+            echo ""
+            echo "Regenerate them and commit the result (see AGENTS.md):"
+            echo "  pulumi package gen-sdk schema.json nodejs --out sdk/nodejs"
+            echo "  pulumi package gen-sdk schema.json go     --out sdk/go"
+            echo "  pulumi package gen-sdk schema.json dotnet --out sdk/dotnet"
+            exit 1
+          fi
+
+          echo "All non-Python SDKs are in sync with schema.json."
+
   schema-validate:
     runs-on: ubuntu-latest
     steps:
