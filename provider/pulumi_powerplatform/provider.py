@@ -33,14 +33,20 @@ from pulumi_powerplatform.functions.get_apps import GetAppsFunction
 from pulumi_powerplatform.functions.get_connectors import GetConnectorsFunction
 from pulumi_powerplatform.functions.get_environments import GetEnvironmentsFunction
 from pulumi_powerplatform.functions.get_flows import GetFlowsFunction
+from pulumi_powerplatform.resources.billing_policy import BillingPolicyResource
 from pulumi_powerplatform.resources.dlp_policy import DlpPolicyResource
+from pulumi_powerplatform.resources.environment_backup import EnvironmentBackupResource
 from pulumi_powerplatform.resources.environment_group import EnvironmentGroupResource
 from pulumi_powerplatform.resources.isv_contract import IsvContractResource
+from pulumi_powerplatform.resources.managed_environment import ManagedEnvironmentResource
 from pulumi_powerplatform.resources.role_assignment import RoleAssignmentResource
 
 # Resource type tokens.
 _ENVIRONMENT_GROUP = "powerplatform:index:EnvironmentGroup"
 _DLP_POLICY = "powerplatform:index:DlpPolicy"
+_BILLING_POLICY = "powerplatform:index:BillingPolicy"
+_MANAGED_ENVIRONMENT = "powerplatform:index:ManagedEnvironment"
+_ENVIRONMENT_BACKUP = "powerplatform:index:EnvironmentBackup"
 _ROLE_ASSIGNMENT = "powerplatform:index:RoleAssignment"
 _ISV_CONTRACT = "powerplatform:index:IsvContract"
 
@@ -77,6 +83,9 @@ class PowerPlatformProvider(Provider):
     # Lazy-loaded resource/function handlers (created after configure).
     _env_group: Optional[EnvironmentGroupResource] = None
     _dlp_policy: Optional[DlpPolicyResource] = None
+    _billing_policy: Optional[BillingPolicyResource] = None
+    _managed_env: Optional[ManagedEnvironmentResource] = None
+    _env_backup: Optional[EnvironmentBackupResource] = None
     _role_assignment: Optional[RoleAssignmentResource] = None
     _isv_contract: Optional[IsvContractResource] = None
     _get_envs: Optional[GetEnvironmentsFunction] = None
@@ -107,6 +116,9 @@ class PowerPlatformProvider(Provider):
         # Initialize resource/function handlers with the configured client.
         self._env_group = EnvironmentGroupResource(self._client)
         self._dlp_policy = DlpPolicyResource(self._client)
+        self._billing_policy = BillingPolicyResource(self._client)
+        self._managed_env = ManagedEnvironmentResource(self._client)
+        self._env_backup = EnvironmentBackupResource(self._client)
         self._role_assignment = RoleAssignmentResource(self._client)
         self._isv_contract = IsvContractResource(self._client)
         self._get_envs = GetEnvironmentsFunction(self._client)
@@ -193,6 +205,9 @@ class PowerPlatformProvider(Provider):
         handlers = {
             _ENVIRONMENT_GROUP: self._env_group,
             _DLP_POLICY: self._dlp_policy,
+            _BILLING_POLICY: self._billing_policy,
+            _MANAGED_ENVIRONMENT: self._managed_env,
+            _ENVIRONMENT_BACKUP: self._env_backup,
             _ROLE_ASSIGNMENT: self._role_assignment,
             _ISV_CONTRACT: self._isv_contract,
         }
