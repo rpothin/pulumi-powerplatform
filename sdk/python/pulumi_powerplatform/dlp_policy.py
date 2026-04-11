@@ -16,9 +16,9 @@ class DlpPolicy(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        name: str = None,
-        rule_sets: Sequence[Any] = None,
-        opts: pulumi.ResourceOptions = None,
+        name: Optional[str] = None,
+        rule_sets: Optional[Sequence[Any]] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "name": name,

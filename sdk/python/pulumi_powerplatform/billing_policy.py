@@ -17,11 +17,11 @@ class BillingPolicy(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        name: str = None,
-        location: str = None,
-        status: str = None,
-        billing_instrument: Any = None,
-        opts: pulumi.ResourceOptions = None,
+        name: Optional[str] = None,
+        location: Optional[str] = None,
+        status: Optional[str] = None,
+        billing_instrument: Optional[Any] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "name": name,

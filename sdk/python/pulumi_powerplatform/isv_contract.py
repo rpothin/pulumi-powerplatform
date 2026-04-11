@@ -16,10 +16,10 @@ class IsvContract(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        name: str = None,
-        geo: str = None,
-        status: str = None,
-        opts: pulumi.ResourceOptions = None,
+        name: Optional[str] = None,
+        geo: Optional[str] = None,
+        status: Optional[str] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "name": name,

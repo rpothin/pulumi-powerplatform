@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Optional
 from uuid import UUID
 
 from mspp_management.models.environment_group import EnvironmentGroup
@@ -25,13 +24,7 @@ from pulumi.provider.experimental.provider import (
 )
 
 from pulumi_powerplatform.client import PowerPlatformClient
-
-
-def _pv_str(pv: Optional[PropertyValue]) -> Optional[str]:
-    """Extract a string from a PropertyValue, returning None if null/missing."""
-    if pv is None or pv.value is None:
-        return None
-    return str(pv.value)
+from pulumi_powerplatform.utils import pv_str as _pv_str
 
 
 class EnvironmentGroupResource:

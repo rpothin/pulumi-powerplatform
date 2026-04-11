@@ -1,6 +1,7 @@
 """Power Platform Pulumi provider resource."""
 
 import pulumi
+from typing import Optional
 
 
 class Provider(pulumi.ProviderResource):
@@ -12,10 +13,10 @@ class Provider(pulumi.ProviderResource):
     def __init__(
         self,
         resource_name: str,
-        tenant_id: str = None,
-        client_id: str = None,
-        client_secret: str = None,
-        opts: pulumi.ResourceOptions = None,
+        tenant_id: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_secret: Optional[str] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "tenantId": tenant_id,

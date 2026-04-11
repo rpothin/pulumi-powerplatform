@@ -16,10 +16,10 @@ class EnvironmentGroup(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        display_name: str = None,
-        description: str = None,
-        parent_group_id: str = None,
-        opts: pulumi.ResourceOptions = None,
+        display_name: Optional[str] = None,
+        description: Optional[str] = None,
+        parent_group_id: Optional[str] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "displayName": display_name,

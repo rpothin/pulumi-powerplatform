@@ -16,11 +16,11 @@ class RoleAssignment(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        principal_object_id: str = None,
-        principal_type: str = None,
-        role_definition_id: str = None,
-        scope: str = None,
-        opts: pulumi.ResourceOptions = None,
+        principal_object_id: Optional[str] = None,
+        principal_type: Optional[str] = None,
+        role_definition_id: Optional[str] = None,
+        scope: Optional[str] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "principalObjectId": principal_object_id,

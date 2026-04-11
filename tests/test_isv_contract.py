@@ -120,7 +120,7 @@ class TestIsvContractDiff:
 
     @pytest.mark.asyncio
     async def test_diff_geo_changed(self, isv_contract_handler):
-        """Changed geo should be detected as an in-place update (no replace)."""
+        """Changed geo should trigger replacement (immutable after creation)."""
         request = DiffRequest(
             urn="urn:pulumi:test::test::powerplatform:index:IsvContract::my-contract",
             resource_id="contract-123",
@@ -135,4 +135,6 @@ class TestIsvContractDiff:
         response = await isv_contract_handler.diff(request)
         assert response.changes is True
         assert "geo" in response.diffs
-        assert response.detailed_diff["geo"].kind == PropertyDiffKind.UPDATE
+        assert response.detailed_diff["geo"].kind == PropertyDiffKind.UPDATE_REPLACE
+        assert response.replaces is not None
+        assert "geo" in response.replaces

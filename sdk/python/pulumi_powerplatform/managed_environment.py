@@ -1,6 +1,7 @@
 """Power Platform Managed Environment resource."""
 
 import pulumi
+from typing import Optional
 
 
 class ManagedEnvironment(pulumi.CustomResource):
@@ -12,8 +13,8 @@ class ManagedEnvironment(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        environment_id: str = None,
-        opts: pulumi.ResourceOptions = None,
+        environment_id: Optional[str] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "environmentId": environment_id,

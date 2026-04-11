@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from typing import Optional
 
-from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import (
     CheckRequest,
     CheckResponse,
@@ -29,6 +28,7 @@ from pulumi.provider.experimental.provider import (
 )
 
 from pulumi_powerplatform.client import PowerPlatformClient
+from pulumi_powerplatform.config import resolve_client
 from pulumi_powerplatform.functions.get_apps import GetAppsFunction
 from pulumi_powerplatform.functions.get_connectors import GetConnectorsFunction
 from pulumi_powerplatform.functions.get_environments import GetEnvironmentsFunction
@@ -101,17 +101,7 @@ class PowerPlatformProvider(Provider):
     # ---- Configuration ----
 
     async def configure(self, request: ConfigureRequest) -> ConfigureResponse:
-        args = request.args
-
-        tenant_id = _extract_str(args.get("tenantId"))
-        client_id = _extract_str(args.get("clientId"))
-        client_secret = _extract_str(args.get("clientSecret"))
-
-        self._client = PowerPlatformClient(
-            tenant_id=tenant_id,
-            client_id=client_id,
-            client_secret=client_secret,
-        )
+        self._client = resolve_client(request.args)
 
         # Initialize resource/function handlers with the configured client.
         self._env_group = EnvironmentGroupResource(self._client)
@@ -212,10 +202,3 @@ class PowerPlatformProvider(Provider):
             _ISV_CONTRACT: self._isv_contract,
         }
         return handlers.get(resource_type)
-
-
-def _extract_str(pv: Optional[PropertyValue]) -> Optional[str]:
-    """Safely extract a string from a PropertyValue."""
-    if pv is None or pv.value is None:
-        return None
-    return str(pv.value)

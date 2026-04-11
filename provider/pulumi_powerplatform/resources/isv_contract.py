@@ -26,13 +26,7 @@ from pulumi.provider.experimental.provider import (
 )
 
 from pulumi_powerplatform.client import PowerPlatformClient
-
-
-def _pv_str(pv: Optional[PropertyValue]) -> Optional[str]:
-    """Extract a string from a PropertyValue, returning None if null/missing."""
-    if pv is None or pv.value is None:
-        return None
-    return str(pv.value)
+from pulumi_powerplatform.utils import pv_str as _pv_str
 
 
 class IsvContractResource:
@@ -60,11 +54,21 @@ class IsvContractResource:
         """Compute property-level diff for an ISV contract."""
         diffs: list[str] = []
         detailed: dict[str, PropertyDiff] = {}
+        replaces: list[str] = []
 
         old = request.old_state
         new = request.new_inputs
 
-        for prop in ("name", "geo", "status"):
+        # geo is immutable — changes require replacement.
+        old_geo = _pv_str(old.get("geo"))
+        new_geo = _pv_str(new.get("geo"))
+        if old_geo != new_geo:
+            diffs.append("geo")
+            detailed["geo"] = PropertyDiff(kind=PropertyDiffKind.UPDATE_REPLACE, input_diff=True)
+            replaces.append("geo")
+
+        # name and status can be updated in-place.
+        for prop in ("name", "status"):
             old_val = _pv_str(old.get(prop))
             new_val = _pv_str(new.get(prop))
             if old_val != new_val:
@@ -75,6 +79,7 @@ class IsvContractResource:
             changes=bool(diffs),
             diffs=diffs,
             detailed_diff=detailed,
+            replaces=replaces if replaces else None,
         )
 
     async def create(self, request: CreateRequest) -> CreateResponse:

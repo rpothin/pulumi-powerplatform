@@ -15,9 +15,9 @@ class EnvironmentBackup(pulumi.CustomResource):
     def __init__(
         self,
         resource_name: str,
-        environment_id: str = None,
-        label: str = None,
-        opts: pulumi.ResourceOptions = None,
+        environment_id: Optional[str] = None,
+        label: Optional[str] = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
             "environmentId": environment_id,
