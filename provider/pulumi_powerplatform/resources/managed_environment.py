@@ -20,6 +20,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 class ManagedEnvironmentResource:
@@ -73,7 +74,7 @@ class ManagedEnvironmentResource:
         env_id = _pv_str(props.get("environmentId")) or ""
 
         gov = self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).governancesetting
-        await gov.enablemanaged.post()
+        await retry_with_backoff(lambda: gov.enablemanaged.post())
 
         outputs: dict[str, PropertyValue] = {
             "environmentId": PropertyValue(env_id),
@@ -84,7 +85,9 @@ class ManagedEnvironmentResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of a managed environment."""
         env_id = request.resource_id
-        result = await self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).get()
+        )
 
         if result is None:
             return ReadResponse(resource_id="", properties={}, inputs={})
@@ -106,4 +109,4 @@ class ManagedEnvironmentResource:
         """Disable managed environment."""
         env_id = request.resource_id
         gov = self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).governancesetting
-        await gov.disablemanaged.post()
+        await retry_with_backoff(lambda: gov.disablemanaged.post())

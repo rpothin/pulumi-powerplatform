@@ -31,6 +31,7 @@ from pulumi.provider.experimental.provider import (
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
 from pulumi_powerplatform.utils import pv_to_comparable as _pv_to_comparable
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 class BillingPolicyResource:
@@ -100,7 +101,7 @@ class BillingPolicyResource:
         body.status = _resolve_status(_pv_str(props.get("status")))
         body.billing_instrument = _resolve_billing_instrument(props.get("billingInstrument"))
 
-        result = await self._client.sdk.licensing.billing_policies.post(body)
+        result = await retry_with_backoff(lambda: self._client.sdk.licensing.billing_policies.post(body))
         if result is None:
             raise RuntimeError("Failed to create billing policy: API returned no result.")
 
@@ -113,7 +114,9 @@ class BillingPolicyResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of a billing policy."""
         policy_id = request.resource_id
-        result = await self._client.sdk.licensing.billing_policies.by_billing_policy_id(policy_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.licensing.billing_policies.by_billing_policy_id(policy_id).get()
+        )
 
         if result is None:
             return ReadResponse(resource_id="", properties={}, inputs={})
@@ -136,7 +139,9 @@ class BillingPolicyResource:
         body.name = _pv_str(props.get("name"))
         body.status = _resolve_status(_pv_str(props.get("status")))
 
-        result = await self._client.sdk.licensing.billing_policies.by_billing_policy_id(policy_id).put(body)
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.licensing.billing_policies.by_billing_policy_id(policy_id).put(body)
+        )
         if result is None:
             raise RuntimeError(f"Failed to update billing policy {policy_id}: API returned no result.")
 
@@ -145,7 +150,9 @@ class BillingPolicyResource:
     async def delete(self, request: DeleteRequest) -> None:
         """Delete a billing policy."""
         policy_id = request.resource_id
-        await self._client.sdk.licensing.billing_policies.by_billing_policy_id(policy_id).delete()
+        await retry_with_backoff(
+            lambda: self._client.sdk.licensing.billing_policies.by_billing_policy_id(policy_id).delete()
+        )
 
 
 def _resolve_status(status_str: Optional[str]) -> BillingPolicyStatus:

@@ -27,6 +27,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 class IsvContractResource:
@@ -94,7 +95,7 @@ class IsvContractResource:
         body.geo = _pv_str(props.get("geo"))
         body.status = _resolve_status(_pv_str(props.get("status")))
 
-        result = await self._client.sdk.licensing.isv_contracts.post(body)
+        result = await retry_with_backoff(lambda: self._client.sdk.licensing.isv_contracts.post(body))
         if result is None:
             raise RuntimeError("Failed to create ISV contract: API returned no result.")
 
@@ -107,7 +108,9 @@ class IsvContractResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of an ISV contract."""
         contract_id = request.resource_id
-        result = await self._client.sdk.licensing.isv_contracts.by_isv_contract_id(contract_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.licensing.isv_contracts.by_isv_contract_id(contract_id).get()
+        )
 
         if result is None:
             return ReadResponse(resource_id="", properties={}, inputs={})
@@ -129,7 +132,9 @@ class IsvContractResource:
         body.geo = _pv_str(props.get("geo"))
         body.status = _resolve_status(_pv_str(props.get("status")))
 
-        result = await self._client.sdk.licensing.isv_contracts.by_isv_contract_id(contract_id).put(body)
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.licensing.isv_contracts.by_isv_contract_id(contract_id).put(body)
+        )
         if result is None:
             raise RuntimeError(f"Failed to update ISV contract {contract_id}: API returned no result.")
 
@@ -138,7 +143,9 @@ class IsvContractResource:
     async def delete(self, request: DeleteRequest) -> None:
         """Delete an ISV contract."""
         contract_id = request.resource_id
-        await self._client.sdk.licensing.isv_contracts.by_isv_contract_id(contract_id).delete()
+        await retry_with_backoff(
+            lambda: self._client.sdk.licensing.isv_contracts.by_isv_contract_id(contract_id).delete()
+        )
 
 
 def _resolve_status(status_str: Optional[str]) -> BillingPolicyStatus:

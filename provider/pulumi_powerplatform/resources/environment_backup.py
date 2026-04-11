@@ -22,6 +22,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 class EnvironmentBackupResource:
@@ -84,7 +85,9 @@ class EnvironmentBackupResource:
         body = CreateBackupRequest()
         body.label = _pv_str(props.get("label"))
 
-        result = await self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).backups.post(body)
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).backups.post(body)
+        )
         if result is None:
             raise RuntimeError("Failed to create environment backup: API returned no result.")
 
@@ -101,7 +104,7 @@ class EnvironmentBackupResource:
         env_id, backup_id = _parse_resource_id(request.resource_id)
 
         env_backups = self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).backups
-        result = await env_backups.by_backup_id(backup_id).get()
+        result = await retry_with_backoff(lambda: env_backups.by_backup_id(backup_id).get())
 
         if result is None:
             return ReadResponse(resource_id="", properties={}, inputs={})
@@ -114,7 +117,7 @@ class EnvironmentBackupResource:
         """Delete an environment backup."""
         env_id, backup_id = _parse_resource_id(request.resource_id)
         env_backups = self._client.sdk.environmentmanagement.environments.by_environment_id(env_id).backups
-        await env_backups.by_backup_id(backup_id).delete()
+        await retry_with_backoff(lambda: env_backups.by_backup_id(backup_id).delete())
 
 
 def _parse_resource_id(resource_id: str) -> tuple[str, str]:
