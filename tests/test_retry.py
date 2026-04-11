@@ -5,7 +5,6 @@ from __future__ import annotations
 from unittest.mock import AsyncMock
 
 import pytest
-
 from pulumi_powerplatform.utils import HttpError, retry_with_backoff
 
 

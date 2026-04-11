@@ -2,7 +2,9 @@
 
 from .provider import Provider
 
+from .environment import Environment
 from .environment_group import EnvironmentGroup
+from .environment_settings import EnvironmentSettings
 from .dlp_policy import DlpPolicy
 from .billing_policy import BillingPolicy
 from .managed_environment import ManagedEnvironment
@@ -17,7 +19,9 @@ from .get_flows import get_flows
 
 __all__ = [
     "Provider",
+    "Environment",
     "EnvironmentGroup",
+    "EnvironmentSettings",
     "DlpPolicy",
     "BillingPolicy",
     "ManagedEnvironment",

@@ -493,6 +493,156 @@
                 "name",
                 "geo"
             ]
+        },
+        "powerplatform:index:Environment": {
+            "description": "Manages a Power Platform environment. Environments are containers for apps, flows, data, and other resources. Uses the BAP admin REST API for lifecycle management.",
+            "inputProperties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the environment."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the environment."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation."
+                },
+                "environmentType": {
+                    "type": "string",
+                    "description": "The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation."
+                },
+                "domainName": {
+                    "type": "string",
+                    "description": "The domain name for the Dataverse database associated with the environment."
+                },
+                "currencyCode": {
+                    "type": "string",
+                    "description": "The currency code for the Dataverse database (e.g., USD, EUR)."
+                },
+                "languageCode": {
+                    "type": "string",
+                    "description": "The base language code for the Dataverse database (e.g., 1033 for English)."
+                }
+            },
+            "requiredInputs": [
+                "displayName",
+                "location",
+                "environmentType"
+            ],
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the environment."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the environment."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "The geographic region of the environment."
+                },
+                "environmentType": {
+                    "type": "string",
+                    "description": "The type (SKU) of the environment."
+                },
+                "domainName": {
+                    "type": "string",
+                    "description": "The domain name of the Dataverse database."
+                },
+                "currencyCode": {
+                    "type": "string",
+                    "description": "The currency code of the Dataverse database."
+                },
+                "languageCode": {
+                    "type": "string",
+                    "description": "The base language code of the Dataverse database."
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The current state of the environment (e.g., Ready, Preparing)."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "The Dataverse instance URL of the environment."
+                },
+                "createdTime": {
+                    "type": "string",
+                    "description": "The timestamp when the environment was created."
+                },
+                "lastModifiedTime": {
+                    "type": "string",
+                    "description": "The timestamp when the environment was last modified."
+                }
+            },
+            "required": [
+                "displayName",
+                "location",
+                "environmentType"
+            ]
+        },
+        "powerplatform:index:EnvironmentSettings": {
+            "description": "Manages settings on a Power Platform environment. Settings are applied via PATCH to the BAP admin API. Deletion removes the resource from Pulumi state only (settings cannot be unset).",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The ID of the environment to manage settings for. Immutable after creation."
+                },
+                "maxUploadFileSize": {
+                    "type": "string",
+                    "description": "Maximum file upload size in bytes."
+                },
+                "pluginTraceLogSetting": {
+                    "type": "string",
+                    "description": "Plugin trace log setting (Off, Exception, All)."
+                },
+                "isAuditEnabled": {
+                    "type": "string",
+                    "description": "Whether auditing is enabled (true or false)."
+                },
+                "isUserAccessAuditEnabled": {
+                    "type": "string",
+                    "description": "Whether user access auditing is enabled (true or false)."
+                },
+                "isActivityLoggingEnabled": {
+                    "type": "string",
+                    "description": "Whether activity logging is enabled (true or false)."
+                }
+            },
+            "requiredInputs": [
+                "environmentId"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The ID of the environment."
+                },
+                "maxUploadFileSize": {
+                    "type": "string",
+                    "description": "Maximum file upload size in bytes."
+                },
+                "pluginTraceLogSetting": {
+                    "type": "string",
+                    "description": "Plugin trace log setting."
+                },
+                "isAuditEnabled": {
+                    "type": "string",
+                    "description": "Whether auditing is enabled."
+                },
+                "isUserAccessAuditEnabled": {
+                    "type": "string",
+                    "description": "Whether user access auditing is enabled."
+                },
+                "isActivityLoggingEnabled": {
+                    "type": "string",
+                    "description": "Whether activity logging is enabled."
+                }
+            },
+            "required": [
+                "environmentId"
+            ]
         }
     },
     "functions": {
