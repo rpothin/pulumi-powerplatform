@@ -29,6 +29,7 @@ from pulumi.provider.experimental.provider import (
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
 from pulumi_powerplatform.utils import pv_to_comparable as _pv_to_comparable
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 def _pv_to_rule_sets(pv: Optional[PropertyValue]) -> Optional[list[RuleSet]]:
@@ -136,7 +137,7 @@ class DlpPolicyResource:
         body.name = _pv_str(props.get("name"))
         body.rule_sets = _pv_to_rule_sets(props.get("ruleSets"))
 
-        result = await self._client.sdk.governance.rule_based_policies.post(body)
+        result = await retry_with_backoff(lambda: self._client.sdk.governance.rule_based_policies.post(body))
         if result is None:
             raise RuntimeError("Failed to create DLP policy: API returned no result.")
 
@@ -149,7 +150,9 @@ class DlpPolicyResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of a DLP policy."""
         policy_id = request.resource_id
-        result = await self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+        )
 
         if result is None:
             return ReadResponse(resource_id="", properties={}, inputs={})
@@ -170,10 +173,14 @@ class DlpPolicyResource:
         body.name = _pv_str(props.get("name"))
         body.rule_sets = _pv_to_rule_sets(props.get("ruleSets"))
 
-        await self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).put(body)
+        await retry_with_backoff(
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).put(body)
+        )
 
         # Re-read to get the authoritative state after update.
-        result = await self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+        )
         if result is None:
             raise RuntimeError(f"Failed to read DLP policy {policy_id} after update.")
 
@@ -190,7 +197,9 @@ class DlpPolicyResource:
         policy_id = request.resource_id
 
         # Read the policy to get its rule sets.
-        policy = await self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+        policy = await retry_with_backoff(
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+        )
         if policy is None:
             return  # Already gone.
 
@@ -198,7 +207,9 @@ class DlpPolicyResource:
         if policy.rule_sets:
             for rs in policy.rule_sets:
                 if rs.id:
-                    await self._client.sdk.governance.rule_sets.by_rule_set_id(rs.id).delete()
+                    await retry_with_backoff(
+                        lambda _id=rs.id: self._client.sdk.governance.rule_sets.by_rule_set_id(_id).delete()
+                    )
 
 
 def _policy_to_outputs(policy: Policy) -> dict[str, PropertyValue]:
