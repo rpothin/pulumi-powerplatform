@@ -156,3 +156,44 @@ class TestBillingPolicyDiff:
         assert "location" in response.diffs
         assert response.detailed_diff["location"].kind == PropertyDiffKind.UPDATE_REPLACE
         assert "location" in response.replaces
+
+    @pytest.mark.asyncio
+    async def test_diff_billing_instrument_subfield_changed_requires_replace(
+        self, billing_policy_handler
+    ):
+        """Changed billingInstrument.resourceGroup should trigger UPDATE_REPLACE."""
+        old_bi = PropertyValue(
+            {
+                "id": PropertyValue("bi-1"),
+                "resourceGroup": PropertyValue("rg-old"),
+                "subscriptionId": PropertyValue("00000000-0000-0000-0000-000000000001"),
+            }
+        )
+        new_bi = PropertyValue(
+            {
+                "id": PropertyValue("bi-1"),
+                "resourceGroup": PropertyValue("rg-new"),
+                "subscriptionId": PropertyValue("00000000-0000-0000-0000-000000000001"),
+            }
+        )
+
+        request = DiffRequest(
+            urn="urn:pulumi:test::test::powerplatform:index:BillingPolicy::my-policy",
+            resource_id="policy-123",
+            old_state={
+                "name": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "billingInstrument": old_bi,
+            },
+            new_inputs={
+                "name": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "billingInstrument": new_bi,
+            },
+            ignore_changes=[],
+        )
+        response = await billing_policy_handler.diff(request)
+        assert response.changes is True
+        assert "billingInstrument" in response.diffs
+        assert response.detailed_diff["billingInstrument"].kind == PropertyDiffKind.UPDATE_REPLACE
+        assert "billingInstrument" in response.replaces
