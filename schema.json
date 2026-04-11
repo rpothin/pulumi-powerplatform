@@ -1,0 +1,621 @@
+{
+    "name": "powerplatform",
+    "displayName": "Power Platform",
+    "description": "A Pulumi provider for managing Microsoft Power Platform resources.",
+    "version": "0.1.0",
+    "publisher": "rpothin",
+    "homepage": "https://github.com/rpothin/pulumi-powerplatform",
+    "repository": "https://github.com/rpothin/pulumi-powerplatform",
+    "license": "MIT",
+    "config": {
+        "variables": {
+            "tenantId": {
+                "type": "string",
+                "description": "The Azure AD Tenant ID for authenticating with Power Platform. Can also be set with the AZURE_TENANT_ID environment variable."
+            },
+            "clientId": {
+                "type": "string",
+                "description": "The Azure AD Application (Client) ID. Can also be set with the AZURE_CLIENT_ID environment variable."
+            },
+            "clientSecret": {
+                "type": "string",
+                "description": "The Azure AD Client Secret. Can also be set with the AZURE_CLIENT_SECRET environment variable.",
+                "secret": true
+            }
+        }
+    },
+    "types": {
+        "powerplatform:index:RuleSet": {
+            "type": "object",
+            "description": "A rule set for a DLP policy, defining data loss prevention rules.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the rule set."
+                },
+                "version": {
+                    "type": "string",
+                    "description": "The version of the rule set."
+                },
+                "inputs": {
+                    "type": "object",
+                    "description": "The inputs for the rule set, which may vary based on the rule.",
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    }
+                }
+            }
+        },
+        "powerplatform:index:BillingInstrument": {
+            "type": "object",
+            "description": "Azure billing instrument (subscription) details for a billing policy.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The billing instrument identifier."
+                },
+                "resourceGroup": {
+                    "type": "string",
+                    "description": "The Azure resource group within the subscription."
+                },
+                "subscriptionId": {
+                    "type": "string",
+                    "description": "The Azure subscription ID."
+                }
+            }
+        },
+        "powerplatform:index:ConnectorSummary": {
+            "type": "object",
+            "description": "Summary information about a Power Platform connector.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the connector."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The internal name of the connector."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the connector."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "The type of the connector."
+                }
+            }
+        },
+        "powerplatform:index:AppSummary": {
+            "type": "object",
+            "description": "Summary information about a Power App.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the app."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The internal name of the app."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the app."
+                }
+            }
+        },
+        "powerplatform:index:FlowSummary": {
+            "type": "object",
+            "description": "Summary information about a Cloud Flow.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the flow."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "The internal name of the flow."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the flow."
+                }
+            }
+        },
+        "powerplatform:index:EnvironmentSummary": {
+            "type": "object",
+            "description": "Summary information about a Power Platform environment.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "The unique identifier of the environment."
+                },
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the environment."
+                },
+                "domainName": {
+                    "type": "string",
+                    "description": "The domain name of the Dataverse database."
+                },
+                "state": {
+                    "type": "string",
+                    "description": "The current state of the environment."
+                },
+                "type": {
+                    "type": "string",
+                    "description": "The type (SKU) of the environment."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "The URL of the Dataverse database."
+                },
+                "geo": {
+                    "type": "string",
+                    "description": "The geographical region of the environment."
+                },
+                "azureRegion": {
+                    "type": "string",
+                    "description": "The Azure region of the environment."
+                },
+                "securityGroupId": {
+                    "type": "string",
+                    "description": "The security group that controls access."
+                },
+                "tenantId": {
+                    "type": "string",
+                    "description": "The tenant that the environment belongs to."
+                },
+                "environmentGroupId": {
+                    "type": "string",
+                    "description": "The environment group to which this environment belongs."
+                },
+                "dataverseId": {
+                    "type": "string",
+                    "description": "The Dataverse organization ID."
+                },
+                "version": {
+                    "type": "string",
+                    "description": "The version of the Dataverse database."
+                }
+            }
+        }
+    },
+    "resources": {
+        "powerplatform:index:EnvironmentGroup": {
+            "description": "Manages a Power Platform environment group. Environment groups allow you to organize environments and apply policies at a group level.",
+            "inputProperties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name for the environment group."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "A description of the environment group."
+                },
+                "parentGroupId": {
+                    "type": "string",
+                    "description": "The ID of the parent environment group, if this is a nested group."
+                }
+            },
+            "requiredInputs": [
+                "displayName"
+            ],
+            "properties": {
+                "displayName": {
+                    "type": "string",
+                    "description": "The display name of the environment group."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "The description of the environment group."
+                },
+                "parentGroupId": {
+                    "type": "string",
+                    "description": "The ID of the parent environment group."
+                },
+                "createdTime": {
+                    "type": "string",
+                    "description": "The timestamp when the group was created."
+                },
+                "lastModifiedTime": {
+                    "type": "string",
+                    "description": "The timestamp when the group was last modified."
+                }
+            },
+            "required": [
+                "displayName"
+            ]
+        },
+        "powerplatform:index:DlpPolicy": {
+            "description": "Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data. Note: Deletion removes all rule sets from the policy, as the SDK does not expose a direct policy delete endpoint.",
+            "inputProperties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the DLP policy."
+                },
+                "ruleSets": {
+                    "type": "array",
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    }
+                }
+            },
+            "requiredInputs": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the DLP policy."
+                },
+                "ruleSets": {
+                    "type": "array",
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    }
+                },
+                "tenantId": {
+                    "type": "string",
+                    "description": "The tenant ID that owns the policy."
+                },
+                "lastModified": {
+                    "type": "string",
+                    "description": "The timestamp when the policy was last modified."
+                },
+                "ruleSetCount": {
+                    "type": "integer",
+                    "description": "The number of rule sets in the policy."
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "powerplatform:index:BillingPolicy": {
+            "description": "Manages a Power Platform billing policy. Billing policies control pay-as-you-go billing for Power Platform environments.",
+            "inputProperties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the billing policy."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "The geographic location for the billing policy (e.g., unitedstates, europe)."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "The status of the billing policy: Enabled or Disabled."
+                },
+                "billingInstrument": {
+                    "$ref": "#/types/powerplatform:index:BillingInstrument",
+                    "description": "The billing instrument (Azure subscription) details."
+                }
+            },
+            "requiredInputs": [
+                "name",
+                "location"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the billing policy."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "The geographic location of the billing policy."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "The status of the billing policy."
+                },
+                "billingInstrument": {
+                    "$ref": "#/types/powerplatform:index:BillingInstrument",
+                    "description": "The billing instrument details."
+                },
+                "createdOn": {
+                    "type": "string",
+                    "description": "The timestamp when the billing policy was created."
+                },
+                "lastModifiedOn": {
+                    "type": "string",
+                    "description": "The timestamp when the billing policy was last modified."
+                }
+            },
+            "required": [
+                "name",
+                "location"
+            ]
+        },
+        "powerplatform:index:ManagedEnvironment": {
+            "description": "Enables managed environment governance on a Power Platform environment. Managed environments provide enhanced admin controls. Deleting this resource disables the managed environment setting.",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The ID of the Power Platform environment to manage."
+                }
+            },
+            "requiredInputs": [
+                "environmentId"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The ID of the managed environment."
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Whether the managed environment is enabled."
+                }
+            },
+            "required": [
+                "environmentId",
+                "enabled"
+            ]
+        },
+        "powerplatform:index:EnvironmentBackup": {
+            "description": "Creates a manual backup of a Power Platform environment. Backups are immutable — any change to inputs triggers replacement.",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The ID of the environment to back up."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "A descriptive label for the backup."
+                }
+            },
+            "requiredInputs": [
+                "environmentId",
+                "label"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The ID of the backed-up environment."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "The label for the backup."
+                },
+                "backupPointDateTime": {
+                    "type": "string",
+                    "description": "The date and time when the backup was created."
+                },
+                "backupExpiryDateTime": {
+                    "type": "string",
+                    "description": "The date and time when the backup expires."
+                }
+            },
+            "required": [
+                "environmentId",
+                "label"
+            ]
+        },
+        "powerplatform:index:RoleAssignment": {
+            "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable — any change to inputs triggers replacement.",
+            "inputProperties": {
+                "principalObjectId": {
+                    "type": "string",
+                    "description": "The object ID of the principal (user, group, or service principal) to assign the role to."
+                },
+                "principalType": {
+                    "type": "string",
+                    "description": "The type of the principal: User, Group, or ServicePrincipal."
+                },
+                "roleDefinitionId": {
+                    "type": "string",
+                    "description": "The ID of the role definition to assign."
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "The scope of the role assignment (e.g., tenant, environment, or environment group)."
+                }
+            },
+            "requiredInputs": [
+                "principalObjectId",
+                "principalType",
+                "roleDefinitionId"
+            ],
+            "properties": {
+                "principalObjectId": {
+                    "type": "string",
+                    "description": "The object ID of the assigned principal."
+                },
+                "principalType": {
+                    "type": "string",
+                    "description": "The type of the assigned principal."
+                },
+                "roleDefinitionId": {
+                    "type": "string",
+                    "description": "The role definition ID."
+                },
+                "scope": {
+                    "type": "string",
+                    "description": "The scope of the role assignment."
+                },
+                "createdOn": {
+                    "type": "string",
+                    "description": "The timestamp when the role assignment was created."
+                }
+            },
+            "required": [
+                "principalObjectId",
+                "principalType",
+                "roleDefinitionId"
+            ]
+        },
+        "powerplatform:index:IsvContract": {
+            "description": "Manages an ISV (Independent Software Vendor) contract for Power Platform licensing.",
+            "inputProperties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the ISV contract."
+                },
+                "geo": {
+                    "type": "string",
+                    "description": "The geographic region for the ISV contract (e.g., unitedstates, europe). Immutable after creation."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "The status of the ISV contract: Enabled or Disabled."
+                }
+            },
+            "requiredInputs": [
+                "name",
+                "geo"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The name of the ISV contract."
+                },
+                "geo": {
+                    "type": "string",
+                    "description": "The geographic region of the ISV contract."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "The status of the ISV contract."
+                },
+                "createdOn": {
+                    "type": "string",
+                    "description": "The timestamp when the ISV contract was created."
+                },
+                "lastModifiedOn": {
+                    "type": "string",
+                    "description": "The timestamp when the ISV contract was last modified."
+                }
+            },
+            "required": [
+                "name",
+                "geo"
+            ]
+        }
+    },
+    "functions": {
+        "powerplatform:index:getEnvironments": {
+            "description": "Retrieves a list of Power Platform environments available for the authenticated user.",
+            "inputs": {
+                "properties": {
+                    "filter": {
+                        "type": "string",
+                        "description": "An OData filter expression. Supported properties: dataverseId, type, geo, state, environmentGroupId, domainName."
+                    },
+                    "top": {
+                        "type": "integer",
+                        "description": "Maximum number of environments to return."
+                    }
+                }
+            },
+            "outputs": {
+                "properties": {
+                    "environments": {
+                        "type": "array",
+                        "description": "The list of environments.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:EnvironmentSummary"
+                        }
+                    }
+                },
+                "required": [
+                    "environments"
+                ]
+            }
+        },
+        "powerplatform:index:getConnectors": {
+            "description": "Lists connectors available in a Power Platform environment.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "type": "string",
+                        "description": "The ID of the environment to list connectors for."
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "connectors": {
+                        "type": "array",
+                        "description": "The list of connectors.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:ConnectorSummary"
+                        }
+                    }
+                },
+                "required": [
+                    "connectors"
+                ]
+            }
+        },
+        "powerplatform:index:getApps": {
+            "description": "Lists Power Apps in a Power Platform environment.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "type": "string",
+                        "description": "The ID of the environment to list apps for."
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "apps": {
+                        "type": "array",
+                        "description": "The list of Power Apps.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:AppSummary"
+                        }
+                    }
+                },
+                "required": [
+                    "apps"
+                ]
+            }
+        },
+        "powerplatform:index:getFlows": {
+            "description": "Lists Cloud Flows in a Power Platform environment.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "type": "string",
+                        "description": "The ID of the environment to list flows for."
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "flows": {
+                        "type": "array",
+                        "description": "The list of Cloud Flows.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:FlowSummary"
+                        }
+                    }
+                },
+                "required": [
+                    "flows"
+                ]
+            }
+        }
+    },
+    "language": {
+        "python": {
+            "packageName": "pulumi_powerplatform",
+            "requires": {
+                "pulumi": ">=3.0.0,<4.0.0"
+            }
+        }
+    }
+}

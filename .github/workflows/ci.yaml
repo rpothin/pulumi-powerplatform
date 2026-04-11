@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check provider/ tests/
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: pip install -e ".[dev]"
+      - run: python -m pytest tests/ -v
+
+  schema-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate schema.json
+        run: |
+          python -c "
+          import json, sys
+
+          with open('schema.json') as f:
+              schema = json.load(f)
+
+          errors = []
+
+          # Verify every resource has required structure.
+          for name, res in schema.get('resources', {}).items():
+              if 'inputProperties' not in res:
+                  errors.append(f'Resource {name} missing inputProperties')
+              if 'properties' not in res:
+                  errors.append(f'Resource {name} missing properties')
+              if 'requiredInputs' not in res:
+                  errors.append(f'Resource {name} missing requiredInputs')
+
+          # Verify every function has inputs and outputs.
+          for name, func in schema.get('functions', {}).items():
+              if 'outputs' not in func:
+                  errors.append(f'Function {name} missing outputs')
+
+          if errors:
+              for e in errors:
+                  print(f'ERROR: {e}', file=sys.stderr)
+              sys.exit(1)
+
+          print(f'Schema is valid: {len(schema[\"resources\"])} resources, {len(schema[\"functions\"])} functions')
+          "
