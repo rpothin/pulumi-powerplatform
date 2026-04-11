@@ -29,16 +29,26 @@ from pulumi.provider.experimental.provider import (
 )
 
 from pulumi_powerplatform.client import PowerPlatformClient
+from pulumi_powerplatform.functions.get_apps import GetAppsFunction
+from pulumi_powerplatform.functions.get_connectors import GetConnectorsFunction
 from pulumi_powerplatform.functions.get_environments import GetEnvironmentsFunction
+from pulumi_powerplatform.functions.get_flows import GetFlowsFunction
 from pulumi_powerplatform.resources.dlp_policy import DlpPolicyResource
 from pulumi_powerplatform.resources.environment_group import EnvironmentGroupResource
+from pulumi_powerplatform.resources.isv_contract import IsvContractResource
+from pulumi_powerplatform.resources.role_assignment import RoleAssignmentResource
 
 # Resource type tokens.
 _ENVIRONMENT_GROUP = "powerplatform:index:EnvironmentGroup"
 _DLP_POLICY = "powerplatform:index:DlpPolicy"
+_ROLE_ASSIGNMENT = "powerplatform:index:RoleAssignment"
+_ISV_CONTRACT = "powerplatform:index:IsvContract"
 
 # Function tokens.
 _GET_ENVIRONMENTS = "powerplatform:index:getEnvironments"
+_GET_CONNECTORS = "powerplatform:index:getConnectors"
+_GET_APPS = "powerplatform:index:getApps"
+_GET_FLOWS = "powerplatform:index:getFlows"
 
 # Locate the schema file relative to this module (repo root / schema.json).
 _SCHEMA_PATH = str(Path(__file__).resolve().parents[2] / "schema.json")
@@ -67,7 +77,12 @@ class PowerPlatformProvider(Provider):
     # Lazy-loaded resource/function handlers (created after configure).
     _env_group: Optional[EnvironmentGroupResource] = None
     _dlp_policy: Optional[DlpPolicyResource] = None
+    _role_assignment: Optional[RoleAssignmentResource] = None
+    _isv_contract: Optional[IsvContractResource] = None
     _get_envs: Optional[GetEnvironmentsFunction] = None
+    _get_connectors: Optional[GetConnectorsFunction] = None
+    _get_apps: Optional[GetAppsFunction] = None
+    _get_flows: Optional[GetFlowsFunction] = None
 
     # ---- Schema ----
 
@@ -92,7 +107,12 @@ class PowerPlatformProvider(Provider):
         # Initialize resource/function handlers with the configured client.
         self._env_group = EnvironmentGroupResource(self._client)
         self._dlp_policy = DlpPolicyResource(self._client)
+        self._role_assignment = RoleAssignmentResource(self._client)
+        self._isv_contract = IsvContractResource(self._client)
         self._get_envs = GetEnvironmentsFunction(self._client)
+        self._get_connectors = GetConnectorsFunction(self._client)
+        self._get_apps = GetAppsFunction(self._client)
+        self._get_flows = GetFlowsFunction(self._client)
 
         return ConfigureResponse(
             accept_secrets=True,
@@ -158,6 +178,12 @@ class PowerPlatformProvider(Provider):
     async def invoke(self, request: InvokeRequest) -> InvokeResponse:
         if request.tok == _GET_ENVIRONMENTS and self._get_envs:
             return await self._get_envs.invoke(request)
+        if request.tok == _GET_CONNECTORS and self._get_connectors:
+            return await self._get_connectors.invoke(request)
+        if request.tok == _GET_APPS and self._get_apps:
+            return await self._get_apps.invoke(request)
+        if request.tok == _GET_FLOWS and self._get_flows:
+            return await self._get_flows.invoke(request)
         raise NotImplementedError(f"Unknown function: {request.tok}")
 
     # ---- Internal helpers ----
@@ -167,6 +193,8 @@ class PowerPlatformProvider(Provider):
         handlers = {
             _ENVIRONMENT_GROUP: self._env_group,
             _DLP_POLICY: self._dlp_policy,
+            _ROLE_ASSIGNMENT: self._role_assignment,
+            _ISV_CONTRACT: self._isv_contract,
         }
         return handlers.get(resource_type)
 
