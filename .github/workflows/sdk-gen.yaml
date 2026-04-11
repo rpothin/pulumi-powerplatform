@@ -50,9 +50,9 @@ jobs:
       - name: Generate non-Python SDKs
         if: steps.schema_changed.outputs.schema_changed == 'true'
         run: |
-          pulumi package gen-sdk schema.json nodejs --out sdk/nodejs
-          pulumi package gen-sdk schema.json go     --out sdk/go
-          pulumi package gen-sdk schema.json dotnet --out sdk/dotnet
+          pulumi package gen-sdk . --language nodejs --out sdk
+          pulumi package gen-sdk . --language go     --out sdk
+          pulumi package gen-sdk . --language dotnet --out sdk
 
       - name: Check if SDK files changed
         if: steps.schema_changed.outputs.schema_changed == 'true'

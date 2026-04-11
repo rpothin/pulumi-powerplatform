@@ -14,9 +14,9 @@ See `README.md` and `CONTRIBUTING.md` for architecture and development details.
 3. **If `schema.json` was modified**, regenerate non-Python SDKs and stage
    the output as part of the same commit as the schema change:
    ```bash
-   pulumi package gen-sdk schema.json nodejs --out sdk/nodejs
-   pulumi package gen-sdk schema.json go    --out sdk/go
-   pulumi package gen-sdk schema.json dotnet --out sdk/dotnet
+   pulumi package gen-sdk . --language nodejs --out sdk
+   pulumi package gen-sdk . --language go     --out sdk
+   pulumi package gen-sdk . --language dotnet --out sdk
    ```
    > `sdk/python/` is maintained manually — do not regenerate it.
 

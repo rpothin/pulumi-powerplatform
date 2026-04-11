@@ -67,9 +67,9 @@ jobs:
         if: steps.schema_changed.outputs.schema_changed == 'true'
         run: |
           GEN_DIR=$(mktemp -d)
-          pulumi package gen-sdk schema.json nodejs --out "$GEN_DIR/nodejs"
-          pulumi package gen-sdk schema.json go     --out "$GEN_DIR/go"
-          pulumi package gen-sdk schema.json dotnet --out "$GEN_DIR/dotnet"
+          pulumi package gen-sdk . --language nodejs --out "$GEN_DIR"
+          pulumi package gen-sdk . --language go     --out "$GEN_DIR"
+          pulumi package gen-sdk . --language dotnet --out "$GEN_DIR"
 
           STALE=""
           for lang in nodejs go dotnet; do
@@ -83,9 +83,9 @@ jobs:
             printf "$STALE\n"
             echo ""
             echo "Regenerate them and commit the result (see AGENTS.md):"
-            echo "  pulumi package gen-sdk schema.json nodejs --out sdk/nodejs"
-            echo "  pulumi package gen-sdk schema.json go     --out sdk/go"
-            echo "  pulumi package gen-sdk schema.json dotnet --out sdk/dotnet"
+            echo "  pulumi package gen-sdk . --language nodejs --out sdk"
+            echo "  pulumi package gen-sdk . --language go     --out sdk"
+            echo "  pulumi package gen-sdk . --language dotnet --out sdk"
             exit 1
           fi
 
