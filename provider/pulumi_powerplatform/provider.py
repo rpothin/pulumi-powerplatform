@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import Optional
 
 from pulumi.provider.experimental.property_value import PropertyValue
@@ -39,8 +40,8 @@ _DLP_POLICY = "powerplatform:index:DlpPolicy"
 # Function tokens.
 _GET_ENVIRONMENTS = "powerplatform:index:getEnvironments"
 
-# Locate the schema file relative to this module.
-_SCHEMA_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "schema.json")
+# Locate the schema file relative to this module (repo root / schema.json).
+_SCHEMA_PATH = str(Path(__file__).resolve().parents[2] / "schema.json")
 
 
 def _load_schema() -> str:

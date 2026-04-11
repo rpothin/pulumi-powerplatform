@@ -188,8 +188,9 @@ class DlpPolicyResource:
         """Delete a DLP policy.
 
         Note: The SDK does not expose a DELETE on rule-based policies directly.
-        A policy can be effectively removed by deleting all its rule sets.
-        This is a known limitation — a future version may use the raw REST API.
+        A policy is effectively removed by deleting all its rule sets — this is
+        a known limitation documented in the schema. A future version may use
+        the raw REST API for direct deletion.
         """
         policy_id = request.resource_id
 

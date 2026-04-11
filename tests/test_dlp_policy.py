@@ -18,7 +18,7 @@ def _mock_client():
 
 
 @pytest.fixture
-def handler():
+def dlp_policy_handler():
     """Create a DlpPolicyResource with no live client (for offline tests)."""
     return DlpPolicyResource(client=_mock_client())
 
@@ -27,7 +27,7 @@ class TestDlpPolicyCheck:
     """Tests for the DlpPolicy check method."""
 
     @pytest.mark.asyncio
-    async def test_check_valid_inputs(self, handler):
+    async def test_check_valid_inputs(self, dlp_policy_handler):
         """Valid inputs should pass check without failures."""
         request = CheckRequest(
             urn="urn:pulumi:test::test::powerplatform:index:DlpPolicy::my-policy",
@@ -37,11 +37,11 @@ class TestDlpPolicyCheck:
             },
             random_seed=b"",
         )
-        response = await handler.check(request)
+        response = await dlp_policy_handler.check(request)
         assert response.failures is None
 
     @pytest.mark.asyncio
-    async def test_check_missing_name(self, handler):
+    async def test_check_missing_name(self, dlp_policy_handler):
         """Missing name should produce a check failure."""
         request = CheckRequest(
             urn="urn:pulumi:test::test::powerplatform:index:DlpPolicy::my-policy",
@@ -49,13 +49,13 @@ class TestDlpPolicyCheck:
             new_inputs={},
             random_seed=b"",
         )
-        response = await handler.check(request)
+        response = await dlp_policy_handler.check(request)
         assert response.failures is not None
         assert len(response.failures) == 1
         assert response.failures[0].property == "name"
 
     @pytest.mark.asyncio
-    async def test_check_empty_name(self, handler):
+    async def test_check_empty_name(self, dlp_policy_handler):
         """An empty name should produce a check failure."""
         request = CheckRequest(
             urn="urn:pulumi:test::test::powerplatform:index:DlpPolicy::my-policy",
@@ -65,7 +65,7 @@ class TestDlpPolicyCheck:
             },
             random_seed=b"",
         )
-        response = await handler.check(request)
+        response = await dlp_policy_handler.check(request)
         assert response.failures is not None
         assert len(response.failures) == 1
 
@@ -74,7 +74,7 @@ class TestDlpPolicyDiff:
     """Tests for the DlpPolicy diff method."""
 
     @pytest.mark.asyncio
-    async def test_diff_no_changes(self, handler):
+    async def test_diff_no_changes(self, dlp_policy_handler):
         """Identical old and new should produce no diff."""
         request = DiffRequest(
             urn="urn:pulumi:test::test::powerplatform:index:DlpPolicy::my-policy",
@@ -87,11 +87,11 @@ class TestDlpPolicyDiff:
             },
             ignore_changes=[],
         )
-        response = await handler.diff(request)
+        response = await dlp_policy_handler.diff(request)
         assert response.changes is False
 
     @pytest.mark.asyncio
-    async def test_diff_name_changed(self, handler):
+    async def test_diff_name_changed(self, dlp_policy_handler):
         """Changed name should be detected."""
         request = DiffRequest(
             urn="urn:pulumi:test::test::powerplatform:index:DlpPolicy::my-policy",
@@ -104,13 +104,13 @@ class TestDlpPolicyDiff:
             },
             ignore_changes=[],
         )
-        response = await handler.diff(request)
+        response = await dlp_policy_handler.diff(request)
         assert response.changes is True
         assert "name" in response.diffs
         assert response.detailed_diff["name"].kind == PropertyDiffKind.UPDATE
 
     @pytest.mark.asyncio
-    async def test_diff_rule_sets_changed(self, handler):
+    async def test_diff_rule_sets_changed(self, dlp_policy_handler):
         """Changed ruleSets should be detected."""
         old_rs = PropertyValue(
             [PropertyValue({"id": PropertyValue("rs-1"), "version": PropertyValue("1.0")})]
@@ -132,6 +132,6 @@ class TestDlpPolicyDiff:
             },
             ignore_changes=[],
         )
-        response = await handler.diff(request)
+        response = await dlp_policy_handler.diff(request)
         assert response.changes is True
         assert "ruleSets" in response.diffs

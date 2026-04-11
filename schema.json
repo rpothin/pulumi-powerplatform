@@ -152,7 +152,7 @@
             ]
         },
         "powerplatform:index:DlpPolicy": {
-            "description": "Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data.",
+            "description": "Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data. Note: Deletion removes all rule sets from the policy, as the SDK does not expose a direct policy delete endpoint.",
             "inputProperties": {
                 "name": {
                     "type": "string",

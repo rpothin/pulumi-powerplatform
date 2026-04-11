@@ -18,7 +18,7 @@ def _mock_client():
 
 
 @pytest.fixture
-def handler():
+def env_group_handler():
     """Create an EnvironmentGroupResource with no live client (for offline tests)."""
     return EnvironmentGroupResource(client=_mock_client())
 
@@ -27,7 +27,7 @@ class TestEnvironmentGroupCheck:
     """Tests for the EnvironmentGroup check method."""
 
     @pytest.mark.asyncio
-    async def test_check_valid_inputs(self, handler):
+    async def test_check_valid_inputs(self, env_group_handler):
         """Valid inputs should pass check without failures."""
         request = CheckRequest(
             urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
@@ -38,12 +38,12 @@ class TestEnvironmentGroupCheck:
             },
             random_seed=b"",
         )
-        response = await handler.check(request)
+        response = await env_group_handler.check(request)
         assert response.failures is None
         assert "displayName" in response.inputs
 
     @pytest.mark.asyncio
-    async def test_check_missing_display_name(self, handler):
+    async def test_check_missing_display_name(self, env_group_handler):
         """Missing displayName should produce a check failure."""
         request = CheckRequest(
             urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
@@ -53,13 +53,13 @@ class TestEnvironmentGroupCheck:
             },
             random_seed=b"",
         )
-        response = await handler.check(request)
+        response = await env_group_handler.check(request)
         assert response.failures is not None
         assert len(response.failures) == 1
         assert response.failures[0].property == "displayName"
 
     @pytest.mark.asyncio
-    async def test_check_empty_display_name(self, handler):
+    async def test_check_empty_display_name(self, env_group_handler):
         """An empty displayName should produce a check failure."""
         request = CheckRequest(
             urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
@@ -69,7 +69,7 @@ class TestEnvironmentGroupCheck:
             },
             random_seed=b"",
         )
-        response = await handler.check(request)
+        response = await env_group_handler.check(request)
         assert response.failures is not None
         assert len(response.failures) == 1
 
@@ -78,7 +78,7 @@ class TestEnvironmentGroupDiff:
     """Tests for the EnvironmentGroup diff method."""
 
     @pytest.mark.asyncio
-    async def test_diff_no_changes(self, handler):
+    async def test_diff_no_changes(self, env_group_handler):
         """Identical old and new should produce no diff."""
         request = DiffRequest(
             urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
@@ -93,12 +93,12 @@ class TestEnvironmentGroupDiff:
             },
             ignore_changes=[],
         )
-        response = await handler.diff(request)
+        response = await env_group_handler.diff(request)
         assert response.changes is False
         assert len(response.diffs) == 0
 
     @pytest.mark.asyncio
-    async def test_diff_display_name_changed(self, handler):
+    async def test_diff_display_name_changed(self, env_group_handler):
         """Changed displayName should be detected."""
         request = DiffRequest(
             urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
@@ -111,14 +111,14 @@ class TestEnvironmentGroupDiff:
             },
             ignore_changes=[],
         )
-        response = await handler.diff(request)
+        response = await env_group_handler.diff(request)
         assert response.changes is True
         assert "displayName" in response.diffs
         assert "displayName" in response.detailed_diff
         assert response.detailed_diff["displayName"].kind == PropertyDiffKind.UPDATE
 
     @pytest.mark.asyncio
-    async def test_diff_description_added(self, handler):
+    async def test_diff_description_added(self, env_group_handler):
         """Adding a description should be detected as an update."""
         request = DiffRequest(
             urn="urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group",
@@ -132,6 +132,6 @@ class TestEnvironmentGroupDiff:
             },
             ignore_changes=[],
         )
-        response = await handler.diff(request)
+        response = await env_group_handler.diff(request)
         assert response.changes is True
         assert "description" in response.diffs
