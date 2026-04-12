@@ -257,8 +257,10 @@ class EnvironmentResource:
                 continue
             state = result.get("properties", {}).get("provisioningState", "")
             if state in _TERMINAL_STATES:
-                if state == "Failed":
-                    raise RuntimeError(f"Environment provisioning failed: {result}")
+                if state in {"Failed", "Canceled", "Cancelled"}:
+                    raise RuntimeError(
+                        f"Environment provisioning ended in non-successful terminal state '{state}': {result}"
+                    )
                 return
         raise RuntimeError(f"Environment provisioning timed out after polling {max_polls} times.")
 

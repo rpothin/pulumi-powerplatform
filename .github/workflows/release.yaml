@@ -119,10 +119,17 @@ CMDWRAPPER
           node-version: 20
           registry-url: https://registry.npmjs.org
 
-      - name: Install and publish
+      - name: Set package version
+        working-directory: sdk/nodejs
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          sed -i "s/\${VERSION}/$VERSION/" package.json
+
+      - name: Install, build, and publish
         working-directory: sdk/nodejs
         run: |
           npm install
+          npm run build
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

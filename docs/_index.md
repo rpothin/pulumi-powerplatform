@@ -32,6 +32,7 @@ apps, and flows.
 {{% choosable language python %}}
 
 ```python
+import pulumi
 import pulumi_powerplatform as pp
 
 env = pp.Environment(

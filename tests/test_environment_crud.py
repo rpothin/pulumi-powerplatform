@@ -160,7 +160,30 @@ class TestEnvironmentCreate:
             preview=False,
         )
         with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
-            with pytest.raises(RuntimeError, match="provisioning failed"):
+            with pytest.raises(RuntimeError, match="non-successful terminal state"):
+                await handler.create(request)
+
+    @pytest.mark.asyncio
+    @pytest.mark.parametrize("canceled_state", ["Canceled", "Cancelled"])
+    async def test_create_polling_canceled_raises(self, handler, mock_client, canceled_state):
+        """When the poll returns 'Canceled' or 'Cancelled', create should raise."""
+        async_response = _fake_env_response(provisioning_state="Running")
+        canceled_response = _fake_env_response(provisioning_state=canceled_state)
+
+        mock_client.raw.request.side_effect = [async_response, canceled_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            with pytest.raises(RuntimeError, match="non-successful terminal state"):
                 await handler.create(request)
 
     @pytest.mark.asyncio
