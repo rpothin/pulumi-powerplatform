@@ -175,7 +175,7 @@ jobs:
     needs: [validate-version, build-provider]
     environment:
       name: npmjs
-      url: https://www.npmjs.com/package/@pulumi/powerplatform
+      url: https://www.npmjs.com/package/@rpothin/powerplatform
     steps:
       - uses: actions/checkout@v4
 

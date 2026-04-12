@@ -18,7 +18,7 @@ pip install pulumi-powerplatform
 ### Node.js
 
 ```bash
-npm install @pulumi/powerplatform
+npm install @rpothin/powerplatform
 ```
 
 ### .NET
