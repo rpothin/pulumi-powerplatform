@@ -1,0 +1,53 @@
+decrypt:
+  my:servers: '[{"host":"example","port":80,"token":{"secure":"securevalue"}}]'
+paths:
+  my:servers:
+    value:
+    - host: example
+      port: 80
+      token:
+        secure: securevalue
+    string: '[{"host":"example","port":80,"token":{"secure":"securevalue"}}]'
+    redacted: '[{"host":"example","port":80,"token":"[secret]"}]'
+    object: HRAADltdaW50ZXJmYWNlIHt9/4ECAQL/ggABEAAA/5f/gicAARdtYXBbc3RyaW5nXWludGVyZmFjZSB7fX8EAQL/gAABDAEQAABs/4BpAAMEcG9ydAVpbnQ2NAQDAP+gBXRva2VuF21hcFtzdHJpbmddaW50ZXJmYWNlIHt9/4AfAAEGc2VjdXJlBnN0cmluZwwNAAtzZWN1cmV2YWx1ZQRob3N0BnN0cmluZwwJAAdleGFtcGxl
+    secure: true
+    isObject: true
+    secureValues:
+    - securevalue
+  my:servers[0]:
+    value:
+      host: example
+      port: 80
+      token:
+        secure: securevalue
+    string: '{"host":"example","port":80,"token":{"secure":"securevalue"}}'
+    redacted: '{"host":"example","port":80,"token":"[secret]"}'
+    object: JxAAF21hcFtzdHJpbmddaW50ZXJmYWNlIHt9fwQBAv+AAAEMARAAAGz/gGkAAwRob3N0BnN0cmluZwwJAAdleGFtcGxlBHBvcnQFaW50NjQEAwD/oAV0b2tlbhdtYXBbc3RyaW5nXWludGVyZmFjZSB7ff+AHwABBnNlY3VyZQZzdHJpbmcMDQALc2VjdXJldmFsdWU=
+    secure: true
+    isObject: true
+    secureValues:
+    - securevalue
+  my:servers[0].host:
+    value: example
+    string: example
+    redacted: example
+    object: FBAABnN0cmluZwwJAAdleGFtcGxl
+    secure: false
+    isObject: false
+  my:servers[0].port:
+    value: "80"
+    string: "80"
+    redacted: "80"
+    object: DxAABnN0cmluZwwEAAI4MA==
+    secure: false
+    isObject: false
+  my:servers[0].token:
+    value:
+      secure: securevalue
+    string: securevalue
+    redacted: '[secret]'
+    object: GBAABnN0cmluZwwNAAtzZWN1cmV2YWx1ZQ==
+    secure: true
+    isObject: false
+    secureValues:
+    - securevalue

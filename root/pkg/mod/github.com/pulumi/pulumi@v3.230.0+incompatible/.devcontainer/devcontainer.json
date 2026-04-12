@@ -1,0 +1,38 @@
+{
+    "name": "Pulumi",
+
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "USER_NAME": "user",
+            "USER_UID": "1000"
+        }
+    },
+
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/common-utils:2": {
+            "installZsh": false,
+            "installOhMyZsh": false,
+            "upgradePackages": false,
+            "username": "automatic",
+            "userUid": "automatic",
+            "userGid": "automatic"
+        }
+    },
+
+    "containerEnv": {
+        "PULUMI_ACCESS_TOKEN": "${localEnv:PULUMI_ACCESS_TOKEN}",
+        "PULUMI_TEST_ORG": "${localEnv:PULUMI_TEST_ORG}"
+    },
+
+    "remoteUser": "user",
+
+    "extensions": ["golang.go", "ms-dotnettools.csharp", "ms-python.python", "formulahendry.dotnet-test-explorer"],
+
+    "postCreateCommand": "make ensure",
+
+    "settings": {
+        "extensions.ignoreRecommendations": true
+    }
+}

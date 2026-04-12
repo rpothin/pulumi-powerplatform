@@ -1,0 +1,673 @@
+// Copyright 2024, Pulumi Corporation.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+package toolchain
+
+import (
+	"bytes"
+	"errors"
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"runtime"
+	"strings"
+	"testing"
+
+	"github.com/blang/semver"
+	"github.com/pulumi/pulumi/sdk/v3/go/common/util/errutil"
+	"github.com/stretchr/testify/require"
+)
+
+func TestValidateVenv(t *testing.T) {
+	t.Parallel()
+
+	for _, opts := range []PythonOptions{
+		{
+			Toolchain:  Pip,
+			Virtualenv: "venv",
+		},
+		{
+			Toolchain: Poetry,
+		},
+	} {
+		t.Run("Doesnt-exist-"+Name(opts.Toolchain), func(t *testing.T) {
+			t.Parallel()
+			opts := copyOptions(opts)
+
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+
+			err = tc.ValidateVenv(t.Context())
+			require.Error(t, err)
+		})
+		t.Run("Exists-"+Name(opts.Toolchain), func(t *testing.T) {
+			t.Parallel()
+			opts := copyOptions(opts)
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			createVenv(t, opts)
+
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+			err = tc.InstallDependencies(t.Context(), opts.Root, false, true, os.Stdout, os.Stderr)
+			require.NoError(t, err)
+			err = tc.ValidateVenv(t.Context())
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestCommand(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// TODO[pulumi/pulumi#19675]: Fix this test on Windows
+		t.Skip("Skipping tests on Windows")
+	}
+	// Poetry with `in-project = true` uses `.venv` as the default virtualenv directory.
+	// Use the same for pip to keep the tests consistent.
+	venvDir := ".venv"
+
+	for _, opts := range []PythonOptions{
+		{
+			Toolchain:  Pip,
+			Virtualenv: venvDir,
+		},
+		{
+			Toolchain: Poetry,
+		},
+	} {
+		t.Run("empty/"+Name(opts.Toolchain), func(t *testing.T) {
+			opts := copyOptions(opts)
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			createVenv(t, opts)
+
+			t.Setenv("MY_ENV_VAR", "HELLO")
+
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+
+			cmd, err := tc.Command(t.Context())
+			require.NoError(t, err)
+
+			var venvBin string
+			if runtime.GOOS == windows {
+				venvBin = filepath.Join(opts.Root, venvDir, "Scripts")
+				require.Equal(t, filepath.Join("python.exe"), cmd.Path)
+			} else {
+				venvBin = filepath.Join(opts.Root, venvDir, "bin")
+				cmdPath := normalizePath(t, cmd.Path)
+				require.Equal(t, filepath.Join(normalizePath(t, venvBin), "python"), cmdPath)
+			}
+
+			foundPath := false
+			foundMyEnvVar := false
+			for _, env := range cmd.Env {
+				if strings.HasPrefix(env, "PATH=") {
+					require.Contains(t, env, venvBin, "venv binary directory should in PATH")
+					foundPath = true
+				}
+				if strings.HasPrefix(env, "MY_ENV_VAR=") {
+					require.Equal(t, "MY_ENV_VAR=HELLO", env, "Env variables should be passed through")
+					foundMyEnvVar = true
+				}
+			}
+			require.True(t, foundPath, "PATH was not found in cmd.Env")
+			require.True(t, foundMyEnvVar, "MY_ENV_VAR was not found in cmd.Env")
+		})
+	}
+}
+
+func TestListPackages(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// TODO[pulumi/pulumi#19675]: Fix this test on Windows
+		t.Skip("Skipping tests on Windows")
+	}
+
+	t.Parallel()
+
+	// Build the mock package before running the tests, so parallel tests don't
+	// interfere with each other.
+	testPackage, err := filepath.Abs(filepath.Join("testdata", "pulumi-test-package"))
+	require.NoError(t, err)
+	cmd := exec.Command("uv", "build")
+	cmd.Dir = testPackage
+	out, err := cmd.CombinedOutput()
+	require.NoError(t, err, string(out))
+	wheels, err := filepath.Glob(filepath.Join(testPackage, "dist", "*.whl"))
+	require.NoError(t, err)
+	require.NotEmpty(t, 1, wheels)
+	testPackageWheel := wheels[0]
+	t.Cleanup(func() {
+		require.NoError(t, os.RemoveAll(filepath.Join(testPackage, "dist")))
+	})
+
+	for _, test := range []struct {
+		opts             PythonOptions
+		expectedPackages []string
+	}{
+		{
+			opts: PythonOptions{
+				Toolchain:  Pip,
+				Virtualenv: "venv",
+			},
+			// The virtualenv created by the pip toolchain always has pip
+			// installed. Additionally it always installs setuptools and wheel
+			// into the virtualenv.
+			expectedPackages: []string{"pip", "setuptools", "wheel"},
+		},
+		{
+			opts: PythonOptions{
+				Toolchain: Poetry,
+			},
+			expectedPackages: []string{},
+		},
+		{
+			opts: PythonOptions{
+				Toolchain: Uv,
+			},
+			// Virtual environments created by uv are empty.
+			expectedPackages: []string{},
+		},
+	} {
+		t.Run("empty/"+Name(test.opts.Toolchain), func(t *testing.T) {
+			t.Parallel()
+			opts := copyOptions(test.opts)
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			createVenv(t, opts)
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+
+			packages, err := tc.ListPackages(t.Context(), false)
+
+			require.NoError(t, err)
+			packageNames := make([]string, len(packages))
+			for i, pkg := range packages {
+				packageNames[i] = pkg.Name
+			}
+			for _, pkg := range test.expectedPackages {
+				require.Contains(t, packageNames, pkg)
+			}
+		})
+
+		t.Run("non-empty/"+Name(test.opts.Toolchain), func(t *testing.T) {
+			t.Parallel()
+			opts := copyOptions(test.opts)
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			createVenv(t, opts, testPackageWheel)
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+
+			packages, err := tc.ListPackages(t.Context(), false)
+
+			require.NoError(t, err)
+			packageNames := make([]string, len(packages))
+			for i, pkg := range packages {
+				packageNames[i] = pkg.Name
+			}
+			expectedPackages := append([]string{"pulumi-test-package"}, test.expectedPackages...)
+			for _, pkg := range expectedPackages {
+				require.Contains(t, packageNames, pkg)
+			}
+		})
+
+		t.Run("non-empty-with-pip/"+Name(test.opts.Toolchain), func(t *testing.T) {
+			t.Parallel()
+			opts := copyOptions(test.opts)
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			createVenv(t, opts, testPackageWheel, "pip")
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+
+			packages, err := tc.ListPackages(t.Context(), false)
+
+			require.NoError(t, err)
+			packageNames := make([]string, len(packages))
+			for i, pkg := range packages {
+				packageNames[i] = pkg.Name
+			}
+			expectedPackages := append([]string{"pulumi-test-package"}, test.expectedPackages...)
+			for _, pkg := range expectedPackages {
+				require.Contains(t, packageNames, pkg)
+			}
+		})
+	}
+}
+
+func TestAbout(t *testing.T) {
+	if runtime.GOOS == "windows" {
+		// TODO[pulumi/pulumi#19675]: Fix this test on Windows
+		t.Skip("Skipping tests on Windows")
+	}
+	t.Parallel()
+
+	for _, opts := range []PythonOptions{
+		{
+			Toolchain:  Pip,
+			Virtualenv: "venv",
+		},
+		{
+			Toolchain: Poetry,
+		},
+		{
+			Toolchain: Uv,
+		},
+	} {
+		t.Run(Name(opts.Toolchain), func(t *testing.T) {
+			t.Parallel()
+			opts := copyOptions(opts)
+			opts.Root = t.TempDir()
+			opts.ProgramDir = opts.Root
+			createVenv(t, opts)
+
+			tc, err := ResolveToolchain(opts)
+			require.NoError(t, err)
+			info, err := tc.About(t.Context())
+			require.NoError(t, err)
+			require.NotEqual(t, semver.Version{}, info.PythonVersion)
+			require.True(t, info.PythonVersion.Major > 0)
+			require.False(t, info.ToolchainVersion.EQ(semver.Version{}),
+				"the toolchain version should not be empty")
+			require.Regexp(t, "python$", info.PythonExecutable)
+		})
+	}
+}
+
+func TestParsePythonVersion(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name           string
+		versionString  string
+		expectedSemver string
+		expectError    bool
+	}{
+		{
+			name:           "standard version format",
+			versionString:  "3.11.4",
+			expectedSemver: "3.11.4",
+			expectError:    false,
+		},
+		{
+			name:           "python --version output",
+			versionString:  "Python 3.11.4",
+			expectedSemver: "3.11.4",
+			expectError:    false,
+		},
+		{
+			name:           "version without patch",
+			versionString:  "3.11",
+			expectedSemver: "3.11.0",
+			expectError:    false,
+		},
+		{
+			name:           "python --version without patch",
+			versionString:  "Python 3.11",
+			expectedSemver: "3.11.0",
+			expectError:    false,
+		},
+		{
+			name:           "version with extra spaces",
+			versionString:  "  Python 3.9.16  ",
+			expectedSemver: "3.9.16",
+			expectError:    false,
+		},
+		{
+			name:          "invalid format",
+			versionString: "invalid version",
+			expectError:   true,
+		},
+		{
+			name:          "empty string",
+			versionString: "",
+			expectError:   true,
+		},
+		{
+			name:           "alpha pre-release",
+			versionString:  "3.15.0a1",
+			expectedSemver: "3.15.0-alpha.1",
+			expectError:    false,
+		},
+		{
+			name:           "beta pre-release",
+			versionString:  "3.11.0b3",
+			expectedSemver: "3.11.0-beta.3",
+			expectError:    false,
+		},
+		{
+			name:           "release candidate",
+			versionString:  "3.10.0rc2",
+			expectedSemver: "3.10.0-rc.2",
+			expectError:    false,
+		},
+		{
+			name:           "python --version with alpha",
+			versionString:  "Python 3.15.0a1",
+			expectedSemver: "3.15.0-alpha.1",
+			expectError:    false,
+		},
+		{
+			name:           "python --version with rc",
+			versionString:  "Python 3.12.0rc1",
+			expectedSemver: "3.12.0-rc.1",
+			expectError:    false,
+		},
+		{
+			name:           "alpha without patch version",
+			versionString:  "3.14a5",
+			expectedSemver: "3.14.0-alpha.5",
+			expectError:    false,
+		},
+		{
+			name:           "development version",
+			versionString:  "3.13.0dev1",
+			expectedSemver: "3.13.0-dev.1",
+			expectError:    false,
+		},
+		{
+			name:           "pre-release with extra text",
+			versionString:  "3.11.0a7+ (default, Oct 10 2022, 12:34:56)",
+			expectedSemver: "3.11.0-alpha.7",
+			expectError:    false,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			t.Parallel()
+
+			version, err := ParsePythonVersion(test.versionString)
+
+			if test.expectError {
+				require.Error(t, err)
+			} else {
+				require.NoError(t, err)
+				expected := semver.MustParse(test.expectedSemver)
+				require.Equal(t, expected, version)
+			}
+		})
+	}
+}
+
+func TestPyenv(t *testing.T) {
+	if runtime.GOOS == windows {
+		t.Skip("pyenv is not supported on Windows")
+	}
+	tmpDir := t.TempDir()
+
+	// Test without pyenv, a .python-version file
+	use, _, _, err := usePyenv(tmpDir)
+	require.NoError(t, err)
+	require.False(t, use)
+
+	// Add a fake pyenv binary to $tmp/bin and set $PATH to $tmp/bin
+	require.NoError(t, os.MkdirAll(filepath.Join(tmpDir, "bin"), 0o755))
+	//nolint:gosec // we want this file to be executable
+	require.NoError(t, os.WriteFile(filepath.Join(tmpDir, "bin", "pyenv"), []byte("#!/bin/sh\nexit 0;\n"), 0o700))
+	t.Setenv("PATH", filepath.Join(tmpDir, "bin"))
+
+	// Test witbout .python-version file
+	use, _, _, err = usePyenv(tmpDir)
+	require.NoError(t, err)
+	require.False(t, use)
+
+	// Create a .python-version file
+	require.NoError(t, os.WriteFile(filepath.Join(tmpDir, ".python-version"), []byte("3.9.0"), 0o600))
+
+	use, pyenvPath, versionFile, err := usePyenv(tmpDir)
+	t.Log("X", use, pyenvPath, versionFile, err)
+	require.NoError(t, err)
+	require.True(t, use)
+	require.Equal(t, filepath.Join(tmpDir, ".python-version"), versionFile)
+	require.Equal(t, filepath.Join(tmpDir, "bin", "pyenv"), pyenvPath)
+}
+
+func TestPyenvInstall(t *testing.T) {
+	if runtime.GOOS == windows {
+		t.Skip("pyenv is not supported on Windows")
+	}
+	tmpDir := t.TempDir()
+
+	t.Log("tmpDir", tmpDir)
+
+	// Add a fake pyenv binary to $tmp/bin and set $PATH to $tmp/bin.
+	// The binary will write its arguments to a file, that we read back later to verify that it was called with the
+	// correct arguments.
+	require.NoError(t, os.MkdirAll(filepath.Join(tmpDir, "bin"), 0o755))
+	outPath := filepath.Join(tmpDir, "out.txt")
+	script := fmt.Sprintf("#!/bin/sh\necho $@ > %s\n", outPath)
+	//nolint:gosec // we want this file to be executable
+	require.NoError(t, os.WriteFile(filepath.Join(tmpDir, "bin", "pyenv"), []byte(script), 0o700))
+	t.Setenv("PATH", filepath.Join(tmpDir, "bin"))
+
+	// Create a .python-version file
+	require.NoError(t, os.WriteFile(filepath.Join(tmpDir, ".python-version"), []byte("3.9.0"), 0o600))
+
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	err := installPython(t.Context(), tmpDir, false, stdout, stderr)
+	require.NoError(t, err)
+
+	b, err := os.ReadFile(outPath)
+	require.NoError(t, err)
+	require.Equal(t, "install --skip-existing", strings.TrimSpace(string(b)))
+}
+
+func createVenv(t *testing.T, opts PythonOptions, packages ...string) {
+	t.Helper()
+
+	switch opts.Toolchain {
+	case Auto, Pip:
+		tc, err := ResolveToolchain(opts)
+		require.NoError(t, err)
+		err = tc.InstallDependencies(t.Context(), opts.Root, false, /*useLanguageVersionTools*/
+			true /*showOutput */, os.Stdout, os.Stderr)
+		require.NoError(t, err)
+
+		for _, pkg := range packages {
+			cmd, err := tc.Command(t.Context(), "-m", "pip", "install", pkg)
+			require.NoError(t, err)
+			out, err := cmd.CombinedOutput()
+			require.NoError(t, err, string(out))
+		}
+	case Poetry:
+		writePyprojectForPoetry(t, opts.Root)
+		// Write poetry.toml file to enable in-project virtualenvs. This ensures we delete the
+		// virtualenv with the tmp directory after the test is done.
+		writePoetryToml(t, opts.Root)
+		tc, err := ResolveToolchain(opts)
+		require.NoError(t, err)
+		err = tc.InstallDependencies(t.Context(), opts.Root, false, /*useLanguageVersionTools*/
+			true /*showOutput */, os.Stdout, os.Stderr)
+		require.NoError(t, err)
+
+		for _, pkg := range packages {
+			cmd := exec.Command("poetry", "add", pkg)
+			cmd.Dir = opts.Root
+			out, err := cmd.CombinedOutput()
+			require.NoError(t, err, string(out))
+		}
+	case Uv:
+		writePyprojectForUv(t, opts.Root)
+		tc, err := ResolveToolchain(opts)
+		require.NoError(t, err)
+		err = tc.InstallDependencies(t.Context(), opts.Root, false, /*useLanguageVersionTools*/
+			true /*showOutput */, os.Stdout, os.Stderr)
+		require.NoError(t, err)
+
+		for _, pkg := range packages {
+			cmd := exec.Command("uv", "add", pkg)
+			cmd.Dir = opts.Root
+			out, err := cmd.CombinedOutput()
+			require.NoError(t, err, string(out))
+		}
+	}
+}
+
+func writePyprojectForUv(t *testing.T, root string) {
+	t.Helper()
+
+	f, err := os.OpenFile(filepath.Join(root, "pyproject.toml"), os.O_CREATE|os.O_WRONLY, 0o600)
+	require.NoError(t, err)
+	fmt.Fprint(f, `
+[project]
+name = "list-packages-test"
+version = "0.0.1"
+requires-python = ">=3.10"
+dependencies = []
+`)
+	err = f.Close()
+	require.NoError(t, err)
+}
+
+func writePyprojectForPoetry(t *testing.T, root string) {
+	t.Helper()
+
+	f, err := os.OpenFile(filepath.Join(root, "pyproject.toml"), os.O_CREATE|os.O_WRONLY, 0o600)
+	require.NoError(t, err)
+	fmt.Fprint(f, `
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "test_pulumi_venv"
+version = "0.1.0"
+description = ""
+authors = []
+readme = "README.md"
+package-mode = false
+packages = [{include = "test_pulumi_venv"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+`)
+	err = f.Close()
+	require.NoError(t, err)
+}
+
+func writePoetryToml(t *testing.T, path string) {
+	t.Helper()
+
+	f, err := os.OpenFile(filepath.Join(path, "poetry.toml"), os.O_CREATE|os.O_WRONLY, 0o600)
+	require.NoError(t, err)
+	fmt.Fprint(f, `[virtualenvs]
+in-project = true
+[virtualenvs.options]
+no-setuptools = true
+`)
+	err = f.Close()
+	require.NoError(t, err)
+}
+
+func copyOptions(opts PythonOptions) PythonOptions {
+	return PythonOptions{
+		Root:        opts.Root,
+		ProgramDir:  opts.ProgramDir,
+		Virtualenv:  opts.Virtualenv,
+		Typechecker: opts.Typechecker,
+		Toolchain:   opts.Toolchain,
+	}
+}
+
+// normalizePath resolves symlinks within the directory part of the given path.
+// This helps avoid test issues on macOS where for example /var -> /private/var.
+// Importantly, we do not evaluate the symlink of the whole path, as that would
+// resolve the python binary to the system python, since within in a virtualenv
+// bin/python points to the system python.
+func normalizePath(t *testing.T, path string) string {
+	t.Helper()
+	dir, bin := filepath.Split(path)
+	normDir, err := filepath.EvalSymlinks(dir)
+	require.NoError(t, err)
+	return filepath.Join(normDir, bin)
+}
+
+type ProcessState struct{}
+
+func (p *ProcessState) Pid() int {
+	return 123
+}
+
+func (p *ProcessState) String() string {
+	return "exit status 139 "
+}
+
+func TestResolveToolchainAuto(t *testing.T) {
+	t.Parallel()
+
+	for _, tt := range []struct {
+		name      string
+		tc        toolchain
+		lockFiles []string
+		expected  string
+	}{
+		{"Auto defaults to pip", Auto, []string{}, "Pip"},
+		{"Auto picks pip with requirements.txt only", Auto, []string{"requirements.txt"}, "Pip"},
+		{"Auto detects uv from uv.lock", Auto, []string{"uv.lock"}, "Uv"},
+		{"Auto detects poetry from poetry.lock", Auto, []string{"poetry.lock"}, "Poetry"},
+		{"Auto uv takes priority over poetry", Auto, []string{"uv.lock", "poetry.lock"}, "Uv"},
+		{"Auto uv takes priority over requirements.txt", Auto, []string{"uv.lock", "requirements.txt"}, "Uv"},
+		{"Auto poetry takes priority over requirements.txt", Auto, []string{"poetry.lock", "requirements.txt"}, "Poetry"},
+		{"explicit Pip ignores lockfiles", Pip, []string{"uv.lock", "poetry.lock"}, "Pip"},
+	} {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+			dir := t.TempDir()
+			for _, lockFile := range tt.lockFiles {
+				f, err := os.Create(filepath.Join(dir, lockFile))
+				require.NoError(t, err)
+				require.NoError(t, f.Close())
+			}
+			tc, err := ResolveToolchain(PythonOptions{
+				Toolchain:  tt.tc,
+				Root:       dir,
+				ProgramDir: dir,
+			})
+			require.NoError(t, err)
+			var got string
+			switch tc.(type) {
+			case *pip:
+				got = "Pip"
+			case *poetry:
+				got = "Poetry"
+			case *uv:
+				got = "Uv"
+			default:
+				require.Fail(t, "unexpected toolchain type: %T", tc)
+			}
+			require.Equal(t, tt.expected, got)
+		})
+	}
+}
+
+func TestErrorWithStderr(t *testing.T) {
+	t.Parallel()
+
+	err := errors.New("error")
+	require.Equal(t, "the error message: error", errutil.ErrorWithStderr(err, "the error message").Error())
+
+	exitErr := &exec.ExitError{ProcessState: &os.ProcessState{}, Stderr: []byte("command said something")}
+	require.Equal(t, "the error message: exit status 0: command said something",
+		errutil.ErrorWithStderr(exitErr, "the error message").Error())
+
+	exitErrNoStderr := &exec.ExitError{ProcessState: &os.ProcessState{}}
+	require.Equal(t, "the error message: exit status 0",
+		errutil.ErrorWithStderr(exitErrNoStderr, "the error message").Error())
+}
