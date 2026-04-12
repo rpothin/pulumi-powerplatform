@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, PropertyMock
+from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 import pytest
 from pulumi.provider.experimental.property_value import PropertyValue
@@ -24,7 +24,7 @@ _ENV_ID = "env-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
 
 
 def _fake_settings_response() -> dict:
-    """Return a fake BAP API settings response."""
+    """Return a fake API settings response."""
     return {
         "maxUploadFileSize": 52428800,
         "pluginTraceLogSetting": "Exception",
@@ -35,11 +35,11 @@ def _fake_settings_response() -> dict:
 
 
 def _mock_client() -> MagicMock:
-    """Build a MagicMock that mimics PowerPlatformClient with a raw API client."""
+    """Build a MagicMock that mimics PowerPlatformClient with raw_pp API client."""
     client = MagicMock(spec=PowerPlatformClient)
-    raw_mock = MagicMock()
-    raw_mock.request = AsyncMock()
-    type(client).raw = PropertyMock(return_value=raw_mock)
+    raw_pp_mock = MagicMock()
+    raw_pp_mock.request = AsyncMock()
+    type(client).raw_pp = PropertyMock(return_value=raw_pp_mock)
     return client
 
 
@@ -150,7 +150,7 @@ class TestEnvironmentSettingsCreate:
     @pytest.mark.asyncio
     async def test_create_applies_settings_and_returns_outputs(self, handler, mock_client):
         # First call: PATCH settings. Second call: GET settings.
-        mock_client.raw.request.side_effect = [None, _fake_settings_response()]
+        mock_client.raw_pp.request.side_effect = [None, _fake_settings_response()]
 
         request = CreateRequest(
             urn=_URN,
@@ -167,7 +167,7 @@ class TestEnvironmentSettingsCreate:
         assert response.resource_id == _ENV_ID
         assert response.properties["environmentId"].value == _ENV_ID
         assert response.properties["maxUploadFileSize"].value == "52428800"
-        assert response.properties["isAuditEnabled"].value == "True"
+        assert response.properties["isAuditEnabled"].value == "true"
 
     @pytest.mark.asyncio
     async def test_create_preview_returns_preview_id(self, handler, mock_client):
@@ -183,7 +183,7 @@ class TestEnvironmentSettingsCreate:
         response = await handler.create(request)
 
         assert response.resource_id == "preview-id"
-        mock_client.raw.request.assert_not_awaited()
+        mock_client.raw_pp.request.assert_not_awaited()
 
 
 class TestEnvironmentSettingsRead:
@@ -191,7 +191,7 @@ class TestEnvironmentSettingsRead:
 
     @pytest.mark.asyncio
     async def test_read_existing_returns_settings(self, handler, mock_client):
-        mock_client.raw.request.return_value = _fake_settings_response()
+        mock_client.raw_pp.request.return_value = _fake_settings_response()
 
         request = ReadRequest(
             urn=_URN,
@@ -204,11 +204,13 @@ class TestEnvironmentSettingsRead:
         assert response.resource_id == _ENV_ID
         assert response.properties["environmentId"].value == _ENV_ID
         assert response.properties["maxUploadFileSize"].value == "52428800"
+        assert response.properties["isAuditEnabled"].value == "true"
+        assert response.properties["isActivityLoggingEnabled"].value == "false"
         assert "environmentId" in response.inputs
 
     @pytest.mark.asyncio
     async def test_read_missing_returns_empty(self, handler, mock_client):
-        mock_client.raw.request.side_effect = HttpError(404, "not found")
+        mock_client.raw_pp.request.side_effect = HttpError(404, "not found")
 
         request = ReadRequest(
             urn=_URN,
@@ -230,7 +232,7 @@ class TestEnvironmentSettingsUpdate:
         updated_settings = _fake_settings_response()
         updated_settings["isAuditEnabled"] = False
         # First call: PATCH. Second call: GET.
-        mock_client.raw.request.side_effect = [None, updated_settings]
+        mock_client.raw_pp.request.side_effect = [None, updated_settings]
 
         request = UpdateRequest(
             urn=_URN,
@@ -249,21 +251,26 @@ class TestEnvironmentSettingsUpdate:
         )
         response = await handler.update(request)
 
-        assert response.properties["isAuditEnabled"].value == "False"
+        assert response.properties["isAuditEnabled"].value == "false"
 
 
 class TestEnvironmentSettingsDelete:
     """Tests for the delete method."""
 
     @pytest.mark.asyncio
-    async def test_delete_is_noop(self, handler, mock_client):
+    async def test_delete_is_noop_with_warning(self, handler, mock_client):
         request = DeleteRequest(
             urn=_URN,
             resource_id=_ENV_ID,
             properties={},
             timeout=300,
         )
-        await handler.delete(request)
+        with patch("pulumi_powerplatform.resources.environment_settings.pulumi") as mock_pulumi:
+            await handler.delete(request)
+            mock_pulumi.warn.assert_called_once()
+            warn_msg = mock_pulumi.warn.call_args[0][0]
+            assert _ENV_ID in warn_msg
+            assert "cannot be deleted" in warn_msg
 
         # Should NOT call the API — it's a no-op
-        mock_client.raw.request.assert_not_awaited()
+        mock_client.raw_pp.request.assert_not_awaited()

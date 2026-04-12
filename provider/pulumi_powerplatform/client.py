@@ -52,6 +52,11 @@ class PowerPlatformClient:
         self._adapter = HttpxRequestAdapter(auth_provider)
         self._sdk = ServiceClientBase(self._adapter)
         self._raw = RawApiClient(token_provider=credential)
+        self._raw_pp = RawApiClient(
+            token_provider=credential,
+            base_url="https://api.powerplatform.com",
+            scope="https://api.powerplatform.com/.default",
+        )
 
     @property
     def sdk(self) -> ServiceClientBase:
@@ -67,6 +72,11 @@ class PowerPlatformClient:
     def raw(self) -> RawApiClient:
         """Return the raw REST API client for BAP admin API calls."""
         return self._raw
+
+    @property
+    def raw_pp(self) -> RawApiClient:
+        """Return the raw REST API client for Power Platform API calls (api.powerplatform.com)."""
+        return self._raw_pp
 
     @property
     def credential(self):

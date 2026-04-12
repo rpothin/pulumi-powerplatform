@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from unittest.mock import AsyncMock, MagicMock, PropertyMock
+from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 
 import pytest
 from pulumi.provider.experimental.property_value import PropertyValue
@@ -26,6 +26,7 @@ def _fake_env_response(
     description: str = "Test description",
     location: str = "unitedstates",
     env_sku: str = "Sandbox",
+    provisioning_state: str = "Succeeded",
 ) -> dict:
     """Return a fake BAP API environment response."""
     return {
@@ -42,7 +43,7 @@ def _fake_env_response(
                 "baseLanguage": 1033,
             },
             "states": {"runtime": {"runtimeReasonCode": "Ready"}},
-            "provisioningState": "Succeeded",
+            "provisioningState": provisioning_state,
             "createdTime": "2025-01-01T00:00:00Z",
             "lastModifiedTime": "2025-01-02T00:00:00Z",
         },
@@ -72,8 +73,52 @@ class TestEnvironmentCreate:
     """Tests for the create method."""
 
     @pytest.mark.asyncio
-    async def test_create_returns_id_and_properties(self, handler, mock_client):
-        mock_client.raw.request.return_value = _fake_env_response()
+    async def test_create_with_polling(self, handler, mock_client):
+        """Create simulates the 202 async pattern: POST → poll → final GET."""
+        # POST returns an async-provisioning response
+        async_response = _fake_env_response(provisioning_state="Running")
+        # Polling GET returns Succeeded
+        poll_response = _fake_env_response(provisioning_state="Succeeded")
+        # Final GET returns full env
+        final_response = _fake_env_response()
+
+        mock_client.raw.request.side_effect = [async_response, poll_response, final_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "description": PropertyValue("Test description"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "domainName": PropertyValue("testenv"),
+                "currencyCode": PropertyValue("USD"),
+                "languageCode": PropertyValue("1033"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        assert response.properties["displayName"].value == "Test Env"
+        assert response.properties["location"].value == "unitedstates"
+        assert response.properties["environmentType"].value == "Sandbox"
+        assert response.properties["domainName"].value == "testenv"
+        assert response.properties["currencyCode"].value == "USD"
+        assert response.properties["languageCode"].value == "1033"
+        assert response.properties["state"].value == "Ready"
+        # 3 calls: POST, poll GET, final GET
+        assert mock_client.raw.request.await_count == 3
+
+    @pytest.mark.asyncio
+    async def test_create_already_succeeded(self, handler, mock_client):
+        """When POST immediately returns Succeeded, skip polling and do final GET."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+
+        mock_client.raw.request.side_effect = [post_response, final_response]
 
         request = CreateRequest(
             urn=_URN,
@@ -93,13 +138,30 @@ class TestEnvironmentCreate:
 
         assert response.resource_id == _FAKE_ID
         assert response.properties["displayName"].value == "Test Env"
-        assert response.properties["location"].value == "unitedstates"
-        assert response.properties["environmentType"].value == "Sandbox"
-        assert response.properties["domainName"].value == "testenv"
-        assert response.properties["currencyCode"].value == "USD"
-        assert response.properties["languageCode"].value == "1033"
-        assert response.properties["state"].value == "Ready"
-        mock_client.raw.request.assert_awaited_once()
+        # 2 calls: POST + final GET
+        assert mock_client.raw.request.await_count == 2
+
+    @pytest.mark.asyncio
+    async def test_create_polling_failure_raises(self, handler, mock_client):
+        """When the poll returns 'Failed', create should raise."""
+        async_response = _fake_env_response(provisioning_state="Running")
+        failed_response = _fake_env_response(provisioning_state="Failed")
+
+        mock_client.raw.request.side_effect = [async_response, failed_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            with pytest.raises(RuntimeError, match="provisioning failed"):
+                await handler.create(request)
 
     @pytest.mark.asyncio
     async def test_create_preview_returns_preview_id(self, handler, mock_client):
@@ -121,14 +183,26 @@ class TestEnvironmentCreate:
     @pytest.mark.asyncio
     async def test_create_minimal_properties(self, handler, mock_client):
         """Create with only required properties."""
-        mock_client.raw.request.return_value = {
+        post_response = {
             "name": _FAKE_ID,
             "location": "unitedstates",
             "properties": {
                 "displayName": "Minimal",
                 "environmentSku": "Sandbox",
+                "provisioningState": "Succeeded",
             },
         }
+        final_response = {
+            "name": _FAKE_ID,
+            "location": "unitedstates",
+            "properties": {
+                "displayName": "Minimal",
+                "environmentSku": "Sandbox",
+                "provisioningState": "Succeeded",
+            },
+        }
+
+        mock_client.raw.request.side_effect = [post_response, final_response]
 
         request = CreateRequest(
             urn=_URN,

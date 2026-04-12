@@ -35,6 +35,17 @@ class TestRawApiClientInit:
         client = RawApiClient(token_provider=_fake_credential(), base_url="https://custom.example.com/")
         assert client._base_url == "https://custom.example.com"
 
+    def test_default_scope(self):
+        client = RawApiClient(token_provider=_fake_credential())
+        assert client._scope == "https://api.bap.microsoft.com/.default"
+
+    def test_custom_scope(self):
+        client = RawApiClient(
+            token_provider=_fake_credential(),
+            scope="https://api.powerplatform.com/.default",
+        )
+        assert client._scope == "https://api.powerplatform.com/.default"
+
 
 class TestRawApiClientRequest:
     """Tests for the ``request`` method."""
