@@ -1,1 +1,10 @@
-404: Not Found
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96">
+  <defs>
+    <linearGradient id="a" x1="48" y1="8" x2="48" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#742774"/>
+      <stop offset="1" stop-color="#4B0E4B"/>
+    </linearGradient>
+  </defs>
+  <rect width="96" height="96" rx="16" fill="url(#a)"/>
+  <text x="48" y="62" font-family="Segoe UI,Arial,sans-serif" font-size="40" font-weight="700" fill="#fff" text-anchor="middle">PP</text>
+</svg>
