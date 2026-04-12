@@ -53,6 +53,7 @@ namespace Pulumi.Powerplatform
         {
             var dst = src ?? new global::Pulumi.InvokeOptions{};
             dst.Version = src?.Version ?? Version;
+            dst.PluginDownloadURL = src?.PluginDownloadURL ?? "github://api.github.com/rpothin";
             return dst;
         }
 
@@ -60,6 +61,7 @@ namespace Pulumi.Powerplatform
         {
             var dst = src ?? new global::Pulumi.InvokeOutputOptions{};
             dst.Version = src?.Version ?? Version;
+            dst.PluginDownloadURL = src?.PluginDownloadURL ?? "github://api.github.com/rpothin";
             return dst;
         }
 

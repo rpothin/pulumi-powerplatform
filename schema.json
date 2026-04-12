@@ -7,6 +7,12 @@
     "homepage": "https://github.com/rpothin/pulumi-powerplatform",
     "repository": "https://github.com/rpothin/pulumi-powerplatform",
     "license": "MIT",
+    "keywords": [
+        "category/cloud",
+        "kind/native"
+    ],
+    "logoUrl": "https://raw.githubusercontent.com/rpothin/pulumi-powerplatform/main/docs/logo.svg",
+    "pluginDownloadURL": "github://api.github.com/rpothin",
     "config": {
         "variables": {
             "tenantId": {

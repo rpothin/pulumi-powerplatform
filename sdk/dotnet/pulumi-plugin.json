@@ -1,4 +1,5 @@
 {
   "resource": true,
-  "name": "powerplatform"
+  "name": "powerplatform",
+  "server": "github://api.github.com/rpothin"
 }
