@@ -15,6 +15,11 @@ export type DlpPolicy = import("./dlpPolicy").DlpPolicy;
 export const DlpPolicy: typeof import("./dlpPolicy").DlpPolicy = null as any;
 utilities.lazyLoad(exports, ["DlpPolicy"], () => require("./dlpPolicy"));
 
+export { EnvironmentArgs } from "./environment";
+export type Environment = import("./environment").Environment;
+export const Environment: typeof import("./environment").Environment = null as any;
+utilities.lazyLoad(exports, ["Environment"], () => require("./environment"));
+
 export { EnvironmentBackupArgs } from "./environmentBackup";
 export type EnvironmentBackup = import("./environmentBackup").EnvironmentBackup;
 export const EnvironmentBackup: typeof import("./environmentBackup").EnvironmentBackup = null as any;
@@ -24,6 +29,11 @@ export { EnvironmentGroupArgs } from "./environmentGroup";
 export type EnvironmentGroup = import("./environmentGroup").EnvironmentGroup;
 export const EnvironmentGroup: typeof import("./environmentGroup").EnvironmentGroup = null as any;
 utilities.lazyLoad(exports, ["EnvironmentGroup"], () => require("./environmentGroup"));
+
+export { EnvironmentSettingsArgs } from "./environmentSettings";
+export type EnvironmentSettings = import("./environmentSettings").EnvironmentSettings;
+export const EnvironmentSettings: typeof import("./environmentSettings").EnvironmentSettings = null as any;
+utilities.lazyLoad(exports, ["EnvironmentSettings"], () => require("./environmentSettings"));
 
 export { GetAppsArgs, GetAppsResult, GetAppsOutputArgs } from "./getApps";
 export const getApps: typeof import("./getApps").getApps = null as any;
@@ -83,10 +93,14 @@ const _module = {
                 return new BillingPolicy(name, <any>undefined, { urn })
             case "powerplatform:index:DlpPolicy":
                 return new DlpPolicy(name, <any>undefined, { urn })
+            case "powerplatform:index:Environment":
+                return new Environment(name, <any>undefined, { urn })
             case "powerplatform:index:EnvironmentBackup":
                 return new EnvironmentBackup(name, <any>undefined, { urn })
             case "powerplatform:index:EnvironmentGroup":
                 return new EnvironmentGroup(name, <any>undefined, { urn })
+            case "powerplatform:index:EnvironmentSettings":
+                return new EnvironmentSettings(name, <any>undefined, { urn })
             case "powerplatform:index:IsvContract":
                 return new IsvContract(name, <any>undefined, { urn })
             case "powerplatform:index:ManagedEnvironment":

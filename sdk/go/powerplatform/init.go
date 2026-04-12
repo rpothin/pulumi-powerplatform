@@ -25,10 +25,14 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &BillingPolicy{}
 	case "powerplatform:index:DlpPolicy":
 		r = &DlpPolicy{}
+	case "powerplatform:index:Environment":
+		r = &Environment{}
 	case "powerplatform:index:EnvironmentBackup":
 		r = &EnvironmentBackup{}
 	case "powerplatform:index:EnvironmentGroup":
 		r = &EnvironmentGroup{}
+	case "powerplatform:index:EnvironmentSettings":
+		r = &EnvironmentSettings{}
 	case "powerplatform:index:IsvContract":
 		r = &IsvContract{}
 	case "powerplatform:index:ManagedEnvironment":
