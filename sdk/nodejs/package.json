@@ -1,6 +1,10 @@
 {
     "name": "@pulumi/powerplatform",
     "version": "${VERSION}",
+    "keywords": [
+        "category/cloud",
+        "kind/native"
+    ],
     "homepage": "https://github.com/rpothin/pulumi-powerplatform",
     "repository": "https://github.com/rpothin/pulumi-powerplatform",
     "license": "MIT",
@@ -16,6 +20,7 @@
     },
     "pulumi": {
         "resource": true,
-        "name": "powerplatform"
+        "name": "powerplatform",
+        "server": "github://api.github.com/rpothin"
     }
 }

@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Optional
 
+import pulumi
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import (
     CheckFailure,
@@ -36,6 +37,8 @@ _SETTINGS_PROPS = (
     "isUserAccessAuditEnabled",
     "isActivityLoggingEnabled",
 )
+
+_PP_API_VERSION = "2022-03-01-preview"
 
 
 class EnvironmentSettingsResource:
@@ -98,10 +101,11 @@ class EnvironmentSettingsResource:
         settings_body = _build_settings_body(props)
 
         if settings_body:
-            await self._client.raw.request(
+            await self._client.raw_pp.request(
                 "PATCH",
-                f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}/settings",
+                f"/environmentmanagement/environments/{env_id}/settings",
                 body=settings_body,
+                api_version=_PP_API_VERSION,
             )
 
         # Read back the current settings
@@ -139,10 +143,11 @@ class EnvironmentSettingsResource:
         settings_body = _build_settings_body(props)
 
         if settings_body:
-            await self._client.raw.request(
+            await self._client.raw_pp.request(
                 "PATCH",
-                f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}/settings",
+                f"/environmentmanagement/environments/{env_id}/settings",
                 body=settings_body,
+                api_version=_PP_API_VERSION,
             )
 
         current = await self._read_settings(env_id)
@@ -150,17 +155,17 @@ class EnvironmentSettingsResource:
 
     async def delete(self, request: DeleteRequest) -> None:
         """Delete is a no-op for environment settings (cannot unset settings)."""
-        logger.warning(
-            "EnvironmentSettings delete is a no-op: settings cannot be removed from environment %s. "
-            "The resource will be removed from the Pulumi state only.",
-            request.resource_id,
+        pulumi.warn(
+            f"EnvironmentSettings for environment {request.resource_id} cannot be deleted. "
+            "Settings will be removed from Pulumi state only — they remain active on the environment."
         )
 
     async def _read_settings(self, env_id: str) -> Optional[dict]:
         """Read current settings from the API."""
-        return await self._client.raw.request(
+        return await self._client.raw_pp.request(
             "GET",
-            f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}/settings",
+            f"/environmentmanagement/environments/{env_id}/settings",
+            api_version=_PP_API_VERSION,
         )
 
 
@@ -196,6 +201,9 @@ def _settings_to_outputs(env_id: str, settings: Optional[dict]) -> dict[str, Pro
     for prop in _SETTINGS_PROPS:
         val = settings.get(prop)
         if val is not None:
-            outputs[prop] = PropertyValue(str(val))
+            if isinstance(val, bool):
+                outputs[prop] = PropertyValue(str(val).lower())
+            else:
+                outputs[prop] = PropertyValue(str(val))
 
     return outputs

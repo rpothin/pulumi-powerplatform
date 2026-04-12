@@ -30,3 +30,11 @@ htmlcov/
 # Pulumi
 Pulumi.*.yaml
 !Pulumi.yaml
+
+# Go module cache (created by pulumi package gen-sdk)
+root/
+
+# Java build artifacts
+sdk/java/gradle/
+sdk/java/gradlew
+sdk/java/gradlew.bat

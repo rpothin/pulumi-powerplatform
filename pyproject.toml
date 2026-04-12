@@ -30,6 +30,7 @@ dependencies = [
     "azure-identity-broker>=1.0.0",
     "microsoft-kiota-authentication-azure>=1.0.0",
     "microsoft-kiota-http>=1.0.0",
+    "httpx>=0.27.0",
 ]
 
 [project.optional-dependencies]

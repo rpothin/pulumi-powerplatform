@@ -1,0 +1,224 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  PROVIDER_NAME: powerplatform
+  PYTHON_VERSION: "3.12"
+
+jobs:
+  validate-version:
+    name: Validate version input
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+    steps:
+      - name: Check version format and progression
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ github.event.inputs.version }}"
+
+          # Validate format: must be vX.Y.Z
+          if ! echo "$VERSION" | grep -qE '^v[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Version '$VERSION' does not match the required format vX.Y.Z (e.g. v0.1.0)"
+            exit 1
+          fi
+
+          # Check version progression against the latest existing release
+          LATEST=$(gh release list --repo "${{ github.repository }}" --limit 1 --json tagName --jq '.[0].tagName // ""')
+
+          if [ -n "$LATEST" ]; then
+            NEW="${VERSION#v}"
+            OLD="${LATEST#v}"
+
+            IFS='.' read -r NEW_MAJOR NEW_MINOR NEW_PATCH <<< "$NEW"
+            IFS='.' read -r OLD_MAJOR OLD_MINOR OLD_PATCH <<< "$OLD"
+
+            if [ "$NEW_MAJOR" -lt "$OLD_MAJOR" ] || \
+               ([ "$NEW_MAJOR" -eq "$OLD_MAJOR" ] && [ "$NEW_MINOR" -lt "$OLD_MINOR" ]) || \
+               ([ "$NEW_MAJOR" -eq "$OLD_MAJOR" ] && [ "$NEW_MINOR" -eq "$OLD_MINOR" ] && [ "$NEW_PATCH" -le "$OLD_PATCH" ]); then
+              echo "::error::New version '$VERSION' must be greater than the latest release '$LATEST'"
+              exit 1
+            fi
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  create-pre-release:
+    name: Create pre-release
+    runs-on: ubuntu-latest
+    needs: [validate-version]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag "${{ needs.validate-version.outputs.version }}"
+          git push origin "${{ needs.validate-version.outputs.version }}"
+
+      - name: Create pre-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ needs.validate-version.outputs.version }}" \
+            --title "${{ needs.validate-version.outputs.version }}" \
+            --generate-notes \
+            --prerelease
+
+  build-provider:
+    name: Build provider plugin
+    runs-on: ubuntu-latest
+    needs: [validate-version, create-pre-release]
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: amd64
+          - os: linux
+            arch: arm64
+          - os: darwin
+            arch: amd64
+          - os: darwin
+            arch: arm64
+          - os: windows
+            arch: amd64
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate-version.outputs.version }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install provider package
+        run: pip install .
+
+      - name: Create plugin archive
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          VERSION="${VERSION#v}"
+          ARCHIVE="pulumi-resource-${PROVIDER_NAME}-v${VERSION}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz"
+
+          # Create a self-contained directory with the provider
+          PLUGIN_DIR="pulumi-resource-${PROVIDER_NAME}"
+          mkdir -p "$PLUGIN_DIR"
+
+          # Copy the provider package and its entrypoint
+          cp -r provider/pulumi_powerplatform "$PLUGIN_DIR/"
+          cp schema.json "$PLUGIN_DIR/"
+          cp PulumiPlugin.yaml "$PLUGIN_DIR/"
+
+          # Create a wrapper script that invokes the provider
+          cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}" <<'WRAPPER'
+#!/usr/bin/env bash
+exec python -m pulumi_powerplatform "$@"
+WRAPPER
+          chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
+
+          # Create a .cmd launcher for Windows
+          if [ "${{ matrix.os }}" = "windows" ]; then
+            cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd" <<'CMDWRAPPER'
+@echo off
+python -m pulumi_powerplatform %*
+CMDWRAPPER
+          fi
+
+          tar -czf "$ARCHIVE" "$PLUGIN_DIR"
+          echo "ARCHIVE=$ARCHIVE" >> $GITHUB_ENV
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: provider-${{ matrix.os }}-${{ matrix.arch }}
+          path: ${{ env.ARCHIVE }}
+
+  publish-sdk-pypi:
+    name: Publish Python SDK to PyPI
+    runs-on: ubuntu-latest
+    needs: [build-provider]
+    permissions:
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pulumi-powerplatform/
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install build tools
+        run: pip install build
+
+      - name: Build SDK package
+        working-directory: sdk/python
+        run: python -m build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdk/python/dist/
+
+  publish-npm:
+    name: Publish Node.js SDK to npm
+    runs-on: ubuntu-latest
+    needs: [validate-version, build-provider]
+    environment:
+      name: npmjs
+      url: https://www.npmjs.com/package/@pulumi/powerplatform
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+
+      - name: Set package version
+        working-directory: sdk/nodejs
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          VERSION="${VERSION#v}"
+          sed -i "s/\${VERSION}/$VERSION/" package.json
+
+      - name: Install, build, and publish
+        working-directory: sdk/nodejs
+        run: |
+          npm install
+          npm run build
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  promote-release:
+    name: Promote release to latest
+    runs-on: ubuntu-latest
+    needs: [validate-version, publish-sdk-pypi, publish-npm]
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          pattern: provider-*
+          merge-multiple: true
+
+      - name: Upload archives and promote release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          gh release upload "$VERSION" artifacts/*.tar.gz --repo "${{ github.repository }}"
+          gh release edit "$VERSION" --prerelease=false --latest --repo "${{ github.repository }}"

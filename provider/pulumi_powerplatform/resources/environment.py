@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 
 from pulumi.provider.experimental.property_value import PropertyValue
@@ -34,6 +35,14 @@ _REPLACE_PROPS = {"location", "environmentType"}
 
 # Updatable properties.
 _UPDATE_PROPS = {"displayName", "description", "domainName"}
+
+_BAP_API_VERSION = "2021-04-01"
+
+_POLL_INTERVAL_SECONDS = 10
+
+_DEFAULT_MAX_POLLS = 30
+
+_TERMINAL_STATES = {"Succeeded", "Failed", "Canceled", "Cancelled"}
 
 
 class EnvironmentResource:
@@ -130,15 +139,39 @@ class EnvironmentResource:
             "POST",
             "/providers/Microsoft.BusinessAppPlatform/environments",
             body=body,
+            api_version=_BAP_API_VERSION,
         )
 
         if result is None:
             raise RuntimeError("Failed to create environment: API returned no result.")
 
+        # Handle async provisioning (202 Accepted pattern).
+        # The BAP API may return a response with provisioningState != "Succeeded",
+        # indicating that the environment is still being created.
+        provisioning_state = result.get("properties", {}).get("provisioningState", "")
         env_id = result.get("name", "")
+
+        if provisioning_state and provisioning_state not in _TERMINAL_STATES:
+            # Poll until terminal state
+            max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
+            await self._poll_provisioning(env_id, max_polls)
+
+        if provisioning_state == "Failed":
+            raise RuntimeError(f"Environment creation failed: {result}")
+
+        # Fetch the final environment state via the admin read endpoint
+        final = await self._client.raw.request(
+            "GET",
+            f"/scopes/admin/environments/{env_id}",
+            api_version=_BAP_API_VERSION,
+        )
+
+        if final is None:
+            raise RuntimeError("Failed to read newly created environment.")
+
         return CreateResponse(
             resource_id=env_id,
-            properties=_env_to_outputs(result),
+            properties=_env_to_outputs(final),
         )
 
     async def read(self, request: ReadRequest) -> ReadResponse:
@@ -150,7 +183,8 @@ class EnvironmentResource:
         try:
             result = await self._client.raw.request(
                 "GET",
-                f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}",
+                f"/scopes/admin/environments/{env_id}",
+                api_version=_BAP_API_VERSION,
             )
         except HttpError as exc:
             if exc.status_code == 404:
@@ -185,13 +219,15 @@ class EnvironmentResource:
             "PATCH",
             f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}",
             body=patch_body,
+            api_version=_BAP_API_VERSION,
         )
 
         if result is None:
             # Re-read if PATCH returned no body
             result = await self._client.raw.request(
                 "GET",
-                f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}",
+                f"/scopes/admin/environments/{env_id}",
+                api_version=_BAP_API_VERSION,
             )
 
         if result is None:
@@ -205,7 +241,28 @@ class EnvironmentResource:
         await self._client.raw.request(
             "DELETE",
             f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}",
+            api_version=_BAP_API_VERSION,
         )
+
+    async def _poll_provisioning(self, env_id: str, max_polls: int) -> None:
+        """Poll the environment until it reaches a terminal provisioning state."""
+        for _ in range(max_polls):
+            await asyncio.sleep(_POLL_INTERVAL_SECONDS)
+            result = await self._client.raw.request(
+                "GET",
+                f"/scopes/admin/environments/{env_id}",
+                api_version=_BAP_API_VERSION,
+            )
+            if result is None:
+                continue
+            state = result.get("properties", {}).get("provisioningState", "")
+            if state in _TERMINAL_STATES:
+                if state in {"Failed", "Canceled", "Cancelled"}:
+                    raise RuntimeError(
+                        f"Environment provisioning ended in non-successful terminal state '{state}': {result}"
+                    )
+                return
+        raise RuntimeError(f"Environment provisioning timed out after polling {max_polls} times.")
 
 
 # Input property names (for reconstructing inputs from outputs during read).

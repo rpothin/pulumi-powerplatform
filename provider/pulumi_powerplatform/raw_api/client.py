@@ -33,6 +33,7 @@ class RawApiClient:
         token_provider: Any,
         *,
         base_url: Optional[str] = None,
+        scope: Optional[str] = None,
     ) -> None:
         """Initialise the client.
 
@@ -42,9 +43,12 @@ class RawApiClient:
             An Azure ``TokenCredential`` that supports ``get_token(scope)``.
         base_url:
             Override the default BAP admin API base URL (useful for testing).
+        scope:
+            Override the default OAuth scope (defaults to BAP scope).
         """
         self._token_provider = token_provider
         self._base_url = (base_url or self.BASE_URL).rstrip("/")
+        self._scope = scope or "https://api.bap.microsoft.com/.default"
         self._http: Optional[httpx.AsyncClient] = None
 
     async def _get_http(self) -> httpx.AsyncClient:
@@ -55,7 +59,7 @@ class RawApiClient:
 
     async def _get_token(self) -> str:
         """Obtain a bearer token from the credential."""
-        token = self._token_provider.get_token("https://api.bap.microsoft.com/.default")
+        token = self._token_provider.get_token(self._scope)
         return token.token
 
     async def request(
