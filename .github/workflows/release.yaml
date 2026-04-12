@@ -123,18 +123,14 @@ jobs:
           cp PulumiPlugin.yaml "$PLUGIN_DIR/"
 
           # Create a wrapper script that invokes the provider
-          cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}" <<'WRAPPER'
-#!/usr/bin/env bash
-exec python -m pulumi_powerplatform "$@"
-WRAPPER
+          printf '#!/usr/bin/env bash\nexec python -m pulumi_powerplatform "$@"\n' \
+            > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
           chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
 
           # Create a .cmd launcher for Windows
           if [ "${{ matrix.os }}" = "windows" ]; then
-            cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd" <<'CMDWRAPPER'
-@echo off
-python -m pulumi_powerplatform %*
-CMDWRAPPER
+            printf '@echo off\npython -m pulumi_powerplatform %%*\n' \
+              > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd"
           fi
 
           tar -czf "$ARCHIVE" "$PLUGIN_DIR"
