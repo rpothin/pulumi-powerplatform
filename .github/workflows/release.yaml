@@ -56,7 +56,6 @@ jobs:
           # Create a wrapper script that invokes the provider
           cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}" <<'WRAPPER'
 #!/usr/bin/env bash
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 exec python -m pulumi_powerplatform "$@"
 WRAPPER
           chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"

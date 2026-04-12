@@ -40,6 +40,8 @@ _BAP_API_VERSION = "2021-04-01"
 
 _POLL_INTERVAL_SECONDS = 10
 
+_DEFAULT_MAX_POLLS = 30
+
 _TERMINAL_STATES = {"Succeeded", "Failed", "Canceled", "Cancelled"}
 
 
@@ -151,7 +153,7 @@ class EnvironmentResource:
 
         if provisioning_state and provisioning_state not in _TERMINAL_STATES:
             # Poll until terminal state
-            max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else 30
+            max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
             await self._poll_provisioning(env_id, max_polls)
 
         if provisioning_state == "Failed":
