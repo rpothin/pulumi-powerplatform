@@ -50,7 +50,7 @@ pulumi.export("envId", env.id)
 {{% choosable language typescript %}}
 
 ```typescript
-import * as pp from "@pulumi/powerplatform";
+import * as pp from "@rpothin/powerplatform";
 
 const env = new pp.Environment("dev", {
     displayName: "Development",
