@@ -3,7 +3,7 @@
 ## Repository orientation
 Native Python Pulumi custom provider for Microsoft Power Platform.
 Provider logic lives in `provider/`, a hand-crafted Python SDK in `sdk/python/`,
-and generated SDKs for other languages in `sdk/{nodejs,go,dotnet}/`.
+and generated SDKs for other languages in `sdk/{nodejs,go,dotnet,java}/`.
 See `README.md` and `CONTRIBUTING.md` for architecture and development details.
 
 ## Non-negotiable rules
@@ -17,6 +17,7 @@ See `README.md` and `CONTRIBUTING.md` for architecture and development details.
    pulumi package gen-sdk . --language nodejs --out sdk
    pulumi package gen-sdk . --language go     --out sdk
    pulumi package gen-sdk . --language dotnet --out sdk
+   pulumi package gen-sdk . --language java   --out sdk
    ```
    > `sdk/python/` is maintained manually — do not regenerate it.
 

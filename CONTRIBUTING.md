@@ -109,8 +109,9 @@ first resource requires raw REST access (e.g., Environment creation).
   rule-based policies. The provider works around this by deleting each rule set
   individually. A future version may use `raw_api/` for direct deletion.
 
-- **No retry logic**: API rate limiting (HTTP 429) and transient failures are not
-  yet handled automatically. This is tracked as future work.
+- **Retry logic**: HTTP 429 and 5xx errors are retried automatically via
+  `retry_with_backoff` in `utils.py`. Use it for all SDK/API calls in
+  resource handlers.
 
 ## CI/CD
 

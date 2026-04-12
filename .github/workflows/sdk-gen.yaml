@@ -5,6 +5,8 @@ on:
     types: [ready_for_review]
   push:
     branches: [main]
+    paths:
+      - 'schema.json'
 
 jobs:
   generate-sdks:
@@ -53,12 +55,13 @@ jobs:
           pulumi package gen-sdk . --language nodejs --out sdk
           pulumi package gen-sdk . --language go     --out sdk
           pulumi package gen-sdk . --language dotnet --out sdk
+          pulumi package gen-sdk . --language java   --out sdk
 
       - name: Check if SDK files changed
         if: steps.schema_changed.outputs.schema_changed == 'true'
         id: sdk_diff
         run: |
-          if git diff --quiet sdk/nodejs sdk/go sdk/dotnet; then
+          if git diff --quiet sdk/nodejs sdk/go sdk/dotnet sdk/java; then
             echo "SDKs already up to date."
             echo "sdk_changed=false" >> $GITHUB_OUTPUT
           else
@@ -70,6 +73,6 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add sdk/nodejs sdk/go sdk/dotnet
+          git add sdk/nodejs sdk/go sdk/dotnet sdk/java
           git commit -m "chore: regenerate non-Python SDKs from schema.json [skip ci]"
           git push

@@ -70,9 +70,10 @@ jobs:
           pulumi package gen-sdk . --language nodejs --out "$GEN_DIR"
           pulumi package gen-sdk . --language go     --out "$GEN_DIR"
           pulumi package gen-sdk . --language dotnet --out "$GEN_DIR"
+          pulumi package gen-sdk . --language java   --out "$GEN_DIR"
 
           STALE=""
-          for lang in nodejs go dotnet; do
+          for lang in nodejs go dotnet java; do
             if ! diff -rq "$GEN_DIR/$lang" "sdk/$lang" > /dev/null 2>&1; then
               STALE="$STALE\n  - sdk/$lang"
             fi
@@ -86,6 +87,7 @@ jobs:
             echo "  pulumi package gen-sdk . --language nodejs --out sdk"
             echo "  pulumi package gen-sdk . --language go     --out sdk"
             echo "  pulumi package gen-sdk . --language dotnet --out sdk"
+            echo "  pulumi package gen-sdk . --language java   --out sdk"
             exit 1
           fi
 
