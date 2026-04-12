@@ -35,8 +35,10 @@ from pulumi_powerplatform.functions.get_environments import GetEnvironmentsFunct
 from pulumi_powerplatform.functions.get_flows import GetFlowsFunction
 from pulumi_powerplatform.resources.billing_policy import BillingPolicyResource
 from pulumi_powerplatform.resources.dlp_policy import DlpPolicyResource
+from pulumi_powerplatform.resources.environment import EnvironmentResource
 from pulumi_powerplatform.resources.environment_backup import EnvironmentBackupResource
 from pulumi_powerplatform.resources.environment_group import EnvironmentGroupResource
+from pulumi_powerplatform.resources.environment_settings import EnvironmentSettingsResource
 from pulumi_powerplatform.resources.isv_contract import IsvContractResource
 from pulumi_powerplatform.resources.managed_environment import ManagedEnvironmentResource
 from pulumi_powerplatform.resources.role_assignment import RoleAssignmentResource
@@ -49,6 +51,8 @@ _MANAGED_ENVIRONMENT = "powerplatform:index:ManagedEnvironment"
 _ENVIRONMENT_BACKUP = "powerplatform:index:EnvironmentBackup"
 _ROLE_ASSIGNMENT = "powerplatform:index:RoleAssignment"
 _ISV_CONTRACT = "powerplatform:index:IsvContract"
+_ENVIRONMENT = "powerplatform:index:Environment"
+_ENVIRONMENT_SETTINGS = "powerplatform:index:EnvironmentSettings"
 
 # Function tokens.
 _GET_ENVIRONMENTS = "powerplatform:index:getEnvironments"
@@ -88,6 +92,8 @@ class PowerPlatformProvider(Provider):
         self._env_backup: Optional[EnvironmentBackupResource] = None
         self._role_assignment: Optional[RoleAssignmentResource] = None
         self._isv_contract: Optional[IsvContractResource] = None
+        self._environment: Optional[EnvironmentResource] = None
+        self._env_settings: Optional[EnvironmentSettingsResource] = None
         self._get_envs: Optional[GetEnvironmentsFunction] = None
         self._get_connectors: Optional[GetConnectorsFunction] = None
         self._get_apps: Optional[GetAppsFunction] = None
@@ -111,6 +117,8 @@ class PowerPlatformProvider(Provider):
         self._env_backup = EnvironmentBackupResource(self._client)
         self._role_assignment = RoleAssignmentResource(self._client)
         self._isv_contract = IsvContractResource(self._client)
+        self._environment = EnvironmentResource(self._client)
+        self._env_settings = EnvironmentSettingsResource(self._client)
         self._get_envs = GetEnvironmentsFunction(self._client)
         self._get_connectors = GetConnectorsFunction(self._client)
         self._get_apps = GetAppsFunction(self._client)
@@ -200,5 +208,7 @@ class PowerPlatformProvider(Provider):
             _ENVIRONMENT_BACKUP: self._env_backup,
             _ROLE_ASSIGNMENT: self._role_assignment,
             _ISV_CONTRACT: self._isv_contract,
+            _ENVIRONMENT: self._environment,
+            _ENVIRONMENT_SETTINGS: self._env_settings,
         }
         return handlers.get(resource_type)

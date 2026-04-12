@@ -23,6 +23,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 class RoleAssignmentResource:
@@ -97,7 +98,7 @@ class RoleAssignmentResource:
         body.role_definition_id = _pv_str(props.get("roleDefinitionId"))
         body.scope = _pv_str(props.get("scope"))
 
-        result = await self._client.sdk.authorization.role_assignments.post(body)
+        result = await retry_with_backoff(lambda: self._client.sdk.authorization.role_assignments.post(body))
         if result is None:
             raise RuntimeError("Failed to create role assignment: API returned no result.")
 
@@ -112,7 +113,9 @@ class RoleAssignmentResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of a role assignment."""
         assignment_id = request.resource_id
-        result = await self._client.sdk.authorization.role_assignments.by_role_assignment_id(assignment_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.authorization.role_assignments.by_role_assignment_id(assignment_id).get()
+        )
 
         if result is None:
             return ReadResponse(resource_id="", properties={}, inputs={})
@@ -128,7 +131,9 @@ class RoleAssignmentResource:
     async def delete(self, request: DeleteRequest) -> None:
         """Delete a role assignment."""
         assignment_id = request.resource_id
-        await self._client.sdk.authorization.role_assignments.by_role_assignment_id(assignment_id).delete()
+        await retry_with_backoff(
+            lambda: self._client.sdk.authorization.role_assignments.by_role_assignment_id(assignment_id).delete()
+        )
 
 
 def _first_value(response: RoleAssignmentResponse) -> RoleAssignmentResponse_value:

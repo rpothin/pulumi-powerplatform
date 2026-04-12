@@ -25,6 +25,7 @@ from pulumi.provider.experimental.provider import (
 
 from pulumi_powerplatform.client import PowerPlatformClient
 from pulumi_powerplatform.utils import pv_str as _pv_str
+from pulumi_powerplatform.utils import retry_with_backoff
 
 
 class EnvironmentGroupResource:
@@ -88,7 +89,7 @@ class EnvironmentGroupResource:
         if parent_id:
             body.parent_group_id = UUID(parent_id)
 
-        result = await self._client.sdk.environmentmanagement.environment_groups.post(body)
+        result = await retry_with_backoff(lambda: self._client.sdk.environmentmanagement.environment_groups.post(body))
         if result is None:
             raise RuntimeError("Failed to create environment group: API returned no result.")
 
@@ -101,7 +102,9 @@ class EnvironmentGroupResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of an environment group."""
         group_id = request.resource_id
-        result = await self._client.sdk.environmentmanagement.environment_groups.by_group_id(group_id).get()
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.environmentmanagement.environment_groups.by_group_id(group_id).get()
+        )
 
         if result is None:
             # Resource no longer exists.
@@ -129,7 +132,9 @@ class EnvironmentGroupResource:
         if parent_id:
             body.parent_group_id = UUID(parent_id)
 
-        result = await self._client.sdk.environmentmanagement.environment_groups.by_group_id(group_id).put(body)
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.environmentmanagement.environment_groups.by_group_id(group_id).put(body)
+        )
         if result is None:
             raise RuntimeError(f"Failed to update environment group {group_id}: API returned no result.")
 
@@ -138,7 +143,9 @@ class EnvironmentGroupResource:
     async def delete(self, request: DeleteRequest) -> None:
         """Delete an environment group."""
         group_id = request.resource_id
-        await self._client.sdk.environmentmanagement.environment_groups.by_group_id(group_id).delete()
+        await retry_with_backoff(
+            lambda: self._client.sdk.environmentmanagement.environment_groups.by_group_id(group_id).delete()
+        )
 
 
 def _group_to_outputs(group: EnvironmentGroup) -> dict[str, PropertyValue]:

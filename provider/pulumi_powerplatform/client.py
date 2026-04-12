@@ -10,6 +10,8 @@ from kiota_authentication_azure.azure_identity_authentication_provider import Az
 from kiota_http.httpx_request_adapter import HttpxRequestAdapter
 from mspp_management.service_client_base import ServiceClientBase
 
+from pulumi_powerplatform.raw_api import RawApiClient
+
 # The scope required for the Power Platform Management API.
 POWER_PLATFORM_SCOPE = "https://api.powerplatform.com/.default"
 
@@ -20,13 +22,6 @@ class PowerPlatformClient:
     Supports authentication via:
     - Explicit client secret credentials (tenant_id, client_id, client_secret)
     - DefaultAzureCredential (environment variables, managed identity, Azure CLI, etc.)
-
-    .. note::
-
-        TODO: Add retry/exponential backoff for transient failures and API rate
-        limiting (HTTP 429).  A decorator or wrapper on the ``HttpxRequestAdapter``
-        would allow transparent retries without changing individual resource
-        handlers.  See the research report's risk matrix for details.
     """
 
     def __init__(
@@ -49,12 +44,14 @@ class PowerPlatformClient:
         else:
             credential = DefaultAzureCredential()
 
+        self._credential = credential
         auth_provider = AzureIdentityAuthenticationProvider(
             credential,
             scopes=[POWER_PLATFORM_SCOPE],
         )
         self._adapter = HttpxRequestAdapter(auth_provider)
         self._sdk = ServiceClientBase(self._adapter)
+        self._raw = RawApiClient(token_provider=credential)
 
     @property
     def sdk(self) -> ServiceClientBase:
@@ -65,3 +62,13 @@ class PowerPlatformClient:
     def adapter(self) -> HttpxRequestAdapter:
         """Return the underlying HTTP request adapter (for raw API calls)."""
         return self._adapter
+
+    @property
+    def raw(self) -> RawApiClient:
+        """Return the raw REST API client for BAP admin API calls."""
+        return self._raw
+
+    @property
+    def credential(self):
+        """Return the underlying Azure credential."""
+        return self._credential
