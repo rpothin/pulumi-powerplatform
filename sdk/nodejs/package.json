@@ -1,0 +1,21 @@
+{
+    "name": "@pulumi/powerplatform",
+    "version": "${VERSION}",
+    "homepage": "https://github.com/rpothin/pulumi-powerplatform",
+    "repository": "https://github.com/rpothin/pulumi-powerplatform",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc"
+    },
+    "dependencies": {
+        "@pulumi/pulumi": "^3.142.0"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "typescript": "^4.7.0"
+    },
+    "pulumi": {
+        "resource": true,
+        "name": "powerplatform"
+    }
+}
