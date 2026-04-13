@@ -211,10 +211,59 @@ jobs:
           npm run build
           npm publish --access public
 
+  publish-nuget:
+    name: Publish .NET SDK to NuGet
+    runs-on: ubuntu-latest
+    needs: [validate-version, build-provider]
+    permissions:
+      id-token: write   # required for OIDC token issuance
+    environment:
+      name: nuget
+      url: https://www.nuget.org/packages/Pulumi.Powerplatform/
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate-version.outputs.version }}
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "6.x"
+
+      - name: Set package version
+        working-directory: sdk/dotnet
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          VERSION="${VERSION#v}"
+          echo "$VERSION" > version.txt
+
+      - name: Build and pack
+        working-directory: sdk/dotnet
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          VERSION="${VERSION#v}"
+          dotnet pack Pulumi.Powerplatform.csproj \
+            --configuration Release \
+            /p:Version="$VERSION" \
+            --output nupkgs
+
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: Publish to NuGet
+        working-directory: sdk/dotnet
+        run: |
+          dotnet nuget push nupkgs/*.nupkg \
+            --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate
+
   promote-release:
     name: Promote release to latest
     runs-on: ubuntu-latest
-    needs: [validate-version, publish-sdk-pypi, publish-npm]
+    needs: [validate-version, publish-sdk-pypi, publish-npm, publish-nuget]
     steps:
       - uses: actions/download-artifact@v4
         with:
