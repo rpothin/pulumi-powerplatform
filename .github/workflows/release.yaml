@@ -182,6 +182,8 @@ jobs:
     name: Publish Node.js SDK to npm
     runs-on: ubuntu-latest
     needs: [validate-version, build-provider]
+    permissions:
+      id-token: write
     environment:
       name: npmjs
       url: https://www.npmjs.com/package/@rpothin/powerplatform
@@ -190,7 +192,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org
 
       - name: Set package version
@@ -206,8 +208,6 @@ jobs:
           npm install
           npm run build
           npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   promote-release:
     name: Promote release to latest
