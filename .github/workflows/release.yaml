@@ -195,9 +195,7 @@ jobs:
           node-version: 22
           registry-url: https://registry.npmjs.org
       - name: Upgrade npm for OIDC Trusted Publishing support
-        run: |
-          corepack enable
-          corepack prepare npm@11 --activate
+        run: npm i -g npm@11.5.1
 
       - name: Set package version
         working-directory: sdk/nodejs
