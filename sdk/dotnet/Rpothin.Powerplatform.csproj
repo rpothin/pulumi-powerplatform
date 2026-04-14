@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Rpothin.Powerplatform</PackageId>
+    <AssemblyName>Rpothin.Powerplatform</AssemblyName>
     <Authors>rpothin</Authors>
     <Company>rpothin</Company>
     <Description>A Pulumi provider for managing Microsoft Power Platform resources.</Description>

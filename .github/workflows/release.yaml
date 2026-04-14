@@ -219,7 +219,7 @@ jobs:
       id-token: write   # required for OIDC token issuance
     environment:
       name: nuget
-      url: https://www.nuget.org/packages/Pulumi.Powerplatform/
+      url: https://www.nuget.org/packages/Rpothin.Powerplatform/
     steps:
       - uses: actions/checkout@v4
         with:
@@ -241,7 +241,7 @@ jobs:
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"
           VERSION="${VERSION#v}"
-          dotnet build Pulumi.Powerplatform.csproj \
+          dotnet build Rpothin.Powerplatform.csproj \
             --configuration Release \
             /p:Version="$VERSION"
 
@@ -250,7 +250,7 @@ jobs:
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"
           VERSION="${VERSION#v}"
-          dotnet pack Pulumi.Powerplatform.csproj \
+          dotnet pack Rpothin.Powerplatform.csproj \
             --configuration Release \
             /p:Version="$VERSION" \
             --no-build \
