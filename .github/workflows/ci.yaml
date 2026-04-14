@@ -72,16 +72,7 @@ jobs:
           pulumi package gen-sdk . --language go     --out "$GEN_DIR"
           pulumi package gen-sdk . --language dotnet --out "$GEN_DIR"
           pulumi package gen-sdk . --language java   --out "$GEN_DIR"
-          sed -i 's#<TargetFramework>net6.0</TargetFramework>#<TargetFramework>net8.0</TargetFramework>#' "$GEN_DIR/dotnet/Pulumi.Powerplatform.csproj"
-          cat > "$GEN_DIR/dotnet/global.json" <<'EOF'
-          {
-            "sdk": {
-              "version": "8.0.0",
-              "rollForward": "latestMajor",
-              "allowPrerelease": false
-            }
-          }
-          EOF
+          bash ./scripts/normalize-dotnet-sdk.sh "$GEN_DIR/dotnet"
 
           STALE=""
           for lang in nodejs go dotnet java; do

@@ -57,16 +57,7 @@ jobs:
           pulumi package gen-sdk . --language go     --out sdk
           pulumi package gen-sdk . --language dotnet --out sdk
           pulumi package gen-sdk . --language java   --out sdk
-          sed -i 's#<TargetFramework>net6.0</TargetFramework>#<TargetFramework>net8.0</TargetFramework>#' sdk/dotnet/Pulumi.Powerplatform.csproj
-          cat > sdk/dotnet/global.json <<'EOF'
-          {
-            "sdk": {
-              "version": "8.0.0",
-              "rollForward": "latestMajor",
-              "allowPrerelease": false
-            }
-          }
-          EOF
+          bash ./scripts/normalize-dotnet-sdk.sh sdk/dotnet
 
       - name: Check if SDK files changed
         if: steps.schema_changed.outputs.schema_changed == 'true'
