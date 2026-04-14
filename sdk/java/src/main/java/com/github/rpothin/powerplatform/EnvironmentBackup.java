@@ -3,12 +3,12 @@
 
 package com.github.rpothin.powerplatform;
 
+import com.github.rpothin.powerplatform.EnvironmentBackupArgs;
+import com.github.rpothin.powerplatform.Utilities;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Export;
 import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
-import com.github.rpothin.powerplatform.EnvironmentBackupArgs;
-import com.github.rpothin.powerplatform.Utilities;
 import java.lang.String;
 import java.util.Optional;
 import javax.annotation.Nullable;

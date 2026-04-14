@@ -3,13 +3,13 @@
 
 package com.github.rpothin.powerplatform;
 
+import com.github.rpothin.powerplatform.DlpPolicyArgs;
+import com.github.rpothin.powerplatform.Utilities;
+import com.github.rpothin.powerplatform.outputs.RuleSet;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Export;
 import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
-import com.github.rpothin.powerplatform.DlpPolicyArgs;
-import com.github.rpothin.powerplatform.Utilities;
-import com.github.rpothin.powerplatform.outputs.RuleSet;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.List;

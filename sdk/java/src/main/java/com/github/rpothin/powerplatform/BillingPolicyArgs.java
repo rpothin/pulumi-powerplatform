@@ -3,10 +3,10 @@
 
 package com.github.rpothin.powerplatform;
 
+import com.github.rpothin.powerplatform.inputs.BillingInstrumentArgs;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
-import com.github.rpothin.powerplatform.inputs.BillingInstrumentArgs;
 import java.lang.String;
 import java.util.Objects;
 import java.util.Optional;

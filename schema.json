@@ -362,7 +362,7 @@
             ]
         },
         "powerplatform:index:EnvironmentBackup": {
-            "description": "Creates a manual backup of a Power Platform environment. Backups are immutable — any change to inputs triggers replacement.",
+            "description": "Creates a manual backup of a Power Platform environment. Backups are immutable \u2014 any change to inputs triggers replacement.",
             "inputProperties": {
                 "environmentId": {
                     "type": "string",
@@ -401,7 +401,7 @@
             ]
         },
         "powerplatform:index:RoleAssignment": {
-            "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable — any change to inputs triggers replacement.",
+            "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable \u2014 any change to inputs triggers replacement.",
             "inputProperties": {
                 "principalObjectId": {
                     "type": "string",
@@ -772,6 +772,9 @@
             "requires": {
                 "pulumi": ">=3.0.0,<4.0.0"
             }
+        },
+        "java": {
+            "basePackage": "com.github.rpothin"
         }
     }
 }

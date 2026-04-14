@@ -87,7 +87,7 @@ public class Utilities {
     }
 
     static {
-        var resourceName = "com/pulumi/powerplatform/version.txt";
+        var resourceName = "com/github/rpothin/powerplatform/version.txt";
         var versionFile = Utilities.class.getClassLoader().getResourceAsStream(resourceName);
         if (versionFile == null) {
             throw new IllegalStateException(

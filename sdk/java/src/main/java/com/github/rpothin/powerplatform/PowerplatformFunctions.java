@@ -3,11 +3,6 @@
 
 package com.github.rpothin.powerplatform;
 
-import com.pulumi.core.Output;
-import com.pulumi.core.TypeShape;
-import com.pulumi.deployment.Deployment;
-import com.pulumi.deployment.InvokeOptions;
-import com.pulumi.deployment.InvokeOutputOptions;
 import com.github.rpothin.powerplatform.Utilities;
 import com.github.rpothin.powerplatform.inputs.GetAppsArgs;
 import com.github.rpothin.powerplatform.inputs.GetAppsPlainArgs;
@@ -21,6 +16,11 @@ import com.github.rpothin.powerplatform.outputs.GetAppsResult;
 import com.github.rpothin.powerplatform.outputs.GetConnectorsResult;
 import com.github.rpothin.powerplatform.outputs.GetEnvironmentsResult;
 import com.github.rpothin.powerplatform.outputs.GetFlowsResult;
+import com.pulumi.core.Output;
+import com.pulumi.core.TypeShape;
+import com.pulumi.deployment.Deployment;
+import com.pulumi.deployment.InvokeOptions;
+import com.pulumi.deployment.InvokeOutputOptions;
 import java.util.concurrent.CompletableFuture;
 
 public final class PowerplatformFunctions {

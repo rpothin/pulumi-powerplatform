@@ -1,5 +1,5 @@
 {
-    "name": "@rpothin/powerplatform",
+    "name": "@pulumi/powerplatform",
     "version": "${VERSION}",
     "keywords": [
         "category/cloud",

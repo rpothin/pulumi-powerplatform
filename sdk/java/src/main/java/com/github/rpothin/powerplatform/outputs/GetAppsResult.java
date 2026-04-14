@@ -3,9 +3,9 @@
 
 package com.github.rpothin.powerplatform.outputs;
 
+import com.github.rpothin.powerplatform.outputs.AppSummary;
 import com.pulumi.core.annotations.CustomType;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
-import com.github.rpothin.powerplatform.outputs.AppSummary;
 import java.util.List;
 import java.util.Objects;
 
