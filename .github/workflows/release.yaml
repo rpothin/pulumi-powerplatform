@@ -236,7 +236,16 @@ jobs:
           VERSION="${VERSION#v}"
           echo "$VERSION" > version.txt
 
-      - name: Build and pack
+      - name: Build SDK
+        working-directory: sdk/dotnet
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          VERSION="${VERSION#v}"
+          dotnet build Pulumi.Powerplatform.csproj \
+            --configuration Release \
+            /p:Version="$VERSION"
+
+      - name: Pack SDK
         working-directory: sdk/dotnet
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"
@@ -244,6 +253,7 @@ jobs:
           dotnet pack Pulumi.Powerplatform.csproj \
             --configuration Release \
             /p:Version="$VERSION" \
+            --no-build \
             --output nupkgs
 
       - name: NuGet login (OIDC → temp API key)
