@@ -775,6 +775,9 @@
         },
         "java": {
             "basePackage": "com.github.rpothin"
+        },
+        "dotnet": {
+            "packageId": "Rpothin.Powerplatform"
         }
     }
 }
