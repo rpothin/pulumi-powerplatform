@@ -57,6 +57,7 @@ jobs:
           pulumi package gen-sdk . --language go     --out sdk
           pulumi package gen-sdk . --language dotnet --out sdk
           pulumi package gen-sdk . --language java   --out sdk
+          bash ./scripts/normalize-dotnet-sdk.sh sdk/dotnet
 
       - name: Check if SDK files changed
         if: steps.schema_changed.outputs.schema_changed == 'true'

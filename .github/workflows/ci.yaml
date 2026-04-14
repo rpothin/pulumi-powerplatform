@@ -72,6 +72,7 @@ jobs:
           pulumi package gen-sdk . --language go     --out "$GEN_DIR"
           pulumi package gen-sdk . --language dotnet --out "$GEN_DIR"
           pulumi package gen-sdk . --language java   --out "$GEN_DIR"
+          bash ./scripts/normalize-dotnet-sdk.sh "$GEN_DIR/dotnet"
 
           STALE=""
           for lang in nodejs go dotnet java; do
