@@ -33,7 +33,7 @@ apps, and flows.
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 env = pp.Environment(
     "dev",

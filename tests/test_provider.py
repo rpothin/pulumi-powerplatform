@@ -8,7 +8,7 @@ import pytest
 from pulumi.provider.experimental.provider import (
     GetSchemaRequest,
 )
-from pulumi_powerplatform.provider import PowerPlatformProvider
+from rpothin_powerplatform.provider import PowerPlatformProvider
 
 
 @pytest.fixture

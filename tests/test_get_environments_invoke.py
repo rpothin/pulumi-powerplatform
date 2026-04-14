@@ -6,8 +6,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 from pulumi.provider.experimental.provider import InvokeRequest
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.functions.get_environments import GetEnvironmentsFunction
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.functions.get_environments import GetEnvironmentsFunction
 
 
 def _fake_env(*, env_id: str = "env-1", display_name: str = "Dev") -> MagicMock:

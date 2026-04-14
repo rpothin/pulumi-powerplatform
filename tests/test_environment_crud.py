@@ -12,9 +12,9 @@ from pulumi.provider.experimental.provider import (
     ReadRequest,
     UpdateRequest,
 )
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.resources.environment import EnvironmentResource
-from pulumi_powerplatform.utils import HttpError
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.resources.environment import EnvironmentResource
+from rpothin_powerplatform.utils import HttpError
 
 _URN = "urn:pulumi:test::test::powerplatform:index:Environment::my-env"
 _FAKE_ID = "env-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
@@ -98,7 +98,7 @@ class TestEnvironmentCreate:
             timeout=300,
             preview=False,
         )
-        with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
             response = await handler.create(request)
 
         assert response.resource_id == _FAKE_ID
@@ -159,7 +159,7 @@ class TestEnvironmentCreate:
             timeout=300,
             preview=False,
         )
-        with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
             with pytest.raises(RuntimeError, match="non-successful terminal state"):
                 await handler.create(request)
 
@@ -182,7 +182,7 @@ class TestEnvironmentCreate:
             timeout=300,
             preview=False,
         )
-        with patch("pulumi_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
             with pytest.raises(RuntimeError, match="non-successful terminal state"):
                 await handler.create(request)
 

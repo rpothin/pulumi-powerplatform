@@ -15,8 +15,8 @@ from pulumi.provider.experimental.provider import (
     ReadRequest,
     UpdateRequest,
 )
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.resources.dlp_policy import DlpPolicyResource
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.resources.dlp_policy import DlpPolicyResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:DlpPolicy::my-policy"
 _FAKE_ID = "policy-abc-123"

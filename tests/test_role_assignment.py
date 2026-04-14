@@ -9,7 +9,7 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from pulumi_powerplatform.resources.role_assignment import RoleAssignmentResource
+from rpothin_powerplatform.resources.role_assignment import RoleAssignmentResource
 
 
 def _mock_client():

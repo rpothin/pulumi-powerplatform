@@ -1,7 +1,7 @@
 """Example: Create a Power Platform environment."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 # Create a new Sandbox environment in the United States region.
 environment = pp.Environment(

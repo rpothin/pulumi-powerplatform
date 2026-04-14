@@ -42,7 +42,7 @@ This provider enables managing Microsoft Power Platform resources using [Pulumi]
 ## Installation
 
 ```bash
-pip install pulumi-powerplatform
+pip install rpothin-powerplatform
 ```
 
 ## Configuration
@@ -71,7 +71,7 @@ pulumi config set powerplatform:clientSecret <your-secret> --secret
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 env_group = pp.EnvironmentGroup(
     "my-env-group",
@@ -86,7 +86,7 @@ pulumi.export("groupId", env_group.id)
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 dlp_policy = pp.DlpPolicy(
     "my-dlp-policy",
@@ -110,7 +110,7 @@ pulumi.export("policyId", dlp_policy.id)
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 billing_policy = pp.BillingPolicy(
     "my-billing-policy",
@@ -131,7 +131,7 @@ pulumi.export("billingPolicyId", billing_policy.id)
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 managed_env = pp.ManagedEnvironment(
     "my-managed-env",
@@ -145,7 +145,7 @@ pulumi.export("managedEnvId", managed_env.id)
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 backup = pp.EnvironmentBackup(
     "my-env-backup",
@@ -160,7 +160,7 @@ pulumi.export("backupId", backup.id)
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 role_assignment = pp.RoleAssignment(
     "my-role-assignment",
@@ -177,7 +177,7 @@ pulumi.export("roleAssignmentId", role_assignment.id)
 
 ```python
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 isv_contract = pp.IsvContract(
     "my-isv-contract",
@@ -219,7 +219,7 @@ ruff check provider/ tests/
 ```
 pulumi-powerplatform/
 ├── provider/
-│   └── pulumi_powerplatform/
+│   └── rpothin_powerplatform/
 │       ├── __init__.py              # Package exports
 │       ├── __main__.py              # gRPC server entry point
 │       ├── provider.py              # Main provider (CRUD dispatch)
@@ -244,7 +244,7 @@ pulumi-powerplatform/
 │           └── client.py            # RawApiClient scaffold
 ├── sdk/
 │   └── python/
-│       └── pulumi_powerplatform/    # End-user Python SDK
+│       └── rpothin_powerplatform/    # End-user Python SDK
 ├── examples/                        # Usage examples (one per resource)
 ├── tests/                           # Unit tests
 ├── .github/
@@ -299,7 +299,7 @@ pulumi-powerplatform/
 - **ISV Contract `geo`**: Immutable after creation — changing `geo` triggers a resource replacement.
 - **No retry logic**: API rate limiting (HTTP 429) and transient failures are not yet handled. This is planned as future work.
 - **No raw REST API**: The `raw_api/` module is currently a scaffold. It will be implemented when the first resource requires direct REST access (e.g., Environment creation).
-- **SDK / provider package name collision**: The provider source (`provider/pulumi_powerplatform/`) and the end-user Python SDK (`sdk/python/pulumi_powerplatform/`) share the same package name. Do not install both in the same Python environment. This will be resolved when the provider is published to PyPI with a dedicated package name.
+- **SDK / provider package name collision**: The provider source (`provider/rpothin_powerplatform/`) and the end-user Python SDK (`sdk/python/rpothin_powerplatform/`) share the same package name. Do not install both in the same Python environment. This will be resolved when the provider is published to PyPI with a dedicated package name.
 
 ## Contributing
 

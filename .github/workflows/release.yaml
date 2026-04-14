@@ -118,18 +118,18 @@ jobs:
           mkdir -p "$PLUGIN_DIR"
 
           # Copy the provider package and its entrypoint
-          cp -r provider/pulumi_powerplatform "$PLUGIN_DIR/"
+          cp -r provider/rpothin_powerplatform "$PLUGIN_DIR/"
           cp schema.json "$PLUGIN_DIR/"
           cp PulumiPlugin.yaml "$PLUGIN_DIR/"
 
           # Create a wrapper script that invokes the provider
-          printf '#!/usr/bin/env bash\nexec python -m pulumi_powerplatform "$@"\n' \
+          printf '#!/usr/bin/env bash\nexec python -m rpothin_powerplatform "$@"\n' \
             > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
           chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
 
           # Create a .cmd launcher for Windows
           if [ "${{ matrix.os }}" = "windows" ]; then
-            printf '@echo off\npython -m pulumi_powerplatform %%*\n' \
+            printf '@echo off\npython -m rpothin_powerplatform %%*\n' \
               > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd"
           fi
 
@@ -149,7 +149,7 @@ jobs:
       id-token: write
     environment:
       name: pypi
-      url: https://pypi.org/project/pulumi-powerplatform/
+      url: https://pypi.org/project/rpothin-powerplatform/
     steps:
       - uses: actions/checkout@v4
         with:

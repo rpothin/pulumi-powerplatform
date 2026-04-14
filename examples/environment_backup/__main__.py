@@ -1,7 +1,7 @@
 """Example: Create a Power Platform Environment Backup."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 backup = pp.EnvironmentBackup(
     "my-env-backup",

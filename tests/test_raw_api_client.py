@@ -6,8 +6,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import httpx
 import pytest
-from pulumi_powerplatform.raw_api.client import RawApiClient
-from pulumi_powerplatform.utils import HttpError
+from rpothin_powerplatform.raw_api.client import RawApiClient
+from rpothin_powerplatform.utils import HttpError
 
 
 class _FakeToken:

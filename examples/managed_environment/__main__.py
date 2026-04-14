@@ -1,7 +1,7 @@
 """Example: Enable a Managed Environment in Power Platform."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 managed_env = pp.ManagedEnvironment(
     "my-managed-env",

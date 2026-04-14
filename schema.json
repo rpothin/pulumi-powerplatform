@@ -768,7 +768,7 @@
     },
     "language": {
         "python": {
-            "packageName": "pulumi_powerplatform",
+            "packageName": "rpothin_powerplatform",
             "requires": {
                 "pulumi": ">=3.0.0,<4.0.0"
             }

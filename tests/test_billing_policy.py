@@ -9,7 +9,7 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from pulumi_powerplatform.resources.billing_policy import BillingPolicyResource
+from rpothin_powerplatform.resources.billing_policy import BillingPolicyResource
 
 
 def _mock_client():

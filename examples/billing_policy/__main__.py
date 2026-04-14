@@ -1,7 +1,7 @@
 """Example: Create a Power Platform Billing Policy."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 billing_policy = pp.BillingPolicy(
     "my-billing-policy",

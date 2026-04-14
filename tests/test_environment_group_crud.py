@@ -15,8 +15,8 @@ from pulumi.provider.experimental.provider import (
     ReadRequest,
     UpdateRequest,
 )
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.resources.environment_group import EnvironmentGroupResource
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.resources.environment_group import EnvironmentGroupResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:EnvironmentGroup::my-group"
 _FAKE_ID = UUID("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")

@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import InvokeRequest
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.functions.get_apps import GetAppsFunction
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.functions.get_apps import GetAppsFunction
 
 
 def _fake_app(*, app_id: str = "app-1", name: str = "MyApp", display_name: str = "My Application"):

@@ -1,7 +1,7 @@
 """Example: Create a Power Platform Environment Group."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 env_group = pp.EnvironmentGroup(
     "my-env-group",

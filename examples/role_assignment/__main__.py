@@ -1,7 +1,7 @@
 """Example: Create a Power Platform Role Assignment."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 role_assignment = pp.RoleAssignment(
     "my-role-assignment",

@@ -9,7 +9,7 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from pulumi_powerplatform.resources.isv_contract import IsvContractResource
+from rpothin_powerplatform.resources.isv_contract import IsvContractResource
 
 
 def _mock_client():
