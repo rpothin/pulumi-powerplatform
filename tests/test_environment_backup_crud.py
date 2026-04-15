@@ -12,8 +12,8 @@ from pulumi.provider.experimental.provider import (
     DeleteRequest,
     ReadRequest,
 )
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.resources.environment_backup import EnvironmentBackupResource
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.resources.environment_backup import EnvironmentBackupResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:EnvironmentBackup::my-backup"
 _FAKE_BACKUP_ID = "backup-abc-123"

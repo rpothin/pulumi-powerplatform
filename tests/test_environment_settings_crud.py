@@ -15,9 +15,9 @@ from pulumi.provider.experimental.provider import (
     ReadRequest,
     UpdateRequest,
 )
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.resources.environment_settings import EnvironmentSettingsResource
-from pulumi_powerplatform.utils import HttpError
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.resources.environment_settings import EnvironmentSettingsResource
+from rpothin_powerplatform.utils import HttpError
 
 _URN = "urn:pulumi:test::test::powerplatform:index:EnvironmentSettings::my-settings"
 _ENV_ID = "env-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
@@ -265,7 +265,7 @@ class TestEnvironmentSettingsDelete:
             properties={},
             timeout=300,
         )
-        with patch("pulumi_powerplatform.resources.environment_settings.pulumi") as mock_pulumi:
+        with patch("rpothin_powerplatform.resources.environment_settings.pulumi") as mock_pulumi:
             await handler.delete(request)
             mock_pulumi.warn.assert_called_once()
             warn_msg = mock_pulumi.warn.call_args[0][0]

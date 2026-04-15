@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import InvokeRequest
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.functions.get_flows import GetFlowsFunction
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.functions.get_flows import GetFlowsFunction
 
 
 def _fake_flow(*, flow_id: str = "flow-1", name: str = "MyFlow", display_name: str = "My Cloud Flow"):

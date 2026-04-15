@@ -12,8 +12,8 @@ from pulumi.provider.experimental.provider import (
     DeleteRequest,
     ReadRequest,
 )
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.resources.role_assignment import RoleAssignmentResource
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.resources.role_assignment import RoleAssignmentResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:RoleAssignment::my-assignment"
 _FAKE_ID = "assignment-abc-123"

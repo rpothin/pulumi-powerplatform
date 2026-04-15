@@ -9,7 +9,7 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from pulumi_powerplatform.resources.environment import EnvironmentResource
+from rpothin_powerplatform.resources.environment import EnvironmentResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:Environment::my-env"
 

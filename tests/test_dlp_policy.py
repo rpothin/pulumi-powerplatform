@@ -9,7 +9,7 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from pulumi_powerplatform.resources.dlp_policy import DlpPolicyResource
+from rpothin_powerplatform.resources.dlp_policy import DlpPolicyResource
 
 
 def _mock_client():

@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import InvokeRequest
-from pulumi_powerplatform.client import PowerPlatformClient
-from pulumi_powerplatform.functions.get_connectors import GetConnectorsFunction
+from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.functions.get_connectors import GetConnectorsFunction
 
 
 def _fake_connector(*, connector_id: str = "conn-1", name: str = "SQL", display_name: str = "SQL Server"):

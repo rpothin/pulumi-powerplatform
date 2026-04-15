@@ -1,7 +1,7 @@
 """Example: Create a Power Platform DLP Policy."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 dlp_policy = pp.DlpPolicy(
     "my-dlp-policy",

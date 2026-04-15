@@ -12,7 +12,7 @@ Pulumi-supported languages:
 ### Python
 
 ```bash
-pip install pulumi-powerplatform
+pip install rpothin-powerplatform
 ```
 
 ### Node.js

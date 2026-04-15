@@ -9,7 +9,7 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from pulumi_powerplatform.resources.environment_group import EnvironmentGroupResource
+from rpothin_powerplatform.resources.environment_group import EnvironmentGroupResource
 
 
 def _mock_client():

@@ -5,13 +5,13 @@ The Pulumi Power Platform SDK allows you to manage [Microsoft Power Platform](ht
 ## Installation
 
 ```bash
-pip install pulumi-powerplatform
+pip install rpothin-powerplatform
 ```
 
 ## Usage
 
 ```python
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 env = pp.Environment(
     "dev",

@@ -35,7 +35,7 @@ ruff check provider/ tests/
 ## Project Structure
 
 ```
-provider/pulumi_powerplatform/
+provider/rpothin_powerplatform/
 ├── provider.py              # Main provider (CRUD/invoke dispatch)
 ├── config.py                # Configuration resolution (args + env vars)
 ├── client.py                # SDK client factory (Azure Identity auth)
@@ -54,9 +54,9 @@ provider/pulumi_powerplatform/
 
 ## Adding a New Resource
 
-1. **Create the handler** in `provider/pulumi_powerplatform/resources/my_resource.py`:
+1. **Create the handler** in `provider/rpothin_powerplatform/resources/my_resource.py`:
    - Implement `check()`, `diff()`, `create()`, `read()`, `update()` (or subset), `delete()`
-   - Use `from pulumi_powerplatform.utils import pv_str as _pv_str` for the shared helper
+   - Use `from rpothin_powerplatform.utils import pv_str as _pv_str` for the shared helper
    - Follow the pattern of existing resources (e.g., `environment_group.py`)
 
 2. **Register in `provider.py`**:
@@ -67,7 +67,7 @@ provider/pulumi_powerplatform/
 3. **Add to `schema.json`**:
    - Define the resource under `resources` with `inputProperties`, `properties`, and `requiredInputs`
 
-4. **Add an SDK class** in `sdk/python/pulumi_powerplatform/my_resource.py`:
+4. **Add an SDK class** in `sdk/python/rpothin_powerplatform/my_resource.py`:
    - Extend `pulumi.CustomResource`
    - Use `Optional[str] = None` for constructor parameters
    - Export from `__init__.py`
@@ -94,7 +94,7 @@ the Kiota `HttpxRequestAdapter`. This reuses the same authentication and transpo
 as the SDK:
 
 ```python
-from pulumi_powerplatform.raw_api import RawApiClient
+from rpothin_powerplatform.raw_api import RawApiClient
 
 raw = RawApiClient(self._client.adapter)
 result = await raw.request("GET", "/providers/Microsoft.BusinessAppPlatform/environments")

@@ -1,7 +1,7 @@
 """Example: Create a Power Platform ISV Contract."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 isv_contract = pp.IsvContract(
     "my-isv-contract",

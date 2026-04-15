@@ -1,7 +1,7 @@
 """Example: Configure settings on a Power Platform environment."""
 
 import pulumi
-import pulumi_powerplatform as pp
+import rpothin_powerplatform as pp
 
 # Reference an existing environment (e.g., created by the Environment resource).
 environment_id = "00000000-0000-0000-0000-000000000001"
