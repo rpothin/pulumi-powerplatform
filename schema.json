@@ -767,6 +767,9 @@
         }
     },
     "language": {
+        "nodejs": {
+            "packageName": "@rpothin/powerplatform"
+        },
         "python": {
             "packageName": "rpothin_powerplatform",
             "requires": {
