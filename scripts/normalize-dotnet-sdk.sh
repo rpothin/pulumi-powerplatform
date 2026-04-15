@@ -2,6 +2,7 @@
 set -euo pipefail
 
 DOTNET_SDK_DIR="${1:?usage: normalize-dotnet-sdk.sh <dotnet-sdk-dir>}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 sed -i 's#<TargetFramework>net6.0</TargetFramework>#<TargetFramework>net8.0</TargetFramework>#' \
   "$DOTNET_SDK_DIR/Pulumi.Powerplatform.csproj"
@@ -22,3 +23,7 @@ cat > "$DOTNET_SDK_DIR/global.json" <<'EOF'
   }
 }
 EOF
+
+# Replace the SVG-disguised-as-PNG that the generator downloads from logoUrl
+# with the canonical real PNG stored in docs/logo.png.
+cp "$SCRIPT_DIR/../docs/logo.png" "$DOTNET_SDK_DIR/logo.png"
