@@ -24,13 +24,31 @@ npm install @rpothin/powerplatform
 ### .NET
 
 ```bash
-dotnet add package Pulumi.Powerplatform
+dotnet add package Rpothin.Powerplatform
 ```
 
 ### Go
 
 ```bash
 go get github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform
+```
+
+### Java
+
+**Gradle**
+
+```groovy
+implementation "com.github.rpothin:powerplatform:<version>"
+```
+
+**Maven**
+
+```xml
+<dependency>
+  <groupId>com.github.rpothin</groupId>
+  <artifactId>powerplatform</artifactId>
+  <version>&lt;version&gt;</version>
+</dependency>
 ```
 
 ## Authentication
@@ -80,3 +98,4 @@ and other credential sources.
 - An Azure AD app registration with the appropriate Power Platform API
   permissions (`https://api.powerplatform.com/.default`)
 - Pulumi CLI v3 or later
+- Python 3.10 or later available on `PATH`

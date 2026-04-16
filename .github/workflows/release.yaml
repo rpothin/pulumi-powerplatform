@@ -104,9 +104,6 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Install provider package
-        run: pip install .
-
       - name: Create plugin archive
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"
@@ -117,19 +114,19 @@ jobs:
           PLUGIN_DIR="pulumi-resource-${PROVIDER_NAME}"
           mkdir -p "$PLUGIN_DIR"
 
-          # Copy the provider package and its entrypoint
-          cp -r provider/rpothin_powerplatform "$PLUGIN_DIR/"
+          # Install the provider and all of its dependencies into the plugin directory
+          python -m pip install --target "$PLUGIN_DIR" .
           cp schema.json "$PLUGIN_DIR/"
           cp PulumiPlugin.yaml "$PLUGIN_DIR/"
 
           # Create a wrapper script that invokes the provider
-          printf '#!/usr/bin/env bash\nexec python -m rpothin_powerplatform "$@"\n' \
+          printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nPYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python -m rpothin_powerplatform "$@"\n' \
             > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
           chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
 
           # Create a .cmd launcher for Windows
           if [ "${{ matrix.os }}" = "windows" ]; then
-            printf '@echo off\npython -m rpothin_powerplatform %%*\n' \
+            printf '@echo off\nset SCRIPT_DIR=%%~dp0\nset PYTHONPATH=%%SCRIPT_DIR%%;%%PYTHONPATH%%\npython -m rpothin_powerplatform %%*\n' \
               > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd"
           fi
 
@@ -270,10 +267,64 @@ jobs:
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
 
+  publish-go:
+    name: Publish Go module tag
+    runs-on: ubuntu-latest
+    needs: [validate-version, build-provider]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ needs.validate-version.outputs.version }}
+
+      - name: Create Go module tag
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          GO_TAG="sdk/go/powerplatform/${VERSION}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${GO_TAG}" >/dev/null 2>&1; then
+            echo "Go module tag ${GO_TAG} already exists."
+            exit 0
+          fi
+
+          git tag "${GO_TAG}"
+          git push origin "${GO_TAG}"
+
+  publish-java:
+    name: Publish Java SDK to Maven Central
+    runs-on: ubuntu-latest
+    needs: [validate-version, build-provider]
+    env:
+      PACKAGE_VERSION: ${{ needs.validate-version.outputs.version }}
+      SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+      PUBLISH_REPO_USERNAME: ${{ secrets.PUBLISH_REPO_USERNAME }}
+      PUBLISH_REPO_PASSWORD: ${{ secrets.PUBLISH_REPO_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.validate-version.outputs.version }}
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "11"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Publish Java SDK
+        working-directory: sdk/java
+        run: |
+          export PACKAGE_VERSION="${PACKAGE_VERSION#v}"
+          gradle publishToSonatype closeAndReleaseSonatypeStagingRepository
+
   promote-release:
     name: Promote release to latest
     runs-on: ubuntu-latest
-    needs: [validate-version, publish-sdk-pypi, publish-npm, publish-nuget]
+    needs: [validate-version, publish-sdk-pypi, publish-npm, publish-nuget, publish-go, publish-java]
     steps:
       - uses: actions/download-artifact@v4
         with:
