@@ -38,14 +38,14 @@ go get github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform
 **Gradle**
 
 ```groovy
-implementation "com.github.rpothin:powerplatform:<version>"
+implementation "io.github.rpothin:powerplatform:<version>"
 ```
 
 **Maven**
 
 ```xml
 <dependency>
-  <groupId>com.github.rpothin</groupId>
+  <groupId>io.github.rpothin</groupId>
   <artifactId>powerplatform</artifactId>
   <version>&lt;version&gt;</version>
 </dependency>
