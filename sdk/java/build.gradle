@@ -93,8 +93,8 @@ publishing {
             artifact javadocJar
 
             pom {
-                inceptionYear = "2026"
-                name = "Pulumi Power Platform Provider"
+                inceptionYear = ""
+                name = ""
                 packaging = "jar"
                 description = "A Pulumi provider for managing Microsoft Power Platform resources."
 
@@ -108,16 +108,16 @@ publishing {
 
                 licenses {
                     license {
-                        name = "MIT"
-                        url = "https://opensource.org/license/mit"
+                        name = ""
+                        url = ""
                     }
                 }
 
                 developers {
                     developer {
-                        id = "rpothin"
-                        name = "Raphael Pothin"
-                        email = "raphael.pothin@gmail.com"
+                        id = ""
+                        name = ""
+                        email = ""
                     }
                 }
             }
