@@ -10,4 +10,4 @@ pluginManagement {
   }
 }
 
-rootProject.name = "com.github.rpothin.powerplatform"
+rootProject.name = "io.github.rpothin.powerplatform"
