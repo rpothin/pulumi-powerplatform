@@ -120,14 +120,21 @@ jobs:
           cp PulumiPlugin.yaml "$PLUGIN_DIR/"
 
           # Create a wrapper script that invokes the provider
-          printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nPYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python -m rpothin_powerplatform "$@"\n' \
-            > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
+          cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}" <<'EOF'
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python -m rpothin_powerplatform "$@"
+EOF
           chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
 
           # Create a .cmd launcher for Windows
           if [ "${{ matrix.os }}" = "windows" ]; then
-            printf '@echo off\nset SCRIPT_DIR=%%~dp0\nset PYTHONPATH=%%SCRIPT_DIR%%;%%PYTHONPATH%%\npython -m rpothin_powerplatform %%*\n' \
-              > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd"
+          cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd" <<'EOF'
+@echo off
+set SCRIPT_DIR=%~dp0
+set PYTHONPATH=%SCRIPT_DIR%;%PYTHONPATH%
+python -m rpothin_powerplatform %*
+EOF
           fi
 
           tar -czf "$ARCHIVE" "$PLUGIN_DIR"
