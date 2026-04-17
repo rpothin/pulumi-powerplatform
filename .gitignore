@@ -35,6 +35,3 @@ Pulumi.*.yaml
 root/
 
 # Java build artifacts
-sdk/java/gradle/
-sdk/java/gradlew
-sdk/java/gradlew.bat
