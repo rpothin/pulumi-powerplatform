@@ -297,6 +297,9 @@ jobs:
     name: Publish Java SDK to Maven Central
     runs-on: ubuntu-latest
     needs: [validate-version, build-provider]
+    environment:
+      name: maven
+      url: https://central.sonatype.com/artifact/io.github.rpothin/powerplatform
     env:
       PACKAGE_VERSION: ${{ needs.validate-version.outputs.version }}
       SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
