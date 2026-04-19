@@ -114,68 +114,31 @@ jobs:
           PLUGIN_DIR="pulumi-resource-${PROVIDER_NAME}"
           mkdir -p "$PLUGIN_DIR"
 
-          # Build wheels for the provider and ALL of its dependencies, bundling
-          # them inside the plugin archive. At runtime the bootstrap shim installs
-          # from these local wheels (--no-index), so no PyPI access is needed and
-          # the provider starts quickly without risking OOM from live pip installs.
-          python -m pip wheel . -w "$PLUGIN_DIR/wheels/"
+          # Install packages directly into plugin dir (no runtime pip needed)
+          python -m pip install --target "$PLUGIN_DIR" .
           cp schema.json "$PLUGIN_DIR/"
           cp PulumiPlugin.yaml "$PLUGIN_DIR/"
 
-          # Create a root-level __main__.py so the Pulumi Python language host
-          # can execute this plugin directly (required for Pulumi CLI >= 3.231.0)
+          # Keep __main__.py (added for Pulumi CLI >= 3.231.0 compatibility)
           printf '"""Plugin entry point for Pulumi Python language host."""\nfrom rpothin_powerplatform.__main__ import main\n\nif __name__ == "__main__":\n    main()\n' \
             > "$PLUGIN_DIR/__main__.py"
 
-          # Create venv/bin/python3 bootstrap shim.
-          # On first run it creates a virtualenv using the system Python and
-          # installs the provider + deps from the bundled wheelhouse (offline).
-          # Uses an atomic staging dir + sentinel to prevent race conditions
-          # when Pulumi starts multiple provider processes simultaneously.
+          # Simple PYTHONPATH-based venv shim (no pip at runtime)
           mkdir -p "$PLUGIN_DIR/venv/bin"
-          cat > "$PLUGIN_DIR/venv/bin/python3" << 'SHIM_EOF'
-          #!/usr/bin/env bash
-          set -euo pipefail
-          PLUGIN_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-          VENV_DIR="$PLUGIN_DIR/_runtime_venv"
-
-          if [ ! -f "$VENV_DIR/.bootstrap-done" ]; then
-              STAGING="$VENV_DIR.staging.$$"
-              python3 -m venv "$STAGING"
-              "$STAGING/bin/pip" install --quiet --no-index \
-                  --find-links "$PLUGIN_DIR/wheels/" rpothin-powerplatform
-              mv "$STAGING" "$VENV_DIR"
-              touch "$VENV_DIR/.bootstrap-done"
-          fi
-
-          exec "$VENV_DIR/bin/python3" "$@"
-          SHIM_EOF
+          printf '#!/usr/bin/env bash\nPLUGIN_DIR="$(cd "$(dirname "$0")/../.." && pwd)"\nPYTHONPATH="$PLUGIN_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python3 "$@"\n' \
+            > "$PLUGIN_DIR/venv/bin/python3"
           chmod +x "$PLUGIN_DIR/venv/bin/python3"
           cp "$PLUGIN_DIR/venv/bin/python3" "$PLUGIN_DIR/venv/bin/python"
           chmod +x "$PLUGIN_DIR/venv/bin/python"
 
-          # Create a wrapper script that invokes the provider via the bootstrapped venv
-          printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nexec "$SCRIPT_DIR/venv/bin/python3" -m rpothin_powerplatform "$@"\n' \
+          # Wrapper script using PYTHONPATH (no venv)
+          printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nPYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python -m rpothin_powerplatform "$@"\n' \
             > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
           chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
 
           if [ "${{ matrix.os }}" = "windows" ]; then
-            cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd" << 'CMD_EOF'
-          @echo off
-          setlocal
-          set PLUGIN_DIR=%~dp0
-          set VENV_DIR=%PLUGIN_DIR%_runtime_venv
-
-          if not exist "%VENV_DIR%\.bootstrap-done" (
-              set STAGING=%VENV_DIR%.staging.%RANDOM%
-              python -m venv "%STAGING%"
-              "%STAGING%\Scripts\pip.exe" install --quiet --no-index --find-links "%PLUGIN_DIR%wheels\" rpothin-powerplatform
-              move /Y "%STAGING%" "%VENV_DIR%" >nul
-              echo.> "%VENV_DIR%\.bootstrap-done"
-          )
-
-          "%VENV_DIR%\Scripts\python.exe" -m rpothin_powerplatform %*
-          CMD_EOF
+            printf '@echo off\r\nset SCRIPT_DIR=%%~dp0\r\nset PYTHONPATH=%%SCRIPT_DIR%%;%%PYTHONPATH%%\r\npython -m rpothin_powerplatform %%*\r\n' \
+              > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd"
           fi
 
           tar -czf "$ARCHIVE" "$PLUGIN_DIR"
