@@ -60,16 +60,24 @@ _GET_CONNECTORS = "powerplatform:index:getConnectors"
 _GET_APPS = "powerplatform:index:getApps"
 _GET_FLOWS = "powerplatform:index:getFlows"
 
-# Locate the schema file relative to this module (repo root / schema.json).
-_SCHEMA_PATH = str(Path(__file__).resolve().parents[2] / "schema.json")
-
-
 def _load_schema() -> str:
-    """Read the Pulumi Package Schema JSON file once."""
-    # Try the path relative to the provider package first, then fall back to
-    # the repository root (useful during development).
-    for candidate in [_SCHEMA_PATH, os.path.join(os.getcwd(), "schema.json")]:
-        if os.path.isfile(candidate):
+    """Read the Pulumi Package Schema JSON file once.
+
+    Search order:
+    1. Installed plugin layout: schema.json sits one level above the package dir
+       (<plugin_dir>/rpothin_powerplatform/ → <plugin_dir>/schema.json).
+    2. Development repo layout: schema.json is at the repo root, two levels above
+       provider/rpothin_powerplatform/ → repo_root/schema.json.
+    3. Current working directory fallback.
+    """
+    here = Path(__file__).resolve().parent
+    candidates = [
+        here.parent / "schema.json",       # installed: <plugin_dir>/schema.json
+        here.parents[1] / "schema.json",   # dev repo:  repo_root/schema.json
+        Path(os.getcwd()) / "schema.json", # cwd fallback
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
             with open(candidate, encoding="utf-8") as f:
                 return f.read()
     raise FileNotFoundError("schema.json not found. Ensure it is present alongside the provider package.")
