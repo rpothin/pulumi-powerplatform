@@ -120,3 +120,13 @@ The GitHub Actions CI pipeline runs on every push and PR:
 - **Lint**: `ruff check` on provider and test code
 - **Test**: `pytest` across Python 3.10, 3.11, 3.12
 - **Schema validation**: Structural checks on `schema.json`
+
+## Dependency Version Notes
+
+### .NET (`sdk/dotnet/Rpothin.Powerplatform.csproj`)
+
+The `Pulumi` NuGet package and the `@pulumi/pulumi` npm package are published on
+independent schedules. Before bumping the lower bound of the `Pulumi` NuGet
+`PackageReference`, verify that the target version is available on
+[nuget.org/packages/Pulumi](https://www.nuget.org/packages/Pulumi) — a version
+that exists for npm may not yet be published to NuGet.
