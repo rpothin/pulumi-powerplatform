@@ -121,13 +121,8 @@ jobs:
 
           # Create a root-level __main__.py so the Pulumi Python language host
           # can execute this plugin directly (required for Pulumi CLI >= 3.231.0)
-          cat > "$PLUGIN_DIR/__main__.py" << 'ENTRY'
-"""Plugin entry point for Pulumi Python language host."""
-from rpothin_powerplatform.__main__ import main
-
-if __name__ == "__main__":
-    main()
-ENTRY
+          printf '"""Plugin entry point for Pulumi Python language host."""\nfrom rpothin_powerplatform.__main__ import main\n\nif __name__ == "__main__":\n    main()\n' \
+            > "$PLUGIN_DIR/__main__.py"
 
           # Create a wrapper script that invokes the provider
           printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nPYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python -m rpothin_powerplatform "$@"\n' \
