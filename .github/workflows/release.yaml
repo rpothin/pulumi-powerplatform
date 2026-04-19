@@ -284,7 +284,7 @@ jobs:
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"
           VERSION="${VERSION#v}"
-          dotnet build Rpothin.Powerplatform.csproj \
+          dotnet build Pulumi.Powerplatform.csproj \
             --configuration Release \
             /p:Version="$VERSION"
 
@@ -293,7 +293,7 @@ jobs:
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"
           VERSION="${VERSION#v}"
-          dotnet pack Rpothin.Powerplatform.csproj \
+          dotnet pack Pulumi.Powerplatform.csproj \
             --configuration Release \
             /p:Version="$VERSION" \
             --no-build \
