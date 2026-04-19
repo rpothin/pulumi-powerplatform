@@ -114,8 +114,12 @@ jobs:
           PLUGIN_DIR="pulumi-resource-${PROVIDER_NAME}"
           mkdir -p "$PLUGIN_DIR"
 
-          # Install the provider and all of its dependencies into the plugin directory
-          python -m pip install --target "$PLUGIN_DIR" .
+          # Build a pure-Python wheel for the provider runtime and bundle it
+          # inside the plugin archive. Dependencies (grpcio, pulumi, etc.) are
+          # intentionally excluded so they are fetched from PyPI at runtime by
+          # the system's own Python, ensuring ABI-compatible native extensions
+          # regardless of the Python version used at build time.
+          python -m pip wheel . --no-deps -w "$PLUGIN_DIR/wheels/"
           cp schema.json "$PLUGIN_DIR/"
           cp PulumiPlugin.yaml "$PLUGIN_DIR/"
 
@@ -124,27 +128,51 @@ jobs:
           printf '"""Plugin entry point for Pulumi Python language host."""\nfrom rpothin_powerplatform.__main__ import main\n\nif __name__ == "__main__":\n    main()\n' \
             > "$PLUGIN_DIR/__main__.py"
 
-          # Create a wrapper script that invokes the provider
-          printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nPYTHONPATH="$SCRIPT_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python -m rpothin_powerplatform "$@"\n' \
-            > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
-          chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
-
-          # Create venv/bin/python and venv/bin/python3 wrapper scripts.
-          # Pulumi's Python language host (v3.231.0+) defaults to using
-          # <plugin_dir>/venv/bin/python for all Python plugins. The shim
-          # sets PYTHONPATH to the plugin root so pip install --target
-          # packages are importable, then delegates to the system python3.
+          # Create venv/bin/python3 bootstrap shim.
+          # On first run it creates a real virtualenv using the system Python,
+          # installs the bundled provider wheel (which pulls ABI-compatible
+          # dependency wheels from PyPI), then execs the venv Python.
+          # Subsequent runs skip straight to exec.
           mkdir -p "$PLUGIN_DIR/venv/bin"
-          printf '#!/usr/bin/env bash\nPLUGIN_DIR="$(cd "$(dirname "$0")/../.." && pwd)"\nPYTHONPATH="$PLUGIN_DIR${PYTHONPATH:+:$PYTHONPATH}" exec python3 "$@"\n' \
-            > "$PLUGIN_DIR/venv/bin/python3"
+          cat > "$PLUGIN_DIR/venv/bin/python3" << 'SHIM_EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          PLUGIN_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+          VENV_DIR="$PLUGIN_DIR/_runtime_venv"
+
+          if [ ! -f "$VENV_DIR/bin/python3" ]; then
+              python3 -m venv "$VENV_DIR"
+              "$VENV_DIR/bin/pip" install --quiet "$PLUGIN_DIR/wheels/"*.whl
+          fi
+
+          exec "$VENV_DIR/bin/python3" "$@"
+          SHIM_EOF
           chmod +x "$PLUGIN_DIR/venv/bin/python3"
           cp "$PLUGIN_DIR/venv/bin/python3" "$PLUGIN_DIR/venv/bin/python"
           chmod +x "$PLUGIN_DIR/venv/bin/python"
 
-          # Create a .cmd launcher for Windows
+          # Create a wrapper script that invokes the provider via the bootstrapped venv
+          printf '#!/usr/bin/env bash\nSCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"\nexec "$SCRIPT_DIR/venv/bin/python3" -m rpothin_powerplatform "$@"\n' \
+            > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
+          chmod +x "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}"
+
+          # Create a .cmd launcher for Windows that mirrors the Unix bootstrap logic
           if [ "${{ matrix.os }}" = "windows" ]; then
-            printf '@echo off\r\nset SCRIPT_DIR=%%~dp0\r\nset PYTHONPATH=%%SCRIPT_DIR%%;%%PYTHONPATH%%\r\npython -m rpothin_powerplatform %%*\r\n' \
-              > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd"
+            cat > "$PLUGIN_DIR/pulumi-resource-${PROVIDER_NAME}.cmd" << 'CMD_EOF'
+          @echo off
+          setlocal
+          set PLUGIN_DIR=%~dp0
+          set VENV_DIR=%PLUGIN_DIR%_runtime_venv
+
+          if not exist "%VENV_DIR%\Scripts\python.exe" (
+              python -m venv "%VENV_DIR%"
+              for %%f in ("%PLUGIN_DIR%wheels\*.whl") do (
+                  "%VENV_DIR%\Scripts\pip.exe" install --quiet "%%f"
+              )
+          )
+
+          "%VENV_DIR%\Scripts\python.exe" -m rpothin_powerplatform %*
+          CMD_EOF
           fi
 
           tar -czf "$ARCHIVE" "$PLUGIN_DIR"
