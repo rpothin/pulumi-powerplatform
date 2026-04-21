@@ -1,7 +1,8 @@
 """Power Platform Pulumi provider resource."""
 
-import pulumi
 from typing import Optional
+
+import pulumi
 
 
 class Provider(pulumi.ProviderResource):

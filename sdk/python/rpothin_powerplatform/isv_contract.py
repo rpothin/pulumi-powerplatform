@@ -27,10 +27,13 @@ class IsvContract(pulumi.CustomResource):
             "name": name,
             "geo": geo,
             "status": status,
-            "createdOn": None,
-            "lastModifiedOn": None,
+            "created_on": None,
+            "last_modified_on": None,
         }
         super().__init__("powerplatform:index:IsvContract", resource_name, props, opts)
+
+    def translate_input_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
 
     def translate_output_property(self, prop: str) -> str:
         return re.sub(r'([A-Z])', lambda m: '_' + m.group(1).lower(), prop)

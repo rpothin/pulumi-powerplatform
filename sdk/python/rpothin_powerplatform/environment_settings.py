@@ -28,14 +28,17 @@ class EnvironmentSettings(pulumi.CustomResource):
         opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
-            "environmentId": environment_id,
-            "maxUploadFileSize": max_upload_file_size,
-            "pluginTraceLogSetting": plugin_trace_log_setting,
-            "isAuditEnabled": is_audit_enabled,
-            "isUserAccessAuditEnabled": is_user_access_audit_enabled,
-            "isActivityLoggingEnabled": is_activity_logging_enabled,
+            "environment_id": environment_id,
+            "max_upload_file_size": max_upload_file_size,
+            "plugin_trace_log_setting": plugin_trace_log_setting,
+            "is_audit_enabled": is_audit_enabled,
+            "is_user_access_audit_enabled": is_user_access_audit_enabled,
+            "is_activity_logging_enabled": is_activity_logging_enabled,
         }
         super().__init__("powerplatform:index:EnvironmentSettings", resource_name, props, opts)
+
+    def translate_input_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
 
     def translate_output_property(self, prop: str) -> str:
         return re.sub(r'([A-Z])', lambda m: '_' + m.group(1).lower(), prop)
