@@ -1,7 +1,9 @@
 """Power Platform DLP Policy resource."""
 
-import pulumi
+import re
 from typing import Any, Optional, Sequence
+
+import pulumi
 
 
 class DlpPolicy(pulumi.CustomResource):
@@ -28,3 +30,6 @@ class DlpPolicy(pulumi.CustomResource):
             "ruleSetCount": None,
         }
         super().__init__("powerplatform:index:DlpPolicy", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
