@@ -25,13 +25,16 @@ class RoleAssignment(pulumi.CustomResource):
         opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
-            "principalObjectId": principal_object_id,
-            "principalType": principal_type,
-            "roleDefinitionId": role_definition_id,
+            "principal_object_id": principal_object_id,
+            "principal_type": principal_type,
+            "role_definition_id": role_definition_id,
             "scope": scope,
-            "createdOn": None,
+            "created_on": None,
         }
         super().__init__("powerplatform:index:RoleAssignment", resource_name, props, opts)
+
+    def translate_input_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
 
     def translate_output_property(self, prop: str) -> str:
         return re.sub(r'([A-Z])', lambda m: '_' + m.group(1).lower(), prop)

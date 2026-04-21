@@ -24,12 +24,15 @@ class DlpPolicy(pulumi.CustomResource):
     ):
         props = {
             "name": name,
-            "ruleSets": rule_sets,
-            "tenantId": None,
-            "lastModified": None,
-            "ruleSetCount": None,
+            "rule_sets": rule_sets,
+            "tenant_id": None,
+            "last_modified": None,
+            "rule_set_count": None,
         }
         super().__init__("powerplatform:index:DlpPolicy", resource_name, props, opts)
+
+    def translate_input_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
 
     def translate_output_property(self, prop: str) -> str:
         return re.sub(r'([A-Z])', lambda m: '_' + m.group(1).lower(), prop)

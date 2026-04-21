@@ -1,21 +1,19 @@
 """Pulumi SDK for Microsoft Power Platform."""
 
-from .provider import Provider
-
+from .billing_policy import BillingPolicy
+from .dlp_policy import DlpPolicy
 from .environment import Environment
+from .environment_backup import EnvironmentBackup
 from .environment_group import EnvironmentGroup
 from .environment_settings import EnvironmentSettings
-from .dlp_policy import DlpPolicy
-from .billing_policy import BillingPolicy
-from .managed_environment import ManagedEnvironment
-from .environment_backup import EnvironmentBackup
-from .role_assignment import RoleAssignment
-from .isv_contract import IsvContract
-
-from .get_environments import get_environments
-from .get_connectors import get_connectors
 from .get_apps import get_apps
+from .get_connectors import get_connectors
+from .get_environments import get_environments
 from .get_flows import get_flows
+from .isv_contract import IsvContract
+from .managed_environment import ManagedEnvironment
+from .provider import Provider
+from .role_assignment import RoleAssignment
 
 __all__ = [
     "Provider",

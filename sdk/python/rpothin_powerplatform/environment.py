@@ -34,19 +34,22 @@ class Environment(pulumi.CustomResource):
         opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
-            "displayName": display_name,
+            "display_name": display_name,
             "description": description,
             "location": location,
-            "environmentType": environment_type,
-            "domainName": domain_name,
-            "currencyCode": currency_code,
-            "languageCode": language_code,
+            "environment_type": environment_type,
+            "domain_name": domain_name,
+            "currency_code": currency_code,
+            "language_code": language_code,
             "state": None,
             "url": None,
-            "createdTime": None,
-            "lastModifiedTime": None,
+            "created_time": None,
+            "last_modified_time": None,
         }
         super().__init__("powerplatform:index:Environment", resource_name, props, opts)
+
+    def translate_input_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
 
     def translate_output_property(self, prop: str) -> str:
         return re.sub(r'([A-Z])', lambda m: '_' + m.group(1).lower(), prop)
