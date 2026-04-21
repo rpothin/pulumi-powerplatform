@@ -24,6 +24,7 @@ from pulumi.provider.experimental.provider import (
 )
 
 from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.utils import HttpError
 from rpothin_powerplatform.utils import pv_str as _pv_str
 
 logger = logging.getLogger(__name__)
@@ -159,15 +160,9 @@ class EnvironmentResource:
         if provisioning_state == "Failed":
             raise RuntimeError(f"Environment creation failed: {result}")
 
-        # Fetch the final environment state via the admin read endpoint
-        final = await self._client.raw.request(
-            "GET",
-            f"/scopes/admin/environments/{env_id}",
-            api_version=_BAP_API_VERSION,
-        )
-
-        if final is None:
-            raise RuntimeError("Failed to read newly created environment.")
+        # Fetch the final environment state via the admin read endpoint,
+        # retrying on 404 until the resource is propagated (eventual consistency).
+        final = await self._wait_for_visibility(env_id)
 
         return CreateResponse(
             resource_id=env_id,
@@ -177,8 +172,6 @@ class EnvironmentResource:
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Read the current state of an environment."""
         env_id = request.resource_id
-
-        from rpothin_powerplatform.utils import HttpError
 
         try:
             result = await self._client.raw.request(
@@ -248,11 +241,16 @@ class EnvironmentResource:
         """Poll the environment until it reaches a terminal provisioning state."""
         for _ in range(max_polls):
             await asyncio.sleep(_POLL_INTERVAL_SECONDS)
-            result = await self._client.raw.request(
-                "GET",
-                f"/scopes/admin/environments/{env_id}",
-                api_version=_BAP_API_VERSION,
-            )
+            try:
+                result = await self._client.raw.request(
+                    "GET",
+                    f"/scopes/admin/environments/{env_id}",
+                    api_version=_BAP_API_VERSION,
+                )
+            except HttpError as exc:
+                if exc.status_code == 404:
+                    continue  # not yet propagated, keep polling
+                raise
             if result is None:
                 continue
             state = result.get("properties", {}).get("provisioningState", "")
@@ -263,6 +261,31 @@ class EnvironmentResource:
                     )
                 return
         raise RuntimeError(f"Environment provisioning timed out after polling {max_polls} times.")
+
+    async def _wait_for_visibility(self, env_id: str, max_polls: int = _DEFAULT_MAX_POLLS) -> dict:
+        """Wait for the environment to become visible on the admin endpoint.
+
+        After creation, the BAP admin GET endpoint may transiently return 404
+        before the resource is propagated. Retry until a non-None response is
+        returned or max_polls is exhausted.
+        """
+        for attempt in range(max_polls):
+            try:
+                result = await self._client.raw.request(
+                    "GET",
+                    f"/scopes/admin/environments/{env_id}",
+                    api_version=_BAP_API_VERSION,
+                )
+                if result is not None:
+                    return result
+            except HttpError as exc:
+                if exc.status_code != 404:
+                    raise
+            # 404 or None response — not yet visible, wait and retry
+            await asyncio.sleep(_POLL_INTERVAL_SECONDS)
+        raise RuntimeError(
+            f"Environment {env_id} did not become visible on the admin endpoint after {max_polls} polls."
+        )
 
 
 # Input property names (for reconstructing inputs from outputs during read).
