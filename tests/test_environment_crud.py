@@ -242,6 +242,68 @@ class TestEnvironmentCreate:
         assert response.resource_id == _FAKE_ID
         assert response.properties["displayName"].value == "Minimal"
 
+    @pytest.mark.asyncio
+    async def test_create_final_get_retries_on_404(self, handler, mock_client):
+        """POST returns Succeeded immediately; first final GET returns 404, second succeeds."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+
+        mock_client.raw.request.side_effect = [
+            post_response,
+            HttpError(404, "not found"),
+            final_response,
+        ]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        assert response.properties["displayName"].value == "Test Env"
+        # 3 calls: POST + 404 final GET + success final GET
+        assert mock_client.raw.request.await_count == 3
+
+    @pytest.mark.asyncio
+    async def test_create_poll_handles_404(self, handler, mock_client):
+        """POST returns Running; poll GET returns 404, next poll returns Succeeded; final GET succeeds."""
+        post_response = _fake_env_response(provisioning_state="Running")
+        succeeded_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+
+        mock_client.raw.request.side_effect = [
+            post_response,
+            HttpError(404, "not found"),
+            succeeded_response,
+            final_response,
+        ]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        assert response.properties["displayName"].value == "Test Env"
+        # 4 calls: POST + 404 poll GET + succeeded poll GET + final GET
+        assert mock_client.raw.request.await_count == 4
+
 
 class TestEnvironmentRead:
     """Tests for the read method."""
