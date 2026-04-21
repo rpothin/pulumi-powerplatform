@@ -1,7 +1,9 @@
 """Power Platform ISV Contract resource."""
 
-import pulumi
+import re
 from typing import Optional
+
+import pulumi
 
 
 class IsvContract(pulumi.CustomResource):
@@ -29,3 +31,6 @@ class IsvContract(pulumi.CustomResource):
             "lastModifiedOn": None,
         }
         super().__init__("powerplatform:index:IsvContract", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)

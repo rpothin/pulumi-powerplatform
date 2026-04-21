@@ -1,7 +1,9 @@
 """Power Platform Managed Environment resource."""
 
-import pulumi
+import re
 from typing import Optional
+
+import pulumi
 
 
 class ManagedEnvironment(pulumi.CustomResource):
@@ -21,3 +23,6 @@ class ManagedEnvironment(pulumi.CustomResource):
             "enabled": None,
         }
         super().__init__("powerplatform:index:ManagedEnvironment", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)

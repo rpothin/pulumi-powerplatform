@@ -1,7 +1,9 @@
 """Power Platform Environment Settings resource."""
 
-import pulumi
+import re
 from typing import Optional
+
+import pulumi
 
 
 class EnvironmentSettings(pulumi.CustomResource):
@@ -34,3 +36,6 @@ class EnvironmentSettings(pulumi.CustomResource):
             "isActivityLoggingEnabled": is_activity_logging_enabled,
         }
         super().__init__("powerplatform:index:EnvironmentSettings", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)

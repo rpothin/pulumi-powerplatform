@@ -1,7 +1,9 @@
 """Power Platform Environment resource."""
 
+import re
+from typing import Optional
+
 import pulumi
-from typing import Any, Optional
 
 
 class Environment(pulumi.CustomResource):
@@ -45,3 +47,6 @@ class Environment(pulumi.CustomResource):
             "lastModifiedTime": None,
         }
         super().__init__("powerplatform:index:Environment", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)

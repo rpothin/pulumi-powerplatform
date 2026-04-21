@@ -1,7 +1,9 @@
 """Power Platform Role Assignment resource."""
 
-import pulumi
+import re
 from typing import Optional
+
+import pulumi
 
 
 class RoleAssignment(pulumi.CustomResource):
@@ -30,3 +32,6 @@ class RoleAssignment(pulumi.CustomResource):
             "createdOn": None,
         }
         super().__init__("powerplatform:index:RoleAssignment", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)

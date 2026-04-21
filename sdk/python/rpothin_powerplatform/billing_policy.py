@@ -1,7 +1,9 @@
 """Power Platform Billing Policy resource."""
 
-import pulumi
+import re
 from typing import Any, Optional
+
+import pulumi
 
 
 class BillingPolicy(pulumi.CustomResource):
@@ -32,3 +34,6 @@ class BillingPolicy(pulumi.CustomResource):
             "lastModifiedOn": None,
         }
         super().__init__("powerplatform:index:BillingPolicy", resource_name, props, opts)
+
+    def _translate_output_property(self, prop: str) -> str:
+        return re.sub(r'_([a-z])', lambda m: m.group(1).upper(), prop)
