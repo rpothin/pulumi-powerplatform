@@ -39,6 +39,8 @@ _UPDATE_PROPS = {"displayName", "description", "domainName"}
 
 _BAP_API_VERSION = "2021-04-01"
 
+_ADMIN_ENV_PATH = "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments"
+
 _POLL_INTERVAL_SECONDS = 10
 
 _DEFAULT_MAX_POLLS = 30
@@ -151,6 +153,8 @@ class EnvironmentResource:
         # indicating that the environment is still being created.
         provisioning_state = result.get("properties", {}).get("provisioningState", "")
         env_id = result.get("name", "")
+        if not env_id:
+            raise RuntimeError("Environment create response did not include an environment id.")
 
         if provisioning_state and provisioning_state not in _TERMINAL_STATES:
             # Poll until terminal state
@@ -176,7 +180,7 @@ class EnvironmentResource:
         try:
             result = await self._client.raw.request(
                 "GET",
-                f"/scopes/admin/environments/{env_id}",
+                f"{_ADMIN_ENV_PATH}/{env_id}",
                 api_version=_BAP_API_VERSION,
             )
         except HttpError as exc:
@@ -210,7 +214,7 @@ class EnvironmentResource:
 
         result = await self._client.raw.request(
             "PATCH",
-            f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}",
+            f"{_ADMIN_ENV_PATH}/{env_id}",
             body=patch_body,
             api_version=_BAP_API_VERSION,
         )
@@ -219,7 +223,7 @@ class EnvironmentResource:
             # Re-read if PATCH returned no body
             result = await self._client.raw.request(
                 "GET",
-                f"/scopes/admin/environments/{env_id}",
+                f"{_ADMIN_ENV_PATH}/{env_id}",
                 api_version=_BAP_API_VERSION,
             )
 
@@ -233,7 +237,7 @@ class EnvironmentResource:
         env_id = request.resource_id
         await self._client.raw.request(
             "DELETE",
-            f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}",
+            f"{_ADMIN_ENV_PATH}/{env_id}",
             api_version=_BAP_API_VERSION,
         )
 
@@ -244,7 +248,7 @@ class EnvironmentResource:
             try:
                 result = await self._client.raw.request(
                     "GET",
-                    f"/scopes/admin/environments/{env_id}",
+                    f"{_ADMIN_ENV_PATH}/{env_id}",
                     api_version=_BAP_API_VERSION,
                 )
             except HttpError as exc:
@@ -273,7 +277,7 @@ class EnvironmentResource:
             try:
                 result = await self._client.raw.request(
                     "GET",
-                    f"/scopes/admin/environments/{env_id}",
+                    f"{_ADMIN_ENV_PATH}/{env_id}",
                     api_version=_BAP_API_VERSION,
                 )
                 if result is not None:
