@@ -60,6 +60,10 @@ jobs:
           bash ./scripts/normalize-dotnet-sdk.sh sdk/dotnet
           cd sdk/go/powerplatform && go mod tidy && cd -
 
+      - name: Validate Go SDK builds
+        if: steps.schema_changed.outputs.schema_changed == 'true'
+        run: cd sdk/go/powerplatform && go build ./...
+
       - name: Check if SDK files changed
         if: steps.schema_changed.outputs.schema_changed == 'true'
         id: sdk_diff
