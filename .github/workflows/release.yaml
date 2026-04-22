@@ -336,7 +336,7 @@ jobs:
         working-directory: sdk/java
         run: |
           export PACKAGE_VERSION="${PACKAGE_VERSION#v}"
-          ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository --stacktrace
+          gradle publishToSonatype closeAndReleaseSonatypeStagingRepository --stacktrace
 
   promote-release:
     name: Promote release to latest
