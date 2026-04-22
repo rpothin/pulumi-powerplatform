@@ -1,6 +1,7 @@
 name: Generate Multi-Language SDKs
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [ready_for_review]
   push:
