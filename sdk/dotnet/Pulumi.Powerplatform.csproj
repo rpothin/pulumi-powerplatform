@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>Rpothin.Powerplatform</PackageId>
     <Authors>rpothin</Authors>
     <Company>rpothin</Company>
     <Description>A Pulumi provider for managing Microsoft Power Platform resources.</Description>
@@ -10,7 +11,7 @@
     <RepositoryUrl>https://github.com/rpothin/pulumi-powerplatform</RepositoryUrl>
     <PackageIcon>logo.png</PackageIcon>
 
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
