@@ -79,6 +79,9 @@ jobs:
           cp sdk/go/powerplatform/go.mod "$GEN_DIR/go/powerplatform/go.mod"
           cp sdk/go/powerplatform/go.sum  "$GEN_DIR/go/powerplatform/go.sum"
 
+          # Patch Java POM metadata (pulumi-java-gen generates empty placeholder strings)
+          python3 scripts/patch-java-pom-metadata.py --gradle-path "$GEN_DIR/java/build.gradle"
+
           STALE=""
           for lang in nodejs go dotnet java; do
             if ! diff -rq "$GEN_DIR/$lang" "sdk/$lang" > /dev/null 2>&1; then
