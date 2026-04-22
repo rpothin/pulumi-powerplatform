@@ -64,6 +64,32 @@ export interface ConnectorSummary {
 }
 
 /**
+ * An enterprise policy associated with a Power Platform environment.
+ */
+export interface EnterprisePolicy {
+    /**
+     * The resource ID of the policy.
+     */
+    id?: string;
+    /**
+     * Azure region of the policy.
+     */
+    location?: string;
+    /**
+     * Policy link status (e.g. Linked, Disabled).
+     */
+    status?: string;
+    /**
+     * System-assigned ID of the policy.
+     */
+    systemId?: string;
+    /**
+     * Policy type (e.g. NetworkInjection, Encryption, Identity).
+     */
+    type?: string;
+}
+
+/**
  * Summary information about a Power Platform environment.
  */
 export interface EnvironmentSummary {

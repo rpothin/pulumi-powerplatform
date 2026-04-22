@@ -24,6 +24,32 @@ export interface BillingInstrumentArgs {
 }
 
 /**
+ * An enterprise policy associated with a Power Platform environment.
+ */
+export interface EnterprisePolicyArgs {
+    /**
+     * The resource ID of the policy.
+     */
+    id?: pulumi.Input<string>;
+    /**
+     * Azure region of the policy.
+     */
+    location?: pulumi.Input<string>;
+    /**
+     * Policy link status (e.g. Linked, Disabled).
+     */
+    status?: pulumi.Input<string>;
+    /**
+     * System-assigned ID of the policy.
+     */
+    systemId?: pulumi.Input<string>;
+    /**
+     * Policy type (e.g. NetworkInjection, Encryption, Identity).
+     */
+    type?: pulumi.Input<string>;
+}
+
+/**
  * A rule set for a DLP policy, defining data loss prevention rules.
  */
 export interface RuleSetArgs {

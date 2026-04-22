@@ -9,7 +9,10 @@ import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
 import io.github.rpothin.powerplatform.EnvironmentArgs;
 import io.github.rpothin.powerplatform.Utilities;
+import io.github.rpothin.powerplatform.outputs.EnterprisePolicy;
+import java.lang.Boolean;
 import java.lang.String;
+import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -19,6 +22,104 @@ import javax.annotation.Nullable;
  */
 @ResourceType(type="powerplatform:index:Environment")
 public class Environment extends com.pulumi.resources.CustomResource {
+    /**
+     * Whether the environment Dataverse database is in administration-only mode.
+     * 
+     */
+    @Export(name="administrationModeEnabled", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> administrationModeEnabled;
+
+    /**
+     * @return Whether the environment Dataverse database is in administration-only mode.
+     * 
+     */
+    public Output<Optional<Boolean>> administrationModeEnabled() {
+        return Codegen.optional(this.administrationModeEnabled);
+    }
+    /**
+     * Whether Bing Search integration is allowed.
+     * 
+     */
+    @Export(name="allowBingSearch", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> allowBingSearch;
+
+    /**
+     * @return Whether Bing Search integration is allowed.
+     * 
+     */
+    public Output<Optional<Boolean>> allowBingSearch() {
+        return Codegen.optional(this.allowBingSearch);
+    }
+    /**
+     * Whether data can move across geographic boundaries for Copilot features.
+     * 
+     */
+    @Export(name="allowMovingDataAcrossRegions", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> allowMovingDataAcrossRegions;
+
+    /**
+     * @return Whether data can move across geographic boundaries for Copilot features.
+     * 
+     */
+    public Output<Optional<Boolean>> allowMovingDataAcrossRegions() {
+        return Codegen.optional(this.allowMovingDataAcrossRegions);
+    }
+    /**
+     * Specific Azure region within the location geo.
+     * 
+     */
+    @Export(name="azureRegion", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> azureRegion;
+
+    /**
+     * @return Specific Azure region within the location geo.
+     * 
+     */
+    public Output<Optional<String>> azureRegion() {
+        return Codegen.optional(this.azureRegion);
+    }
+    /**
+     * Whether background operations are enabled during administration mode.
+     * 
+     */
+    @Export(name="backgroundOperationEnabled", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> backgroundOperationEnabled;
+
+    /**
+     * @return Whether background operations are enabled during administration mode.
+     * 
+     */
+    public Output<Optional<Boolean>> backgroundOperationEnabled() {
+        return Codegen.optional(this.backgroundOperationEnabled);
+    }
+    /**
+     * ID of the billing policy linked to this environment.
+     * 
+     */
+    @Export(name="billingPolicyId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> billingPolicyId;
+
+    /**
+     * @return ID of the billing policy linked to this environment.
+     * 
+     */
+    public Output<Optional<String>> billingPolicyId() {
+        return Codegen.optional(this.billingPolicyId);
+    }
+    /**
+     * Release wave cadence: Frequent or Moderate.
+     * 
+     */
+    @Export(name="cadence", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> cadence;
+
+    /**
+     * @return Release wave cadence: Frequent or Moderate.
+     * 
+     */
+    public Output<Optional<String>> cadence() {
+        return Codegen.optional(this.cadence);
+    }
     /**
      * The timestamp when the environment was created.
      * 
@@ -46,6 +147,20 @@ public class Environment extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<String>> currencyCode() {
         return Codegen.optional(this.currencyCode);
+    }
+    /**
+     * Dataverse version string. Computed.
+     * 
+     */
+    @Export(name="dataverseVersion", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> dataverseVersion;
+
+    /**
+     * @return Dataverse version string. Computed.
+     * 
+     */
+    public Output<Optional<String>> dataverseVersion() {
+        return Codegen.optional(this.dataverseVersion);
     }
     /**
      * The description of the environment.
@@ -90,6 +205,34 @@ public class Environment extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.domainName);
     }
     /**
+     * Enterprise policies associated with the environment.
+     * 
+     */
+    @Export(name="enterprisePolicies", refs={List.class,EnterprisePolicy.class}, tree="[0,1]")
+    private Output</* @Nullable */ List<EnterprisePolicy>> enterprisePolicies;
+
+    /**
+     * @return Enterprise policies associated with the environment.
+     * 
+     */
+    public Output<Optional<List<EnterprisePolicy>>> enterprisePolicies() {
+        return Codegen.optional(this.enterprisePolicies);
+    }
+    /**
+     * ID of the environment group.
+     * 
+     */
+    @Export(name="environmentGroupId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> environmentGroupId;
+
+    /**
+     * @return ID of the environment group.
+     * 
+     */
+    public Output<Optional<String>> environmentGroupId() {
+        return Codegen.optional(this.environmentGroupId);
+    }
+    /**
      * The type (SKU) of the environment.
      * 
      */
@@ -132,6 +275,48 @@ public class Environment extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.lastModifiedTime);
     }
     /**
+     * GUID of the linked app.
+     * 
+     */
+    @Export(name="linkedAppId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> linkedAppId;
+
+    /**
+     * @return GUID of the linked app.
+     * 
+     */
+    public Output<Optional<String>> linkedAppId() {
+        return Codegen.optional(this.linkedAppId);
+    }
+    /**
+     * Type of linked app: Canvas or ModelDriven.
+     * 
+     */
+    @Export(name="linkedAppType", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> linkedAppType;
+
+    /**
+     * @return Type of linked app: Canvas or ModelDriven.
+     * 
+     */
+    public Output<Optional<String>> linkedAppType() {
+        return Codegen.optional(this.linkedAppType);
+    }
+    /**
+     * URL of the linked app. Computed.
+     * 
+     */
+    @Export(name="linkedAppUrl", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> linkedAppUrl;
+
+    /**
+     * @return URL of the linked app. Computed.
+     * 
+     */
+    public Output<Optional<String>> linkedAppUrl() {
+        return Codegen.optional(this.linkedAppUrl);
+    }
+    /**
      * The geographic region of the environment.
      * 
      */
@@ -146,6 +331,48 @@ public class Environment extends com.pulumi.resources.CustomResource {
         return this.location;
     }
     /**
+     * Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
+     * 
+     */
+    @Export(name="organizationId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> organizationId;
+
+    /**
+     * @return Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
+     * 
+     */
+    public Output<Optional<String>> organizationId() {
+        return Codegen.optional(this.organizationId);
+    }
+    /**
+     * AAD user or group GUID who owns the environment.
+     * 
+     */
+    @Export(name="ownerId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> ownerId;
+
+    /**
+     * @return AAD user or group GUID who owns the environment.
+     * 
+     */
+    public Output<Optional<String>> ownerId() {
+        return Codegen.optional(this.ownerId);
+    }
+    /**
+     * AAD security group GUID restricting environment access.
+     * 
+     */
+    @Export(name="securityGroupId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> securityGroupId;
+
+    /**
+     * @return AAD security group GUID restricting environment access.
+     * 
+     */
+    public Output<Optional<String>> securityGroupId() {
+        return Codegen.optional(this.securityGroupId);
+    }
+    /**
      * The current state of the environment (e.g., Ready, Preparing).
      * 
      */
@@ -158,6 +385,48 @@ public class Environment extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<String>> state() {
         return Codegen.optional(this.state);
+    }
+    /**
+     * JSON metadata string for provisioning templates.
+     * 
+     */
+    @Export(name="templateMetadata", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> templateMetadata;
+
+    /**
+     * @return JSON metadata string for provisioning templates.
+     * 
+     */
+    public Output<Optional<String>> templateMetadata() {
+        return Codegen.optional(this.templateMetadata);
+    }
+    /**
+     * Template names used for Dataverse provisioning.
+     * 
+     */
+    @Export(name="templates", refs={List.class,String.class}, tree="[0,1]")
+    private Output</* @Nullable */ List<String>> templates;
+
+    /**
+     * @return Template names used for Dataverse provisioning.
+     * 
+     */
+    public Output<Optional<List<String>>> templates() {
+        return Codegen.optional(this.templates);
+    }
+    /**
+     * Dataverse unique name. Computed.
+     * 
+     */
+    @Export(name="uniqueName", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> uniqueName;
+
+    /**
+     * @return Dataverse unique name. Computed.
+     * 
+     */
+    public Output<Optional<String>> uniqueName() {
+        return Codegen.optional(this.uniqueName);
     }
     /**
      * The Dataverse instance URL of the environment.

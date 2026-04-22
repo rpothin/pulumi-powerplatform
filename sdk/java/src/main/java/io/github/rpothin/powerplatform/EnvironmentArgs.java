@@ -6,7 +6,10 @@ package io.github.rpothin.powerplatform;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import io.github.rpothin.powerplatform.inputs.EnterprisePolicyArgs;
+import java.lang.Boolean;
 import java.lang.String;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -15,6 +18,111 @@ import javax.annotation.Nullable;
 public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final EnvironmentArgs Empty = new EnvironmentArgs();
+
+    /**
+     * Put the Dataverse database into administration-only mode.
+     * 
+     */
+    @Import(name="administrationModeEnabled")
+    private @Nullable Output<Boolean> administrationModeEnabled;
+
+    /**
+     * @return Put the Dataverse database into administration-only mode.
+     * 
+     */
+    public Optional<Output<Boolean>> administrationModeEnabled() {
+        return Optional.ofNullable(this.administrationModeEnabled);
+    }
+
+    /**
+     * Allow Bing Search integration (AI generative features).
+     * 
+     */
+    @Import(name="allowBingSearch")
+    private @Nullable Output<Boolean> allowBingSearch;
+
+    /**
+     * @return Allow Bing Search integration (AI generative features).
+     * 
+     */
+    public Optional<Output<Boolean>> allowBingSearch() {
+        return Optional.ofNullable(this.allowBingSearch);
+    }
+
+    /**
+     * Allow data to move across geographic boundaries for Copilot features.
+     * 
+     */
+    @Import(name="allowMovingDataAcrossRegions")
+    private @Nullable Output<Boolean> allowMovingDataAcrossRegions;
+
+    /**
+     * @return Allow data to move across geographic boundaries for Copilot features.
+     * 
+     */
+    public Optional<Output<Boolean>> allowMovingDataAcrossRegions() {
+        return Optional.ofNullable(this.allowMovingDataAcrossRegions);
+    }
+
+    /**
+     * Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+     * 
+     */
+    @Import(name="azureRegion")
+    private @Nullable Output<String> azureRegion;
+
+    /**
+     * @return Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+     * 
+     */
+    public Optional<Output<String>> azureRegion() {
+        return Optional.ofNullable(this.azureRegion);
+    }
+
+    /**
+     * Allow background operations during administration mode.
+     * 
+     */
+    @Import(name="backgroundOperationEnabled")
+    private @Nullable Output<Boolean> backgroundOperationEnabled;
+
+    /**
+     * @return Allow background operations during administration mode.
+     * 
+     */
+    public Optional<Output<Boolean>> backgroundOperationEnabled() {
+        return Optional.ofNullable(this.backgroundOperationEnabled);
+    }
+
+    /**
+     * ID of the billing policy to link to this environment.
+     * 
+     */
+    @Import(name="billingPolicyId")
+    private @Nullable Output<String> billingPolicyId;
+
+    /**
+     * @return ID of the billing policy to link to this environment.
+     * 
+     */
+    public Optional<Output<String>> billingPolicyId() {
+        return Optional.ofNullable(this.billingPolicyId);
+    }
+
+    /**
+     * Release wave cadence: Frequent or Moderate. Immutable after creation.
+     * 
+     */
+    @Import(name="cadence")
+    private @Nullable Output<String> cadence;
+
+    /**
+     * @return Release wave cadence: Frequent or Moderate. Immutable after creation.
+     * 
+     */
+    public Optional<Output<String>> cadence() {
+        return Optional.ofNullable(this.cadence);
+    }
 
     /**
      * The currency code for the Dataverse database (e.g., USD, EUR).
@@ -77,6 +185,36 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
+     * Set of enterprise policies associated with the environment.
+     * 
+     */
+    @Import(name="enterprisePolicies")
+    private @Nullable Output<List<EnterprisePolicyArgs>> enterprisePolicies;
+
+    /**
+     * @return Set of enterprise policies associated with the environment.
+     * 
+     */
+    public Optional<Output<List<EnterprisePolicyArgs>>> enterprisePolicies() {
+        return Optional.ofNullable(this.enterprisePolicies);
+    }
+
+    /**
+     * ID of the environment group this environment belongs to.
+     * 
+     */
+    @Import(name="environmentGroupId")
+    private @Nullable Output<String> environmentGroupId;
+
+    /**
+     * @return ID of the environment group this environment belongs to.
+     * 
+     */
+    public Optional<Output<String>> environmentGroupId() {
+        return Optional.ofNullable(this.environmentGroupId);
+    }
+
+    /**
      * The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
      * 
      */
@@ -107,6 +245,36 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
+     * GUID of the linked app.
+     * 
+     */
+    @Import(name="linkedAppId")
+    private @Nullable Output<String> linkedAppId;
+
+    /**
+     * @return GUID of the linked app.
+     * 
+     */
+    public Optional<Output<String>> linkedAppId() {
+        return Optional.ofNullable(this.linkedAppId);
+    }
+
+    /**
+     * Type of linked app: Canvas or ModelDriven.
+     * 
+     */
+    @Import(name="linkedAppType")
+    private @Nullable Output<String> linkedAppType;
+
+    /**
+     * @return Type of linked app: Canvas or ModelDriven.
+     * 
+     */
+    public Optional<Output<String>> linkedAppType() {
+        return Optional.ofNullable(this.linkedAppType);
+    }
+
+    /**
      * The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation.
      * 
      */
@@ -121,16 +289,91 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         return this.location;
     }
 
+    /**
+     * AAD user or group GUID who owns the environment. Only valid for Developer environments.
+     * 
+     */
+    @Import(name="ownerId")
+    private @Nullable Output<String> ownerId;
+
+    /**
+     * @return AAD user or group GUID who owns the environment. Only valid for Developer environments.
+     * 
+     */
+    public Optional<Output<String>> ownerId() {
+        return Optional.ofNullable(this.ownerId);
+    }
+
+    /**
+     * AAD security group GUID that restricts environment access.
+     * 
+     */
+    @Import(name="securityGroupId")
+    private @Nullable Output<String> securityGroupId;
+
+    /**
+     * @return AAD security group GUID that restricts environment access.
+     * 
+     */
+    public Optional<Output<String>> securityGroupId() {
+        return Optional.ofNullable(this.securityGroupId);
+    }
+
+    /**
+     * JSON metadata string for templates. Immutable after creation.
+     * 
+     */
+    @Import(name="templateMetadata")
+    private @Nullable Output<String> templateMetadata;
+
+    /**
+     * @return JSON metadata string for templates. Immutable after creation.
+     * 
+     */
+    public Optional<Output<String>> templateMetadata() {
+        return Optional.ofNullable(this.templateMetadata);
+    }
+
+    /**
+     * Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
+     * 
+     */
+    @Import(name="templates")
+    private @Nullable Output<List<String>> templates;
+
+    /**
+     * @return Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
+     * 
+     */
+    public Optional<Output<List<String>>> templates() {
+        return Optional.ofNullable(this.templates);
+    }
+
     private EnvironmentArgs() {}
 
     private EnvironmentArgs(EnvironmentArgs $) {
+        this.administrationModeEnabled = $.administrationModeEnabled;
+        this.allowBingSearch = $.allowBingSearch;
+        this.allowMovingDataAcrossRegions = $.allowMovingDataAcrossRegions;
+        this.azureRegion = $.azureRegion;
+        this.backgroundOperationEnabled = $.backgroundOperationEnabled;
+        this.billingPolicyId = $.billingPolicyId;
+        this.cadence = $.cadence;
         this.currencyCode = $.currencyCode;
         this.description = $.description;
         this.displayName = $.displayName;
         this.domainName = $.domainName;
+        this.enterprisePolicies = $.enterprisePolicies;
+        this.environmentGroupId = $.environmentGroupId;
         this.environmentType = $.environmentType;
         this.languageCode = $.languageCode;
+        this.linkedAppId = $.linkedAppId;
+        this.linkedAppType = $.linkedAppType;
         this.location = $.location;
+        this.ownerId = $.ownerId;
+        this.securityGroupId = $.securityGroupId;
+        this.templateMetadata = $.templateMetadata;
+        this.templates = $.templates;
     }
 
     public static Builder builder() {
@@ -149,6 +392,153 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
 
         public Builder(EnvironmentArgs defaults) {
             $ = new EnvironmentArgs(Objects.requireNonNull(defaults));
+        }
+
+        /**
+         * @param administrationModeEnabled Put the Dataverse database into administration-only mode.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder administrationModeEnabled(@Nullable Output<Boolean> administrationModeEnabled) {
+            $.administrationModeEnabled = administrationModeEnabled;
+            return this;
+        }
+
+        /**
+         * @param administrationModeEnabled Put the Dataverse database into administration-only mode.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder administrationModeEnabled(Boolean administrationModeEnabled) {
+            return administrationModeEnabled(Output.of(administrationModeEnabled));
+        }
+
+        /**
+         * @param allowBingSearch Allow Bing Search integration (AI generative features).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowBingSearch(@Nullable Output<Boolean> allowBingSearch) {
+            $.allowBingSearch = allowBingSearch;
+            return this;
+        }
+
+        /**
+         * @param allowBingSearch Allow Bing Search integration (AI generative features).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowBingSearch(Boolean allowBingSearch) {
+            return allowBingSearch(Output.of(allowBingSearch));
+        }
+
+        /**
+         * @param allowMovingDataAcrossRegions Allow data to move across geographic boundaries for Copilot features.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowMovingDataAcrossRegions(@Nullable Output<Boolean> allowMovingDataAcrossRegions) {
+            $.allowMovingDataAcrossRegions = allowMovingDataAcrossRegions;
+            return this;
+        }
+
+        /**
+         * @param allowMovingDataAcrossRegions Allow data to move across geographic boundaries for Copilot features.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowMovingDataAcrossRegions(Boolean allowMovingDataAcrossRegions) {
+            return allowMovingDataAcrossRegions(Output.of(allowMovingDataAcrossRegions));
+        }
+
+        /**
+         * @param azureRegion Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder azureRegion(@Nullable Output<String> azureRegion) {
+            $.azureRegion = azureRegion;
+            return this;
+        }
+
+        /**
+         * @param azureRegion Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder azureRegion(String azureRegion) {
+            return azureRegion(Output.of(azureRegion));
+        }
+
+        /**
+         * @param backgroundOperationEnabled Allow background operations during administration mode.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder backgroundOperationEnabled(@Nullable Output<Boolean> backgroundOperationEnabled) {
+            $.backgroundOperationEnabled = backgroundOperationEnabled;
+            return this;
+        }
+
+        /**
+         * @param backgroundOperationEnabled Allow background operations during administration mode.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder backgroundOperationEnabled(Boolean backgroundOperationEnabled) {
+            return backgroundOperationEnabled(Output.of(backgroundOperationEnabled));
+        }
+
+        /**
+         * @param billingPolicyId ID of the billing policy to link to this environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder billingPolicyId(@Nullable Output<String> billingPolicyId) {
+            $.billingPolicyId = billingPolicyId;
+            return this;
+        }
+
+        /**
+         * @param billingPolicyId ID of the billing policy to link to this environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder billingPolicyId(String billingPolicyId) {
+            return billingPolicyId(Output.of(billingPolicyId));
+        }
+
+        /**
+         * @param cadence Release wave cadence: Frequent or Moderate. Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder cadence(@Nullable Output<String> cadence) {
+            $.cadence = cadence;
+            return this;
+        }
+
+        /**
+         * @param cadence Release wave cadence: Frequent or Moderate. Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder cadence(String cadence) {
+            return cadence(Output.of(cadence));
         }
 
         /**
@@ -236,6 +626,58 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
+         * @param enterprisePolicies Set of enterprise policies associated with the environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder enterprisePolicies(@Nullable Output<List<EnterprisePolicyArgs>> enterprisePolicies) {
+            $.enterprisePolicies = enterprisePolicies;
+            return this;
+        }
+
+        /**
+         * @param enterprisePolicies Set of enterprise policies associated with the environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder enterprisePolicies(List<EnterprisePolicyArgs> enterprisePolicies) {
+            return enterprisePolicies(Output.of(enterprisePolicies));
+        }
+
+        /**
+         * @param enterprisePolicies Set of enterprise policies associated with the environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder enterprisePolicies(EnterprisePolicyArgs... enterprisePolicies) {
+            return enterprisePolicies(List.of(enterprisePolicies));
+        }
+
+        /**
+         * @param environmentGroupId ID of the environment group this environment belongs to.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder environmentGroupId(@Nullable Output<String> environmentGroupId) {
+            $.environmentGroupId = environmentGroupId;
+            return this;
+        }
+
+        /**
+         * @param environmentGroupId ID of the environment group this environment belongs to.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder environmentGroupId(String environmentGroupId) {
+            return environmentGroupId(Output.of(environmentGroupId));
+        }
+
+        /**
          * @param environmentType The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
          * 
          * @return builder
@@ -278,6 +720,48 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
+         * @param linkedAppId GUID of the linked app.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder linkedAppId(@Nullable Output<String> linkedAppId) {
+            $.linkedAppId = linkedAppId;
+            return this;
+        }
+
+        /**
+         * @param linkedAppId GUID of the linked app.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder linkedAppId(String linkedAppId) {
+            return linkedAppId(Output.of(linkedAppId));
+        }
+
+        /**
+         * @param linkedAppType Type of linked app: Canvas or ModelDriven.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder linkedAppType(@Nullable Output<String> linkedAppType) {
+            $.linkedAppType = linkedAppType;
+            return this;
+        }
+
+        /**
+         * @param linkedAppType Type of linked app: Canvas or ModelDriven.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder linkedAppType(String linkedAppType) {
+            return linkedAppType(Output.of(linkedAppType));
+        }
+
+        /**
          * @param location The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation.
          * 
          * @return builder
@@ -296,6 +780,100 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
          */
         public Builder location(String location) {
             return location(Output.of(location));
+        }
+
+        /**
+         * @param ownerId AAD user or group GUID who owns the environment. Only valid for Developer environments.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ownerId(@Nullable Output<String> ownerId) {
+            $.ownerId = ownerId;
+            return this;
+        }
+
+        /**
+         * @param ownerId AAD user or group GUID who owns the environment. Only valid for Developer environments.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ownerId(String ownerId) {
+            return ownerId(Output.of(ownerId));
+        }
+
+        /**
+         * @param securityGroupId AAD security group GUID that restricts environment access.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder securityGroupId(@Nullable Output<String> securityGroupId) {
+            $.securityGroupId = securityGroupId;
+            return this;
+        }
+
+        /**
+         * @param securityGroupId AAD security group GUID that restricts environment access.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder securityGroupId(String securityGroupId) {
+            return securityGroupId(Output.of(securityGroupId));
+        }
+
+        /**
+         * @param templateMetadata JSON metadata string for templates. Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder templateMetadata(@Nullable Output<String> templateMetadata) {
+            $.templateMetadata = templateMetadata;
+            return this;
+        }
+
+        /**
+         * @param templateMetadata JSON metadata string for templates. Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder templateMetadata(String templateMetadata) {
+            return templateMetadata(Output.of(templateMetadata));
+        }
+
+        /**
+         * @param templates Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder templates(@Nullable Output<List<String>> templates) {
+            $.templates = templates;
+            return this;
+        }
+
+        /**
+         * @param templates Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder templates(List<String> templates) {
+            return templates(Output.of(templates));
+        }
+
+        /**
+         * @param templates Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder templates(String... templates) {
+            return templates(List.of(templates));
         }
 
         public EnvironmentArgs build() {

@@ -318,6 +318,142 @@ func (o ConnectorSummaryArrayOutput) Index(i pulumi.IntInput) ConnectorSummaryOu
 	}).(ConnectorSummaryOutput)
 }
 
+// An enterprise policy associated with a Power Platform environment.
+type EnterprisePolicy struct {
+	// The resource ID of the policy.
+	Id *string `pulumi:"id"`
+	// Azure region of the policy.
+	Location *string `pulumi:"location"`
+	// Policy link status (e.g. Linked, Disabled).
+	Status *string `pulumi:"status"`
+	// System-assigned ID of the policy.
+	SystemId *string `pulumi:"systemId"`
+	// Policy type (e.g. NetworkInjection, Encryption, Identity).
+	Type *string `pulumi:"type"`
+}
+
+// EnterprisePolicyInput is an input type that accepts EnterprisePolicyArgs and EnterprisePolicyOutput values.
+// You can construct a concrete instance of `EnterprisePolicyInput` via:
+//
+//	EnterprisePolicyArgs{...}
+type EnterprisePolicyInput interface {
+	pulumi.Input
+
+	ToEnterprisePolicyOutput() EnterprisePolicyOutput
+	ToEnterprisePolicyOutputWithContext(context.Context) EnterprisePolicyOutput
+}
+
+// An enterprise policy associated with a Power Platform environment.
+type EnterprisePolicyArgs struct {
+	// The resource ID of the policy.
+	Id pulumi.StringPtrInput `pulumi:"id"`
+	// Azure region of the policy.
+	Location pulumi.StringPtrInput `pulumi:"location"`
+	// Policy link status (e.g. Linked, Disabled).
+	Status pulumi.StringPtrInput `pulumi:"status"`
+	// System-assigned ID of the policy.
+	SystemId pulumi.StringPtrInput `pulumi:"systemId"`
+	// Policy type (e.g. NetworkInjection, Encryption, Identity).
+	Type pulumi.StringPtrInput `pulumi:"type"`
+}
+
+func (EnterprisePolicyArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*EnterprisePolicy)(nil)).Elem()
+}
+
+func (i EnterprisePolicyArgs) ToEnterprisePolicyOutput() EnterprisePolicyOutput {
+	return i.ToEnterprisePolicyOutputWithContext(context.Background())
+}
+
+func (i EnterprisePolicyArgs) ToEnterprisePolicyOutputWithContext(ctx context.Context) EnterprisePolicyOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(EnterprisePolicyOutput)
+}
+
+// EnterprisePolicyArrayInput is an input type that accepts EnterprisePolicyArray and EnterprisePolicyArrayOutput values.
+// You can construct a concrete instance of `EnterprisePolicyArrayInput` via:
+//
+//	EnterprisePolicyArray{ EnterprisePolicyArgs{...} }
+type EnterprisePolicyArrayInput interface {
+	pulumi.Input
+
+	ToEnterprisePolicyArrayOutput() EnterprisePolicyArrayOutput
+	ToEnterprisePolicyArrayOutputWithContext(context.Context) EnterprisePolicyArrayOutput
+}
+
+type EnterprisePolicyArray []EnterprisePolicyInput
+
+func (EnterprisePolicyArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]EnterprisePolicy)(nil)).Elem()
+}
+
+func (i EnterprisePolicyArray) ToEnterprisePolicyArrayOutput() EnterprisePolicyArrayOutput {
+	return i.ToEnterprisePolicyArrayOutputWithContext(context.Background())
+}
+
+func (i EnterprisePolicyArray) ToEnterprisePolicyArrayOutputWithContext(ctx context.Context) EnterprisePolicyArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(EnterprisePolicyArrayOutput)
+}
+
+// An enterprise policy associated with a Power Platform environment.
+type EnterprisePolicyOutput struct{ *pulumi.OutputState }
+
+func (EnterprisePolicyOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*EnterprisePolicy)(nil)).Elem()
+}
+
+func (o EnterprisePolicyOutput) ToEnterprisePolicyOutput() EnterprisePolicyOutput {
+	return o
+}
+
+func (o EnterprisePolicyOutput) ToEnterprisePolicyOutputWithContext(ctx context.Context) EnterprisePolicyOutput {
+	return o
+}
+
+// The resource ID of the policy.
+func (o EnterprisePolicyOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnterprisePolicy) *string { return v.Id }).(pulumi.StringPtrOutput)
+}
+
+// Azure region of the policy.
+func (o EnterprisePolicyOutput) Location() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnterprisePolicy) *string { return v.Location }).(pulumi.StringPtrOutput)
+}
+
+// Policy link status (e.g. Linked, Disabled).
+func (o EnterprisePolicyOutput) Status() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnterprisePolicy) *string { return v.Status }).(pulumi.StringPtrOutput)
+}
+
+// System-assigned ID of the policy.
+func (o EnterprisePolicyOutput) SystemId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnterprisePolicy) *string { return v.SystemId }).(pulumi.StringPtrOutput)
+}
+
+// Policy type (e.g. NetworkInjection, Encryption, Identity).
+func (o EnterprisePolicyOutput) Type() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v EnterprisePolicy) *string { return v.Type }).(pulumi.StringPtrOutput)
+}
+
+type EnterprisePolicyArrayOutput struct{ *pulumi.OutputState }
+
+func (EnterprisePolicyArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]EnterprisePolicy)(nil)).Elem()
+}
+
+func (o EnterprisePolicyArrayOutput) ToEnterprisePolicyArrayOutput() EnterprisePolicyArrayOutput {
+	return o
+}
+
+func (o EnterprisePolicyArrayOutput) ToEnterprisePolicyArrayOutputWithContext(ctx context.Context) EnterprisePolicyArrayOutput {
+	return o
+}
+
+func (o EnterprisePolicyArrayOutput) Index(i pulumi.IntInput) EnterprisePolicyOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) EnterprisePolicy {
+		return vs[0].([]EnterprisePolicy)[vs[1].(int)]
+	}).(EnterprisePolicyOutput)
+}
+
 // Summary information about a Power Platform environment.
 type EnvironmentSummary struct {
 	// The Azure region of the environment.
@@ -629,6 +765,8 @@ func (o RuleSetArrayOutput) Index(i pulumi.IntInput) RuleSetOutput {
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentInput)(nil)).Elem(), BillingInstrumentArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentPtrInput)(nil)).Elem(), BillingInstrumentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*EnterprisePolicyInput)(nil)).Elem(), EnterprisePolicyArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*EnterprisePolicyArrayInput)(nil)).Elem(), EnterprisePolicyArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*RuleSetInput)(nil)).Elem(), RuleSetArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*RuleSetArrayInput)(nil)).Elem(), RuleSetArray{})
 	pulumi.RegisterOutputType(AppSummaryOutput{})
@@ -637,6 +775,8 @@ func init() {
 	pulumi.RegisterOutputType(BillingInstrumentPtrOutput{})
 	pulumi.RegisterOutputType(ConnectorSummaryOutput{})
 	pulumi.RegisterOutputType(ConnectorSummaryArrayOutput{})
+	pulumi.RegisterOutputType(EnterprisePolicyOutput{})
+	pulumi.RegisterOutputType(EnterprisePolicyArrayOutput{})
 	pulumi.RegisterOutputType(EnvironmentSummaryOutput{})
 	pulumi.RegisterOutputType(EnvironmentSummaryArrayOutput{})
 	pulumi.RegisterOutputType(FlowSummaryOutput{})
