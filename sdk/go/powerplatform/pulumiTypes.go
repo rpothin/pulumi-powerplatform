@@ -329,7 +329,7 @@ type Dataverse struct {
 	// Domain prefix for the Dataverse instance URL.
 	DomainName *string `pulumi:"domainName"`
 	// Base language LCID (e.g. 1033). Immutable after creation.
-	LanguageCode *int `pulumi:"languageCode"`
+	LanguageCode *float64 `pulumi:"languageCode"`
 	// Dataverse organization GUID. Computed.
 	OrganizationId *string `pulumi:"organizationId"`
 	// AAD security group GUID restricting environment access.
@@ -368,7 +368,7 @@ type DataverseArgs struct {
 	// Domain prefix for the Dataverse instance URL.
 	DomainName pulumi.StringPtrInput `pulumi:"domainName"`
 	// Base language LCID (e.g. 1033). Immutable after creation.
-	LanguageCode pulumi.IntPtrInput `pulumi:"languageCode"`
+	LanguageCode pulumi.Float64PtrInput `pulumi:"languageCode"`
 	// Dataverse organization GUID. Computed.
 	OrganizationId pulumi.StringPtrInput `pulumi:"organizationId"`
 	// AAD security group GUID restricting environment access.
@@ -484,8 +484,8 @@ func (o DataverseOutput) DomainName() pulumi.StringPtrOutput {
 }
 
 // Base language LCID (e.g. 1033). Immutable after creation.
-func (o DataverseOutput) LanguageCode() pulumi.IntPtrOutput {
-	return o.ApplyT(func(v Dataverse) *int { return v.LanguageCode }).(pulumi.IntPtrOutput)
+func (o DataverseOutput) LanguageCode() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v Dataverse) *float64 { return v.LanguageCode }).(pulumi.Float64PtrOutput)
 }
 
 // Dataverse organization GUID. Computed.
@@ -588,13 +588,13 @@ func (o DataversePtrOutput) DomainName() pulumi.StringPtrOutput {
 }
 
 // Base language LCID (e.g. 1033). Immutable after creation.
-func (o DataversePtrOutput) LanguageCode() pulumi.IntPtrOutput {
-	return o.ApplyT(func(v *Dataverse) *int {
+func (o DataversePtrOutput) LanguageCode() pulumi.Float64PtrOutput {
+	return o.ApplyT(func(v *Dataverse) *float64 {
 		if v == nil {
 			return nil
 		}
 		return v.LanguageCode
-	}).(pulumi.IntPtrOutput)
+	}).(pulumi.Float64PtrOutput)
 }
 
 // Dataverse organization GUID. Computed.

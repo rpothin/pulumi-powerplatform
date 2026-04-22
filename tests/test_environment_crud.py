@@ -787,8 +787,41 @@ class TestDataverseProvisioning:
         for call in mock_client.raw.request.call_args_list:
             assert "provisionInstance" not in call[0][1]
 
+    @pytest.mark.asyncio
+    async def test_create_dataverse_provisioning_failure_still_returns_env_id(
+        self, handler, mock_client
+    ):
+        """If provisionInstance raises, env_id is still returned (environment not orphaned)."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        visibility_response = _fake_env_response()
 
-class TestDataverseCheck:
+        def _side_effect(*args, **kwargs):
+            method, path = args[0], args[1]
+            if method == "POST" and "provisionInstance" in path:
+                raise RuntimeError("Quota exceeded")
+            return post_response if method == "POST" else visibility_response
+
+        mock_client.raw.request.side_effect = _side_effect
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                }),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
+
+        # The env_id must always be returned so Pulumi can track the resource.
+        assert response.resource_id == _FAKE_ID
     """Tests for dataverse block validation in check()."""
 
     @pytest.mark.asyncio

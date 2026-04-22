@@ -6,7 +6,7 @@ package io.github.rpothin.powerplatform.inputs;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import java.lang.Boolean;
-import java.lang.Integer;
+import java.lang.Double;
 import java.lang.String;
 import java.util.List;
 import java.util.Objects;
@@ -87,13 +87,13 @@ public final class DataverseArgs extends com.pulumi.resources.ResourceArgs {
      * 
      */
     @Import(name="languageCode")
-    private @Nullable Output<Integer> languageCode;
+    private @Nullable Output<Double> languageCode;
 
     /**
      * @return Base language LCID (e.g. 1033). Immutable after creation.
      * 
      */
-    public Optional<Output<Integer>> languageCode() {
+    public Optional<Output<Double>> languageCode() {
         return Optional.ofNullable(this.languageCode);
     }
 
@@ -327,7 +327,7 @@ public final class DataverseArgs extends com.pulumi.resources.ResourceArgs {
          * @return builder
          * 
          */
-        public Builder languageCode(@Nullable Output<Integer> languageCode) {
+        public Builder languageCode(@Nullable Output<Double> languageCode) {
             $.languageCode = languageCode;
             return this;
         }
@@ -338,7 +338,7 @@ public final class DataverseArgs extends com.pulumi.resources.ResourceArgs {
          * @return builder
          * 
          */
-        public Builder languageCode(Integer languageCode) {
+        public Builder languageCode(Double languageCode) {
             return languageCode(Output.of(languageCode));
         }
 

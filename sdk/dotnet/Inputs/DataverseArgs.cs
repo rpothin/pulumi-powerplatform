@@ -43,7 +43,7 @@ namespace Pulumi.Powerplatform.Inputs
         /// Base language LCID (e.g. 1033). Immutable after creation.
         /// </summary>
         [Input("languageCode")]
-        public Input<int>? LanguageCode { get; set; }
+        public Input<double>? LanguageCode { get; set; }
 
         /// <summary>
         /// Dataverse organization GUID. Computed.

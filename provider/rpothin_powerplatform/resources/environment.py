@@ -285,9 +285,16 @@ class EnvironmentResource:
         if not env_id:
             raise RuntimeError("Environment create response did not include an environment id.")
 
+        # Compute per-stage poll budget. Splitting the total timeout across three sequential
+        # stages prevents one slow stage from consuming the entire deadline.
+        # Shell creation gets 2/3 (usually the fastest), visibility and Dataverse 1/3 each.
+        if request.timeout:
+            stage_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS // 3)
+        else:
+            stage_polls = _DEFAULT_MAX_POLLS // 3  # 10 polls ≈ 100 seconds per stage
+
         if provisioning_state and provisioning_state not in _TERMINAL_STATES:
-            max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
-            await self._poll_provisioning(env_id, max_polls)
+            await self._poll_provisioning(env_id, stage_polls * 2)
 
         # Note: _poll_provisioning() already raises on Failed/Canceled states.
         # The provisioning_state captured above is from the initial POST response and
@@ -295,7 +302,7 @@ class EnvironmentResource:
         # the polling loop above.
 
         # Wait for environment to be visible before any follow-up calls.
-        visible_env = await self._wait_for_visibility(env_id)
+        visible_env = await self._wait_for_visibility(env_id, stage_polls)
 
         # Step 2: provision Dataverse if requested.
         dv = _pv_dataverse_dict(props.get("dataverse"))
@@ -335,9 +342,7 @@ class EnvironmentResource:
                     api_version=_BAP_API_VERSION,
                 )
 
-                max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
-                await self._poll_dataverse_provisioning(env_id, max_polls)
-
+                await self._poll_dataverse_provisioning(env_id, stage_polls)
                 # Re-read after Dataverse is provisioned.
                 final: dict = await self._client.raw.request(
                     "GET",
@@ -372,8 +377,9 @@ class EnvironmentResource:
             except Exception as exc:
                 logger.error(
                     "Environment %s was created but Dataverse provisioning failed: %s. "
-                    "The environment shell has been tracked in Pulumi state. "
-                    "Fix the error and run 'pulumi up' again.",
+                    "The environment shell has been recorded in Pulumi state. "
+                    "WARNING: The next 'pulumi up' will REPLACE (destroy and recreate) this "
+                    "environment to retry Dataverse provisioning — not a safe in-place retry.",
                     env_id,
                     exc,
                 )
@@ -774,10 +780,10 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
                 dv_out["templateMetadata"] = PropertyValue(json.dumps(template_metadata))
             else:
                 dv_out["templateMetadata"] = PropertyValue(str(template_metadata))
-        if linked.get("backgroundOperationsState"):
-            dv_out["backgroundOperationEnabled"] = PropertyValue(
-                linked["backgroundOperationsState"] == "Enabled"
-            )
+        # Only emit backgroundOperationEnabled when explicitly enabled — emitting False
+        # unconditionally causes perpetual drift when the user hasn't set this field.
+        if linked.get("backgroundOperationsState") == "Enabled":
+            dv_out["backgroundOperationEnabled"] = PropertyValue(True)
         states = props.get("states", {})
         admin_mode_id = states.get("runtime", {}).get("id", "")
         # BLOCKER 1: only emit administrationModeEnabled when the API reports admin mode

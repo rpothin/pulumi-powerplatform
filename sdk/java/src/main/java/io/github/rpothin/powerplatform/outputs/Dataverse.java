@@ -5,7 +5,7 @@ package io.github.rpothin.powerplatform.outputs;
 
 import com.pulumi.core.annotations.CustomType;
 import java.lang.Boolean;
-import java.lang.Integer;
+import java.lang.Double;
 import java.lang.String;
 import java.util.List;
 import java.util.Objects;
@@ -38,7 +38,7 @@ public final class Dataverse {
      * @return Base language LCID (e.g. 1033). Immutable after creation.
      * 
      */
-    private @Nullable Integer languageCode;
+    private @Nullable Double languageCode;
     /**
      * @return Dataverse organization GUID. Computed.
      * 
@@ -108,7 +108,7 @@ public final class Dataverse {
      * @return Base language LCID (e.g. 1033). Immutable after creation.
      * 
      */
-    public Optional<Integer> languageCode() {
+    public Optional<Double> languageCode() {
         return Optional.ofNullable(this.languageCode);
     }
     /**
@@ -174,7 +174,7 @@ public final class Dataverse {
         private @Nullable Boolean backgroundOperationEnabled;
         private @Nullable String currencyCode;
         private @Nullable String domainName;
-        private @Nullable Integer languageCode;
+        private @Nullable Double languageCode;
         private @Nullable String organizationId;
         private @Nullable String securityGroupId;
         private @Nullable String templateMetadata;
@@ -224,7 +224,7 @@ public final class Dataverse {
             return this;
         }
         @CustomType.Setter
-        public Builder languageCode(@Nullable Integer languageCode) {
+        public Builder languageCode(@Nullable Double languageCode) {
 
             this.languageCode = languageCode;
             return this;

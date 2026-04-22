@@ -35,7 +35,7 @@ namespace Pulumi.Powerplatform.Outputs
         /// <summary>
         /// Base language LCID (e.g. 1033). Immutable after creation.
         /// </summary>
-        public readonly int? LanguageCode;
+        public readonly double? LanguageCode;
         /// <summary>
         /// Dataverse organization GUID. Computed.
         /// </summary>
@@ -75,7 +75,7 @@ namespace Pulumi.Powerplatform.Outputs
 
             string? domainName,
 
-            int? languageCode,
+            double? languageCode,
 
             string? organizationId,
 

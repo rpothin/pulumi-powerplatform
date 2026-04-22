@@ -221,7 +221,7 @@
                     "description": "Currency code for the Dataverse database (e.g. USD). Immutable after creation."
                 },
                 "languageCode": {
-                    "type": "integer",
+                    "type": "number",
                     "description": "Base language LCID (e.g. 1033). Immutable after creation."
                 },
                 "domainName": {
