@@ -53,11 +53,23 @@ jobs:
       - name: Generate non-Python SDKs
         if: steps.schema_changed.outputs.schema_changed == 'true'
         run: |
+          # go.mod and go.sum are manually maintained; pulumi package gen-sdk
+          # overwrites the directory without recreating them. Save them first
+          # so they survive the generation step and go mod tidy can run.
+          GO_MOD_BACKUP=$(mktemp -d)
+          cp sdk/go/powerplatform/go.mod "$GO_MOD_BACKUP/go.mod"
+          cp sdk/go/powerplatform/go.sum  "$GO_MOD_BACKUP/go.sum"
+
           pulumi package gen-sdk . --language nodejs --out sdk
           pulumi package gen-sdk . --language go     --out sdk
           pulumi package gen-sdk . --language dotnet --out sdk
           pulumi package gen-sdk . --language java   --out sdk
           bash ./scripts/normalize-dotnet-sdk.sh sdk/dotnet
+
+          # Restore go.mod/go.sum (gen-sdk does not produce them).
+          cp "$GO_MOD_BACKUP/go.mod" sdk/go/powerplatform/go.mod
+          cp "$GO_MOD_BACKUP/go.sum"  sdk/go/powerplatform/go.sum
+
           cd sdk/go/powerplatform && go mod tidy && cd -
 
       - name: Validate Go SDK builds
