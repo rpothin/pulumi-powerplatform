@@ -118,9 +118,28 @@ class EnvironmentResource:
                 )
             )
 
+        # WARNING 6a: ownerId is only supported for Developer environments.
+        owner_id = _pv_str(inputs.get("ownerId"))
+        if owner_id and env_type and env_type != "Developer":
+            failures.append(
+                CheckFailure(
+                    property="ownerId",
+                    reason="ownerId is only valid for environmentType 'Developer'.",
+                )
+            )
+
         dv = _pv_dataverse_dict(inputs.get("dataverse"))
         old_dv = _pv_dataverse_dict(request.old_inputs.get("dataverse"))
-        if dv is not None:
+
+        # WARNING 6b: Developer environments cannot have a Dataverse database provisioned.
+        if dv is not None and env_type == "Developer":
+            failures.append(
+                CheckFailure(
+                    property="dataverse",
+                    reason="The dataverse block is not supported for environmentType 'Developer'.",
+                )
+            )
+        elif dv is not None:
             if not dv.get("currencyCode") and not (old_dv or {}).get("currencyCode"):
                 failures.append(
                     CheckFailure(
@@ -270,8 +289,10 @@ class EnvironmentResource:
             max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
             await self._poll_provisioning(env_id, max_polls)
 
-        if provisioning_state == "Failed":
-            raise RuntimeError(f"Environment creation failed: {result}")
+        # Note: _poll_provisioning() already raises on Failed/Canceled states.
+        # The provisioning_state captured above is from the initial POST response and
+        # may be stale by the time we reach here. Failure detection is handled by
+        # the polling loop above.
 
         # Wait for environment to be visible before any follow-up calls.
         visible_env = await self._wait_for_visibility(env_id)
@@ -302,22 +323,61 @@ class EnvironmentResource:
                 except (json.JSONDecodeError, TypeError):
                     provision_body["templateMetadata"] = tmeta
 
-            await self._client.raw.request(
-                "POST",
-                f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}/provisionInstance",
-                body=provision_body,
-                api_version=_BAP_API_VERSION,
-            )
+            # BLOCKER 3: wrap provisionInstance in try/except so the environment shell
+            # is always returned in CreateResponse. If Dataverse provisioning fails,
+            # the env_id is still recorded in Pulumi state; the user can fix the error
+            # and run 'pulumi up' again (which will trigger an update to retry).
+            try:
+                await self._client.raw.request(
+                    "POST",
+                    f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}/provisionInstance",
+                    body=provision_body,
+                    api_version=_BAP_API_VERSION,
+                )
 
-            max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
-            await self._poll_dataverse_provisioning(env_id, max_polls)
+                max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
+                await self._poll_dataverse_provisioning(env_id, max_polls)
 
-            # Re-read after Dataverse is provisioned.
-            final = await self._client.raw.request(
-                "GET",
-                f"{_ADMIN_ENV_PATH}/{env_id}",
-                api_version=_BAP_API_VERSION,
-            ) or visible_env
+                # Re-read after Dataverse is provisioned.
+                final: dict = await self._client.raw.request(
+                    "GET",
+                    f"{_ADMIN_ENV_PATH}/{env_id}",
+                    api_version=_BAP_API_VERSION,
+                ) or visible_env
+
+                # WARNING 5: /provisionInstance does not accept administrationModeEnabled or
+                # backgroundOperationEnabled — apply them via PATCH after provisioning.
+                admin_mode = dv.get("administrationModeEnabled")
+                bg_ops = dv.get("backgroundOperationEnabled")
+                if admin_mode is not None or bg_ops is not None:
+                    post_provision_patch: dict[str, Any] = {"properties": {}}
+                    linked_patch: dict[str, Any] = {}
+                    if admin_mode is not None:
+                        post_provision_patch["properties"]["states"] = {
+                            "runtime": {"id": "AdminMode" if admin_mode else "Enabled"}
+                        }
+                    if bg_ops is not None:
+                        linked_patch["backgroundOperationsState"] = "Enabled" if bg_ops else "Disabled"
+                    if linked_patch:
+                        post_provision_patch["properties"]["linkedEnvironmentMetadata"] = linked_patch
+                    patched = await self._client.raw.request(
+                        "PATCH",
+                        f"{_ADMIN_ENV_PATH}/{env_id}",
+                        body=post_provision_patch,
+                        api_version=_BAP_API_VERSION,
+                    )
+                    if patched:
+                        final = patched
+
+            except Exception as exc:
+                logger.error(
+                    "Environment %s was created but Dataverse provisioning failed: %s. "
+                    "The environment shell has been tracked in Pulumi state. "
+                    "Fix the error and run 'pulumi up' again.",
+                    env_id,
+                    exc,
+                )
+                final = visible_env
         else:
             final = visible_env
 
@@ -528,7 +588,13 @@ class EnvironmentResource:
             linked = props.get("linkedEnvironmentMetadata", {})
             if linked.get("instanceUrl") or linked.get("resourceId"):
                 return
-        raise RuntimeError(f"Dataverse provisioning timed out after polling {max_polls} times.")
+            logger.debug("Waiting for Dataverse provisioning on %s; current API response: %s", env_id, result)
+        raise RuntimeError(
+            f"Dataverse provisioning timed out after polling {max_polls} times. "
+            f"Last API response is logged at DEBUG level. "
+            f"Check the Power Platform admin center for the environment status."
+        )
+
 
 
 # Input property names (for reconstructing inputs from outputs during read).
@@ -575,10 +641,17 @@ def _pv_list(val: Any) -> list | None:
 
 
 def _pv_list_json(val: Any) -> str:
-    """Serialize a list PropertyValue to a JSON string for comparison."""
+    """Serialize a list PropertyValue to a JSON string for stable comparison.
+
+    Items that are dicts with a 'type' key are sorted by that key to ensure
+    ordering differences (e.g. enterprise policies) don't cause perpetual drift.
+    """
     lst = _pv_list(val)
     if lst is None:
         return "null"
+    # Normalize list order for dicts with a 'type' key (e.g. enterprisePolicies).
+    if lst and isinstance(lst[0], dict) and "type" in lst[0]:
+        lst = sorted(lst, key=lambda x: x.get("type", ""))
     return json.dumps(lst, sort_keys=True)
 
 
@@ -679,7 +752,9 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
         if linked.get("currency", {}).get("code"):
             dv_out["currencyCode"] = PropertyValue(linked["currency"]["code"])
         if linked.get("baseLanguage") is not None:
-            dv_out["languageCode"] = PropertyValue(float(linked["baseLanguage"]))
+            # PropertyValue does not accept int; store as float. Using int() first
+            # ensures no fractional part (e.g. 1033.0, never 1033.5).
+            dv_out["languageCode"] = PropertyValue(float(int(linked["baseLanguage"])))
         if linked.get("securityGroupId"):
             dv_out["securityGroupId"] = PropertyValue(linked["securityGroupId"])
         if linked.get("resourceId"):
@@ -705,7 +780,11 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
             )
         states = props.get("states", {})
         admin_mode_id = states.get("runtime", {}).get("id", "")
-        dv_out["administrationModeEnabled"] = PropertyValue(admin_mode_id == "AdminMode")
+        # BLOCKER 1: only emit administrationModeEnabled when the API reports admin mode
+        # is active. Emitting False unconditionally causes perpetual drift when the user
+        # has not specified this field (state has False, inputs have nothing → diff fires).
+        if admin_mode_id == "AdminMode":
+            dv_out["administrationModeEnabled"] = PropertyValue(True)
         if dv_out:
             outputs["dataverse"] = PropertyValue(dv_out)
 
@@ -738,6 +817,12 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
                     "systemId": PropertyValue(policy.get("systemId", "")),
                     "status": PropertyValue(policy.get("linkStatus", "")),
                 }))
+        # WARNING 4: sort by type name so output order is stable regardless of
+        # API iteration order, preventing perpetual drift in diff().
+        def _policy_sort_key(pv: PropertyValue) -> str:
+            d = _deep_to_python(pv)
+            return d.get("type", "") if isinstance(d, dict) else ""
+        policies_out.sort(key=_policy_sort_key)
         if policies_out:
             outputs["enterprisePolicies"] = PropertyValue(policies_out)
 

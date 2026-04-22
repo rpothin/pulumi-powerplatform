@@ -552,7 +552,9 @@ class TestEnvironmentRead:
         assert dv["version"].value == "9.2.24124.00182"
         assert dv["securityGroupId"].value == "sg-guid"
         assert dv["backgroundOperationEnabled"].value is True
-        assert dv["administrationModeEnabled"].value is False
+        # administrationModeEnabled is only emitted when admin mode is active (True),
+        # so it should be absent from state when the API returns "Enabled" runtime state.
+        assert "administrationModeEnabled" not in dv
 
     @pytest.mark.asyncio
     async def test_read_missing_returns_empty(self, handler, mock_client):
@@ -829,8 +831,44 @@ class TestDataverseCheck:
         failure_props = [f.property for f in (response.failures or [])]
         assert "dataverse" not in failure_props
 
+    @pytest.mark.asyncio
+    async def test_check_owner_id_invalid_for_non_developer(self, handler):
+        """check() should fail if ownerId is set for a non-Developer environment."""
+        request = CheckRequest(
+            urn=_URN,
+            old_inputs={},
+            new_inputs={
+                "displayName": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "ownerId": PropertyValue("user-guid"),
+            },
+            random_seed=b"",
+        )
+        response = await handler.check(request)
+        failure_props = [f.property for f in (response.failures or [])]
+        assert "ownerId" in failure_props
 
-class TestDataverseDiff:
+    @pytest.mark.asyncio
+    async def test_check_dataverse_invalid_for_developer_environment(self, handler):
+        """check() should fail if the dataverse block is set for a Developer environment."""
+        request = CheckRequest(
+            urn=_URN,
+            old_inputs={},
+            new_inputs={
+                "displayName": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Developer"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                }),
+            },
+            random_seed=b"",
+        )
+        response = await handler.check(request)
+        failure_props = [f.property for f in (response.failures or [])]
+        assert "dataverse" in failure_props
     """Tests for diff() behavior with the dataverse nested block."""
 
     @pytest.mark.asyncio
