@@ -16,40 +16,30 @@ import (
 type Environment struct {
 	pulumi.CustomResourceState
 
-	// Whether the environment Dataverse database is in administration-only mode.
-	AdministrationModeEnabled pulumi.BoolPtrOutput `pulumi:"administrationModeEnabled"`
 	// Whether Bing Search integration is allowed.
 	AllowBingSearch pulumi.BoolPtrOutput `pulumi:"allowBingSearch"`
 	// Whether data can move across geographic boundaries for Copilot features.
 	AllowMovingDataAcrossRegions pulumi.BoolPtrOutput `pulumi:"allowMovingDataAcrossRegions"`
 	// Specific Azure region within the location geo.
 	AzureRegion pulumi.StringPtrOutput `pulumi:"azureRegion"`
-	// Whether background operations are enabled during administration mode.
-	BackgroundOperationEnabled pulumi.BoolPtrOutput `pulumi:"backgroundOperationEnabled"`
 	// ID of the billing policy linked to this environment.
 	BillingPolicyId pulumi.StringPtrOutput `pulumi:"billingPolicyId"`
 	// Release wave cadence: Frequent or Moderate.
 	Cadence pulumi.StringPtrOutput `pulumi:"cadence"`
 	// The timestamp when the environment was created.
 	CreatedTime pulumi.StringPtrOutput `pulumi:"createdTime"`
-	// The currency code of the Dataverse database.
-	CurrencyCode pulumi.StringPtrOutput `pulumi:"currencyCode"`
-	// Dataverse version string. Computed.
-	DataverseVersion pulumi.StringPtrOutput `pulumi:"dataverseVersion"`
+	// Dataverse database configuration. Presence triggers Dataverse provisioning.
+	Dataverse DataversePtrOutput `pulumi:"dataverse"`
 	// The description of the environment.
 	Description pulumi.StringPtrOutput `pulumi:"description"`
 	// The display name of the environment.
 	DisplayName pulumi.StringOutput `pulumi:"displayName"`
-	// The domain name of the Dataverse database.
-	DomainName pulumi.StringPtrOutput `pulumi:"domainName"`
 	// Enterprise policies associated with the environment.
 	EnterprisePolicies EnterprisePolicyArrayOutput `pulumi:"enterprisePolicies"`
 	// ID of the environment group.
 	EnvironmentGroupId pulumi.StringPtrOutput `pulumi:"environmentGroupId"`
 	// The type (SKU) of the environment.
 	EnvironmentType pulumi.StringOutput `pulumi:"environmentType"`
-	// The base language code of the Dataverse database.
-	LanguageCode pulumi.StringPtrOutput `pulumi:"languageCode"`
 	// The timestamp when the environment was last modified.
 	LastModifiedTime pulumi.StringPtrOutput `pulumi:"lastModifiedTime"`
 	// GUID of the linked app.
@@ -60,22 +50,10 @@ type Environment struct {
 	LinkedAppUrl pulumi.StringPtrOutput `pulumi:"linkedAppUrl"`
 	// The geographic region of the environment.
 	Location pulumi.StringOutput `pulumi:"location"`
-	// Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
-	OrganizationId pulumi.StringPtrOutput `pulumi:"organizationId"`
 	// AAD user or group GUID who owns the environment.
 	OwnerId pulumi.StringPtrOutput `pulumi:"ownerId"`
-	// AAD security group GUID restricting environment access.
-	SecurityGroupId pulumi.StringPtrOutput `pulumi:"securityGroupId"`
 	// The current state of the environment (e.g., Ready, Preparing).
 	State pulumi.StringPtrOutput `pulumi:"state"`
-	// JSON metadata string for provisioning templates.
-	TemplateMetadata pulumi.StringPtrOutput `pulumi:"templateMetadata"`
-	// Template names used for Dataverse provisioning.
-	Templates pulumi.StringArrayOutput `pulumi:"templates"`
-	// Dataverse unique name. Computed.
-	UniqueName pulumi.StringPtrOutput `pulumi:"uniqueName"`
-	// The Dataverse instance URL of the environment.
-	Url pulumi.StringPtrOutput `pulumi:"url"`
 }
 
 // NewEnvironment registers a new resource with the given unique name, arguments, and options.
@@ -127,36 +105,28 @@ func (EnvironmentState) ElementType() reflect.Type {
 }
 
 type environmentArgs struct {
-	// Put the Dataverse database into administration-only mode.
-	AdministrationModeEnabled *bool `pulumi:"administrationModeEnabled"`
 	// Allow Bing Search integration (AI generative features).
 	AllowBingSearch *bool `pulumi:"allowBingSearch"`
 	// Allow data to move across geographic boundaries for Copilot features.
 	AllowMovingDataAcrossRegions *bool `pulumi:"allowMovingDataAcrossRegions"`
 	// Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
 	AzureRegion *string `pulumi:"azureRegion"`
-	// Allow background operations during administration mode.
-	BackgroundOperationEnabled *bool `pulumi:"backgroundOperationEnabled"`
 	// ID of the billing policy to link to this environment.
 	BillingPolicyId *string `pulumi:"billingPolicyId"`
 	// Release wave cadence: Frequent or Moderate. Immutable after creation.
 	Cadence *string `pulumi:"cadence"`
-	// The currency code for the Dataverse database (e.g., USD, EUR).
-	CurrencyCode *string `pulumi:"currencyCode"`
+	// Dataverse database configuration. Presence triggers Dataverse provisioning.
+	Dataverse *Dataverse `pulumi:"dataverse"`
 	// A description of the environment.
 	Description *string `pulumi:"description"`
 	// The display name of the environment.
 	DisplayName string `pulumi:"displayName"`
-	// The domain name for the Dataverse database associated with the environment.
-	DomainName *string `pulumi:"domainName"`
 	// Set of enterprise policies associated with the environment.
 	EnterprisePolicies []EnterprisePolicy `pulumi:"enterprisePolicies"`
 	// ID of the environment group this environment belongs to.
 	EnvironmentGroupId *string `pulumi:"environmentGroupId"`
 	// The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
 	EnvironmentType string `pulumi:"environmentType"`
-	// The base language code for the Dataverse database (e.g., 1033 for English).
-	LanguageCode *string `pulumi:"languageCode"`
 	// GUID of the linked app.
 	LinkedAppId *string `pulumi:"linkedAppId"`
 	// Type of linked app: Canvas or ModelDriven.
@@ -165,46 +135,32 @@ type environmentArgs struct {
 	Location string `pulumi:"location"`
 	// AAD user or group GUID who owns the environment. Only valid for Developer environments.
 	OwnerId *string `pulumi:"ownerId"`
-	// AAD security group GUID that restricts environment access.
-	SecurityGroupId *string `pulumi:"securityGroupId"`
-	// JSON metadata string for templates. Immutable after creation.
-	TemplateMetadata *string `pulumi:"templateMetadata"`
-	// Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
-	Templates []string `pulumi:"templates"`
 }
 
 // The set of arguments for constructing a Environment resource.
 type EnvironmentArgs struct {
-	// Put the Dataverse database into administration-only mode.
-	AdministrationModeEnabled pulumi.BoolPtrInput
 	// Allow Bing Search integration (AI generative features).
 	AllowBingSearch pulumi.BoolPtrInput
 	// Allow data to move across geographic boundaries for Copilot features.
 	AllowMovingDataAcrossRegions pulumi.BoolPtrInput
 	// Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
 	AzureRegion pulumi.StringPtrInput
-	// Allow background operations during administration mode.
-	BackgroundOperationEnabled pulumi.BoolPtrInput
 	// ID of the billing policy to link to this environment.
 	BillingPolicyId pulumi.StringPtrInput
 	// Release wave cadence: Frequent or Moderate. Immutable after creation.
 	Cadence pulumi.StringPtrInput
-	// The currency code for the Dataverse database (e.g., USD, EUR).
-	CurrencyCode pulumi.StringPtrInput
+	// Dataverse database configuration. Presence triggers Dataverse provisioning.
+	Dataverse DataversePtrInput
 	// A description of the environment.
 	Description pulumi.StringPtrInput
 	// The display name of the environment.
 	DisplayName pulumi.StringInput
-	// The domain name for the Dataverse database associated with the environment.
-	DomainName pulumi.StringPtrInput
 	// Set of enterprise policies associated with the environment.
 	EnterprisePolicies EnterprisePolicyArrayInput
 	// ID of the environment group this environment belongs to.
 	EnvironmentGroupId pulumi.StringPtrInput
 	// The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
 	EnvironmentType pulumi.StringInput
-	// The base language code for the Dataverse database (e.g., 1033 for English).
-	LanguageCode pulumi.StringPtrInput
 	// GUID of the linked app.
 	LinkedAppId pulumi.StringPtrInput
 	// Type of linked app: Canvas or ModelDriven.
@@ -213,12 +169,6 @@ type EnvironmentArgs struct {
 	Location pulumi.StringInput
 	// AAD user or group GUID who owns the environment. Only valid for Developer environments.
 	OwnerId pulumi.StringPtrInput
-	// AAD security group GUID that restricts environment access.
-	SecurityGroupId pulumi.StringPtrInput
-	// JSON metadata string for templates. Immutable after creation.
-	TemplateMetadata pulumi.StringPtrInput
-	// Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
-	Templates pulumi.StringArrayInput
 }
 
 func (EnvironmentArgs) ElementType() reflect.Type {
@@ -258,11 +208,6 @@ func (o EnvironmentOutput) ToEnvironmentOutputWithContext(ctx context.Context) E
 	return o
 }
 
-// Whether the environment Dataverse database is in administration-only mode.
-func (o EnvironmentOutput) AdministrationModeEnabled() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.BoolPtrOutput { return v.AdministrationModeEnabled }).(pulumi.BoolPtrOutput)
-}
-
 // Whether Bing Search integration is allowed.
 func (o EnvironmentOutput) AllowBingSearch() pulumi.BoolPtrOutput {
 	return o.ApplyT(func(v *Environment) pulumi.BoolPtrOutput { return v.AllowBingSearch }).(pulumi.BoolPtrOutput)
@@ -276,11 +221,6 @@ func (o EnvironmentOutput) AllowMovingDataAcrossRegions() pulumi.BoolPtrOutput {
 // Specific Azure region within the location geo.
 func (o EnvironmentOutput) AzureRegion() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.AzureRegion }).(pulumi.StringPtrOutput)
-}
-
-// Whether background operations are enabled during administration mode.
-func (o EnvironmentOutput) BackgroundOperationEnabled() pulumi.BoolPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.BoolPtrOutput { return v.BackgroundOperationEnabled }).(pulumi.BoolPtrOutput)
 }
 
 // ID of the billing policy linked to this environment.
@@ -298,14 +238,9 @@ func (o EnvironmentOutput) CreatedTime() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.CreatedTime }).(pulumi.StringPtrOutput)
 }
 
-// The currency code of the Dataverse database.
-func (o EnvironmentOutput) CurrencyCode() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.CurrencyCode }).(pulumi.StringPtrOutput)
-}
-
-// Dataverse version string. Computed.
-func (o EnvironmentOutput) DataverseVersion() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.DataverseVersion }).(pulumi.StringPtrOutput)
+// Dataverse database configuration. Presence triggers Dataverse provisioning.
+func (o EnvironmentOutput) Dataverse() DataversePtrOutput {
+	return o.ApplyT(func(v *Environment) DataversePtrOutput { return v.Dataverse }).(DataversePtrOutput)
 }
 
 // The description of the environment.
@@ -316,11 +251,6 @@ func (o EnvironmentOutput) Description() pulumi.StringPtrOutput {
 // The display name of the environment.
 func (o EnvironmentOutput) DisplayName() pulumi.StringOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringOutput { return v.DisplayName }).(pulumi.StringOutput)
-}
-
-// The domain name of the Dataverse database.
-func (o EnvironmentOutput) DomainName() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.DomainName }).(pulumi.StringPtrOutput)
 }
 
 // Enterprise policies associated with the environment.
@@ -336,11 +266,6 @@ func (o EnvironmentOutput) EnvironmentGroupId() pulumi.StringPtrOutput {
 // The type (SKU) of the environment.
 func (o EnvironmentOutput) EnvironmentType() pulumi.StringOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringOutput { return v.EnvironmentType }).(pulumi.StringOutput)
-}
-
-// The base language code of the Dataverse database.
-func (o EnvironmentOutput) LanguageCode() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.LanguageCode }).(pulumi.StringPtrOutput)
 }
 
 // The timestamp when the environment was last modified.
@@ -368,44 +293,14 @@ func (o EnvironmentOutput) Location() pulumi.StringOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringOutput { return v.Location }).(pulumi.StringOutput)
 }
 
-// Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
-func (o EnvironmentOutput) OrganizationId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.OrganizationId }).(pulumi.StringPtrOutput)
-}
-
 // AAD user or group GUID who owns the environment.
 func (o EnvironmentOutput) OwnerId() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.OwnerId }).(pulumi.StringPtrOutput)
 }
 
-// AAD security group GUID restricting environment access.
-func (o EnvironmentOutput) SecurityGroupId() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.SecurityGroupId }).(pulumi.StringPtrOutput)
-}
-
 // The current state of the environment (e.g., Ready, Preparing).
 func (o EnvironmentOutput) State() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.State }).(pulumi.StringPtrOutput)
-}
-
-// JSON metadata string for provisioning templates.
-func (o EnvironmentOutput) TemplateMetadata() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.TemplateMetadata }).(pulumi.StringPtrOutput)
-}
-
-// Template names used for Dataverse provisioning.
-func (o EnvironmentOutput) Templates() pulumi.StringArrayOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringArrayOutput { return v.Templates }).(pulumi.StringArrayOutput)
-}
-
-// Dataverse unique name. Computed.
-func (o EnvironmentOutput) UniqueName() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.UniqueName }).(pulumi.StringPtrOutput)
-}
-
-// The Dataverse instance URL of the environment.
-func (o EnvironmentOutput) Url() pulumi.StringPtrOutput {
-	return o.ApplyT(func(v *Environment) pulumi.StringPtrOutput { return v.Url }).(pulumi.StringPtrOutput)
 }
 
 func init() {

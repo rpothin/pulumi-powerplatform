@@ -16,12 +16,6 @@ namespace Pulumi.Powerplatform
     public partial class Environment : global::Pulumi.CustomResource
     {
         /// <summary>
-        /// Whether the environment Dataverse database is in administration-only mode.
-        /// </summary>
-        [Output("administrationModeEnabled")]
-        public Output<bool?> AdministrationModeEnabled { get; private set; } = null!;
-
-        /// <summary>
         /// Whether Bing Search integration is allowed.
         /// </summary>
         [Output("allowBingSearch")]
@@ -38,12 +32,6 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Output("azureRegion")]
         public Output<string?> AzureRegion { get; private set; } = null!;
-
-        /// <summary>
-        /// Whether background operations are enabled during administration mode.
-        /// </summary>
-        [Output("backgroundOperationEnabled")]
-        public Output<bool?> BackgroundOperationEnabled { get; private set; } = null!;
 
         /// <summary>
         /// ID of the billing policy linked to this environment.
@@ -64,16 +52,10 @@ namespace Pulumi.Powerplatform
         public Output<string?> CreatedTime { get; private set; } = null!;
 
         /// <summary>
-        /// The currency code of the Dataverse database.
+        /// Dataverse database configuration. Presence triggers Dataverse provisioning.
         /// </summary>
-        [Output("currencyCode")]
-        public Output<string?> CurrencyCode { get; private set; } = null!;
-
-        /// <summary>
-        /// Dataverse version string. Computed.
-        /// </summary>
-        [Output("dataverseVersion")]
-        public Output<string?> DataverseVersion { get; private set; } = null!;
+        [Output("dataverse")]
+        public Output<Outputs.Dataverse?> Dataverse { get; private set; } = null!;
 
         /// <summary>
         /// The description of the environment.
@@ -86,12 +68,6 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Output("displayName")]
         public Output<string> DisplayName { get; private set; } = null!;
-
-        /// <summary>
-        /// The domain name of the Dataverse database.
-        /// </summary>
-        [Output("domainName")]
-        public Output<string?> DomainName { get; private set; } = null!;
 
         /// <summary>
         /// Enterprise policies associated with the environment.
@@ -110,12 +86,6 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Output("environmentType")]
         public Output<string> EnvironmentType { get; private set; } = null!;
-
-        /// <summary>
-        /// The base language code of the Dataverse database.
-        /// </summary>
-        [Output("languageCode")]
-        public Output<string?> LanguageCode { get; private set; } = null!;
 
         /// <summary>
         /// The timestamp when the environment was last modified.
@@ -148,52 +118,16 @@ namespace Pulumi.Powerplatform
         public Output<string> Location { get; private set; } = null!;
 
         /// <summary>
-        /// Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
-        /// </summary>
-        [Output("organizationId")]
-        public Output<string?> OrganizationId { get; private set; } = null!;
-
-        /// <summary>
         /// AAD user or group GUID who owns the environment.
         /// </summary>
         [Output("ownerId")]
         public Output<string?> OwnerId { get; private set; } = null!;
 
         /// <summary>
-        /// AAD security group GUID restricting environment access.
-        /// </summary>
-        [Output("securityGroupId")]
-        public Output<string?> SecurityGroupId { get; private set; } = null!;
-
-        /// <summary>
         /// The current state of the environment (e.g., Ready, Preparing).
         /// </summary>
         [Output("state")]
         public Output<string?> State { get; private set; } = null!;
-
-        /// <summary>
-        /// JSON metadata string for provisioning templates.
-        /// </summary>
-        [Output("templateMetadata")]
-        public Output<string?> TemplateMetadata { get; private set; } = null!;
-
-        /// <summary>
-        /// Template names used for Dataverse provisioning.
-        /// </summary>
-        [Output("templates")]
-        public Output<ImmutableArray<string>> Templates { get; private set; } = null!;
-
-        /// <summary>
-        /// Dataverse unique name. Computed.
-        /// </summary>
-        [Output("uniqueName")]
-        public Output<string?> UniqueName { get; private set; } = null!;
-
-        /// <summary>
-        /// The Dataverse instance URL of the environment.
-        /// </summary>
-        [Output("url")]
-        public Output<string?> Url { get; private set; } = null!;
 
 
         /// <summary>
@@ -242,12 +176,6 @@ namespace Pulumi.Powerplatform
     public sealed class EnvironmentArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// Put the Dataverse database into administration-only mode.
-        /// </summary>
-        [Input("administrationModeEnabled")]
-        public Input<bool>? AdministrationModeEnabled { get; set; }
-
-        /// <summary>
         /// Allow Bing Search integration (AI generative features).
         /// </summary>
         [Input("allowBingSearch")]
@@ -266,12 +194,6 @@ namespace Pulumi.Powerplatform
         public Input<string>? AzureRegion { get; set; }
 
         /// <summary>
-        /// Allow background operations during administration mode.
-        /// </summary>
-        [Input("backgroundOperationEnabled")]
-        public Input<bool>? BackgroundOperationEnabled { get; set; }
-
-        /// <summary>
         /// ID of the billing policy to link to this environment.
         /// </summary>
         [Input("billingPolicyId")]
@@ -284,10 +206,10 @@ namespace Pulumi.Powerplatform
         public Input<string>? Cadence { get; set; }
 
         /// <summary>
-        /// The currency code for the Dataverse database (e.g., USD, EUR).
+        /// Dataverse database configuration. Presence triggers Dataverse provisioning.
         /// </summary>
-        [Input("currencyCode")]
-        public Input<string>? CurrencyCode { get; set; }
+        [Input("dataverse")]
+        public Input<Inputs.DataverseArgs>? Dataverse { get; set; }
 
         /// <summary>
         /// A description of the environment.
@@ -300,12 +222,6 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Input("displayName", required: true)]
         public Input<string> DisplayName { get; set; } = null!;
-
-        /// <summary>
-        /// The domain name for the Dataverse database associated with the environment.
-        /// </summary>
-        [Input("domainName")]
-        public Input<string>? DomainName { get; set; }
 
         [Input("enterprisePolicies")]
         private InputList<Inputs.EnterprisePolicyArgs>? _enterprisePolicies;
@@ -332,12 +248,6 @@ namespace Pulumi.Powerplatform
         public Input<string> EnvironmentType { get; set; } = null!;
 
         /// <summary>
-        /// The base language code for the Dataverse database (e.g., 1033 for English).
-        /// </summary>
-        [Input("languageCode")]
-        public Input<string>? LanguageCode { get; set; }
-
-        /// <summary>
         /// GUID of the linked app.
         /// </summary>
         [Input("linkedAppId")]
@@ -360,30 +270,6 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Input("ownerId")]
         public Input<string>? OwnerId { get; set; }
-
-        /// <summary>
-        /// AAD security group GUID that restricts environment access.
-        /// </summary>
-        [Input("securityGroupId")]
-        public Input<string>? SecurityGroupId { get; set; }
-
-        /// <summary>
-        /// JSON metadata string for templates. Immutable after creation.
-        /// </summary>
-        [Input("templateMetadata")]
-        public Input<string>? TemplateMetadata { get; set; }
-
-        [Input("templates")]
-        private InputList<string>? _templates;
-
-        /// <summary>
-        /// Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation.
-        /// </summary>
-        public InputList<string> Templates
-        {
-            get => _templates ?? (_templates = new InputList<string>());
-            set => _templates = value;
-        }
 
         public EnvironmentArgs()
         {

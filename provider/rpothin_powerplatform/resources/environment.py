@@ -42,17 +42,20 @@ _POLICY_TYPE_TO_KEY = {
 }
 _POLICY_KEY_TO_TYPE = {v: k for k, v in _POLICY_TYPE_TO_KEY.items()}
 
+# Sub-fields of the `dataverse` block that are immutable after creation.
+_DATAVERSE_IMMUTABLE_FIELDS = {"currencyCode", "languageCode", "templates", "templateMetadata"}
+# All writable input fields of the `dataverse` block.
+_DATAVERSE_INPUT_FIELDS = _DATAVERSE_IMMUTABLE_FIELDS | {
+    "domainName", "securityGroupId", "administrationModeEnabled", "backgroundOperationEnabled"
+}
+
 # Immutable properties that require replacement when changed.
-_REPLACE_PROPS = {"location", "environmentType", "azureRegion", "cadence", "templates", "templateMetadata"}
+_REPLACE_PROPS = {"location", "environmentType", "azureRegion", "cadence"}
 
 # Updatable properties.
 _UPDATE_PROPS = {
     "displayName",
     "description",
-    "domainName",
-    "securityGroupId",
-    "administrationModeEnabled",
-    "backgroundOperationEnabled",
     "allowBingSearch",
     "allowMovingDataAcrossRegions",
     "ownerId",
@@ -115,6 +118,24 @@ class EnvironmentResource:
                 )
             )
 
+        dv = _pv_dataverse_dict(inputs.get("dataverse"))
+        old_dv = _pv_dataverse_dict(request.old_inputs.get("dataverse"))
+        if dv is not None:
+            if not dv.get("currencyCode") and not (old_dv or {}).get("currencyCode"):
+                failures.append(
+                    CheckFailure(
+                        property="dataverse",
+                        reason="dataverse.currencyCode is required when dataverse is specified.",
+                    )
+                )
+            if dv.get("languageCode") is None and (old_dv or {}).get("languageCode") is None:
+                failures.append(
+                    CheckFailure(
+                        property="dataverse",
+                        reason="dataverse.languageCode is required when dataverse is specified.",
+                    )
+                )
+
         return CheckResponse(inputs=inputs, failures=failures if failures else None)
 
     async def diff(self, request: DiffRequest) -> DiffResponse:
@@ -126,12 +147,8 @@ class EnvironmentResource:
         new = request.new_inputs
 
         for prop in _REPLACE_PROPS:
-            if prop == "templates":
-                old_val = _pv_list(old.get(prop))
-                new_val = _pv_list(new.get(prop))
-            else:
-                old_val = _pv_str(old.get(prop))
-                new_val = _pv_str(new.get(prop))
+            old_val = _pv_str(old.get(prop))
+            new_val = _pv_str(new.get(prop))
             if old_val != new_val:
                 diffs.append(prop)
                 detailed[prop] = PropertyDiff(kind=PropertyDiffKind.UPDATE_REPLACE, input_diff=True)
@@ -143,12 +160,7 @@ class EnvironmentResource:
                 if old_json != new_json:
                     diffs.append(prop)
                     detailed[prop] = PropertyDiff(kind=PropertyDiffKind.UPDATE, input_diff=True)
-            elif prop in {
-                "administrationModeEnabled",
-                "backgroundOperationEnabled",
-                "allowBingSearch",
-                "allowMovingDataAcrossRegions",
-            }:
+            elif prop in {"allowBingSearch", "allowMovingDataAcrossRegions"}:
                 old_val = _pv_bool(old.get(prop))
                 new_val = _pv_bool(new.get(prop))
                 if old_val != new_val:
@@ -160,6 +172,20 @@ class EnvironmentResource:
                 if old_val != new_val:
                     diffs.append(prop)
                     detailed[prop] = PropertyDiff(kind=PropertyDiffKind.UPDATE, input_diff=True)
+
+        # Diff the nested dataverse block using only writable input fields.
+        old_dv = _pv_dataverse_inputs(old.get("dataverse"))
+        new_dv = _pv_dataverse_inputs(new.get("dataverse"))
+        if old_dv != new_dv:
+            old_immutable = {k: v for k, v in (old_dv or {}).items() if k in _DATAVERSE_IMMUTABLE_FIELDS}
+            new_immutable = {k: v for k, v in (new_dv or {}).items() if k in _DATAVERSE_IMMUTABLE_FIELDS}
+            # Treat adding/removing Dataverse entirely as replace; also replace on immutable changes.
+            if old_dv is None or new_dv is None or old_immutable != new_immutable:
+                kind = PropertyDiffKind.UPDATE_REPLACE
+            else:
+                kind = PropertyDiffKind.UPDATE
+            diffs.append("dataverse")
+            detailed["dataverse"] = PropertyDiff(kind=kind, input_diff=True)
 
         return DiffResponse(
             changes=bool(diffs),
@@ -212,43 +238,6 @@ class EnvironmentResource:
                 "crossGeoCopilotDataMovementEnabled": allow_cross_region
             }
 
-        linked = body["properties"].setdefault("linkedEnvironmentMetadata", {})
-
-        domain_name = _pv_str(props.get("domainName"))
-        if domain_name:
-            linked["domainName"] = domain_name
-
-        currency_code = _pv_str(props.get("currencyCode"))
-        if currency_code:
-            linked["currency"] = {"code": currency_code}
-
-        language_code = _pv_str(props.get("languageCode"))
-        if language_code:
-            linked["baseLanguage"] = int(language_code)
-
-        security_group_id = _pv_str(props.get("securityGroupId"))
-        if security_group_id:
-            linked["securityGroupId"] = security_group_id
-
-        admin_mode = _pv_bool(props.get("administrationModeEnabled"))
-        if admin_mode:
-            body["properties"]["states"] = {"runtime": {"id": "AdminMode"}}
-
-        bg_ops = _pv_bool(props.get("backgroundOperationEnabled"))
-        if bg_ops is not None:
-            linked["backgroundOperationsState"] = "Enabled" if bg_ops else "Disabled"
-
-        templates = _pv_list(props.get("templates"))
-        if templates:
-            linked["templates"] = templates
-
-        template_metadata_str = _pv_str(props.get("templateMetadata"))
-        if template_metadata_str:
-            try:
-                linked["templateMetadata"] = json.loads(template_metadata_str)
-            except json.JSONDecodeError:
-                linked["templateMetadata"] = template_metadata_str
-
         linked_app_type = _pv_str(props.get("linkedAppType"))
         linked_app_id = _pv_str(props.get("linkedAppId"))
         if linked_app_type or linked_app_id:
@@ -262,10 +251,6 @@ class EnvironmentResource:
         if enterprise_policies:
             body["properties"]["enterprisePolicies"] = enterprise_policies
 
-        # Remove empty linkedEnvironmentMetadata if nothing was set.
-        if not linked:
-            del body["properties"]["linkedEnvironmentMetadata"]
-
         result = await self._client.raw.request(
             "POST",
             "/providers/Microsoft.BusinessAppPlatform/environments",
@@ -276,25 +261,65 @@ class EnvironmentResource:
         if result is None:
             raise RuntimeError("Failed to create environment: API returned no result.")
 
-        # Handle async provisioning (202 Accepted pattern).
-        # The BAP API may return a response with provisioningState != "Succeeded",
-        # indicating that the environment is still being created.
         provisioning_state = result.get("properties", {}).get("provisioningState", "")
         env_id = result.get("name", "")
         if not env_id:
             raise RuntimeError("Environment create response did not include an environment id.")
 
         if provisioning_state and provisioning_state not in _TERMINAL_STATES:
-            # Poll until terminal state
             max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
             await self._poll_provisioning(env_id, max_polls)
 
         if provisioning_state == "Failed":
             raise RuntimeError(f"Environment creation failed: {result}")
 
-        # Fetch the final environment state via the admin read endpoint,
-        # retrying on 404 until the resource is propagated (eventual consistency).
-        final = await self._wait_for_visibility(env_id)
+        # Wait for environment to be visible before any follow-up calls.
+        visible_env = await self._wait_for_visibility(env_id)
+
+        # Step 2: provision Dataverse if requested.
+        dv = _pv_dataverse_dict(props.get("dataverse"))
+        if dv:
+            provision_body: dict[str, Any] = {}
+            lang = dv.get("languageCode")
+            if lang is not None:
+                provision_body["baseLanguage"] = int(lang)
+            currency = dv.get("currencyCode")
+            if currency:
+                provision_body["currency"] = {"code": currency}
+            domain = dv.get("domainName")
+            if domain:
+                provision_body["domainName"] = domain
+            sg = dv.get("securityGroupId")
+            if sg:
+                provision_body["securityGroupId"] = sg
+            templates = dv.get("templates")
+            if templates:
+                provision_body["templates"] = templates
+            tmeta = dv.get("templateMetadata")
+            if tmeta:
+                try:
+                    provision_body["templateMetadata"] = json.loads(tmeta)
+                except (json.JSONDecodeError, TypeError):
+                    provision_body["templateMetadata"] = tmeta
+
+            await self._client.raw.request(
+                "POST",
+                f"/providers/Microsoft.BusinessAppPlatform/environments/{env_id}/provisionInstance",
+                body=provision_body,
+                api_version=_BAP_API_VERSION,
+            )
+
+            max_polls = max(1, request.timeout // _POLL_INTERVAL_SECONDS) if request.timeout else _DEFAULT_MAX_POLLS
+            await self._poll_dataverse_provisioning(env_id, max_polls)
+
+            # Re-read after Dataverse is provisioned.
+            final = await self._client.raw.request(
+                "GET",
+                f"{_ADMIN_ENV_PATH}/{env_id}",
+                api_version=_BAP_API_VERSION,
+            ) or visible_env
+        else:
+            final = visible_env
 
         return CreateResponse(
             resource_id=env_id,
@@ -363,12 +388,6 @@ class EnvironmentResource:
                 "crossGeoCopilotDataMovementEnabled": allow_cross_region
             }
 
-        admin_mode = _pv_bool(props.get("administrationModeEnabled"))
-        if admin_mode is not None:
-            patch_body["properties"]["states"] = {
-                "runtime": {"id": "AdminMode" if admin_mode else "Enabled"}
-            }
-
         linked_app_type = _pv_str(props.get("linkedAppType"))
         linked_app_id = _pv_str(props.get("linkedAppId"))
         if linked_app_type is not None or linked_app_id is not None:
@@ -383,20 +402,24 @@ class EnvironmentResource:
         if enterprise_policies:
             patch_body["properties"]["enterprisePolicies"] = enterprise_policies
 
-        # Build linkedEnvironmentMetadata patch if needed.
+        # Build linkedEnvironmentMetadata patch from the dataverse nested block.
         linked_patch: dict[str, Any] = {}
-
-        domain_name = _pv_str(props.get("domainName"))
-        if domain_name is not None:
-            linked_patch["domainName"] = domain_name
-
-        security_group_id = _pv_str(props.get("securityGroupId"))
-        if security_group_id is not None:
-            linked_patch["securityGroupId"] = security_group_id
-
-        bg_ops = _pv_bool(props.get("backgroundOperationEnabled"))
-        if bg_ops is not None:
-            linked_patch["backgroundOperationsState"] = "Enabled" if bg_ops else "Disabled"
+        dv = _pv_dataverse_dict(props.get("dataverse"))
+        if dv:
+            domain_name = dv.get("domainName")
+            if domain_name is not None:
+                linked_patch["domainName"] = domain_name
+            security_group_id = dv.get("securityGroupId")
+            if security_group_id is not None:
+                linked_patch["securityGroupId"] = security_group_id
+            bg_ops = dv.get("backgroundOperationEnabled")
+            if bg_ops is not None:
+                linked_patch["backgroundOperationsState"] = "Enabled" if bg_ops else "Disabled"
+            admin_mode = dv.get("administrationModeEnabled")
+            if admin_mode is not None:
+                patch_body["properties"]["states"] = {
+                    "runtime": {"id": "AdminMode" if admin_mode else "Enabled"}
+                }
 
         if linked_patch:
             patch_body["properties"]["linkedEnvironmentMetadata"] = linked_patch
@@ -480,16 +503,42 @@ class EnvironmentResource:
             f"Environment {env_id} did not become visible on the admin endpoint after {max_polls} polls."
         )
 
+    async def _poll_dataverse_provisioning(self, env_id: str, max_polls: int) -> None:
+        """Poll the environment until Dataverse is provisioned (instanceUrl appears)."""
+        for _ in range(max_polls):
+            await asyncio.sleep(_POLL_INTERVAL_SECONDS)
+            try:
+                result = await self._client.raw.request(
+                    "GET",
+                    f"{_ADMIN_ENV_PATH}/{env_id}",
+                    api_version=_BAP_API_VERSION,
+                )
+            except HttpError as exc:
+                if exc.status_code == 404:
+                    continue
+                raise
+            if result is None:
+                continue
+            props = result.get("properties", {})
+            ps = props.get("provisioningState", "")
+            if ps in {"Failed", "Canceled", "Cancelled"}:
+                raise RuntimeError(
+                    f"Dataverse provisioning ended in non-successful terminal state '{ps}': {result}"
+                )
+            linked = props.get("linkedEnvironmentMetadata", {})
+            if linked.get("instanceUrl") or linked.get("resourceId"):
+                return
+        raise RuntimeError(f"Dataverse provisioning timed out after polling {max_polls} times.")
+
 
 # Input property names (for reconstructing inputs from outputs during read).
 _INPUT_PROPS = {
     "displayName", "description", "location", "environmentType",
-    "domainName", "currencyCode", "languageCode",
     "azureRegion", "ownerId", "cadence", "billingPolicyId", "environmentGroupId",
-    "allowBingSearch", "allowMovingDataAcrossRegions", "securityGroupId",
-    "administrationModeEnabled", "backgroundOperationEnabled",
-    "templates", "templateMetadata", "linkedAppType", "linkedAppId",
+    "allowBingSearch", "allowMovingDataAcrossRegions",
+    "linkedAppType", "linkedAppId",
     "enterprisePolicies",
+    "dataverse",
 }
 
 
@@ -558,6 +607,23 @@ def _pv_enterprise_policies(val: Any) -> dict | None:
     return result or None
 
 
+def _pv_dataverse_dict(val: Any) -> dict | None:
+    """Extract the dataverse nested block as a plain Python dict, or None if absent."""
+    d = _deep_to_python(val)
+    if not isinstance(d, dict):
+        return None
+    return d if d else None
+
+
+def _pv_dataverse_inputs(val: Any) -> dict | None:
+    """Extract only writable input fields from the dataverse block (excludes computed outputs)."""
+    d = _pv_dataverse_dict(val)
+    if d is None:
+        return None
+    result = {k: v for k, v in d.items() if k in _DATAVERSE_INPUT_FIELDS}
+    return result if result else None
+
+
 def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
     """Convert a BAP API environment JSON response to a Pulumi property map."""
     outputs: dict[str, PropertyValue] = {}
@@ -604,41 +670,48 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
             bool(copilot_policies["crossGeoCopilotDataMovementEnabled"])
         )
 
+    # Build the nested dataverse block — only when Dataverse is actually provisioned.
     linked = props.get("linkedEnvironmentMetadata", {})
-    if linked.get("domainName"):
-        outputs["domainName"] = PropertyValue(linked["domainName"])
-    if linked.get("currency", {}).get("code"):
-        outputs["currencyCode"] = PropertyValue(linked["currency"]["code"])
-    if linked.get("baseLanguage") is not None:
-        outputs["languageCode"] = PropertyValue(str(linked["baseLanguage"]))
-    if linked.get("securityGroupId"):
-        outputs["securityGroupId"] = PropertyValue(linked["securityGroupId"])
-    if linked.get("resourceId"):
-        outputs["organizationId"] = PropertyValue(linked["resourceId"])
-    if linked.get("uniqueName"):
-        outputs["uniqueName"] = PropertyValue(linked["uniqueName"])
-    if linked.get("version"):
-        outputs["dataverseVersion"] = PropertyValue(linked["version"])
-    if linked.get("backgroundOperationsState"):
-        outputs["backgroundOperationEnabled"] = PropertyValue(
-            linked["backgroundOperationsState"] == "Enabled"
-        )
-    templates = linked.get("template") or linked.get("templates")
-    if templates:
-        outputs["templates"] = PropertyValue([PropertyValue(t) for t in templates])
-    template_metadata = linked.get("templateMetadata")
-    if template_metadata:
-        if isinstance(template_metadata, dict):
-            outputs["templateMetadata"] = PropertyValue(json.dumps(template_metadata))
-        else:
-            outputs["templateMetadata"] = PropertyValue(str(template_metadata))
+    if linked.get("resourceId") or linked.get("instanceUrl"):
+        dv_out: dict[str, PropertyValue] = {}
+        if linked.get("domainName"):
+            dv_out["domainName"] = PropertyValue(linked["domainName"])
+        if linked.get("currency", {}).get("code"):
+            dv_out["currencyCode"] = PropertyValue(linked["currency"]["code"])
+        if linked.get("baseLanguage") is not None:
+            dv_out["languageCode"] = PropertyValue(float(linked["baseLanguage"]))
+        if linked.get("securityGroupId"):
+            dv_out["securityGroupId"] = PropertyValue(linked["securityGroupId"])
+        if linked.get("resourceId"):
+            dv_out["organizationId"] = PropertyValue(linked["resourceId"])
+        if linked.get("uniqueName"):
+            dv_out["uniqueName"] = PropertyValue(linked["uniqueName"])
+        if linked.get("version"):
+            dv_out["version"] = PropertyValue(linked["version"])
+        if linked.get("instanceUrl"):
+            dv_out["url"] = PropertyValue(linked["instanceUrl"])
+        templates = linked.get("template") or linked.get("templates")
+        if templates:
+            dv_out["templates"] = PropertyValue([PropertyValue(t) for t in templates])
+        template_metadata = linked.get("templateMetadata")
+        if template_metadata:
+            if isinstance(template_metadata, dict):
+                dv_out["templateMetadata"] = PropertyValue(json.dumps(template_metadata))
+            else:
+                dv_out["templateMetadata"] = PropertyValue(str(template_metadata))
+        if linked.get("backgroundOperationsState"):
+            dv_out["backgroundOperationEnabled"] = PropertyValue(
+                linked["backgroundOperationsState"] == "Enabled"
+            )
+        states = props.get("states", {})
+        admin_mode_id = states.get("runtime", {}).get("id", "")
+        dv_out["administrationModeEnabled"] = PropertyValue(admin_mode_id == "AdminMode")
+        if dv_out:
+            outputs["dataverse"] = PropertyValue(dv_out)
 
     states = props.get("states", {})
     runtime = states.get("runtime", {})
-    admin_mode_id = runtime.get("id", "")
-    outputs["administrationModeEnabled"] = PropertyValue(admin_mode_id == "AdminMode")
-
-    runtime_code = runtime.get("runtimeReasonCode") or admin_mode_id
+    runtime_code = runtime.get("runtimeReasonCode") or runtime.get("id")
     if runtime_code:
         outputs["state"] = PropertyValue(runtime_code)
     elif props.get("provisioningState"):
@@ -651,9 +724,6 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
         outputs["linkedAppId"] = PropertyValue(linked_app["id"])
     if linked_app.get("url"):
         outputs["linkedAppUrl"] = PropertyValue(linked_app["url"])
-
-    if linked.get("instanceUrl"):
-        outputs["url"] = PropertyValue(linked["instanceUrl"])
 
     enterprise_policies_dto = props.get("enterprisePolicies")
     if enterprise_policies_dto:

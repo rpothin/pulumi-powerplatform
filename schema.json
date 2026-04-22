@@ -211,6 +211,63 @@
                     "description": "The version of the Dataverse database."
                 }
             }
+        },
+        "powerplatform:index:Dataverse": {
+            "description": "Configuration for the Dataverse database associated with a Power Platform environment.",
+            "type": "object",
+            "properties": {
+                "currencyCode": {
+                    "type": "string",
+                    "description": "Currency code for the Dataverse database (e.g. USD). Immutable after creation."
+                },
+                "languageCode": {
+                    "type": "integer",
+                    "description": "Base language LCID (e.g. 1033). Immutable after creation."
+                },
+                "domainName": {
+                    "type": "string",
+                    "description": "Domain prefix for the Dataverse instance URL."
+                },
+                "securityGroupId": {
+                    "type": "string",
+                    "description": "AAD security group GUID restricting environment access."
+                },
+                "administrationModeEnabled": {
+                    "type": "boolean",
+                    "description": "Whether the Dataverse instance is in administration mode."
+                },
+                "backgroundOperationEnabled": {
+                    "type": "boolean",
+                    "description": "Whether background operations are enabled during administration mode."
+                },
+                "templates": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Provisioning templates (e.g. D365_Sales). Immutable after creation."
+                },
+                "templateMetadata": {
+                    "type": "string",
+                    "description": "JSON metadata for provisioning templates. Immutable after creation."
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "Dataverse organization GUID. Computed."
+                },
+                "uniqueName": {
+                    "type": "string",
+                    "description": "Dataverse unique name. Computed."
+                },
+                "version": {
+                    "type": "string",
+                    "description": "Dataverse version string. Computed."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "URL of the Dataverse instance. Computed."
+                }
+            }
         }
     },
     "resources": {
@@ -545,18 +602,6 @@
                     "type": "string",
                     "description": "The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation."
                 },
-                "domainName": {
-                    "type": "string",
-                    "description": "The domain name for the Dataverse database associated with the environment."
-                },
-                "currencyCode": {
-                    "type": "string",
-                    "description": "The currency code for the Dataverse database (e.g., USD, EUR)."
-                },
-                "languageCode": {
-                    "type": "string",
-                    "description": "The base language code for the Dataverse database (e.g., 1033 for English)."
-                },
                 "azureRegion": {
                     "type": "string",
                     "description": "Specific Azure region within the location geo (e.g. westus2). Immutable after creation."
@@ -585,27 +630,6 @@
                     "type": "boolean",
                     "description": "Allow data to move across geographic boundaries for Copilot features."
                 },
-                "securityGroupId": {
-                    "type": "string",
-                    "description": "AAD security group GUID that restricts environment access."
-                },
-                "administrationModeEnabled": {
-                    "type": "boolean",
-                    "description": "Put the Dataverse database into administration-only mode."
-                },
-                "backgroundOperationEnabled": {
-                    "type": "boolean",
-                    "description": "Allow background operations during administration mode."
-                },
-                "templates": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation."
-                },
-                "templateMetadata": {
-                    "type": "string",
-                    "description": "JSON metadata string for templates. Immutable after creation."
-                },
                 "linkedAppType": {
                     "type": "string",
                     "description": "Type of linked app: Canvas or ModelDriven."
@@ -616,8 +640,14 @@
                 },
                 "enterprisePolicies": {
                     "type": "array",
-                    "items": { "$ref": "#/types/powerplatform:index:EnterprisePolicy" },
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:EnterprisePolicy"
+                    },
                     "description": "Set of enterprise policies associated with the environment."
+                },
+                "dataverse": {
+                    "description": "Dataverse database configuration. Presence triggers Dataverse provisioning.",
+                    "$ref": "#/types/powerplatform:index:Dataverse"
                 }
             },
             "requiredInputs": [
@@ -641,18 +671,6 @@
                 "environmentType": {
                     "type": "string",
                     "description": "The type (SKU) of the environment."
-                },
-                "domainName": {
-                    "type": "string",
-                    "description": "The domain name of the Dataverse database."
-                },
-                "currencyCode": {
-                    "type": "string",
-                    "description": "The currency code of the Dataverse database."
-                },
-                "languageCode": {
-                    "type": "string",
-                    "description": "The base language code of the Dataverse database."
                 },
                 "azureRegion": {
                     "type": "string",
@@ -682,27 +700,6 @@
                     "type": "boolean",
                     "description": "Whether data can move across geographic boundaries for Copilot features."
                 },
-                "securityGroupId": {
-                    "type": "string",
-                    "description": "AAD security group GUID restricting environment access."
-                },
-                "administrationModeEnabled": {
-                    "type": "boolean",
-                    "description": "Whether the environment Dataverse database is in administration-only mode."
-                },
-                "backgroundOperationEnabled": {
-                    "type": "boolean",
-                    "description": "Whether background operations are enabled during administration mode."
-                },
-                "templates": {
-                    "type": "array",
-                    "items": { "type": "string" },
-                    "description": "Template names used for Dataverse provisioning."
-                },
-                "templateMetadata": {
-                    "type": "string",
-                    "description": "JSON metadata string for provisioning templates."
-                },
                 "linkedAppType": {
                     "type": "string",
                     "description": "Type of linked app: Canvas or ModelDriven."
@@ -713,20 +710,10 @@
                 },
                 "enterprisePolicies": {
                     "type": "array",
-                    "items": { "$ref": "#/types/powerplatform:index:EnterprisePolicy" },
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:EnterprisePolicy"
+                    },
                     "description": "Enterprise policies associated with the environment."
-                },
-                "organizationId": {
-                    "type": "string",
-                    "description": "Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed."
-                },
-                "uniqueName": {
-                    "type": "string",
-                    "description": "Dataverse unique name. Computed."
-                },
-                "dataverseVersion": {
-                    "type": "string",
-                    "description": "Dataverse version string. Computed."
                 },
                 "linkedAppUrl": {
                     "type": "string",
@@ -736,10 +723,6 @@
                     "type": "string",
                     "description": "The current state of the environment (e.g., Ready, Preparing)."
                 },
-                "url": {
-                    "type": "string",
-                    "description": "The Dataverse instance URL of the environment."
-                },
                 "createdTime": {
                     "type": "string",
                     "description": "The timestamp when the environment was created."
@@ -747,6 +730,10 @@
                 "lastModifiedTime": {
                     "type": "string",
                     "description": "The timestamp when the environment was last modified."
+                },
+                "dataverse": {
+                    "description": "Dataverse database configuration. Presence triggers Dataverse provisioning.",
+                    "$ref": "#/types/powerplatform:index:Dataverse"
                 }
             },
             "required": [

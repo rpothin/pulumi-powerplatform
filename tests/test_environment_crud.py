@@ -105,15 +105,24 @@ class TestEnvironmentCreate:
 
     @pytest.mark.asyncio
     async def test_create_with_polling(self, handler, mock_client):
-        """Create simulates the 202 async pattern: POST → poll → final GET."""
+        """Create simulates the 202 async pattern: POST → poll → provisionInstance → final GET."""
         # POST returns an async-provisioning response
         async_response = _fake_env_response(provisioning_state="Running")
         # Polling GET returns Succeeded
         poll_response = _fake_env_response(provisioning_state="Succeeded")
-        # Final GET returns full env
+        # _wait_for_visibility GET
+        visibility_response = _fake_env_response()
+        # provisionInstance POST returns None
+        provision_result = None
+        # _poll_dataverse_provisioning GET
+        poll_dv_response = _fake_env_response()
+        # Final GET
         final_response = _fake_env_response()
 
-        mock_client.raw.request.side_effect = [async_response, poll_response, final_response]
+        mock_client.raw.request.side_effect = [
+            async_response, poll_response, visibility_response,
+            provision_result, poll_dv_response, final_response,
+        ]
 
         request = CreateRequest(
             urn=_URN,
@@ -122,9 +131,11 @@ class TestEnvironmentCreate:
                 "description": PropertyValue("Test description"),
                 "location": PropertyValue("unitedstates"),
                 "environmentType": PropertyValue("Sandbox"),
-                "domainName": PropertyValue("testenv"),
-                "currencyCode": PropertyValue("USD"),
-                "languageCode": PropertyValue("1033"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                    "domainName": PropertyValue("testenv"),
+                }),
             },
             timeout=300,
             preview=False,
@@ -136,20 +147,26 @@ class TestEnvironmentCreate:
         assert response.properties["displayName"].value == "Test Env"
         assert response.properties["location"].value == "unitedstates"
         assert response.properties["environmentType"].value == "Sandbox"
-        assert response.properties["domainName"].value == "testenv"
-        assert response.properties["currencyCode"].value == "USD"
-        assert response.properties["languageCode"].value == "1033"
+        dv = response.properties["dataverse"].value
+        assert dv["domainName"].value == "testenv"
+        assert dv["currencyCode"].value == "USD"
+        assert dv["languageCode"].value == 1033
         assert response.properties["state"].value == "Ready"
-        # 3 calls: POST, poll GET, final GET
-        assert mock_client.raw.request.await_count == 3
+        # 6 calls: POST, poll GET, visibility GET, provisionInstance POST, poll_dv GET, final GET
+        assert mock_client.raw.request.await_count == 6
 
     @pytest.mark.asyncio
     async def test_create_already_succeeded(self, handler, mock_client):
-        """When POST immediately returns Succeeded, skip polling and do final GET."""
+        """When POST immediately returns Succeeded, skip polling; still call provisionInstance."""
         post_response = _fake_env_response(provisioning_state="Succeeded")
+        visibility_response = _fake_env_response()
+        provision_result = None
+        poll_dv_response = _fake_env_response()
         final_response = _fake_env_response()
 
-        mock_client.raw.request.side_effect = [post_response, final_response]
+        mock_client.raw.request.side_effect = [
+            post_response, visibility_response, provision_result, poll_dv_response, final_response,
+        ]
 
         request = CreateRequest(
             urn=_URN,
@@ -158,19 +175,22 @@ class TestEnvironmentCreate:
                 "description": PropertyValue("Test description"),
                 "location": PropertyValue("unitedstates"),
                 "environmentType": PropertyValue("Sandbox"),
-                "domainName": PropertyValue("testenv"),
-                "currencyCode": PropertyValue("USD"),
-                "languageCode": PropertyValue("1033"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                    "domainName": PropertyValue("testenv"),
+                }),
             },
             timeout=300,
             preview=False,
         )
-        response = await handler.create(request)
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
 
         assert response.resource_id == _FAKE_ID
         assert response.properties["displayName"].value == "Test Env"
-        # 2 calls: POST + final GET
-        assert mock_client.raw.request.await_count == 2
+        # 5 calls: POST + visibility GET + provisionInstance POST + poll_dv GET + final GET
+        assert mock_client.raw.request.await_count == 5
 
     @pytest.mark.asyncio
     async def test_create_polling_failure_raises(self, handler, mock_client):
@@ -337,10 +357,15 @@ class TestEnvironmentCreate:
 
     @pytest.mark.asyncio
     async def test_create_with_security_group_id(self, handler, mock_client):
-        """Create with securityGroupId — verify it is sent inside linkedEnvironmentMetadata."""
+        """Create with securityGroupId inside dataverse — verify it is sent in the provisionInstance body."""
         post_response = _fake_env_response(provisioning_state="Succeeded")
+        visibility_response = _fake_env_response()
+        provision_result = None
+        poll_dv_response = _fake_env_response()
         final_response = _fake_env_response()
-        mock_client.raw.request.side_effect = [post_response, final_response]
+        mock_client.raw.request.side_effect = [
+            post_response, visibility_response, provision_result, poll_dv_response, final_response,
+        ]
 
         request = CreateRequest(
             urn=_URN,
@@ -348,16 +373,24 @@ class TestEnvironmentCreate:
                 "displayName": PropertyValue("Test Env"),
                 "location": PropertyValue("unitedstates"),
                 "environmentType": PropertyValue("Sandbox"),
-                "securityGroupId": PropertyValue("sg-guid-123"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                    "securityGroupId": PropertyValue("sg-guid-123"),
+                }),
             },
             timeout=300,
             preview=False,
         )
-        response = await handler.create(request)
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
 
         assert response.resource_id == _FAKE_ID
-        call_body = mock_client.raw.request.call_args_list[0][1]["body"]
-        assert call_body["properties"]["linkedEnvironmentMetadata"]["securityGroupId"] == "sg-guid-123"
+        # provisionInstance is the 3rd call (index 2)
+        provision_call = mock_client.raw.request.call_args_list[2]
+        assert "provisionInstance" in provision_call[0][1]
+        provision_body = provision_call[1]["body"]
+        assert provision_body["securityGroupId"] == "sg-guid-123"
 
     @pytest.mark.asyncio
     async def test_create_with_azure_region(self, handler, mock_client):
@@ -509,15 +542,17 @@ class TestEnvironmentRead:
         # New fields should appear in outputs
         assert response.properties["azureRegion"].value == "westus2"
         assert response.properties["cadence"].value == "Frequent"
-        assert response.properties["organizationId"].value == "org-resource-id"
-        assert response.properties["uniqueName"].value == "testenv"
-        assert response.properties["dataverseVersion"].value == "9.2.24124.00182"
         assert response.properties["allowBingSearch"].value is True
-        assert response.properties["securityGroupId"].value == "sg-guid"
-        assert response.properties["backgroundOperationEnabled"].value is True
         assert response.properties["linkedAppType"].value == "ModelDriven"
         assert response.properties["linkedAppUrl"].value == "https://testenv.crm.dynamics.com/apps/app-guid"
-        assert response.properties["administrationModeEnabled"].value is False
+        # Dataverse fields are nested inside the dataverse block
+        dv = response.properties["dataverse"].value
+        assert dv["organizationId"].value == "org-resource-id"
+        assert dv["uniqueName"].value == "testenv"
+        assert dv["version"].value == "9.2.24124.00182"
+        assert dv["securityGroupId"].value == "sg-guid"
+        assert dv["backgroundOperationEnabled"].value is True
+        assert dv["administrationModeEnabled"].value is False
 
     @pytest.mark.asyncio
     async def test_read_missing_returns_empty(self, handler, mock_client):
@@ -678,4 +713,187 @@ class TestEnvironmentDiff:
         response = await handler.diff(request)
 
         assert "enterprisePolicies" not in response.diffs
+
+
+class TestDataverseProvisioning:
+    """Tests for the two-step Dataverse provisioning flow."""
+
+    @pytest.mark.asyncio
+    async def test_create_with_dataverse_calls_provision_instance(self, handler, mock_client):
+        """When dataverse is provided, a second POST to /provisionInstance must be made."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        visibility_response = _fake_env_response()
+        provision_result = None
+        poll_dv_response = _fake_env_response()
+        final_response = _fake_env_response()
+
+        mock_client.raw.request.side_effect = [
+            post_response, visibility_response, provision_result, poll_dv_response, final_response,
+        ]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                }),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        # 5 calls: POST + visibility GET + provisionInstance POST + poll_dv GET + final GET
+        assert mock_client.raw.request.await_count == 5
+        # The 3rd call (index 2) must be the provisionInstance POST
+        provision_call = mock_client.raw.request.call_args_list[2]
+        assert provision_call[0][0] == "POST"
+        assert "provisionInstance" in provision_call[0][1]
+        provision_body = provision_call[1]["body"]
+        assert provision_body["currency"]["code"] == "USD"
+        assert provision_body["baseLanguage"] == 1033
+
+    @pytest.mark.asyncio
+    async def test_create_without_dataverse_skips_provision_instance(self, handler, mock_client):
+        """When no dataverse block is provided, /provisionInstance must NOT be called."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        visibility_response = _fake_env_response()
+
+        mock_client.raw.request.side_effect = [post_response, visibility_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        # 2 calls: POST + visibility GET (no provisionInstance)
+        assert mock_client.raw.request.await_count == 2
+        for call in mock_client.raw.request.call_args_list:
+            assert "provisionInstance" not in call[0][1]
+
+
+class TestDataverseCheck:
+    """Tests for dataverse block validation in check()."""
+
+    @pytest.mark.asyncio
+    async def test_check_dataverse_requires_currency_and_language(self, handler):
+        """check() should fail when dataverse block is missing currencyCode or languageCode."""
+        request = CheckRequest(
+            urn=_URN,
+            old_inputs={},
+            new_inputs={
+                "displayName": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "dataverse": PropertyValue({"domainName": PropertyValue("myenv")}),
+            },
+            random_seed=b"",
+        )
+        response = await handler.check(request)
+        assert response.failures is not None
+        failure_props = [f.property for f in response.failures]
+        assert "dataverse" in failure_props
+
+    @pytest.mark.asyncio
+    async def test_check_dataverse_valid_when_currency_and_language_present(self, handler):
+        """check() should not fail when currencyCode and languageCode are both provided."""
+        request = CheckRequest(
+            urn=_URN,
+            old_inputs={},
+            new_inputs={
+                "displayName": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                }),
+            },
+            random_seed=b"",
+        )
+        response = await handler.check(request)
+        failure_props = [f.property for f in (response.failures or [])]
+        assert "dataverse" not in failure_props
+
+
+class TestDataverseDiff:
+    """Tests for diff() behavior with the dataverse nested block."""
+
+    @pytest.mark.asyncio
+    async def test_diff_dataverse_immutable_field_triggers_replace(self, handler):
+        """Changing an immutable field inside dataverse should trigger UPDATE_REPLACE."""
+        from pulumi.provider.experimental.provider import PropertyDiffKind
+
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            old_state={
+                "displayName": PropertyValue("Test Env"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                    "domainName": PropertyValue("myenv"),
+                }),
+            },
+            new_inputs={
+                "displayName": PropertyValue("Test Env"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("EUR"),
+                    "languageCode": PropertyValue(1033.0),
+                    "domainName": PropertyValue("myenv"),
+                }),
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+
+        assert response.changes is True
+        assert "dataverse" in response.diffs
+        assert response.detailed_diff["dataverse"].kind == PropertyDiffKind.UPDATE_REPLACE
+
+    @pytest.mark.asyncio
+    async def test_diff_dataverse_updatable_field_triggers_update(self, handler):
+        """Changing a non-immutable field inside dataverse should trigger UPDATE (not replace)."""
+        from pulumi.provider.experimental.provider import PropertyDiffKind
+
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            old_state={
+                "displayName": PropertyValue("Test Env"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                    "domainName": PropertyValue("myenv"),
+                }),
+            },
+            new_inputs={
+                "displayName": PropertyValue("Test Env"),
+                "dataverse": PropertyValue({
+                    "currencyCode": PropertyValue("USD"),
+                    "languageCode": PropertyValue(1033.0),
+                    "domainName": PropertyValue("myenv-updated"),
+                }),
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+
+        assert response.changes is True
+        assert "dataverse" in response.diffs
+        assert response.detailed_diff["dataverse"].kind == PropertyDiffKind.UPDATE
 

@@ -318,6 +318,355 @@ func (o ConnectorSummaryArrayOutput) Index(i pulumi.IntInput) ConnectorSummaryOu
 	}).(ConnectorSummaryOutput)
 }
 
+// Configuration for the Dataverse database associated with a Power Platform environment.
+type Dataverse struct {
+	// Whether the Dataverse instance is in administration mode.
+	AdministrationModeEnabled *bool `pulumi:"administrationModeEnabled"`
+	// Whether background operations are enabled during administration mode.
+	BackgroundOperationEnabled *bool `pulumi:"backgroundOperationEnabled"`
+	// Currency code for the Dataverse database (e.g. USD). Immutable after creation.
+	CurrencyCode *string `pulumi:"currencyCode"`
+	// Domain prefix for the Dataverse instance URL.
+	DomainName *string `pulumi:"domainName"`
+	// Base language LCID (e.g. 1033). Immutable after creation.
+	LanguageCode *int `pulumi:"languageCode"`
+	// Dataverse organization GUID. Computed.
+	OrganizationId *string `pulumi:"organizationId"`
+	// AAD security group GUID restricting environment access.
+	SecurityGroupId *string `pulumi:"securityGroupId"`
+	// JSON metadata for provisioning templates. Immutable after creation.
+	TemplateMetadata *string `pulumi:"templateMetadata"`
+	// Provisioning templates (e.g. D365_Sales). Immutable after creation.
+	Templates []string `pulumi:"templates"`
+	// Dataverse unique name. Computed.
+	UniqueName *string `pulumi:"uniqueName"`
+	// URL of the Dataverse instance. Computed.
+	Url *string `pulumi:"url"`
+	// Dataverse version string. Computed.
+	Version *string `pulumi:"version"`
+}
+
+// DataverseInput is an input type that accepts DataverseArgs and DataverseOutput values.
+// You can construct a concrete instance of `DataverseInput` via:
+//
+//	DataverseArgs{...}
+type DataverseInput interface {
+	pulumi.Input
+
+	ToDataverseOutput() DataverseOutput
+	ToDataverseOutputWithContext(context.Context) DataverseOutput
+}
+
+// Configuration for the Dataverse database associated with a Power Platform environment.
+type DataverseArgs struct {
+	// Whether the Dataverse instance is in administration mode.
+	AdministrationModeEnabled pulumi.BoolPtrInput `pulumi:"administrationModeEnabled"`
+	// Whether background operations are enabled during administration mode.
+	BackgroundOperationEnabled pulumi.BoolPtrInput `pulumi:"backgroundOperationEnabled"`
+	// Currency code for the Dataverse database (e.g. USD). Immutable after creation.
+	CurrencyCode pulumi.StringPtrInput `pulumi:"currencyCode"`
+	// Domain prefix for the Dataverse instance URL.
+	DomainName pulumi.StringPtrInput `pulumi:"domainName"`
+	// Base language LCID (e.g. 1033). Immutable after creation.
+	LanguageCode pulumi.IntPtrInput `pulumi:"languageCode"`
+	// Dataverse organization GUID. Computed.
+	OrganizationId pulumi.StringPtrInput `pulumi:"organizationId"`
+	// AAD security group GUID restricting environment access.
+	SecurityGroupId pulumi.StringPtrInput `pulumi:"securityGroupId"`
+	// JSON metadata for provisioning templates. Immutable after creation.
+	TemplateMetadata pulumi.StringPtrInput `pulumi:"templateMetadata"`
+	// Provisioning templates (e.g. D365_Sales). Immutable after creation.
+	Templates pulumi.StringArrayInput `pulumi:"templates"`
+	// Dataverse unique name. Computed.
+	UniqueName pulumi.StringPtrInput `pulumi:"uniqueName"`
+	// URL of the Dataverse instance. Computed.
+	Url pulumi.StringPtrInput `pulumi:"url"`
+	// Dataverse version string. Computed.
+	Version pulumi.StringPtrInput `pulumi:"version"`
+}
+
+func (DataverseArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*Dataverse)(nil)).Elem()
+}
+
+func (i DataverseArgs) ToDataverseOutput() DataverseOutput {
+	return i.ToDataverseOutputWithContext(context.Background())
+}
+
+func (i DataverseArgs) ToDataverseOutputWithContext(ctx context.Context) DataverseOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataverseOutput)
+}
+
+func (i DataverseArgs) ToDataversePtrOutput() DataversePtrOutput {
+	return i.ToDataversePtrOutputWithContext(context.Background())
+}
+
+func (i DataverseArgs) ToDataversePtrOutputWithContext(ctx context.Context) DataversePtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataverseOutput).ToDataversePtrOutputWithContext(ctx)
+}
+
+// DataversePtrInput is an input type that accepts DataverseArgs, DataversePtr and DataversePtrOutput values.
+// You can construct a concrete instance of `DataversePtrInput` via:
+//
+//	        DataverseArgs{...}
+//
+//	or:
+//
+//	        nil
+type DataversePtrInput interface {
+	pulumi.Input
+
+	ToDataversePtrOutput() DataversePtrOutput
+	ToDataversePtrOutputWithContext(context.Context) DataversePtrOutput
+}
+
+type dataversePtrType DataverseArgs
+
+func DataversePtr(v *DataverseArgs) DataversePtrInput {
+	return (*dataversePtrType)(v)
+}
+
+func (*dataversePtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**Dataverse)(nil)).Elem()
+}
+
+func (i *dataversePtrType) ToDataversePtrOutput() DataversePtrOutput {
+	return i.ToDataversePtrOutputWithContext(context.Background())
+}
+
+func (i *dataversePtrType) ToDataversePtrOutputWithContext(ctx context.Context) DataversePtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataversePtrOutput)
+}
+
+// Configuration for the Dataverse database associated with a Power Platform environment.
+type DataverseOutput struct{ *pulumi.OutputState }
+
+func (DataverseOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*Dataverse)(nil)).Elem()
+}
+
+func (o DataverseOutput) ToDataverseOutput() DataverseOutput {
+	return o
+}
+
+func (o DataverseOutput) ToDataverseOutputWithContext(ctx context.Context) DataverseOutput {
+	return o
+}
+
+func (o DataverseOutput) ToDataversePtrOutput() DataversePtrOutput {
+	return o.ToDataversePtrOutputWithContext(context.Background())
+}
+
+func (o DataverseOutput) ToDataversePtrOutputWithContext(ctx context.Context) DataversePtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v Dataverse) *Dataverse {
+		return &v
+	}).(DataversePtrOutput)
+}
+
+// Whether the Dataverse instance is in administration mode.
+func (o DataverseOutput) AdministrationModeEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v Dataverse) *bool { return v.AdministrationModeEnabled }).(pulumi.BoolPtrOutput)
+}
+
+// Whether background operations are enabled during administration mode.
+func (o DataverseOutput) BackgroundOperationEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v Dataverse) *bool { return v.BackgroundOperationEnabled }).(pulumi.BoolPtrOutput)
+}
+
+// Currency code for the Dataverse database (e.g. USD). Immutable after creation.
+func (o DataverseOutput) CurrencyCode() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.CurrencyCode }).(pulumi.StringPtrOutput)
+}
+
+// Domain prefix for the Dataverse instance URL.
+func (o DataverseOutput) DomainName() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.DomainName }).(pulumi.StringPtrOutput)
+}
+
+// Base language LCID (e.g. 1033). Immutable after creation.
+func (o DataverseOutput) LanguageCode() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v Dataverse) *int { return v.LanguageCode }).(pulumi.IntPtrOutput)
+}
+
+// Dataverse organization GUID. Computed.
+func (o DataverseOutput) OrganizationId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.OrganizationId }).(pulumi.StringPtrOutput)
+}
+
+// AAD security group GUID restricting environment access.
+func (o DataverseOutput) SecurityGroupId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.SecurityGroupId }).(pulumi.StringPtrOutput)
+}
+
+// JSON metadata for provisioning templates. Immutable after creation.
+func (o DataverseOutput) TemplateMetadata() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.TemplateMetadata }).(pulumi.StringPtrOutput)
+}
+
+// Provisioning templates (e.g. D365_Sales). Immutable after creation.
+func (o DataverseOutput) Templates() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v Dataverse) []string { return v.Templates }).(pulumi.StringArrayOutput)
+}
+
+// Dataverse unique name. Computed.
+func (o DataverseOutput) UniqueName() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.UniqueName }).(pulumi.StringPtrOutput)
+}
+
+// URL of the Dataverse instance. Computed.
+func (o DataverseOutput) Url() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.Url }).(pulumi.StringPtrOutput)
+}
+
+// Dataverse version string. Computed.
+func (o DataverseOutput) Version() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v Dataverse) *string { return v.Version }).(pulumi.StringPtrOutput)
+}
+
+type DataversePtrOutput struct{ *pulumi.OutputState }
+
+func (DataversePtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**Dataverse)(nil)).Elem()
+}
+
+func (o DataversePtrOutput) ToDataversePtrOutput() DataversePtrOutput {
+	return o
+}
+
+func (o DataversePtrOutput) ToDataversePtrOutputWithContext(ctx context.Context) DataversePtrOutput {
+	return o
+}
+
+func (o DataversePtrOutput) Elem() DataverseOutput {
+	return o.ApplyT(func(v *Dataverse) Dataverse {
+		if v != nil {
+			return *v
+		}
+		var ret Dataverse
+		return ret
+	}).(DataverseOutput)
+}
+
+// Whether the Dataverse instance is in administration mode.
+func (o DataversePtrOutput) AdministrationModeEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.AdministrationModeEnabled
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Whether background operations are enabled during administration mode.
+func (o DataversePtrOutput) BackgroundOperationEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.BackgroundOperationEnabled
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Currency code for the Dataverse database (e.g. USD). Immutable after creation.
+func (o DataversePtrOutput) CurrencyCode() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.CurrencyCode
+	}).(pulumi.StringPtrOutput)
+}
+
+// Domain prefix for the Dataverse instance URL.
+func (o DataversePtrOutput) DomainName() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.DomainName
+	}).(pulumi.StringPtrOutput)
+}
+
+// Base language LCID (e.g. 1033). Immutable after creation.
+func (o DataversePtrOutput) LanguageCode() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *int {
+		if v == nil {
+			return nil
+		}
+		return v.LanguageCode
+	}).(pulumi.IntPtrOutput)
+}
+
+// Dataverse organization GUID. Computed.
+func (o DataversePtrOutput) OrganizationId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.OrganizationId
+	}).(pulumi.StringPtrOutput)
+}
+
+// AAD security group GUID restricting environment access.
+func (o DataversePtrOutput) SecurityGroupId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.SecurityGroupId
+	}).(pulumi.StringPtrOutput)
+}
+
+// JSON metadata for provisioning templates. Immutable after creation.
+func (o DataversePtrOutput) TemplateMetadata() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.TemplateMetadata
+	}).(pulumi.StringPtrOutput)
+}
+
+// Provisioning templates (e.g. D365_Sales). Immutable after creation.
+func (o DataversePtrOutput) Templates() pulumi.StringArrayOutput {
+	return o.ApplyT(func(v *Dataverse) []string {
+		if v == nil {
+			return nil
+		}
+		return v.Templates
+	}).(pulumi.StringArrayOutput)
+}
+
+// Dataverse unique name. Computed.
+func (o DataversePtrOutput) UniqueName() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.UniqueName
+	}).(pulumi.StringPtrOutput)
+}
+
+// URL of the Dataverse instance. Computed.
+func (o DataversePtrOutput) Url() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Url
+	}).(pulumi.StringPtrOutput)
+}
+
+// Dataverse version string. Computed.
+func (o DataversePtrOutput) Version() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *Dataverse) *string {
+		if v == nil {
+			return nil
+		}
+		return v.Version
+	}).(pulumi.StringPtrOutput)
+}
+
 // An enterprise policy associated with a Power Platform environment.
 type EnterprisePolicy struct {
 	// The resource ID of the policy.
@@ -765,6 +1114,8 @@ func (o RuleSetArrayOutput) Index(i pulumi.IntInput) RuleSetOutput {
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentInput)(nil)).Elem(), BillingInstrumentArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentPtrInput)(nil)).Elem(), BillingInstrumentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataverseInput)(nil)).Elem(), DataverseArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataversePtrInput)(nil)).Elem(), DataverseArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*EnterprisePolicyInput)(nil)).Elem(), EnterprisePolicyArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*EnterprisePolicyArrayInput)(nil)).Elem(), EnterprisePolicyArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*RuleSetInput)(nil)).Elem(), RuleSetArgs{})
@@ -775,6 +1126,8 @@ func init() {
 	pulumi.RegisterOutputType(BillingInstrumentPtrOutput{})
 	pulumi.RegisterOutputType(ConnectorSummaryOutput{})
 	pulumi.RegisterOutputType(ConnectorSummaryArrayOutput{})
+	pulumi.RegisterOutputType(DataverseOutput{})
+	pulumi.RegisterOutputType(DataversePtrOutput{})
 	pulumi.RegisterOutputType(EnterprisePolicyOutput{})
 	pulumi.RegisterOutputType(EnterprisePolicyArrayOutput{})
 	pulumi.RegisterOutputType(EnvironmentSummaryOutput{})

@@ -9,6 +9,7 @@ import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
 import io.github.rpothin.powerplatform.EnvironmentArgs;
 import io.github.rpothin.powerplatform.Utilities;
+import io.github.rpothin.powerplatform.outputs.Dataverse;
 import io.github.rpothin.powerplatform.outputs.EnterprisePolicy;
 import java.lang.Boolean;
 import java.lang.String;
@@ -22,20 +23,6 @@ import javax.annotation.Nullable;
  */
 @ResourceType(type="powerplatform:index:Environment")
 public class Environment extends com.pulumi.resources.CustomResource {
-    /**
-     * Whether the environment Dataverse database is in administration-only mode.
-     * 
-     */
-    @Export(name="administrationModeEnabled", refs={Boolean.class}, tree="[0]")
-    private Output</* @Nullable */ Boolean> administrationModeEnabled;
-
-    /**
-     * @return Whether the environment Dataverse database is in administration-only mode.
-     * 
-     */
-    public Output<Optional<Boolean>> administrationModeEnabled() {
-        return Codegen.optional(this.administrationModeEnabled);
-    }
     /**
      * Whether Bing Search integration is allowed.
      * 
@@ -77,20 +64,6 @@ public class Environment extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<String>> azureRegion() {
         return Codegen.optional(this.azureRegion);
-    }
-    /**
-     * Whether background operations are enabled during administration mode.
-     * 
-     */
-    @Export(name="backgroundOperationEnabled", refs={Boolean.class}, tree="[0]")
-    private Output</* @Nullable */ Boolean> backgroundOperationEnabled;
-
-    /**
-     * @return Whether background operations are enabled during administration mode.
-     * 
-     */
-    public Output<Optional<Boolean>> backgroundOperationEnabled() {
-        return Codegen.optional(this.backgroundOperationEnabled);
     }
     /**
      * ID of the billing policy linked to this environment.
@@ -135,32 +108,18 @@ public class Environment extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.createdTime);
     }
     /**
-     * The currency code of the Dataverse database.
+     * Dataverse database configuration. Presence triggers Dataverse provisioning.
      * 
      */
-    @Export(name="currencyCode", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> currencyCode;
+    @Export(name="dataverse", refs={Dataverse.class}, tree="[0]")
+    private Output</* @Nullable */ Dataverse> dataverse;
 
     /**
-     * @return The currency code of the Dataverse database.
+     * @return Dataverse database configuration. Presence triggers Dataverse provisioning.
      * 
      */
-    public Output<Optional<String>> currencyCode() {
-        return Codegen.optional(this.currencyCode);
-    }
-    /**
-     * Dataverse version string. Computed.
-     * 
-     */
-    @Export(name="dataverseVersion", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> dataverseVersion;
-
-    /**
-     * @return Dataverse version string. Computed.
-     * 
-     */
-    public Output<Optional<String>> dataverseVersion() {
-        return Codegen.optional(this.dataverseVersion);
+    public Output<Optional<Dataverse>> dataverse() {
+        return Codegen.optional(this.dataverse);
     }
     /**
      * The description of the environment.
@@ -189,20 +148,6 @@ public class Environment extends com.pulumi.resources.CustomResource {
      */
     public Output<String> displayName() {
         return this.displayName;
-    }
-    /**
-     * The domain name of the Dataverse database.
-     * 
-     */
-    @Export(name="domainName", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> domainName;
-
-    /**
-     * @return The domain name of the Dataverse database.
-     * 
-     */
-    public Output<Optional<String>> domainName() {
-        return Codegen.optional(this.domainName);
     }
     /**
      * Enterprise policies associated with the environment.
@@ -245,20 +190,6 @@ public class Environment extends com.pulumi.resources.CustomResource {
      */
     public Output<String> environmentType() {
         return this.environmentType;
-    }
-    /**
-     * The base language code of the Dataverse database.
-     * 
-     */
-    @Export(name="languageCode", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> languageCode;
-
-    /**
-     * @return The base language code of the Dataverse database.
-     * 
-     */
-    public Output<Optional<String>> languageCode() {
-        return Codegen.optional(this.languageCode);
     }
     /**
      * The timestamp when the environment was last modified.
@@ -331,20 +262,6 @@ public class Environment extends com.pulumi.resources.CustomResource {
         return this.location;
     }
     /**
-     * Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
-     * 
-     */
-    @Export(name="organizationId", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> organizationId;
-
-    /**
-     * @return Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed.
-     * 
-     */
-    public Output<Optional<String>> organizationId() {
-        return Codegen.optional(this.organizationId);
-    }
-    /**
      * AAD user or group GUID who owns the environment.
      * 
      */
@@ -359,20 +276,6 @@ public class Environment extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.ownerId);
     }
     /**
-     * AAD security group GUID restricting environment access.
-     * 
-     */
-    @Export(name="securityGroupId", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> securityGroupId;
-
-    /**
-     * @return AAD security group GUID restricting environment access.
-     * 
-     */
-    public Output<Optional<String>> securityGroupId() {
-        return Codegen.optional(this.securityGroupId);
-    }
-    /**
      * The current state of the environment (e.g., Ready, Preparing).
      * 
      */
@@ -385,62 +288,6 @@ public class Environment extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<String>> state() {
         return Codegen.optional(this.state);
-    }
-    /**
-     * JSON metadata string for provisioning templates.
-     * 
-     */
-    @Export(name="templateMetadata", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> templateMetadata;
-
-    /**
-     * @return JSON metadata string for provisioning templates.
-     * 
-     */
-    public Output<Optional<String>> templateMetadata() {
-        return Codegen.optional(this.templateMetadata);
-    }
-    /**
-     * Template names used for Dataverse provisioning.
-     * 
-     */
-    @Export(name="templates", refs={List.class,String.class}, tree="[0,1]")
-    private Output</* @Nullable */ List<String>> templates;
-
-    /**
-     * @return Template names used for Dataverse provisioning.
-     * 
-     */
-    public Output<Optional<List<String>>> templates() {
-        return Codegen.optional(this.templates);
-    }
-    /**
-     * Dataverse unique name. Computed.
-     * 
-     */
-    @Export(name="uniqueName", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> uniqueName;
-
-    /**
-     * @return Dataverse unique name. Computed.
-     * 
-     */
-    public Output<Optional<String>> uniqueName() {
-        return Codegen.optional(this.uniqueName);
-    }
-    /**
-     * The Dataverse instance URL of the environment.
-     * 
-     */
-    @Export(name="url", refs={String.class}, tree="[0]")
-    private Output</* @Nullable */ String> url;
-
-    /**
-     * @return The Dataverse instance URL of the environment.
-     * 
-     */
-    public Output<Optional<String>> url() {
-        return Codegen.optional(this.url);
     }
 
     /**
