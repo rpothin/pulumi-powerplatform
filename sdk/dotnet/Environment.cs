@@ -16,16 +16,46 @@ namespace Pulumi.Powerplatform
     public partial class Environment : global::Pulumi.CustomResource
     {
         /// <summary>
+        /// Whether Bing Search integration is allowed.
+        /// </summary>
+        [Output("allowBingSearch")]
+        public Output<bool?> AllowBingSearch { get; private set; } = null!;
+
+        /// <summary>
+        /// Whether data can move across geographic boundaries for Copilot features.
+        /// </summary>
+        [Output("allowMovingDataAcrossRegions")]
+        public Output<bool?> AllowMovingDataAcrossRegions { get; private set; } = null!;
+
+        /// <summary>
+        /// Specific Azure region within the location geo.
+        /// </summary>
+        [Output("azureRegion")]
+        public Output<string?> AzureRegion { get; private set; } = null!;
+
+        /// <summary>
+        /// ID of the billing policy linked to this environment.
+        /// </summary>
+        [Output("billingPolicyId")]
+        public Output<string?> BillingPolicyId { get; private set; } = null!;
+
+        /// <summary>
+        /// Release wave cadence: Frequent or Moderate.
+        /// </summary>
+        [Output("cadence")]
+        public Output<string?> Cadence { get; private set; } = null!;
+
+        /// <summary>
         /// The timestamp when the environment was created.
         /// </summary>
         [Output("createdTime")]
         public Output<string?> CreatedTime { get; private set; } = null!;
 
         /// <summary>
-        /// The currency code of the Dataverse database.
+        /// Dataverse database configuration. Presence triggers Dataverse provisioning.
         /// </summary>
-        [Output("currencyCode")]
-        public Output<string?> CurrencyCode { get; private set; } = null!;
+        [Output("dataverse")]
+        public Output<Outputs.Dataverse?> Dataverse { get; private set; } = null!;
 
         /// <summary>
         /// The description of the environment.
@@ -40,10 +70,16 @@ namespace Pulumi.Powerplatform
         public Output<string> DisplayName { get; private set; } = null!;
 
         /// <summary>
-        /// The domain name of the Dataverse database.
+        /// Enterprise policies associated with the environment.
         /// </summary>
-        [Output("domainName")]
-        public Output<string?> DomainName { get; private set; } = null!;
+        [Output("enterprisePolicies")]
+        public Output<ImmutableArray<Outputs.EnterprisePolicy>> EnterprisePolicies { get; private set; } = null!;
+
+        /// <summary>
+        /// ID of the environment group.
+        /// </summary>
+        [Output("environmentGroupId")]
+        public Output<string?> EnvironmentGroupId { get; private set; } = null!;
 
         /// <summary>
         /// The type (SKU) of the environment.
@@ -52,16 +88,28 @@ namespace Pulumi.Powerplatform
         public Output<string> EnvironmentType { get; private set; } = null!;
 
         /// <summary>
-        /// The base language code of the Dataverse database.
-        /// </summary>
-        [Output("languageCode")]
-        public Output<string?> LanguageCode { get; private set; } = null!;
-
-        /// <summary>
         /// The timestamp when the environment was last modified.
         /// </summary>
         [Output("lastModifiedTime")]
         public Output<string?> LastModifiedTime { get; private set; } = null!;
+
+        /// <summary>
+        /// GUID of the linked app.
+        /// </summary>
+        [Output("linkedAppId")]
+        public Output<string?> LinkedAppId { get; private set; } = null!;
+
+        /// <summary>
+        /// Type of linked app: Canvas or ModelDriven.
+        /// </summary>
+        [Output("linkedAppType")]
+        public Output<string?> LinkedAppType { get; private set; } = null!;
+
+        /// <summary>
+        /// URL of the linked app. Computed.
+        /// </summary>
+        [Output("linkedAppUrl")]
+        public Output<string?> LinkedAppUrl { get; private set; } = null!;
 
         /// <summary>
         /// The geographic region of the environment.
@@ -70,16 +118,16 @@ namespace Pulumi.Powerplatform
         public Output<string> Location { get; private set; } = null!;
 
         /// <summary>
+        /// AAD user or group GUID who owns the environment.
+        /// </summary>
+        [Output("ownerId")]
+        public Output<string?> OwnerId { get; private set; } = null!;
+
+        /// <summary>
         /// The current state of the environment (e.g., Ready, Preparing).
         /// </summary>
         [Output("state")]
         public Output<string?> State { get; private set; } = null!;
-
-        /// <summary>
-        /// The Dataverse instance URL of the environment.
-        /// </summary>
-        [Output("url")]
-        public Output<string?> Url { get; private set; } = null!;
 
 
         /// <summary>
@@ -128,10 +176,40 @@ namespace Pulumi.Powerplatform
     public sealed class EnvironmentArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
-        /// The currency code for the Dataverse database (e.g., USD, EUR).
+        /// Allow Bing Search integration (AI generative features).
         /// </summary>
-        [Input("currencyCode")]
-        public Input<string>? CurrencyCode { get; set; }
+        [Input("allowBingSearch")]
+        public Input<bool>? AllowBingSearch { get; set; }
+
+        /// <summary>
+        /// Allow data to move across geographic boundaries for Copilot features.
+        /// </summary>
+        [Input("allowMovingDataAcrossRegions")]
+        public Input<bool>? AllowMovingDataAcrossRegions { get; set; }
+
+        /// <summary>
+        /// Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+        /// </summary>
+        [Input("azureRegion")]
+        public Input<string>? AzureRegion { get; set; }
+
+        /// <summary>
+        /// ID of the billing policy to link to this environment.
+        /// </summary>
+        [Input("billingPolicyId")]
+        public Input<string>? BillingPolicyId { get; set; }
+
+        /// <summary>
+        /// Release wave cadence: Frequent or Moderate. Immutable after creation.
+        /// </summary>
+        [Input("cadence")]
+        public Input<string>? Cadence { get; set; }
+
+        /// <summary>
+        /// Dataverse database configuration. Presence triggers Dataverse provisioning.
+        /// </summary>
+        [Input("dataverse")]
+        public Input<Inputs.DataverseArgs>? Dataverse { get; set; }
 
         /// <summary>
         /// A description of the environment.
@@ -145,11 +223,23 @@ namespace Pulumi.Powerplatform
         [Input("displayName", required: true)]
         public Input<string> DisplayName { get; set; } = null!;
 
+        [Input("enterprisePolicies")]
+        private InputList<Inputs.EnterprisePolicyArgs>? _enterprisePolicies;
+
         /// <summary>
-        /// The domain name for the Dataverse database associated with the environment.
+        /// Set of enterprise policies associated with the environment.
         /// </summary>
-        [Input("domainName")]
-        public Input<string>? DomainName { get; set; }
+        public InputList<Inputs.EnterprisePolicyArgs> EnterprisePolicies
+        {
+            get => _enterprisePolicies ?? (_enterprisePolicies = new InputList<Inputs.EnterprisePolicyArgs>());
+            set => _enterprisePolicies = value;
+        }
+
+        /// <summary>
+        /// ID of the environment group this environment belongs to.
+        /// </summary>
+        [Input("environmentGroupId")]
+        public Input<string>? EnvironmentGroupId { get; set; }
 
         /// <summary>
         /// The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
@@ -158,16 +248,28 @@ namespace Pulumi.Powerplatform
         public Input<string> EnvironmentType { get; set; } = null!;
 
         /// <summary>
-        /// The base language code for the Dataverse database (e.g., 1033 for English).
+        /// GUID of the linked app.
         /// </summary>
-        [Input("languageCode")]
-        public Input<string>? LanguageCode { get; set; }
+        [Input("linkedAppId")]
+        public Input<string>? LinkedAppId { get; set; }
+
+        /// <summary>
+        /// Type of linked app: Canvas or ModelDriven.
+        /// </summary>
+        [Input("linkedAppType")]
+        public Input<string>? LinkedAppType { get; set; }
 
         /// <summary>
         /// The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation.
         /// </summary>
         [Input("location", required: true)]
         public Input<string> Location { get; set; } = null!;
+
+        /// <summary>
+        /// AAD user or group GUID who owns the environment. Only valid for Developer environments.
+        /// </summary>
+        [Input("ownerId")]
+        public Input<string>? OwnerId { get; set; }
 
         public EnvironmentArgs()
         {

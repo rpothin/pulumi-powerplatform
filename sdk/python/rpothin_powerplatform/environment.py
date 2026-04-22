@@ -13,11 +13,19 @@ class Environment(pulumi.CustomResource):
     description: pulumi.Output[str]
     location: pulumi.Output[str]
     environment_type: pulumi.Output[str]
-    domain_name: pulumi.Output[str]
-    currency_code: pulumi.Output[str]
-    language_code: pulumi.Output[str]
+    azure_region: pulumi.Output[str]
+    owner_id: pulumi.Output[str]
+    cadence: pulumi.Output[str]
+    billing_policy_id: pulumi.Output[str]
+    environment_group_id: pulumi.Output[str]
+    allow_bing_search: pulumi.Output[bool]
+    allow_moving_data_across_regions: pulumi.Output[bool]
+    linked_app_type: pulumi.Output[str]
+    linked_app_id: pulumi.Output[str]
+    enterprise_policies: pulumi.Output[list]
+    dataverse: pulumi.Output[dict]
     state: pulumi.Output[str]
-    url: pulumi.Output[str]
+    linked_app_url: pulumi.Output[str]
     created_time: pulumi.Output[str]
     last_modified_time: pulumi.Output[str]
 
@@ -28,9 +36,17 @@ class Environment(pulumi.CustomResource):
         description: Optional[str] = None,
         location: Optional[str] = None,
         environment_type: Optional[str] = None,
-        domain_name: Optional[str] = None,
-        currency_code: Optional[str] = None,
-        language_code: Optional[str] = None,
+        azure_region: Optional[str] = None,
+        owner_id: Optional[str] = None,
+        cadence: Optional[str] = None,
+        billing_policy_id: Optional[str] = None,
+        environment_group_id: Optional[str] = None,
+        allow_bing_search: Optional[bool] = None,
+        allow_moving_data_across_regions: Optional[bool] = None,
+        linked_app_type: Optional[str] = None,
+        linked_app_id: Optional[str] = None,
+        enterprise_policies: Optional[list] = None,
+        dataverse: Optional[dict] = None,
         opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
@@ -38,11 +54,20 @@ class Environment(pulumi.CustomResource):
             "description": description,
             "location": location,
             "environment_type": environment_type,
-            "domain_name": domain_name,
-            "currency_code": currency_code,
-            "language_code": language_code,
+            "azure_region": azure_region,
+            "owner_id": owner_id,
+            "cadence": cadence,
+            "billing_policy_id": billing_policy_id,
+            "environment_group_id": environment_group_id,
+            "allow_bing_search": allow_bing_search,
+            "allow_moving_data_across_regions": allow_moving_data_across_regions,
+            "linked_app_type": linked_app_type,
+            "linked_app_id": linked_app_id,
+            "enterprise_policies": enterprise_policies,
+            "dataverse": dataverse,
+            # Computed outputs
             "state": None,
-            "url": None,
+            "linked_app_url": None,
             "created_time": None,
             "last_modified_time": None,
         }

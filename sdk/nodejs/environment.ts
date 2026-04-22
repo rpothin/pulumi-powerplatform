@@ -2,6 +2,8 @@
 // *** Do not edit by hand unless you're certain you know what you are doing! ***
 
 import * as pulumi from "@pulumi/pulumi";
+import * as inputs from "./types/input";
+import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
@@ -35,13 +37,33 @@ export class Environment extends pulumi.CustomResource {
     }
 
     /**
+     * Whether Bing Search integration is allowed.
+     */
+    declare public readonly allowBingSearch: pulumi.Output<boolean | undefined>;
+    /**
+     * Whether data can move across geographic boundaries for Copilot features.
+     */
+    declare public readonly allowMovingDataAcrossRegions: pulumi.Output<boolean | undefined>;
+    /**
+     * Specific Azure region within the location geo.
+     */
+    declare public readonly azureRegion: pulumi.Output<string | undefined>;
+    /**
+     * ID of the billing policy linked to this environment.
+     */
+    declare public readonly billingPolicyId: pulumi.Output<string | undefined>;
+    /**
+     * Release wave cadence: Frequent or Moderate.
+     */
+    declare public readonly cadence: pulumi.Output<string | undefined>;
+    /**
      * The timestamp when the environment was created.
      */
     declare public /*out*/ readonly createdTime: pulumi.Output<string | undefined>;
     /**
-     * The currency code of the Dataverse database.
+     * Dataverse database configuration. Presence triggers Dataverse provisioning.
      */
-    declare public readonly currencyCode: pulumi.Output<string | undefined>;
+    declare public readonly dataverse: pulumi.Output<outputs.Dataverse | undefined>;
     /**
      * The description of the environment.
      */
@@ -51,33 +73,45 @@ export class Environment extends pulumi.CustomResource {
      */
     declare public readonly displayName: pulumi.Output<string>;
     /**
-     * The domain name of the Dataverse database.
+     * Enterprise policies associated with the environment.
      */
-    declare public readonly domainName: pulumi.Output<string | undefined>;
+    declare public readonly enterprisePolicies: pulumi.Output<outputs.EnterprisePolicy[] | undefined>;
+    /**
+     * ID of the environment group.
+     */
+    declare public readonly environmentGroupId: pulumi.Output<string | undefined>;
     /**
      * The type (SKU) of the environment.
      */
     declare public readonly environmentType: pulumi.Output<string>;
     /**
-     * The base language code of the Dataverse database.
-     */
-    declare public readonly languageCode: pulumi.Output<string | undefined>;
-    /**
      * The timestamp when the environment was last modified.
      */
     declare public /*out*/ readonly lastModifiedTime: pulumi.Output<string | undefined>;
+    /**
+     * GUID of the linked app.
+     */
+    declare public readonly linkedAppId: pulumi.Output<string | undefined>;
+    /**
+     * Type of linked app: Canvas or ModelDriven.
+     */
+    declare public readonly linkedAppType: pulumi.Output<string | undefined>;
+    /**
+     * URL of the linked app. Computed.
+     */
+    declare public /*out*/ readonly linkedAppUrl: pulumi.Output<string | undefined>;
     /**
      * The geographic region of the environment.
      */
     declare public readonly location: pulumi.Output<string>;
     /**
+     * AAD user or group GUID who owns the environment.
+     */
+    declare public readonly ownerId: pulumi.Output<string | undefined>;
+    /**
      * The current state of the environment (e.g., Ready, Preparing).
      */
     declare public /*out*/ readonly state: pulumi.Output<string | undefined>;
-    /**
-     * The Dataverse instance URL of the environment.
-     */
-    declare public /*out*/ readonly url: pulumi.Output<string | undefined>;
 
     /**
      * Create a Environment resource with the given unique name, arguments, and options.
@@ -99,29 +133,45 @@ export class Environment extends pulumi.CustomResource {
             if (args?.location === undefined && !opts.urn) {
                 throw new Error("Missing required property 'location'");
             }
-            resourceInputs["currencyCode"] = args?.currencyCode;
+            resourceInputs["allowBingSearch"] = args?.allowBingSearch;
+            resourceInputs["allowMovingDataAcrossRegions"] = args?.allowMovingDataAcrossRegions;
+            resourceInputs["azureRegion"] = args?.azureRegion;
+            resourceInputs["billingPolicyId"] = args?.billingPolicyId;
+            resourceInputs["cadence"] = args?.cadence;
+            resourceInputs["dataverse"] = args?.dataverse;
             resourceInputs["description"] = args?.description;
             resourceInputs["displayName"] = args?.displayName;
-            resourceInputs["domainName"] = args?.domainName;
+            resourceInputs["enterprisePolicies"] = args?.enterprisePolicies;
+            resourceInputs["environmentGroupId"] = args?.environmentGroupId;
             resourceInputs["environmentType"] = args?.environmentType;
-            resourceInputs["languageCode"] = args?.languageCode;
+            resourceInputs["linkedAppId"] = args?.linkedAppId;
+            resourceInputs["linkedAppType"] = args?.linkedAppType;
             resourceInputs["location"] = args?.location;
+            resourceInputs["ownerId"] = args?.ownerId;
             resourceInputs["createdTime"] = undefined /*out*/;
             resourceInputs["lastModifiedTime"] = undefined /*out*/;
+            resourceInputs["linkedAppUrl"] = undefined /*out*/;
             resourceInputs["state"] = undefined /*out*/;
-            resourceInputs["url"] = undefined /*out*/;
         } else {
+            resourceInputs["allowBingSearch"] = undefined /*out*/;
+            resourceInputs["allowMovingDataAcrossRegions"] = undefined /*out*/;
+            resourceInputs["azureRegion"] = undefined /*out*/;
+            resourceInputs["billingPolicyId"] = undefined /*out*/;
+            resourceInputs["cadence"] = undefined /*out*/;
             resourceInputs["createdTime"] = undefined /*out*/;
-            resourceInputs["currencyCode"] = undefined /*out*/;
+            resourceInputs["dataverse"] = undefined /*out*/;
             resourceInputs["description"] = undefined /*out*/;
             resourceInputs["displayName"] = undefined /*out*/;
-            resourceInputs["domainName"] = undefined /*out*/;
+            resourceInputs["enterprisePolicies"] = undefined /*out*/;
+            resourceInputs["environmentGroupId"] = undefined /*out*/;
             resourceInputs["environmentType"] = undefined /*out*/;
-            resourceInputs["languageCode"] = undefined /*out*/;
             resourceInputs["lastModifiedTime"] = undefined /*out*/;
+            resourceInputs["linkedAppId"] = undefined /*out*/;
+            resourceInputs["linkedAppType"] = undefined /*out*/;
+            resourceInputs["linkedAppUrl"] = undefined /*out*/;
             resourceInputs["location"] = undefined /*out*/;
+            resourceInputs["ownerId"] = undefined /*out*/;
             resourceInputs["state"] = undefined /*out*/;
-            resourceInputs["url"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(Environment.__pulumiType, name, resourceInputs, opts);
@@ -133,9 +183,29 @@ export class Environment extends pulumi.CustomResource {
  */
 export interface EnvironmentArgs {
     /**
-     * The currency code for the Dataverse database (e.g., USD, EUR).
+     * Allow Bing Search integration (AI generative features).
      */
-    currencyCode?: pulumi.Input<string>;
+    allowBingSearch?: pulumi.Input<boolean>;
+    /**
+     * Allow data to move across geographic boundaries for Copilot features.
+     */
+    allowMovingDataAcrossRegions?: pulumi.Input<boolean>;
+    /**
+     * Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+     */
+    azureRegion?: pulumi.Input<string>;
+    /**
+     * ID of the billing policy to link to this environment.
+     */
+    billingPolicyId?: pulumi.Input<string>;
+    /**
+     * Release wave cadence: Frequent or Moderate. Immutable after creation.
+     */
+    cadence?: pulumi.Input<string>;
+    /**
+     * Dataverse database configuration. Presence triggers Dataverse provisioning.
+     */
+    dataverse?: pulumi.Input<inputs.DataverseArgs>;
     /**
      * A description of the environment.
      */
@@ -145,19 +215,31 @@ export interface EnvironmentArgs {
      */
     displayName: pulumi.Input<string>;
     /**
-     * The domain name for the Dataverse database associated with the environment.
+     * Set of enterprise policies associated with the environment.
      */
-    domainName?: pulumi.Input<string>;
+    enterprisePolicies?: pulumi.Input<pulumi.Input<inputs.EnterprisePolicyArgs>[]>;
+    /**
+     * ID of the environment group this environment belongs to.
+     */
+    environmentGroupId?: pulumi.Input<string>;
     /**
      * The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
      */
     environmentType: pulumi.Input<string>;
     /**
-     * The base language code for the Dataverse database (e.g., 1033 for English).
+     * GUID of the linked app.
      */
-    languageCode?: pulumi.Input<string>;
+    linkedAppId?: pulumi.Input<string>;
+    /**
+     * Type of linked app: Canvas or ModelDriven.
+     */
+    linkedAppType?: pulumi.Input<string>;
     /**
      * The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation.
      */
     location: pulumi.Input<string>;
+    /**
+     * AAD user or group GUID who owns the environment. Only valid for Developer environments.
+     */
+    ownerId?: pulumi.Input<string>;
 }

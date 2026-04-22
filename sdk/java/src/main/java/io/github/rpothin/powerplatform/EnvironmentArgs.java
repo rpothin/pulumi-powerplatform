@@ -6,7 +6,11 @@ package io.github.rpothin.powerplatform;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import io.github.rpothin.powerplatform.inputs.DataverseArgs;
+import io.github.rpothin.powerplatform.inputs.EnterprisePolicyArgs;
+import java.lang.Boolean;
 import java.lang.String;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -17,18 +21,93 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
     public static final EnvironmentArgs Empty = new EnvironmentArgs();
 
     /**
-     * The currency code for the Dataverse database (e.g., USD, EUR).
+     * Allow Bing Search integration (AI generative features).
      * 
      */
-    @Import(name="currencyCode")
-    private @Nullable Output<String> currencyCode;
+    @Import(name="allowBingSearch")
+    private @Nullable Output<Boolean> allowBingSearch;
 
     /**
-     * @return The currency code for the Dataverse database (e.g., USD, EUR).
+     * @return Allow Bing Search integration (AI generative features).
      * 
      */
-    public Optional<Output<String>> currencyCode() {
-        return Optional.ofNullable(this.currencyCode);
+    public Optional<Output<Boolean>> allowBingSearch() {
+        return Optional.ofNullable(this.allowBingSearch);
+    }
+
+    /**
+     * Allow data to move across geographic boundaries for Copilot features.
+     * 
+     */
+    @Import(name="allowMovingDataAcrossRegions")
+    private @Nullable Output<Boolean> allowMovingDataAcrossRegions;
+
+    /**
+     * @return Allow data to move across geographic boundaries for Copilot features.
+     * 
+     */
+    public Optional<Output<Boolean>> allowMovingDataAcrossRegions() {
+        return Optional.ofNullable(this.allowMovingDataAcrossRegions);
+    }
+
+    /**
+     * Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+     * 
+     */
+    @Import(name="azureRegion")
+    private @Nullable Output<String> azureRegion;
+
+    /**
+     * @return Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+     * 
+     */
+    public Optional<Output<String>> azureRegion() {
+        return Optional.ofNullable(this.azureRegion);
+    }
+
+    /**
+     * ID of the billing policy to link to this environment.
+     * 
+     */
+    @Import(name="billingPolicyId")
+    private @Nullable Output<String> billingPolicyId;
+
+    /**
+     * @return ID of the billing policy to link to this environment.
+     * 
+     */
+    public Optional<Output<String>> billingPolicyId() {
+        return Optional.ofNullable(this.billingPolicyId);
+    }
+
+    /**
+     * Release wave cadence: Frequent or Moderate. Immutable after creation.
+     * 
+     */
+    @Import(name="cadence")
+    private @Nullable Output<String> cadence;
+
+    /**
+     * @return Release wave cadence: Frequent or Moderate. Immutable after creation.
+     * 
+     */
+    public Optional<Output<String>> cadence() {
+        return Optional.ofNullable(this.cadence);
+    }
+
+    /**
+     * Dataverse database configuration. Presence triggers Dataverse provisioning.
+     * 
+     */
+    @Import(name="dataverse")
+    private @Nullable Output<DataverseArgs> dataverse;
+
+    /**
+     * @return Dataverse database configuration. Presence triggers Dataverse provisioning.
+     * 
+     */
+    public Optional<Output<DataverseArgs>> dataverse() {
+        return Optional.ofNullable(this.dataverse);
     }
 
     /**
@@ -62,18 +141,33 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * The domain name for the Dataverse database associated with the environment.
+     * Set of enterprise policies associated with the environment.
      * 
      */
-    @Import(name="domainName")
-    private @Nullable Output<String> domainName;
+    @Import(name="enterprisePolicies")
+    private @Nullable Output<List<EnterprisePolicyArgs>> enterprisePolicies;
 
     /**
-     * @return The domain name for the Dataverse database associated with the environment.
+     * @return Set of enterprise policies associated with the environment.
      * 
      */
-    public Optional<Output<String>> domainName() {
-        return Optional.ofNullable(this.domainName);
+    public Optional<Output<List<EnterprisePolicyArgs>>> enterprisePolicies() {
+        return Optional.ofNullable(this.enterprisePolicies);
+    }
+
+    /**
+     * ID of the environment group this environment belongs to.
+     * 
+     */
+    @Import(name="environmentGroupId")
+    private @Nullable Output<String> environmentGroupId;
+
+    /**
+     * @return ID of the environment group this environment belongs to.
+     * 
+     */
+    public Optional<Output<String>> environmentGroupId() {
+        return Optional.ofNullable(this.environmentGroupId);
     }
 
     /**
@@ -92,18 +186,33 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
     }
 
     /**
-     * The base language code for the Dataverse database (e.g., 1033 for English).
+     * GUID of the linked app.
      * 
      */
-    @Import(name="languageCode")
-    private @Nullable Output<String> languageCode;
+    @Import(name="linkedAppId")
+    private @Nullable Output<String> linkedAppId;
 
     /**
-     * @return The base language code for the Dataverse database (e.g., 1033 for English).
+     * @return GUID of the linked app.
      * 
      */
-    public Optional<Output<String>> languageCode() {
-        return Optional.ofNullable(this.languageCode);
+    public Optional<Output<String>> linkedAppId() {
+        return Optional.ofNullable(this.linkedAppId);
+    }
+
+    /**
+     * Type of linked app: Canvas or ModelDriven.
+     * 
+     */
+    @Import(name="linkedAppType")
+    private @Nullable Output<String> linkedAppType;
+
+    /**
+     * @return Type of linked app: Canvas or ModelDriven.
+     * 
+     */
+    public Optional<Output<String>> linkedAppType() {
+        return Optional.ofNullable(this.linkedAppType);
     }
 
     /**
@@ -121,16 +230,39 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         return this.location;
     }
 
+    /**
+     * AAD user or group GUID who owns the environment. Only valid for Developer environments.
+     * 
+     */
+    @Import(name="ownerId")
+    private @Nullable Output<String> ownerId;
+
+    /**
+     * @return AAD user or group GUID who owns the environment. Only valid for Developer environments.
+     * 
+     */
+    public Optional<Output<String>> ownerId() {
+        return Optional.ofNullable(this.ownerId);
+    }
+
     private EnvironmentArgs() {}
 
     private EnvironmentArgs(EnvironmentArgs $) {
-        this.currencyCode = $.currencyCode;
+        this.allowBingSearch = $.allowBingSearch;
+        this.allowMovingDataAcrossRegions = $.allowMovingDataAcrossRegions;
+        this.azureRegion = $.azureRegion;
+        this.billingPolicyId = $.billingPolicyId;
+        this.cadence = $.cadence;
+        this.dataverse = $.dataverse;
         this.description = $.description;
         this.displayName = $.displayName;
-        this.domainName = $.domainName;
+        this.enterprisePolicies = $.enterprisePolicies;
+        this.environmentGroupId = $.environmentGroupId;
         this.environmentType = $.environmentType;
-        this.languageCode = $.languageCode;
+        this.linkedAppId = $.linkedAppId;
+        this.linkedAppType = $.linkedAppType;
         this.location = $.location;
+        this.ownerId = $.ownerId;
     }
 
     public static Builder builder() {
@@ -152,24 +284,129 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param currencyCode The currency code for the Dataverse database (e.g., USD, EUR).
+         * @param allowBingSearch Allow Bing Search integration (AI generative features).
          * 
          * @return builder
          * 
          */
-        public Builder currencyCode(@Nullable Output<String> currencyCode) {
-            $.currencyCode = currencyCode;
+        public Builder allowBingSearch(@Nullable Output<Boolean> allowBingSearch) {
+            $.allowBingSearch = allowBingSearch;
             return this;
         }
 
         /**
-         * @param currencyCode The currency code for the Dataverse database (e.g., USD, EUR).
+         * @param allowBingSearch Allow Bing Search integration (AI generative features).
          * 
          * @return builder
          * 
          */
-        public Builder currencyCode(String currencyCode) {
-            return currencyCode(Output.of(currencyCode));
+        public Builder allowBingSearch(Boolean allowBingSearch) {
+            return allowBingSearch(Output.of(allowBingSearch));
+        }
+
+        /**
+         * @param allowMovingDataAcrossRegions Allow data to move across geographic boundaries for Copilot features.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowMovingDataAcrossRegions(@Nullable Output<Boolean> allowMovingDataAcrossRegions) {
+            $.allowMovingDataAcrossRegions = allowMovingDataAcrossRegions;
+            return this;
+        }
+
+        /**
+         * @param allowMovingDataAcrossRegions Allow data to move across geographic boundaries for Copilot features.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowMovingDataAcrossRegions(Boolean allowMovingDataAcrossRegions) {
+            return allowMovingDataAcrossRegions(Output.of(allowMovingDataAcrossRegions));
+        }
+
+        /**
+         * @param azureRegion Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder azureRegion(@Nullable Output<String> azureRegion) {
+            $.azureRegion = azureRegion;
+            return this;
+        }
+
+        /**
+         * @param azureRegion Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder azureRegion(String azureRegion) {
+            return azureRegion(Output.of(azureRegion));
+        }
+
+        /**
+         * @param billingPolicyId ID of the billing policy to link to this environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder billingPolicyId(@Nullable Output<String> billingPolicyId) {
+            $.billingPolicyId = billingPolicyId;
+            return this;
+        }
+
+        /**
+         * @param billingPolicyId ID of the billing policy to link to this environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder billingPolicyId(String billingPolicyId) {
+            return billingPolicyId(Output.of(billingPolicyId));
+        }
+
+        /**
+         * @param cadence Release wave cadence: Frequent or Moderate. Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder cadence(@Nullable Output<String> cadence) {
+            $.cadence = cadence;
+            return this;
+        }
+
+        /**
+         * @param cadence Release wave cadence: Frequent or Moderate. Immutable after creation.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder cadence(String cadence) {
+            return cadence(Output.of(cadence));
+        }
+
+        /**
+         * @param dataverse Dataverse database configuration. Presence triggers Dataverse provisioning.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder dataverse(@Nullable Output<DataverseArgs> dataverse) {
+            $.dataverse = dataverse;
+            return this;
+        }
+
+        /**
+         * @param dataverse Dataverse database configuration. Presence triggers Dataverse provisioning.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder dataverse(DataverseArgs dataverse) {
+            return dataverse(Output.of(dataverse));
         }
 
         /**
@@ -215,24 +452,55 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param domainName The domain name for the Dataverse database associated with the environment.
+         * @param enterprisePolicies Set of enterprise policies associated with the environment.
          * 
          * @return builder
          * 
          */
-        public Builder domainName(@Nullable Output<String> domainName) {
-            $.domainName = domainName;
+        public Builder enterprisePolicies(@Nullable Output<List<EnterprisePolicyArgs>> enterprisePolicies) {
+            $.enterprisePolicies = enterprisePolicies;
             return this;
         }
 
         /**
-         * @param domainName The domain name for the Dataverse database associated with the environment.
+         * @param enterprisePolicies Set of enterprise policies associated with the environment.
          * 
          * @return builder
          * 
          */
-        public Builder domainName(String domainName) {
-            return domainName(Output.of(domainName));
+        public Builder enterprisePolicies(List<EnterprisePolicyArgs> enterprisePolicies) {
+            return enterprisePolicies(Output.of(enterprisePolicies));
+        }
+
+        /**
+         * @param enterprisePolicies Set of enterprise policies associated with the environment.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder enterprisePolicies(EnterprisePolicyArgs... enterprisePolicies) {
+            return enterprisePolicies(List.of(enterprisePolicies));
+        }
+
+        /**
+         * @param environmentGroupId ID of the environment group this environment belongs to.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder environmentGroupId(@Nullable Output<String> environmentGroupId) {
+            $.environmentGroupId = environmentGroupId;
+            return this;
+        }
+
+        /**
+         * @param environmentGroupId ID of the environment group this environment belongs to.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder environmentGroupId(String environmentGroupId) {
+            return environmentGroupId(Output.of(environmentGroupId));
         }
 
         /**
@@ -257,24 +525,45 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
         }
 
         /**
-         * @param languageCode The base language code for the Dataverse database (e.g., 1033 for English).
+         * @param linkedAppId GUID of the linked app.
          * 
          * @return builder
          * 
          */
-        public Builder languageCode(@Nullable Output<String> languageCode) {
-            $.languageCode = languageCode;
+        public Builder linkedAppId(@Nullable Output<String> linkedAppId) {
+            $.linkedAppId = linkedAppId;
             return this;
         }
 
         /**
-         * @param languageCode The base language code for the Dataverse database (e.g., 1033 for English).
+         * @param linkedAppId GUID of the linked app.
          * 
          * @return builder
          * 
          */
-        public Builder languageCode(String languageCode) {
-            return languageCode(Output.of(languageCode));
+        public Builder linkedAppId(String linkedAppId) {
+            return linkedAppId(Output.of(linkedAppId));
+        }
+
+        /**
+         * @param linkedAppType Type of linked app: Canvas or ModelDriven.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder linkedAppType(@Nullable Output<String> linkedAppType) {
+            $.linkedAppType = linkedAppType;
+            return this;
+        }
+
+        /**
+         * @param linkedAppType Type of linked app: Canvas or ModelDriven.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder linkedAppType(String linkedAppType) {
+            return linkedAppType(Output.of(linkedAppType));
         }
 
         /**
@@ -296,6 +585,27 @@ public final class EnvironmentArgs extends com.pulumi.resources.ResourceArgs {
          */
         public Builder location(String location) {
             return location(Output.of(location));
+        }
+
+        /**
+         * @param ownerId AAD user or group GUID who owns the environment. Only valid for Developer environments.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ownerId(@Nullable Output<String> ownerId) {
+            $.ownerId = ownerId;
+            return this;
+        }
+
+        /**
+         * @param ownerId AAD user or group GUID who owns the environment. Only valid for Developer environments.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder ownerId(String ownerId) {
+            return ownerId(Output.of(ownerId));
         }
 
         public EnvironmentArgs build() {

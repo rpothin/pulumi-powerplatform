@@ -64,6 +64,86 @@ export interface ConnectorSummary {
 }
 
 /**
+ * Configuration for the Dataverse database associated with a Power Platform environment.
+ */
+export interface Dataverse {
+    /**
+     * Whether the Dataverse instance is in administration mode.
+     */
+    administrationModeEnabled?: boolean;
+    /**
+     * Whether background operations are enabled during administration mode.
+     */
+    backgroundOperationEnabled?: boolean;
+    /**
+     * Currency code for the Dataverse database (e.g. USD). Immutable after creation.
+     */
+    currencyCode?: string;
+    /**
+     * Domain prefix for the Dataverse instance URL.
+     */
+    domainName?: string;
+    /**
+     * Base language LCID (e.g. 1033). Immutable after creation.
+     */
+    languageCode?: number;
+    /**
+     * Dataverse organization GUID. Computed.
+     */
+    organizationId?: string;
+    /**
+     * AAD security group GUID restricting environment access.
+     */
+    securityGroupId?: string;
+    /**
+     * JSON metadata for provisioning templates. Immutable after creation.
+     */
+    templateMetadata?: string;
+    /**
+     * Provisioning templates (e.g. D365_Sales). Immutable after creation.
+     */
+    templates?: string[];
+    /**
+     * Dataverse unique name. Computed.
+     */
+    uniqueName?: string;
+    /**
+     * URL of the Dataverse instance. Computed.
+     */
+    url?: string;
+    /**
+     * Dataverse version string. Computed.
+     */
+    version?: string;
+}
+
+/**
+ * An enterprise policy associated with a Power Platform environment.
+ */
+export interface EnterprisePolicy {
+    /**
+     * The resource ID of the policy.
+     */
+    id?: string;
+    /**
+     * Azure region of the policy.
+     */
+    location?: string;
+    /**
+     * Policy link status (e.g. Linked, Disabled).
+     */
+    status?: string;
+    /**
+     * System-assigned ID of the policy.
+     */
+    systemId?: string;
+    /**
+     * Policy type (e.g. NetworkInjection, Encryption, Identity).
+     */
+    type?: string;
+}
+
+/**
  * Summary information about a Power Platform environment.
  */
 export interface EnvironmentSummary {

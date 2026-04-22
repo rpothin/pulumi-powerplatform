@@ -24,6 +24,86 @@ export interface BillingInstrumentArgs {
 }
 
 /**
+ * Configuration for the Dataverse database associated with a Power Platform environment.
+ */
+export interface DataverseArgs {
+    /**
+     * Whether the Dataverse instance is in administration mode.
+     */
+    administrationModeEnabled?: pulumi.Input<boolean>;
+    /**
+     * Whether background operations are enabled during administration mode.
+     */
+    backgroundOperationEnabled?: pulumi.Input<boolean>;
+    /**
+     * Currency code for the Dataverse database (e.g. USD). Immutable after creation.
+     */
+    currencyCode?: pulumi.Input<string>;
+    /**
+     * Domain prefix for the Dataverse instance URL.
+     */
+    domainName?: pulumi.Input<string>;
+    /**
+     * Base language LCID (e.g. 1033). Immutable after creation.
+     */
+    languageCode?: pulumi.Input<number>;
+    /**
+     * Dataverse organization GUID. Computed.
+     */
+    organizationId?: pulumi.Input<string>;
+    /**
+     * AAD security group GUID restricting environment access.
+     */
+    securityGroupId?: pulumi.Input<string>;
+    /**
+     * JSON metadata for provisioning templates. Immutable after creation.
+     */
+    templateMetadata?: pulumi.Input<string>;
+    /**
+     * Provisioning templates (e.g. D365_Sales). Immutable after creation.
+     */
+    templates?: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * Dataverse unique name. Computed.
+     */
+    uniqueName?: pulumi.Input<string>;
+    /**
+     * URL of the Dataverse instance. Computed.
+     */
+    url?: pulumi.Input<string>;
+    /**
+     * Dataverse version string. Computed.
+     */
+    version?: pulumi.Input<string>;
+}
+
+/**
+ * An enterprise policy associated with a Power Platform environment.
+ */
+export interface EnterprisePolicyArgs {
+    /**
+     * The resource ID of the policy.
+     */
+    id?: pulumi.Input<string>;
+    /**
+     * Azure region of the policy.
+     */
+    location?: pulumi.Input<string>;
+    /**
+     * Policy link status (e.g. Linked, Disabled).
+     */
+    status?: pulumi.Input<string>;
+    /**
+     * System-assigned ID of the policy.
+     */
+    systemId?: pulumi.Input<string>;
+    /**
+     * Policy type (e.g. NetworkInjection, Encryption, Identity).
+     */
+    type?: pulumi.Input<string>;
+}
+
+/**
  * A rule set for a DLP policy, defining data loss prevention rules.
  */
 export interface RuleSetArgs {
