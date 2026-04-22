@@ -31,6 +31,32 @@
         }
     },
     "types": {
+        "powerplatform:index:EnterprisePolicy": {
+            "type": "object",
+            "description": "An enterprise policy associated with a Power Platform environment.",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "Policy type (e.g. NetworkInjection, Encryption, Identity)."
+                },
+                "id": {
+                    "type": "string",
+                    "description": "The resource ID of the policy."
+                },
+                "location": {
+                    "type": "string",
+                    "description": "Azure region of the policy."
+                },
+                "systemId": {
+                    "type": "string",
+                    "description": "System-assigned ID of the policy."
+                },
+                "status": {
+                    "type": "string",
+                    "description": "Policy link status (e.g. Linked, Disabled)."
+                }
+            }
+        },
         "powerplatform:index:RuleSet": {
             "type": "object",
             "description": "A rule set for a DLP policy, defining data loss prevention rules.",
@@ -530,6 +556,68 @@
                 "languageCode": {
                     "type": "string",
                     "description": "The base language code for the Dataverse database (e.g., 1033 for English)."
+                },
+                "azureRegion": {
+                    "type": "string",
+                    "description": "Specific Azure region within the location geo (e.g. westus2). Immutable after creation."
+                },
+                "ownerId": {
+                    "type": "string",
+                    "description": "AAD user or group GUID who owns the environment. Only valid for Developer environments."
+                },
+                "cadence": {
+                    "type": "string",
+                    "description": "Release wave cadence: Frequent or Moderate. Immutable after creation."
+                },
+                "billingPolicyId": {
+                    "type": "string",
+                    "description": "ID of the billing policy to link to this environment."
+                },
+                "environmentGroupId": {
+                    "type": "string",
+                    "description": "ID of the environment group this environment belongs to."
+                },
+                "allowBingSearch": {
+                    "type": "boolean",
+                    "description": "Allow Bing Search integration (AI generative features)."
+                },
+                "allowMovingDataAcrossRegions": {
+                    "type": "boolean",
+                    "description": "Allow data to move across geographic boundaries for Copilot features."
+                },
+                "securityGroupId": {
+                    "type": "string",
+                    "description": "AAD security group GUID that restricts environment access."
+                },
+                "administrationModeEnabled": {
+                    "type": "boolean",
+                    "description": "Put the Dataverse database into administration-only mode."
+                },
+                "backgroundOperationEnabled": {
+                    "type": "boolean",
+                    "description": "Allow background operations during administration mode."
+                },
+                "templates": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Template names for Dataverse provisioning (e.g. D365_Sales). Immutable after creation."
+                },
+                "templateMetadata": {
+                    "type": "string",
+                    "description": "JSON metadata string for templates. Immutable after creation."
+                },
+                "linkedAppType": {
+                    "type": "string",
+                    "description": "Type of linked app: Canvas or ModelDriven."
+                },
+                "linkedAppId": {
+                    "type": "string",
+                    "description": "GUID of the linked app."
+                },
+                "enterprisePolicies": {
+                    "type": "array",
+                    "items": { "$ref": "#/types/powerplatform:index:EnterprisePolicy" },
+                    "description": "Set of enterprise policies associated with the environment."
                 }
             },
             "requiredInputs": [
@@ -565,6 +653,84 @@
                 "languageCode": {
                     "type": "string",
                     "description": "The base language code of the Dataverse database."
+                },
+                "azureRegion": {
+                    "type": "string",
+                    "description": "Specific Azure region within the location geo."
+                },
+                "ownerId": {
+                    "type": "string",
+                    "description": "AAD user or group GUID who owns the environment."
+                },
+                "cadence": {
+                    "type": "string",
+                    "description": "Release wave cadence: Frequent or Moderate."
+                },
+                "billingPolicyId": {
+                    "type": "string",
+                    "description": "ID of the billing policy linked to this environment."
+                },
+                "environmentGroupId": {
+                    "type": "string",
+                    "description": "ID of the environment group."
+                },
+                "allowBingSearch": {
+                    "type": "boolean",
+                    "description": "Whether Bing Search integration is allowed."
+                },
+                "allowMovingDataAcrossRegions": {
+                    "type": "boolean",
+                    "description": "Whether data can move across geographic boundaries for Copilot features."
+                },
+                "securityGroupId": {
+                    "type": "string",
+                    "description": "AAD security group GUID restricting environment access."
+                },
+                "administrationModeEnabled": {
+                    "type": "boolean",
+                    "description": "Whether the environment Dataverse database is in administration-only mode."
+                },
+                "backgroundOperationEnabled": {
+                    "type": "boolean",
+                    "description": "Whether background operations are enabled during administration mode."
+                },
+                "templates": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Template names used for Dataverse provisioning."
+                },
+                "templateMetadata": {
+                    "type": "string",
+                    "description": "JSON metadata string for provisioning templates."
+                },
+                "linkedAppType": {
+                    "type": "string",
+                    "description": "Type of linked app: Canvas or ModelDriven."
+                },
+                "linkedAppId": {
+                    "type": "string",
+                    "description": "GUID of the linked app."
+                },
+                "enterprisePolicies": {
+                    "type": "array",
+                    "items": { "$ref": "#/types/powerplatform:index:EnterprisePolicy" },
+                    "description": "Enterprise policies associated with the environment."
+                },
+                "organizationId": {
+                    "type": "string",
+                    "description": "Dataverse organization ID (resourceId from linkedEnvironmentMetadata). Computed."
+                },
+                "uniqueName": {
+                    "type": "string",
+                    "description": "Dataverse unique name. Computed."
+                },
+                "dataverseVersion": {
+                    "type": "string",
+                    "description": "Dataverse version string. Computed."
+                },
+                "linkedAppUrl": {
+                    "type": "string",
+                    "description": "URL of the linked app. Computed."
                 },
                 "state": {
                     "type": "string",

@@ -7,8 +7,10 @@ from unittest.mock import AsyncMock, MagicMock, PropertyMock, patch
 import pytest
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import (
+    CheckRequest,
     CreateRequest,
     DeleteRequest,
+    DiffRequest,
     ReadRequest,
     UpdateRequest,
 )
@@ -36,13 +38,42 @@ def _fake_env_response(
             "displayName": display_name,
             "description": description,
             "environmentSku": env_sku,
+            "azureRegion": "westus2",
+            "updateCadence": {"id": "Frequent"},
+            "billingPolicy": {"id": "billing-policy-id"},
+            "parentEnvironmentGroup": {"id": "env-group-id"},
+            "usedBy": {"id": "owner-guid", "type": "1"},
+            "bingChatEnabled": True,
+            "copilotPolicies": {"crossGeoCopilotDataMovementEnabled": True},
+            "states": {
+                "runtime": {"id": "Enabled", "runtimeReasonCode": "Ready"},
+                "management": {"id": "NotSpecified"},
+            },
             "linkedEnvironmentMetadata": {
                 "domainName": "testenv",
                 "instanceUrl": "https://testenv.crm.dynamics.com",
                 "currency": {"code": "USD"},
                 "baseLanguage": 1033,
+                "securityGroupId": "sg-guid",
+                "resourceId": "org-resource-id",
+                "uniqueName": "testenv",
+                "version": "9.2.24124.00182",
+                "backgroundOperationsState": "Enabled",
+                "template": ["D365_Sales"],
             },
-            "states": {"runtime": {"runtimeReasonCode": "Ready"}},
+            "linkedAppMetadata": {
+                "type": "ModelDriven",
+                "id": "app-guid",
+                "url": "https://testenv.crm.dynamics.com/apps/app-guid",
+            },
+            "enterprisePolicies": {
+                "identity": {
+                    "id": "ep-id",
+                    "location": "westus2",
+                    "systemId": "sys-id",
+                    "linkStatus": "Linked",
+                }
+            },
             "provisioningState": provisioning_state,
             "createdTime": "2025-01-01T00:00:00Z",
             "lastModifiedTime": "2025-01-02T00:00:00Z",
@@ -304,6 +335,156 @@ class TestEnvironmentCreate:
         # 4 calls: POST + 404 poll GET + succeeded poll GET + final GET
         assert mock_client.raw.request.await_count == 4
 
+    @pytest.mark.asyncio
+    async def test_create_with_security_group_id(self, handler, mock_client):
+        """Create with securityGroupId — verify it is sent inside linkedEnvironmentMetadata."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+        mock_client.raw.request.side_effect = [post_response, final_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "securityGroupId": PropertyValue("sg-guid-123"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        call_body = mock_client.raw.request.call_args_list[0][1]["body"]
+        assert call_body["properties"]["linkedEnvironmentMetadata"]["securityGroupId"] == "sg-guid-123"
+
+    @pytest.mark.asyncio
+    async def test_create_with_azure_region(self, handler, mock_client):
+        """Create with azureRegion — verify it is sent at properties.azureRegion."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+        mock_client.raw.request.side_effect = [post_response, final_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "azureRegion": PropertyValue("westus2"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        call_body = mock_client.raw.request.call_args_list[0][1]["body"]
+        assert call_body["properties"]["azureRegion"] == "westus2"
+
+    @pytest.mark.asyncio
+    async def test_create_with_cadence(self, handler, mock_client):
+        """Create with cadence — verify it is sent at properties.updateCadence.id."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+        mock_client.raw.request.side_effect = [post_response, final_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "cadence": PropertyValue("Frequent"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        call_body = mock_client.raw.request.call_args_list[0][1]["body"]
+        assert call_body["properties"]["updateCadence"]["id"] == "Frequent"
+
+    @pytest.mark.asyncio
+    async def test_create_with_enterprise_policies(self, handler, mock_client):
+        """Create with enterprisePolicies — verify they are sent under properties.enterprisePolicies."""
+        post_response = _fake_env_response(provisioning_state="Succeeded")
+        final_response = _fake_env_response()
+        mock_client.raw.request.side_effect = [post_response, final_response]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "displayName": PropertyValue("Test Env"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "enterprisePolicies": PropertyValue([
+                    PropertyValue({
+                        "type": PropertyValue("Identity"),
+                        "id": PropertyValue("ep-id"),
+                        "location": PropertyValue("westus2"),
+                        "systemId": PropertyValue("sys-id"),
+                        "status": PropertyValue("Linked"),
+                    })
+                ]),
+            },
+            timeout=300,
+            preview=False,
+        )
+        response = await handler.create(request)
+
+        assert response.resource_id == _FAKE_ID
+        call_body = mock_client.raw.request.call_args_list[0][1]["body"]
+        ep = call_body["properties"]["enterprisePolicies"]
+        assert "identity" in ep
+        assert ep["identity"]["id"] == "ep-id"
+        assert ep["identity"]["location"] == "westus2"
+        assert ep["identity"]["linkStatus"] == "Linked"
+
+
+class TestEnvironmentCheck:
+    """Tests for the check method."""
+
+    @pytest.mark.asyncio
+    async def test_check_invalid_cadence(self, handler):
+        """check() should reject cadence values outside Frequent/Moderate."""
+        request = CheckRequest(
+            urn=_URN,
+            old_inputs={},
+            new_inputs={
+                "displayName": PropertyValue("Test"),
+                "location": PropertyValue("unitedstates"),
+                "environmentType": PropertyValue("Sandbox"),
+                "cadence": PropertyValue("Weekly"),
+            },
+            random_seed=b"",
+        )
+        response = await handler.check(request)
+        assert response.failures is not None
+        failure_props = [f.property for f in response.failures]
+        assert "cadence" in failure_props
+
+    @pytest.mark.asyncio
+    async def test_check_valid_cadence(self, handler):
+        """check() should accept Frequent and Moderate cadence values."""
+        for cadence in ("Frequent", "Moderate"):
+            request = CheckRequest(
+                urn=_URN,
+                old_inputs={},
+                new_inputs={
+                    "displayName": PropertyValue("Test"),
+                    "location": PropertyValue("unitedstates"),
+                    "environmentType": PropertyValue("Sandbox"),
+                    "cadence": PropertyValue(cadence),
+                },
+                random_seed=b"",
+            )
+            response = await handler.check(request)
+            failure_props = [f.property for f in (response.failures or [])]
+            assert "cadence" not in failure_props
+
 
 class TestEnvironmentRead:
     """Tests for the read method."""
@@ -325,6 +506,18 @@ class TestEnvironmentRead:
         assert response.properties["location"].value == "unitedstates"
         assert "displayName" in response.inputs
         assert "location" in response.inputs
+        # New fields should appear in outputs
+        assert response.properties["azureRegion"].value == "westus2"
+        assert response.properties["cadence"].value == "Frequent"
+        assert response.properties["organizationId"].value == "org-resource-id"
+        assert response.properties["uniqueName"].value == "testenv"
+        assert response.properties["dataverseVersion"].value == "9.2.24124.00182"
+        assert response.properties["allowBingSearch"].value is True
+        assert response.properties["securityGroupId"].value == "sg-guid"
+        assert response.properties["backgroundOperationEnabled"].value is True
+        assert response.properties["linkedAppType"].value == "ModelDriven"
+        assert response.properties["linkedAppUrl"].value == "https://testenv.crm.dynamics.com/apps/app-guid"
+        assert response.properties["administrationModeEnabled"].value is False
 
     @pytest.mark.asyncio
     async def test_read_missing_returns_empty(self, handler, mock_client):
@@ -411,3 +604,78 @@ class TestEnvironmentDelete:
         call_args = mock_client.raw.request.call_args
         assert call_args[0][0] == "DELETE"
         assert _FAKE_ID in call_args[0][1]
+
+
+class TestEnvironmentDiff:
+    """Tests for the diff method."""
+
+    @pytest.mark.asyncio
+    async def test_diff_enterprise_policies_changed(self, handler):
+        """diff() should detect enterprise policy changes by JSON comparison."""
+        old_policies = PropertyValue([
+            PropertyValue({
+                "type": PropertyValue("Identity"),
+                "id": PropertyValue("ep-id-old"),
+                "location": PropertyValue("westus2"),
+                "systemId": PropertyValue("sys-id"),
+                "status": PropertyValue("Linked"),
+            })
+        ])
+        new_policies = PropertyValue([
+            PropertyValue({
+                "type": PropertyValue("Identity"),
+                "id": PropertyValue("ep-id-new"),
+                "location": PropertyValue("westus2"),
+                "systemId": PropertyValue("sys-id"),
+                "status": PropertyValue("Linked"),
+            })
+        ])
+
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            old_state={
+                "displayName": PropertyValue("Test Env"),
+                "enterprisePolicies": old_policies,
+            },
+            new_inputs={
+                "displayName": PropertyValue("Test Env"),
+                "enterprisePolicies": new_policies,
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+
+        assert response.changes is True
+        assert "enterprisePolicies" in response.diffs
+
+    @pytest.mark.asyncio
+    async def test_diff_enterprise_policies_unchanged(self, handler):
+        """diff() should not flag enterprise policies if unchanged."""
+        policies = PropertyValue([
+            PropertyValue({
+                "type": PropertyValue("Identity"),
+                "id": PropertyValue("ep-id"),
+                "location": PropertyValue("westus2"),
+                "systemId": PropertyValue("sys-id"),
+                "status": PropertyValue("Linked"),
+            })
+        ])
+
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            old_state={
+                "displayName": PropertyValue("Test Env"),
+                "enterprisePolicies": policies,
+            },
+            new_inputs={
+                "displayName": PropertyValue("Test Env"),
+                "enterprisePolicies": policies,
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+
+        assert "enterprisePolicies" not in response.diffs
+
