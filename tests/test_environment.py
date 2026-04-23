@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import pytest
+from pulumi._types import input_type_to_dict, output_type_from_dict
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import (
     CheckRequest,
     DiffRequest,
     PropertyDiffKind,
 )
+from rpothin_powerplatform.environment import EnvironmentDataverse, EnvironmentDataverseArgs
 from rpothin_powerplatform.resources.environment import EnvironmentResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:Environment::my-env"
@@ -236,3 +238,107 @@ class TestEnvironmentDiff:
         assert response.changes is True
         assert "description" in response.diffs
         assert response.detailed_diff["description"].kind == PropertyDiffKind.UPDATE
+
+
+class TestEnvironmentDataverseArgs:
+    """Tests for EnvironmentDataverseArgs input class."""
+
+    def test_input_type_to_dict_produces_camel_case_keys(self):
+        args = EnvironmentDataverseArgs(
+            currency_code="USD",
+            language_code="1033",
+            domain_name="myenv",
+            security_group_id="sg-123",
+            administration_mode_enabled=True,
+            background_operation_enabled=False,
+        )
+        wire = input_type_to_dict(args)
+        assert wire["currencyCode"] == "USD"
+        assert wire["languageCode"] == "1033"
+        assert wire["domainName"] == "myenv"
+        assert wire["securityGroupId"] == "sg-123"
+        assert wire["administrationModeEnabled"] is True
+        assert wire["backgroundOperationEnabled"] is False
+
+    def test_none_fields_absent_from_wire_dict(self):
+        args = EnvironmentDataverseArgs(currency_code="EUR")
+        wire = input_type_to_dict(args)
+        assert "currencyCode" in wire
+        assert "domainName" not in wire
+        assert "securityGroupId" not in wire
+
+    def test_empty_constructor_produces_empty_wire_dict(self):
+        args = EnvironmentDataverseArgs()
+        wire = input_type_to_dict(args)
+        assert wire == {}
+
+    def test_templates_and_template_metadata(self):
+        args = EnvironmentDataverseArgs(
+            templates=["template-guid-1"],
+            template_metadata='{"version":"1.0"}',
+        )
+        wire = input_type_to_dict(args)
+        assert wire["templates"] == ["template-guid-1"]
+        assert wire["templateMetadata"] == '{"version":"1.0"}'
+
+    def test_setter_updates_property(self):
+        args = EnvironmentDataverseArgs(currency_code="USD")
+        args.currency_code = "GBP"
+        assert args.currency_code == "GBP"
+        assert input_type_to_dict(args)["currencyCode"] == "GBP"
+
+
+class TestEnvironmentDataverse:
+    """Tests for EnvironmentDataverse output class."""
+
+    def _provider_dict(self) -> dict:
+        """Simulates what the provider emits (camelCase keys)."""
+        return {
+            "domainName": "myenv",
+            "currencyCode": "USD",
+            "languageCode": 1033.0,
+            "securityGroupId": "sg-123",
+            "organizationId": "org-456",
+            "uniqueName": "myenv_org456",
+            "version": "9.2.0",
+            "url": "https://myenv.crm.dynamics.com",
+            "templates": ["template-guid-1"],
+            "templateMetadata": '{"version":"1.0"}',
+            "administrationModeEnabled": False,
+            "backgroundOperationEnabled": True,
+        }
+
+    def test_output_type_from_dict_maps_camel_case_to_snake_case(self):
+        obj = output_type_from_dict(EnvironmentDataverse, self._provider_dict())
+        assert obj.domain_name == "myenv"
+        assert obj.currency_code == "USD"
+        assert obj.language_code == 1033.0
+        assert obj.security_group_id == "sg-123"
+        assert obj.organization_id == "org-456"
+        assert obj.unique_name == "myenv_org456"
+        assert obj.version == "9.2.0"
+        assert obj.url == "https://myenv.crm.dynamics.com"
+        assert obj.templates == ["template-guid-1"]
+        assert obj.template_metadata == '{"version":"1.0"}'
+        assert obj.administration_mode_enabled is False
+        assert obj.background_operation_enabled is True
+
+    def test_direct_construction_via_snake_case_kwargs(self):
+        obj = EnvironmentDataverse(domain_name="testenv", currency_code="EUR", language_code=1036.0)
+        assert obj.domain_name == "testenv"
+        assert obj.currency_code == "EUR"
+        assert obj.language_code == 1036.0
+
+    def test_absent_fields_are_none(self):
+        obj = output_type_from_dict(EnvironmentDataverse, {"domainName": "testenv"})
+        assert obj.domain_name == "testenv"
+        assert obj.currency_code is None
+        assert obj.organization_id is None
+        assert obj.url is None
+
+    def test_all_none_construction(self):
+        obj = EnvironmentDataverse()
+        assert obj.domain_name is None
+        assert obj.security_group_id is None
+        assert obj.background_operation_enabled is None
+
