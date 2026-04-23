@@ -627,7 +627,8 @@ class TestEnvironmentDelete:
 
     @pytest.mark.asyncio
     async def test_delete_calls_api(self, handler, mock_client):
-        mock_client.raw.request.return_value = None
+        # DELETE → None, then poll GET → None (treated as deleted)
+        mock_client.raw.request.side_effect = [None, None]
 
         request = DeleteRequest(
             urn=_URN,
@@ -635,12 +636,68 @@ class TestEnvironmentDelete:
             properties={},
             timeout=300,
         )
-        await handler.delete(request)
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            await handler.delete(request)
 
-        mock_client.raw.request.assert_awaited_once()
-        call_args = mock_client.raw.request.call_args
-        assert call_args[0][0] == "DELETE"
-        assert _FAKE_ID in call_args[0][1]
+        assert mock_client.raw.request.await_count == 2
+        first_call = mock_client.raw.request.call_args_list[0]
+        assert first_call[0][0] == "DELETE"
+        assert _FAKE_ID in first_call[0][1]
+
+    @pytest.mark.asyncio
+    async def test_delete_polls_until_404(self, handler, mock_client):
+        """DELETE succeeds, then poll GET returns 404 — deletion confirmed."""
+        mock_client.raw.request.side_effect = [
+            None,  # DELETE
+            HttpError(404, "Not Found"),  # poll GET → 404 means gone
+        ]
+
+        request = DeleteRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            properties={},
+            timeout=300,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            await handler.delete(request)
+
+        assert mock_client.raw.request.await_count == 2
+
+    @pytest.mark.asyncio
+    async def test_delete_handles_none_response(self, handler, mock_client):
+        """Poll GET returning None is treated as deleted — no error raised."""
+        mock_client.raw.request.side_effect = [
+            None,  # DELETE
+            None,  # poll GET → None treated as gone
+        ]
+
+        request = DeleteRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            properties={},
+            timeout=300,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            await handler.delete(request)  # should not raise
+
+        assert mock_client.raw.request.await_count == 2
+
+    @pytest.mark.asyncio
+    async def test_delete_timeout_raises(self, handler, mock_client):
+        """When the environment never disappears, _poll_deletion raises RuntimeError."""
+        live_env = _fake_env_response(provisioning_state="Deleting")
+        # DELETE + enough GET responses to exhaust polls (max_polls = 300 // 10 = 30)
+        mock_client.raw.request.side_effect = [None] + [live_env] * 31
+
+        request = DeleteRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            properties={},
+            timeout=300,
+        )
+        with patch("rpothin_powerplatform.resources.environment.asyncio.sleep", new_callable=AsyncMock):
+            with pytest.raises(RuntimeError, match="deletion timed out"):
+                await handler.delete(request)
 
 
 class TestEnvironmentDiff:
