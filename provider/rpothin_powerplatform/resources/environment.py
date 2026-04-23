@@ -365,14 +365,21 @@ class EnvironmentResource:
                         linked_patch["backgroundOperationsState"] = "Enabled" if bg_ops else "Disabled"
                     if linked_patch:
                         post_provision_patch["properties"]["linkedEnvironmentMetadata"] = linked_patch
-                    patched = await self._client.raw.request(
+                    await self._client.raw.request(
                         "PATCH",
                         f"{_ADMIN_ENV_PATH}/{env_id}",
                         body=post_provision_patch,
                         api_version=_BAP_API_VERSION,
                     )
-                    if patched:
-                        final = patched
+                    # Always re-read after the post-provision PATCH — PATCH responses may omit
+                    # fields like securityGroupId that were set earlier via provisionInstance.
+                    refreshed = await self._client.raw.request(
+                        "GET",
+                        f"{_ADMIN_ENV_PATH}/{env_id}",
+                        api_version=_BAP_API_VERSION,
+                    )
+                    if refreshed:
+                        final = refreshed
 
             except Exception as exc:
                 logger.error(
@@ -490,20 +497,20 @@ class EnvironmentResource:
         if linked_patch:
             patch_body["properties"]["linkedEnvironmentMetadata"] = linked_patch
 
-        result = await self._client.raw.request(
+        await self._client.raw.request(
             "PATCH",
             f"{_ADMIN_ENV_PATH}/{env_id}",
             body=patch_body,
             api_version=_BAP_API_VERSION,
         )
 
-        if result is None:
-            # Re-read if PATCH returned no body
-            result = await self._client.raw.request(
-                "GET",
-                f"{_ADMIN_ENV_PATH}/{env_id}",
-                api_version=_BAP_API_VERSION,
-            )
+        # Always re-read after PATCH — PATCH responses may return partial data,
+        # omitting fields like securityGroupId.
+        result = await self._client.raw.request(
+            "GET",
+            f"{_ADMIN_ENV_PATH}/{env_id}",
+            api_version=_BAP_API_VERSION,
+        )
 
         if result is None:
             raise RuntimeError(f"Failed to update environment {env_id}: API returned no result.")
