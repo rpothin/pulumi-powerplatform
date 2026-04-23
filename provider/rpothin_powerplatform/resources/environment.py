@@ -357,9 +357,9 @@ class EnvironmentResource:
                 if admin_mode is not None or bg_ops is not None:
                     post_provision_patch: dict[str, Any] = {"properties": {}}
                     linked_patch: dict[str, Any] = {}
-                    if admin_mode is not None:
+                    if admin_mode:  # Only patch when enabling admin mode; False/default needs no PATCH
                         post_provision_patch["properties"]["states"] = {
-                            "runtime": {"id": "AdminMode" if admin_mode else "Enabled"}
+                            "runtime": {"id": "AdminMode"}
                         }
                     if bg_ops is not None:
                         linked_patch["backgroundOperationsState"] = "Enabled" if bg_ops else "Disabled"
@@ -796,7 +796,8 @@ def _env_to_outputs(env: dict) -> dict[str, PropertyValue]:
 
     states = props.get("states", {})
     runtime = states.get("runtime", {})
-    runtime_code = runtime.get("runtimeReasonCode") or runtime.get("id")
+    rc = runtime.get("runtimeReasonCode")
+    runtime_code = (rc if rc and rc != "NotSpecified" else None) or runtime.get("id")
     if runtime_code:
         outputs["state"] = PropertyValue(runtime_code)
     elif props.get("provisioningState"):

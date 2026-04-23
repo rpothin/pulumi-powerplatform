@@ -8,6 +8,11 @@
     "homepage": "https://github.com/rpothin/pulumi-powerplatform",
     "repository": "https://github.com/rpothin/pulumi-powerplatform",
     "license": "MIT",
+    "main": "bin/index.js",
+    "types": "bin/index.d.ts",
+    "files": [
+        "bin"
+    ],
     "scripts": {
         "build": "tsc"
     },
