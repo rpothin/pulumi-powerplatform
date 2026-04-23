@@ -511,12 +511,38 @@ class EnvironmentResource:
         return UpdateResponse(properties=_env_to_outputs(result))
 
     async def delete(self, request: DeleteRequest) -> None:
-        """Delete an environment."""
+        """Delete an environment and wait for it to be fully removed."""
         env_id = request.resource_id
         await self._client.raw.request(
             "DELETE",
             f"{_ADMIN_ENV_PATH}/{env_id}",
             api_version=_BAP_API_VERSION,
+        )
+        max_polls = (
+            max(1, request.timeout // _POLL_INTERVAL_SECONDS)
+            if request.timeout
+            else _DEFAULT_MAX_POLLS
+        )
+        await self._poll_deletion(env_id, max_polls)
+
+    async def _poll_deletion(self, env_id: str, max_polls: int) -> None:
+        """Poll until the environment is gone (404 or None response confirms deletion)."""
+        for _ in range(max_polls):
+            await asyncio.sleep(_POLL_INTERVAL_SECONDS)
+            try:
+                result = await self._client.raw.request(
+                    "GET",
+                    f"{_ADMIN_ENV_PATH}/{env_id}",
+                    api_version=_BAP_API_VERSION,
+                )
+            except HttpError as exc:
+                if exc.status_code == 404:
+                    return  # resource is gone — deletion confirmed
+                raise
+            if result is None:
+                return  # treat None response as deleted
+        raise RuntimeError(
+            f"Environment {env_id} deletion timed out after polling {max_polls} times."
         )
 
     async def _poll_provisioning(self, env_id: str, max_polls: int) -> None:
