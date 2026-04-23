@@ -599,7 +599,11 @@ class TestEnvironmentUpdate:
         response = await handler.update(request)
 
         assert response.properties["displayName"].value == "Updated"
-        mock_client.raw.request.assert_awaited_once()
+        # update() always makes two calls: PATCH then GET.
+        assert mock_client.raw.request.await_count == 2
+        calls = mock_client.raw.request.await_args_list
+        assert calls[0].args[0] == "PATCH"
+        assert calls[1].args[0] == "GET"
 
     @pytest.mark.asyncio
     async def test_update_preview_returns_news(self, handler, mock_client):
