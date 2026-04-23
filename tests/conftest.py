@@ -1,12 +1,16 @@
 """Pytest configuration — stubs out SDK sub-packages unavailable in environments
 that lack Windows Long Path support (mspp_management sub-packages cannot be
-installed there).  Has no effect when the real packages are present."""
+installed there).  Has no effect when the real packages are present.
+
+Also extends rpothin_powerplatform.__path__ to expose the hand-crafted Python SDK
+modules (sdk/python/rpothin_powerplatform/) alongside the provider modules."""
 
 from __future__ import annotations
 
 import sys
 from importlib.abc import Loader, MetaPathFinder
 from importlib.machinery import ModuleSpec
+from pathlib import Path
 from unittest.mock import MagicMock
 
 
@@ -46,3 +50,11 @@ class _SdkStubFinder(MetaPathFinder):
 
 # Register early so it applies during collection
 sys.meta_path.insert(0, _SdkStubFinder())
+
+# Import the provider package now (with stubs active) so we can extend its __path__
+# to also include the hand-crafted Python SDK modules.
+import rpothin_powerplatform as _provider_pkg  # noqa: E402
+
+_sdk_pkg_dir = str(Path(__file__).parent.parent / "sdk" / "python" / "rpothin_powerplatform")
+if _sdk_pkg_dir not in _provider_pkg.__path__:
+    _provider_pkg.__path__.append(_sdk_pkg_dir)

@@ -2,7 +2,7 @@
 
 from .billing_policy import BillingPolicy
 from .dlp_policy import DlpPolicy
-from .environment import Environment
+from .environment import Environment, EnvironmentDataverse, EnvironmentDataverseArgs
 from .environment_backup import EnvironmentBackup
 from .environment_group import EnvironmentGroup
 from .environment_settings import EnvironmentSettings
@@ -18,6 +18,8 @@ from .role_assignment import RoleAssignment
 __all__ = [
     "Provider",
     "Environment",
+    "EnvironmentDataverse",
+    "EnvironmentDataverseArgs",
     "EnvironmentGroup",
     "EnvironmentSettings",
     "DlpPolicy",

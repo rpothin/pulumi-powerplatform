@@ -6,6 +6,206 @@ from typing import Optional
 import pulumi
 
 
+@pulumi.input_type
+class EnvironmentDataverseArgs:
+    """Input arguments for provisioning a Dataverse database on an environment."""
+
+    def __init__(
+        self,
+        *,
+        currency_code: Optional[pulumi.Input[str]] = None,
+        language_code: Optional[pulumi.Input[str]] = None,
+        domain_name: Optional[pulumi.Input[str]] = None,
+        security_group_id: Optional[pulumi.Input[str]] = None,
+        templates: Optional[pulumi.Input[list]] = None,
+        template_metadata: Optional[pulumi.Input[str]] = None,
+        administration_mode_enabled: Optional[pulumi.Input[bool]] = None,
+        background_operation_enabled: Optional[pulumi.Input[bool]] = None,
+    ):
+        if currency_code is not None:
+            pulumi.set(self, "currency_code", currency_code)
+        if language_code is not None:
+            pulumi.set(self, "language_code", language_code)
+        if domain_name is not None:
+            pulumi.set(self, "domain_name", domain_name)
+        if security_group_id is not None:
+            pulumi.set(self, "security_group_id", security_group_id)
+        if templates is not None:
+            pulumi.set(self, "templates", templates)
+        if template_metadata is not None:
+            pulumi.set(self, "template_metadata", template_metadata)
+        if administration_mode_enabled is not None:
+            pulumi.set(self, "administration_mode_enabled", administration_mode_enabled)
+        if background_operation_enabled is not None:
+            pulumi.set(self, "background_operation_enabled", background_operation_enabled)
+
+    @property
+    @pulumi.getter(name="currencyCode")
+    def currency_code(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "currency_code")
+
+    @currency_code.setter
+    def currency_code(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "currency_code", value)
+
+    @property
+    @pulumi.getter(name="languageCode")
+    def language_code(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "language_code")
+
+    @language_code.setter
+    def language_code(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "language_code", value)
+
+    @property
+    @pulumi.getter(name="domainName")
+    def domain_name(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "domain_name")
+
+    @domain_name.setter
+    def domain_name(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "domain_name", value)
+
+    @property
+    @pulumi.getter(name="securityGroupId")
+    def security_group_id(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "security_group_id")
+
+    @security_group_id.setter
+    def security_group_id(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "security_group_id", value)
+
+    @property
+    @pulumi.getter(name="templates")
+    def templates(self) -> Optional[pulumi.Input[list]]:
+        return pulumi.get(self, "templates")
+
+    @templates.setter
+    def templates(self, value: Optional[pulumi.Input[list]]):
+        pulumi.set(self, "templates", value)
+
+    @property
+    @pulumi.getter(name="templateMetadata")
+    def template_metadata(self) -> Optional[pulumi.Input[str]]:
+        return pulumi.get(self, "template_metadata")
+
+    @template_metadata.setter
+    def template_metadata(self, value: Optional[pulumi.Input[str]]):
+        pulumi.set(self, "template_metadata", value)
+
+    @property
+    @pulumi.getter(name="administrationModeEnabled")
+    def administration_mode_enabled(self) -> Optional[pulumi.Input[bool]]:
+        return pulumi.get(self, "administration_mode_enabled")
+
+    @administration_mode_enabled.setter
+    def administration_mode_enabled(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "administration_mode_enabled", value)
+
+    @property
+    @pulumi.getter(name="backgroundOperationEnabled")
+    def background_operation_enabled(self) -> Optional[pulumi.Input[bool]]:
+        return pulumi.get(self, "background_operation_enabled")
+
+    @background_operation_enabled.setter
+    def background_operation_enabled(self, value: Optional[pulumi.Input[bool]]):
+        pulumi.set(self, "background_operation_enabled", value)
+
+
+@pulumi.output_type
+class EnvironmentDataverse:
+    """Dataverse database properties returned for a provisioned environment."""
+
+    def __init__(
+        self,
+        *,
+        domain_name: Optional[str] = None,
+        currency_code: Optional[str] = None,
+        language_code: Optional[float] = None,
+        security_group_id: Optional[str] = None,
+        organization_id: Optional[str] = None,
+        unique_name: Optional[str] = None,
+        version: Optional[str] = None,
+        url: Optional[str] = None,
+        templates: Optional[list] = None,
+        template_metadata: Optional[str] = None,
+        administration_mode_enabled: Optional[bool] = None,
+        background_operation_enabled: Optional[bool] = None,
+    ):
+        pulumi.set(self, "domain_name", domain_name)
+        pulumi.set(self, "currency_code", currency_code)
+        pulumi.set(self, "language_code", language_code)
+        pulumi.set(self, "security_group_id", security_group_id)
+        pulumi.set(self, "organization_id", organization_id)
+        pulumi.set(self, "unique_name", unique_name)
+        pulumi.set(self, "version", version)
+        pulumi.set(self, "url", url)
+        pulumi.set(self, "templates", templates)
+        pulumi.set(self, "template_metadata", template_metadata)
+        pulumi.set(self, "administration_mode_enabled", administration_mode_enabled)
+        pulumi.set(self, "background_operation_enabled", background_operation_enabled)
+
+    @property
+    @pulumi.getter(name="domainName")
+    def domain_name(self) -> Optional[str]:
+        return pulumi.get(self, "domain_name")
+
+    @property
+    @pulumi.getter(name="currencyCode")
+    def currency_code(self) -> Optional[str]:
+        return pulumi.get(self, "currency_code")
+
+    @property
+    @pulumi.getter(name="languageCode")
+    def language_code(self) -> Optional[float]:
+        return pulumi.get(self, "language_code")
+
+    @property
+    @pulumi.getter(name="securityGroupId")
+    def security_group_id(self) -> Optional[str]:
+        return pulumi.get(self, "security_group_id")
+
+    @property
+    @pulumi.getter(name="organizationId")
+    def organization_id(self) -> Optional[str]:
+        return pulumi.get(self, "organization_id")
+
+    @property
+    @pulumi.getter(name="uniqueName")
+    def unique_name(self) -> Optional[str]:
+        return pulumi.get(self, "unique_name")
+
+    @property
+    @pulumi.getter(name="version")
+    def version(self) -> Optional[str]:
+        return pulumi.get(self, "version")
+
+    @property
+    @pulumi.getter(name="url")
+    def url(self) -> Optional[str]:
+        return pulumi.get(self, "url")
+
+    @property
+    @pulumi.getter(name="templates")
+    def templates(self) -> Optional[list]:
+        return pulumi.get(self, "templates")
+
+    @property
+    @pulumi.getter(name="templateMetadata")
+    def template_metadata(self) -> Optional[str]:
+        return pulumi.get(self, "template_metadata")
+
+    @property
+    @pulumi.getter(name="administrationModeEnabled")
+    def administration_mode_enabled(self) -> Optional[bool]:
+        return pulumi.get(self, "administration_mode_enabled")
+
+    @property
+    @pulumi.getter(name="backgroundOperationEnabled")
+    def background_operation_enabled(self) -> Optional[bool]:
+        return pulumi.get(self, "background_operation_enabled")
+
+
 class Environment(pulumi.CustomResource):
     """Manages a Power Platform environment."""
 
@@ -23,7 +223,7 @@ class Environment(pulumi.CustomResource):
     linked_app_type: pulumi.Output[str]
     linked_app_id: pulumi.Output[str]
     enterprise_policies: pulumi.Output[list]
-    dataverse: pulumi.Output[dict]
+    dataverse: pulumi.Output['EnvironmentDataverse']
     state: pulumi.Output[str]
     linked_app_url: pulumi.Output[str]
     created_time: pulumi.Output[str]
@@ -46,7 +246,7 @@ class Environment(pulumi.CustomResource):
         linked_app_type: Optional[str] = None,
         linked_app_id: Optional[str] = None,
         enterprise_policies: Optional[list] = None,
-        dataverse: Optional[dict] = None,
+        dataverse: Optional[pulumi.InputType['EnvironmentDataverseArgs']] = None,
         opts: Optional[pulumi.ResourceOptions] = None,
     ):
         props = {
