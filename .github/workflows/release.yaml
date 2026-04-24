@@ -358,3 +358,22 @@ jobs:
           VERSION="${{ needs.validate-version.outputs.version }}"
           gh release upload "$VERSION" artifacts/*.tar.gz --repo "${{ github.repository }}"
           gh release edit "$VERSION" --prerelease=false --latest --repo "${{ github.repository }}"
+
+  trigger-sdk-tests:
+    name: Trigger SDK E2E tests
+    runs-on: ubuntu-latest
+    needs: [validate-version, promote-release]
+    # TEST_REPO_PAT must be a personal access token with `repo` scope on
+    # rpothin/pulumi-powerplatform-test. Create it in repo Settings → Secrets.
+    # The built-in GITHUB_TOKEN cannot dispatch workflows in other repos.
+    continue-on-error: true
+    steps:
+      - name: Dispatch test-sdks workflow
+        env:
+          GH_TOKEN: ${{ secrets.TEST_REPO_PAT }}
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          gh api repos/rpothin/pulumi-powerplatform-test/dispatches \
+            --method POST \
+            --field event_type=test-sdks \
+            --field "client_payload[version]=${VERSION#v}"
