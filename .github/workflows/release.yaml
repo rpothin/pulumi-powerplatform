@@ -104,6 +104,13 @@ jobs:
         with:
           python-version: ${{ env.PYTHON_VERSION }}
 
+      - name: Substitute version in schema and provider package
+        run: |
+          VERSION="${{ needs.validate-version.outputs.version }}"
+          VERSION="${VERSION#v}"
+          sed -i "s/0\.0\.0/$VERSION/g" schema.json
+          sed -i "s/0\.0\.0/$VERSION/g" pyproject.toml
+
       - name: Create plugin archive
         run: |
           VERSION="${{ needs.validate-version.outputs.version }}"

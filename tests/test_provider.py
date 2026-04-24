@@ -27,7 +27,7 @@ class TestSchema:
         assert response.schema is not None
         schema = json.loads(response.schema)
         assert schema["name"] == "powerplatform"
-        assert schema["version"] == "0.1.0"
+        assert schema["version"] == "0.0.0"
 
     @pytest.mark.asyncio
     async def test_schema_contains_environment_group(self, provider):
