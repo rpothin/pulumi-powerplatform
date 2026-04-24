@@ -2,7 +2,7 @@
     "name": "powerplatform",
     "displayName": "Power Platform",
     "description": "A Pulumi provider for managing Microsoft Power Platform resources.",
-    "version": "${VERSION}",
+    "version": "0.0.0",
     "publisher": "rpothin",
     "homepage": "https://github.com/rpothin/pulumi-powerplatform",
     "repository": "https://github.com/rpothin/pulumi-powerplatform",
