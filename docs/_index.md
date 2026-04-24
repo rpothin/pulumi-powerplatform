@@ -27,7 +27,7 @@ apps, and flows.
 
 ## Example
 
-{{< chooser language "python,typescript,go,csharp" >}}
+{{< chooser language "python,typescript,go,csharp,java" >}}
 
 {{% choosable language python %}}
 
@@ -111,6 +111,35 @@ return await Deployment.RunAsync(() =>
         ["envId"] = env.Id,
     };
 });
+```
+
+{{% /choosable %}}
+
+{{% choosable language java %}}
+
+```java
+package generated_program;
+
+import com.pulumi.Context;
+import com.pulumi.Pulumi;
+import io.github.rpothin.powerplatform.Environment;
+import io.github.rpothin.powerplatform.EnvironmentArgs;
+
+public class App {
+    public static void main(String[] args) {
+        Pulumi.run(App::stack);
+    }
+
+    public static void stack(Context ctx) {
+        var env = new Environment("dev", EnvironmentArgs.builder()
+            .displayName("Development")
+            .location("unitedstates")
+            .environmentType("Sandbox")
+            .build());
+
+        ctx.export("envId", env.id());
+    }
+}
 ```
 
 {{% /choosable %}}
