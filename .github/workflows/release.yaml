@@ -221,6 +221,10 @@ jobs:
           VERSION="${VERSION#v}"
           sed -i "s/\${VERSION}/$VERSION/" package.json
 
+      - name: Normalize Node.js SDK package.json
+        working-directory: sdk/nodejs
+        run: python3 ../../scripts/normalize-nodejs-sdk.py .
+
       - name: Install, build, and publish
         working-directory: sdk/nodejs
         run: |
