@@ -66,6 +66,7 @@ jobs:
           pulumi package gen-sdk . --language java   --out sdk
           python3 scripts/patch-java-pom-metadata.py
           bash ./scripts/normalize-dotnet-sdk.sh sdk/dotnet
+          python3 scripts/normalize-nodejs-sdk.py sdk/nodejs
 
           # Restore go.mod/go.sum (gen-sdk does not produce them).
           cp "$GO_MOD_BACKUP/go.mod" sdk/go/powerplatform/go.mod
