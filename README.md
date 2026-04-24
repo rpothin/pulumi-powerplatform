@@ -266,13 +266,13 @@ pulumi-powerplatform/
 - Role Assignment — Create/Read/Delete
 - Data source: getEnvironments
 
-### Phase 2: Core Resources ⚠️ Partial
+### Phase 2: Core Resources ✅
 - ✅ Billing Policy — Full CRUD
 - ✅ Managed Environment — Enable/Disable
 - ✅ Environment Backup — Create/Read/Delete
 - ✅ Data sources: getConnectors, getApps, getFlows
-- ❌ Environment resource (requires raw REST API — see `raw_api/`)
-- ❌ Environment Settings resource
+- ✅ Environment resource
+- ✅ Environment Settings resource
 
 ### Phase 3: Extended Resources ⚠️ Partial
 - ✅ ISV Contract — Full CRUD
@@ -287,9 +287,9 @@ pulumi-powerplatform/
 - ✅ Python SDK for end-user consumption (`sdk/python/`)
 - ✅ Examples for all resources
 - ✅ CI/CD pipeline (lint, test, schema validation)
-- ❌ PyPI publication
-- ❌ Pulumi Registry listing
-- ❌ Multi-language SDK generation (TypeScript, Go, C#)
+- ✅ PyPI publication
+- ⚠️ Pulumi Registry listing
+- ✅ Multi-language SDK generation (TypeScript, Go, C#, Java)
 - ❌ Import support
 - ❌ Retry/exponential backoff for transient failures
 
@@ -299,7 +299,6 @@ pulumi-powerplatform/
 - **ISV Contract `geo`**: Immutable after creation — changing `geo` triggers a resource replacement.
 - **No retry logic**: API rate limiting (HTTP 429) and transient failures are not yet handled. This is planned as future work.
 - **No raw REST API**: The `raw_api/` module is currently a scaffold. It will be implemented when the first resource requires direct REST access (e.g., Environment creation).
-- **SDK / provider package name collision**: The provider source (`provider/rpothin_powerplatform/`) and the end-user Python SDK (`sdk/python/rpothin_powerplatform/`) share the same package name. Do not install both in the same Python environment. This will be resolved when the provider is published to PyPI with a dedicated package name.
 
 ## Contributing
 

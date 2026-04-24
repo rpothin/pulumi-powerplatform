@@ -11,11 +11,15 @@ Pulumi-supported languages:
 
 ### Python
 
+[rpothin-powerplatform on PyPI](https://pypi.org/project/rpothin-powerplatform/)
+
 ```bash
 pip install rpothin-powerplatform
 ```
 
 ### Node.js
+
+[@rpothin/powerplatform on npm](https://www.npmjs.com/package/@rpothin/powerplatform)
 
 ```bash
 npm install @rpothin/powerplatform
@@ -23,17 +27,23 @@ npm install @rpothin/powerplatform
 
 ### .NET
 
+[Rpothin.Powerplatform on NuGet](https://www.nuget.org/packages/Rpothin.Powerplatform/)
+
 ```bash
 dotnet add package Rpothin.Powerplatform
 ```
 
 ### Go
 
+[powerplatform on pkg.go.dev](https://pkg.go.dev/github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform)
+
 ```bash
 go get github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform
 ```
 
 ### Java
+
+[io.github.rpothin:powerplatform on Maven Central](https://central.sonatype.com/artifact/io.github.rpothin/powerplatform)
 
 **Gradle**
 
@@ -49,6 +59,12 @@ implementation "io.github.rpothin:powerplatform:<version>"
   <artifactId>powerplatform</artifactId>
   <version>&lt;version&gt;</version>
 </dependency>
+```
+
+### Plugin installation
+
+```bash
+pulumi plugin install resource powerplatform v0.1.41 --server github://api.github.com/rpothin
 ```
 
 ## Authentication
