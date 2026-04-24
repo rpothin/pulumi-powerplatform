@@ -109,7 +109,7 @@ jobs:
           VERSION="${{ needs.validate-version.outputs.version }}"
           VERSION="${VERSION#v}"
           sed -i "s/\${VERSION}/$VERSION/g" schema.json
-          sed -i "s/\${VERSION}/$VERSION/g" pyproject.toml
+          sed -i "s/0\.0\.0/$VERSION/g" pyproject.toml
 
       - name: Create plugin archive
         run: |
