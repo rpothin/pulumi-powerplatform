@@ -4,6 +4,8 @@ meta_desc: How to install and configure the Pulumi Power Platform provider.
 layout: package
 ---
 
+To provision resources with the Pulumi Power Platform provider, you need Azure Active Directory credentials. Your credentials are never sent to Pulumi — they are used locally by the provider to authenticate against the Power Platform admin APIs.
+
 ## Installation
 
 The Power Platform provider is available as a package in the following
@@ -70,13 +72,64 @@ pulumi plugin install resource powerplatform $VERSION --server github://api.gith
 
 ## Authentication
 
-The provider authenticates with Microsoft Power Platform using
-Azure Active Directory credentials. You can supply credentials in
-three ways (in order of precedence):
+The provider supports several authentication methods. For local development, the Azure CLI is the simplest option. For CI/CD pipelines, OIDC / Workload Identity is recommended.
 
-### 1. Explicit configuration
+### Azure CLI (recommended for local development)
 
-Set configuration values on the provider:
+Install the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli), then log in:
+
+```bash
+az login
+```
+
+The provider automatically discovers CLI credentials via `DefaultAzureCredential`. No additional Pulumi configuration is required when using the CLI.
+
+### DefaultAzureCredential (hosted environments)
+
+When no explicit credentials are configured, the provider uses
+[`DefaultAzureCredential`](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential),
+which automatically tries multiple credential sources (environment variables, workload identity, managed identity, Azure CLI, and others) in a well-defined order. See the
+[official documentation](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential)
+for the full chain.
+
+This makes the provider work automatically in most Azure-hosted environments without any explicit configuration.
+
+### OIDC / Workload Identity (recommended for CI/CD)
+
+Use federated credentials to authenticate from GitHub Actions (or other OIDC providers) without storing a client secret.
+
+**1. Configure federated credentials in Azure:**
+
+In your Azure AD app registration, add a federated identity credential for your GitHub repository:
+- Issuer: `https://token.actions.githubusercontent.com`
+- Subject: `repo:<owner>/<repo>:ref:refs/heads/main` (adjust for your branch or environment)
+- Audience: `api://AzureADTokenExchange`
+
+**2. Add permissions in your GitHub Actions workflow:**
+
+```yaml
+permissions:
+  id-token: write
+  contents: read
+```
+
+**3. Login using the `azure/login` action:**
+
+```yaml
+- uses: azure/login@v2
+  with:
+    client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    allow-no-subscriptions: true
+```
+
+After this step, the provider authenticates via `DefaultAzureCredential`, which picks up the Azure CLI session established by `azure/login` — no `clientSecret` is needed.
+
+### Service Principal (explicit configuration)
+
+For environments where you cannot use CLI or OIDC, configure a service principal explicitly.
+
+**Via `pulumi config`:**
 
 ```bash
 pulumi config set powerplatform:tenantId <AZURE_TENANT_ID>
@@ -84,22 +137,13 @@ pulumi config set powerplatform:clientId <AZURE_CLIENT_ID>
 pulumi config set --secret powerplatform:clientSecret <AZURE_CLIENT_SECRET>
 ```
 
-### 2. Environment variables
-
-Export the following environment variables:
+**Via environment variables:**
 
 | Variable              | Description                       |
 |-----------------------|-----------------------------------|
 | `AZURE_TENANT_ID`    | Azure AD tenant (directory) ID    |
 | `AZURE_CLIENT_ID`    | Application (client) ID           |
 | `AZURE_CLIENT_SECRET` | Client secret value              |
-
-### 3. DefaultAzureCredential
-
-When explicit credentials are not provided the provider falls back to
-[`DefaultAzureCredential`](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential),
-which automatically tries managed identity, Azure CLI, Visual Studio Code,
-and other credential sources.
 
 ## Configuration Reference
 
@@ -112,7 +156,7 @@ and other credential sources.
 ## Prerequisites
 
 - A Microsoft Power Platform tenant with admin access
-- An Azure AD app registration with the appropriate Power Platform API
-  permissions (`https://api.powerplatform.com/.default`)
+- An Azure AD app registration with the Power Platform API permission:
+  `https://api.powerplatform.com/.default`
 - Pulumi CLI v3 or later
 - Python 3.10 or later available on `PATH`
