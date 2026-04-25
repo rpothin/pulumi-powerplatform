@@ -2,6 +2,8 @@
 
 **Deletion behavior:** Running `pulumi destroy` (or removing the resource from your program) **disables** the managed environment setting on the target environment. It does **not** delete the environment itself. The environment continues to exist; it simply reverts to a non-managed state.
 
+**Drift detection:** If managed environment mode is disabled outside of Pulumi, `pulumi refresh` will treat this resource as gone (the provider returns an empty state when the environment is no longer in managed mode).
+
 **Dependency ordering:** Because `ManagedEnvironment` modifies an existing environment, use the [`dependsOn`](https://www.pulumi.com/docs/concepts/options/dependson/) resource option to ensure the target environment is fully created before enabling managed environment governance:
 
 {{< chooser language "python,typescript,go,csharp,yaml" >}}

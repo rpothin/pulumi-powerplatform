@@ -1,8 +1,8 @@
 Manual environment backups are **immutable** — the Power Platform API does not support updating a backup after it has been created.
 
-Any change to the `EnvironmentBackup` resource inputs (such as `label` or `notes`) will trigger a **replacement**: Pulumi will delete the old resource record and create a new backup. This means each change produces an additional backup rather than modifying the existing one.
+The only inputs are `environmentId` and `label`. Any change to either will trigger a **replacement**: Pulumi will delete the existing backup and create a new one.
 
-To make replacement behavior explicit in your program, use the [`replaceOnChanges`](https://www.pulumi.com/docs/concepts/options/replaceonchanges/) resource option:
+To make this replacement behavior explicit in your program, use the [`replaceOnChanges`](https://www.pulumi.com/docs/concepts/options/replaceonchanges/) resource option:
 
 {{< chooser language "python,typescript,go,csharp,yaml" >}}
 
