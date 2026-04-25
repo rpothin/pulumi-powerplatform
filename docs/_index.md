@@ -8,6 +8,8 @@ The Power Platform provider for Pulumi allows you to manage
 [Microsoft Power Platform](https://powerplatform.microsoft.com/) resources
 using infrastructure as code.
 
+Power Platform must be configured with Azure AD credentials to deploy and manage resources. See [Installation & Configuration](./installation-configuration/) for instructions.
+
 ## Overview
 
 The provider supports:
@@ -27,7 +29,7 @@ apps, and flows.
 
 ## Example
 
-{{< chooser language "python,typescript,go,csharp,java" >}}
+{{< chooser language "python,typescript,go,csharp,java,yaml" >}}
 
 {{% choosable language python %}}
 
@@ -140,6 +142,24 @@ public class App {
         ctx.export("envId", env.id());
     }
 }
+```
+
+{{% /choosable %}}
+
+{{% choosable language yaml %}}
+
+```yaml
+name: my-powerplatform-stack
+runtime: yaml
+resources:
+  dev:
+    type: powerplatform:index:Environment
+    properties:
+      displayName: Development
+      location: unitedstates
+      environmentType: Sandbox
+outputs:
+  envId: ${dev.id}
 ```
 
 {{% /choosable %}}
