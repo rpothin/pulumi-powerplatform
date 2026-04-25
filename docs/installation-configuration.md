@@ -82,26 +82,15 @@ Install the [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
 az login
 ```
 
-The provider automatically discovers CLI credentials via `DefaultAzureCredential`. To select a specific subscription:
-
-```bash
-az account set --subscription <SUBSCRIPTION_ID>
-```
-
-No additional Pulumi configuration is required when using the CLI.
+The provider automatically discovers CLI credentials via `DefaultAzureCredential`. No additional Pulumi configuration is required when using the CLI.
 
 ### DefaultAzureCredential (hosted environments)
 
 When no explicit credentials are configured, the provider uses
 [`DefaultAzureCredential`](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential),
-which tries the following sources in order:
-
-1. Environment variables (`AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET` / `AZURE_CLIENT_CERTIFICATE_PATH`)
-2. Workload Identity (Kubernetes, GitHub Actions with OIDC)
-3. Managed Identity (Azure VMs, App Service, Container Instances, etc.)
-4. Azure CLI
-5. Azure Developer CLI
-6. Visual Studio Code
+which automatically tries multiple credential sources (environment variables, workload identity, managed identity, Azure CLI, and others) in a well-defined order. See the
+[official documentation](https://learn.microsoft.com/python/api/azure-identity/azure.identity.defaultazurecredential)
+for the full chain.
 
 This makes the provider work automatically in most Azure-hosted environments without any explicit configuration.
 
@@ -134,7 +123,7 @@ permissions:
     allow-no-subscriptions: true
 ```
 
-After this step, `DefaultAzureCredential` automatically picks up the OIDC token — no `clientSecret` is needed.
+After this step, the provider authenticates via `DefaultAzureCredential`, which picks up the Azure CLI session established by `azure/login` — no `clientSecret` is needed.
 
 ### Service Principal (explicit configuration)
 
