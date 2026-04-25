@@ -64,7 +64,7 @@ implementation "io.github.rpothin:powerplatform:<version>"
 ### Plugin installation
 
 ```bash
-pulumi plugin install resource powerplatform v0.1.41 --server github://api.github.com/rpothin
+pulumi plugin install resource powerplatform v0.1.43 --server github://api.github.com/rpothin
 ```
 
 ## Authentication
