@@ -1124,6 +1124,7 @@
                     "description": "Nested workload-specific tenant settings."
                 }
             },
+            "requiredInputs": [],
             "properties": {
                 "walkMeOptOut": {
                     "type": "boolean",
