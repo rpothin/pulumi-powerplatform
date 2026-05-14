@@ -268,6 +268,283 @@
                     "description": "URL of the Dataverse instance. Computed."
                 }
             }
+        },
+        "powerplatform:index:TenantPowerPlatformSettings": {
+            "type": "object",
+            "description": "Power Platform workload settings at tenant scope.",
+            "properties": {
+                "search": {
+                    "$ref": "#/types/powerplatform:index:TenantSearchSettings",
+                    "description": "Search settings."
+                },
+                "teamsIntegration": {
+                    "$ref": "#/types/powerplatform:index:TenantTeamsIntegrationSettings",
+                    "description": "Teams integration settings."
+                },
+                "powerApps": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerAppsSettings",
+                    "description": "Power Apps settings."
+                },
+                "powerAutomate": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerAutomateSettings",
+                    "description": "Power Automate settings."
+                },
+                "environments": {
+                    "$ref": "#/types/powerplatform:index:TenantEnvironmentsSettings",
+                    "description": "Environment settings."
+                },
+                "governance": {
+                    "$ref": "#/types/powerplatform:index:TenantGovernanceSettings",
+                    "description": "Governance settings."
+                },
+                "licensing": {
+                    "$ref": "#/types/powerplatform:index:TenantLicensingSettings",
+                    "description": "Licensing settings."
+                },
+                "powerPages": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerPagesSettings",
+                    "description": "Power Pages settings."
+                },
+                "champions": {
+                    "$ref": "#/types/powerplatform:index:TenantChampionsSettings",
+                    "description": "Champions settings."
+                },
+                "intelligence": {
+                    "$ref": "#/types/powerplatform:index:TenantIntelligenceSettings",
+                    "description": "Intelligence settings."
+                },
+                "modelExperimentation": {
+                    "$ref": "#/types/powerplatform:index:TenantModelExperimentationSettings",
+                    "description": "Model experimentation settings."
+                },
+                "catalogSettings": {
+                    "$ref": "#/types/powerplatform:index:TenantCatalogSettings",
+                    "description": "Catalog settings."
+                },
+                "userManagementSettings": {
+                    "$ref": "#/types/powerplatform:index:TenantUserManagementSettings",
+                    "description": "User management settings."
+                }
+            }
+        },
+        "powerplatform:index:TenantSearchSettings": {
+            "type": "object",
+            "description": "Search settings.",
+            "properties": {
+                "disableDocsSearch": {
+                    "type": "boolean",
+                    "description": "Disable docs search."
+                },
+                "disableCommunitySearch": {
+                    "type": "boolean",
+                    "description": "Disable community search."
+                },
+                "disableBingVideoSearch": {
+                    "type": "boolean",
+                    "description": "Disable Bing video search."
+                }
+            }
+        },
+        "powerplatform:index:TenantTeamsIntegrationSettings": {
+            "type": "object",
+            "description": "Teams integration settings.",
+            "properties": {
+                "shareWithColleaguesUserLimit": {
+                    "type": "integer",
+                    "description": "Share with colleagues user limit."
+                }
+            }
+        },
+        "powerplatform:index:TenantPowerAppsSettings": {
+            "type": "object",
+            "description": "Power Apps settings.",
+            "properties": {
+                "disableShareWithEveryone": {
+                    "type": "boolean",
+                    "description": "Disable share with everyone."
+                },
+                "enableGuestsToMake": {
+                    "type": "boolean",
+                    "description": "Enable guests to make apps."
+                },
+                "disableMakerMatch": {
+                    "type": "boolean",
+                    "description": "Disable maker match."
+                },
+                "disableUnusedLicenseAssignment": {
+                    "type": "boolean",
+                    "description": "Disable unused license assignment."
+                },
+                "disableCreateFromImage": {
+                    "type": "boolean",
+                    "description": "Disable create from image."
+                },
+                "disableCreateFromFigma": {
+                    "type": "boolean",
+                    "description": "Disable create from Figma."
+                },
+                "disableConnectionSharingWithEveryone": {
+                    "type": "boolean",
+                    "description": "Disable connection sharing with everyone."
+                }
+            }
+        },
+        "powerplatform:index:TenantPowerAutomateSettings": {
+            "type": "object",
+            "description": "Power Automate settings.",
+            "properties": {
+                "disableCopilot": {
+                    "type": "boolean",
+                    "description": "Disable Copilot for Power Automate."
+                }
+            }
+        },
+        "powerplatform:index:TenantEnvironmentsSettings": {
+            "type": "object",
+            "description": "Environment settings.",
+            "properties": {
+                "disablePreferredDataLocationForTeamsEnvironment": {
+                    "type": "boolean",
+                    "description": "Disable preferred data location for Teams environment creation."
+                }
+            }
+        },
+        "powerplatform:index:TenantGovernanceSettings": {
+            "type": "object",
+            "description": "Governance settings.",
+            "properties": {
+                "disableAdminDigest": {
+                    "type": "boolean",
+                    "description": "Disable admin digest."
+                },
+                "disableDeveloperEnvironmentCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable developer environment creation by non-admin users."
+                },
+                "enableDefaultEnvironmentRouting": {
+                    "type": "boolean",
+                    "description": "Enable default environment routing."
+                },
+                "environmentRoutingAllMakers": {
+                    "type": "boolean",
+                    "description": "Route all makers to personal dev environments."
+                },
+                "environmentRoutingTargetEnvironmentGroupId": {
+                    "type": "string",
+                    "description": "Target environment group for default environment routing."
+                },
+                "environmentRoutingTargetSecurityGroupId": {
+                    "type": "string",
+                    "description": "Target security group for default environment routing."
+                },
+                "policy": {
+                    "$ref": "#/types/powerplatform:index:TenantGovernancePolicySettings",
+                    "description": "Governance policy settings."
+                }
+            }
+        },
+        "powerplatform:index:TenantGovernancePolicySettings": {
+            "type": "object",
+            "description": "Governance policy settings.",
+            "properties": {
+                "enableDesktopFlowDataPolicyManagement": {
+                    "type": "boolean",
+                    "description": "Enable desktop flow data policy management."
+                }
+            }
+        },
+        "powerplatform:index:TenantLicensingSettings": {
+            "type": "object",
+            "description": "Licensing settings.",
+            "properties": {
+                "disableBillingPolicyCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable billing policy creation by non-admin users."
+                },
+                "enableTenantCapacityReportForEnvironmentAdmins": {
+                    "type": "boolean",
+                    "description": "Enable tenant capacity report for environment admins."
+                },
+                "storageCapacityConsumptionWarningThreshold": {
+                    "type": "integer",
+                    "description": "Storage capacity consumption warning threshold."
+                },
+                "enableTenantLicensingReportForEnvironmentAdmins": {
+                    "type": "boolean",
+                    "description": "Enable tenant licensing report for environment admins."
+                },
+                "disableUseOfUnassignedAIBuilderCredits": {
+                    "type": "boolean",
+                    "description": "Disable use of unassigned AI Builder credits."
+                }
+            }
+        },
+        "powerplatform:index:TenantPowerPagesSettings": {
+            "type": "object",
+            "description": "Power Pages settings.",
+            "properties": {}
+        },
+        "powerplatform:index:TenantChampionsSettings": {
+            "type": "object",
+            "description": "Champions settings.",
+            "properties": {
+                "disableChampionsInvitationReachout": {
+                    "type": "boolean",
+                    "description": "Disable champions invitation reachout."
+                },
+                "disableSkillsMatchInvitationReachout": {
+                    "type": "boolean",
+                    "description": "Disable skills match invitation reachout."
+                }
+            }
+        },
+        "powerplatform:index:TenantIntelligenceSettings": {
+            "type": "object",
+            "description": "Intelligence settings.",
+            "properties": {
+                "disableCopilot": {
+                    "type": "boolean",
+                    "description": "Disable Copilot."
+                },
+                "enableOpenAiBotPublishing": {
+                    "type": "boolean",
+                    "description": "Enable OpenAI bot publishing."
+                }
+            }
+        },
+        "powerplatform:index:TenantModelExperimentationSettings": {
+            "type": "object",
+            "description": "Model experimentation settings.",
+            "properties": {
+                "enableModelDataSharing": {
+                    "type": "boolean",
+                    "description": "Enable model data sharing."
+                },
+                "disableDataLogging": {
+                    "type": "boolean",
+                    "description": "Disable data logging."
+                }
+            }
+        },
+        "powerplatform:index:TenantCatalogSettings": {
+            "type": "object",
+            "description": "Catalog settings.",
+            "properties": {
+                "powerCatalogAudienceSetting": {
+                    "type": "string",
+                    "description": "Power Catalog audience setting."
+                }
+            }
+        },
+        "powerplatform:index:TenantUserManagementSettings": {
+            "type": "object",
+            "description": "User management settings.",
+            "properties": {
+                "enableDeleteDisabledUserInAllEnvironments": {
+                    "type": "boolean",
+                    "description": "Enable delete disabled user in all environments."
+                }
+            }
         }
     },
     "resources": {
@@ -802,6 +1079,93 @@
             "required": [
                 "environmentId"
             ]
+        },
+        "powerplatform:index:TenantSettings": {
+            "description": "Manages tenant-level Power Platform settings used for governance and platform-wide controls.",
+            "inputProperties": {
+                "walkMeOptOut": {
+                    "type": "boolean",
+                    "description": "Walk Me opt-out setting."
+                },
+                "disableNPSCommentsReachout": {
+                    "type": "boolean",
+                    "description": "Disable NPS comments reachout."
+                },
+                "disableNewsletterSendout": {
+                    "type": "boolean",
+                    "description": "Disable newsletter sendout."
+                },
+                "disableEnvironmentCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable environment creation by non-admin users."
+                },
+                "disablePortalsCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable Power Pages creation by non-admin users."
+                },
+                "disableSurveyFeedback": {
+                    "type": "boolean",
+                    "description": "Disable survey feedback."
+                },
+                "disableTrialEnvironmentCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable trial environment creation by non-admin users."
+                },
+                "disableCapacityAllocationByEnvironmentAdmins": {
+                    "type": "boolean",
+                    "description": "Disable capacity allocation by environment admins."
+                },
+                "disableSupportTicketsVisibleByAllUsers": {
+                    "type": "boolean",
+                    "description": "Disable support tickets visibility by all users."
+                },
+                "powerPlatform": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerPlatformSettings",
+                    "description": "Nested workload-specific tenant settings."
+                }
+            },
+            "properties": {
+                "walkMeOptOut": {
+                    "type": "boolean",
+                    "description": "Walk Me opt-out setting."
+                },
+                "disableNPSCommentsReachout": {
+                    "type": "boolean",
+                    "description": "Disable NPS comments reachout."
+                },
+                "disableNewsletterSendout": {
+                    "type": "boolean",
+                    "description": "Disable newsletter sendout."
+                },
+                "disableEnvironmentCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable environment creation by non-admin users."
+                },
+                "disablePortalsCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable Power Pages creation by non-admin users."
+                },
+                "disableSurveyFeedback": {
+                    "type": "boolean",
+                    "description": "Disable survey feedback."
+                },
+                "disableTrialEnvironmentCreationByNonAdminUsers": {
+                    "type": "boolean",
+                    "description": "Disable trial environment creation by non-admin users."
+                },
+                "disableCapacityAllocationByEnvironmentAdmins": {
+                    "type": "boolean",
+                    "description": "Disable capacity allocation by environment admins."
+                },
+                "disableSupportTicketsVisibleByAllUsers": {
+                    "type": "boolean",
+                    "description": "Disable support tickets visibility by all users."
+                },
+                "powerPlatform": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerPlatformSettings",
+                    "description": "Nested workload-specific tenant settings."
+                }
+            }
         }
     },
     "functions": {

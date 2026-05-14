@@ -39,6 +39,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &ManagedEnvironment{}
 	case "powerplatform:index:RoleAssignment":
 		r = &RoleAssignment{}
+	case "powerplatform:index:TenantSettings":
+		r = &TenantSettings{}
 	default:
 		return nil, fmt.Errorf("unknown resource type: %s", typ)
 	}

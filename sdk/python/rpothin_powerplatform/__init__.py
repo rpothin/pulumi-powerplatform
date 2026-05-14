@@ -14,6 +14,7 @@ from .isv_contract import IsvContract
 from .managed_environment import ManagedEnvironment
 from .provider import Provider
 from .role_assignment import RoleAssignment
+from .tenant_settings import TenantSettings
 
 __all__ = [
     "Provider",
@@ -28,6 +29,7 @@ __all__ = [
     "EnvironmentBackup",
     "RoleAssignment",
     "IsvContract",
+    "TenantSettings",
     "get_environments",
     "get_connectors",
     "get_apps",

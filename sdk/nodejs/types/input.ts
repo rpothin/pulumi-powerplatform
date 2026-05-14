@@ -120,3 +120,281 @@ export interface RuleSetArgs {
      */
     version?: pulumi.Input<string>;
 }
+
+/**
+ * Catalog settings.
+ */
+export interface TenantCatalogSettingsArgs {
+    /**
+     * Power Catalog audience setting.
+     */
+    powerCatalogAudienceSetting?: pulumi.Input<string>;
+}
+
+/**
+ * Champions settings.
+ */
+export interface TenantChampionsSettingsArgs {
+    /**
+     * Disable champions invitation reachout.
+     */
+    disableChampionsInvitationReachout?: pulumi.Input<boolean>;
+    /**
+     * Disable skills match invitation reachout.
+     */
+    disableSkillsMatchInvitationReachout?: pulumi.Input<boolean>;
+}
+
+/**
+ * Environment settings.
+ */
+export interface TenantEnvironmentsSettingsArgs {
+    /**
+     * Disable preferred data location for Teams environment creation.
+     */
+    disablePreferredDataLocationForTeamsEnvironment?: pulumi.Input<boolean>;
+}
+
+/**
+ * Governance policy settings.
+ */
+export interface TenantGovernancePolicySettingsArgs {
+    /**
+     * Enable desktop flow data policy management.
+     */
+    enableDesktopFlowDataPolicyManagement?: pulumi.Input<boolean>;
+}
+
+/**
+ * Governance settings.
+ */
+export interface TenantGovernanceSettingsArgs {
+    /**
+     * Disable admin digest.
+     */
+    disableAdminDigest?: pulumi.Input<boolean>;
+    /**
+     * Disable developer environment creation by non-admin users.
+     */
+    disableDeveloperEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    /**
+     * Enable default environment routing.
+     */
+    enableDefaultEnvironmentRouting?: pulumi.Input<boolean>;
+    /**
+     * Route all makers to personal dev environments.
+     */
+    environmentRoutingAllMakers?: pulumi.Input<boolean>;
+    /**
+     * Target environment group for default environment routing.
+     */
+    environmentRoutingTargetEnvironmentGroupId?: pulumi.Input<string>;
+    /**
+     * Target security group for default environment routing.
+     */
+    environmentRoutingTargetSecurityGroupId?: pulumi.Input<string>;
+    /**
+     * Governance policy settings.
+     */
+    policy?: pulumi.Input<inputs.TenantGovernancePolicySettingsArgs>;
+}
+
+/**
+ * Intelligence settings.
+ */
+export interface TenantIntelligenceSettingsArgs {
+    /**
+     * Disable Copilot.
+     */
+    disableCopilot?: pulumi.Input<boolean>;
+    /**
+     * Enable OpenAI bot publishing.
+     */
+    enableOpenAiBotPublishing?: pulumi.Input<boolean>;
+}
+
+/**
+ * Licensing settings.
+ */
+export interface TenantLicensingSettingsArgs {
+    /**
+     * Disable billing policy creation by non-admin users.
+     */
+    disableBillingPolicyCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    /**
+     * Disable use of unassigned AI Builder credits.
+     */
+    disableUseOfUnassignedAIBuilderCredits?: pulumi.Input<boolean>;
+    /**
+     * Enable tenant capacity report for environment admins.
+     */
+    enableTenantCapacityReportForEnvironmentAdmins?: pulumi.Input<boolean>;
+    /**
+     * Enable tenant licensing report for environment admins.
+     */
+    enableTenantLicensingReportForEnvironmentAdmins?: pulumi.Input<boolean>;
+    /**
+     * Storage capacity consumption warning threshold.
+     */
+    storageCapacityConsumptionWarningThreshold?: pulumi.Input<number>;
+}
+
+/**
+ * Model experimentation settings.
+ */
+export interface TenantModelExperimentationSettingsArgs {
+    /**
+     * Disable data logging.
+     */
+    disableDataLogging?: pulumi.Input<boolean>;
+    /**
+     * Enable model data sharing.
+     */
+    enableModelDataSharing?: pulumi.Input<boolean>;
+}
+
+/**
+ * Power Apps settings.
+ */
+export interface TenantPowerAppsSettingsArgs {
+    /**
+     * Disable connection sharing with everyone.
+     */
+    disableConnectionSharingWithEveryone?: pulumi.Input<boolean>;
+    /**
+     * Disable create from Figma.
+     */
+    disableCreateFromFigma?: pulumi.Input<boolean>;
+    /**
+     * Disable create from image.
+     */
+    disableCreateFromImage?: pulumi.Input<boolean>;
+    /**
+     * Disable maker match.
+     */
+    disableMakerMatch?: pulumi.Input<boolean>;
+    /**
+     * Disable share with everyone.
+     */
+    disableShareWithEveryone?: pulumi.Input<boolean>;
+    /**
+     * Disable unused license assignment.
+     */
+    disableUnusedLicenseAssignment?: pulumi.Input<boolean>;
+    /**
+     * Enable guests to make apps.
+     */
+    enableGuestsToMake?: pulumi.Input<boolean>;
+}
+
+/**
+ * Power Automate settings.
+ */
+export interface TenantPowerAutomateSettingsArgs {
+    /**
+     * Disable Copilot for Power Automate.
+     */
+    disableCopilot?: pulumi.Input<boolean>;
+}
+
+/**
+ * Power Pages settings.
+ */
+export interface TenantPowerPagesSettingsArgs {
+}
+
+/**
+ * Power Platform workload settings at tenant scope.
+ */
+export interface TenantPowerPlatformSettingsArgs {
+    /**
+     * Catalog settings.
+     */
+    catalogSettings?: pulumi.Input<inputs.TenantCatalogSettingsArgs>;
+    /**
+     * Champions settings.
+     */
+    champions?: pulumi.Input<inputs.TenantChampionsSettingsArgs>;
+    /**
+     * Environment settings.
+     */
+    environments?: pulumi.Input<inputs.TenantEnvironmentsSettingsArgs>;
+    /**
+     * Governance settings.
+     */
+    governance?: pulumi.Input<inputs.TenantGovernanceSettingsArgs>;
+    /**
+     * Intelligence settings.
+     */
+    intelligence?: pulumi.Input<inputs.TenantIntelligenceSettingsArgs>;
+    /**
+     * Licensing settings.
+     */
+    licensing?: pulumi.Input<inputs.TenantLicensingSettingsArgs>;
+    /**
+     * Model experimentation settings.
+     */
+    modelExperimentation?: pulumi.Input<inputs.TenantModelExperimentationSettingsArgs>;
+    /**
+     * Power Apps settings.
+     */
+    powerApps?: pulumi.Input<inputs.TenantPowerAppsSettingsArgs>;
+    /**
+     * Power Automate settings.
+     */
+    powerAutomate?: pulumi.Input<inputs.TenantPowerAutomateSettingsArgs>;
+    /**
+     * Power Pages settings.
+     */
+    powerPages?: pulumi.Input<inputs.TenantPowerPagesSettingsArgs>;
+    /**
+     * Search settings.
+     */
+    search?: pulumi.Input<inputs.TenantSearchSettingsArgs>;
+    /**
+     * Teams integration settings.
+     */
+    teamsIntegration?: pulumi.Input<inputs.TenantTeamsIntegrationSettingsArgs>;
+    /**
+     * User management settings.
+     */
+    userManagementSettings?: pulumi.Input<inputs.TenantUserManagementSettingsArgs>;
+}
+
+/**
+ * Search settings.
+ */
+export interface TenantSearchSettingsArgs {
+    /**
+     * Disable Bing video search.
+     */
+    disableBingVideoSearch?: pulumi.Input<boolean>;
+    /**
+     * Disable community search.
+     */
+    disableCommunitySearch?: pulumi.Input<boolean>;
+    /**
+     * Disable docs search.
+     */
+    disableDocsSearch?: pulumi.Input<boolean>;
+}
+
+/**
+ * Teams integration settings.
+ */
+export interface TenantTeamsIntegrationSettingsArgs {
+    /**
+     * Share with colleagues user limit.
+     */
+    shareWithColleaguesUserLimit?: pulumi.Input<number>;
+}
+
+/**
+ * User management settings.
+ */
+export interface TenantUserManagementSettingsArgs {
+    /**
+     * Enable delete disabled user in all environments.
+     */
+    enableDeleteDisabledUserInAllEnvironments?: pulumi.Input<boolean>;
+}
