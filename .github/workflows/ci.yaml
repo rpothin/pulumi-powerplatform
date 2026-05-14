@@ -61,7 +61,8 @@ jobs:
       - name: Install Pulumi CLI
         if: steps.schema_changed.outputs.schema_changed == 'true'
         run: |
-          curl -fsSL https://get.pulumi.com | sh
+          # Keep SDK generation deterministic across local and CI environments.
+          curl -fsSL https://get.pulumi.com | sh -s -- --version 3.230.0
           echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
 
       - name: Verify non-Python SDKs are up to date
