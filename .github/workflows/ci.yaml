@@ -88,9 +88,9 @@ jobs:
 
           STALE=""
           for lang in nodejs go dotnet java; do
-            if ! diff -rq "$GEN_DIR/$lang" "sdk/$lang" > /dev/null 2>&1; then
+            if ! diff -rq --strip-trailing-cr "$GEN_DIR/$lang" "sdk/$lang" > /dev/null 2>&1; then
               echo "Detected differences for sdk/$lang:"
-              diff -rq "$GEN_DIR/$lang" "sdk/$lang" || true
+              diff -rq --strip-trailing-cr "$GEN_DIR/$lang" "sdk/$lang" || true
               STALE="$STALE\n  - sdk/$lang"
             fi
           done
