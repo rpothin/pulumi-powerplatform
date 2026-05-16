@@ -111,5 +111,5 @@ export interface RoleAssignmentArgs {
     /**
      * The scope of the role assignment (e.g., tenant, environment, or environment group).
      */
-    scope?: pulumi.Input<string>;
+    scope?: pulumi.Input<string | undefined>;
 }
