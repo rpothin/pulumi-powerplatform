@@ -94,7 +94,7 @@ publishing {
 
             pom {
                 inceptionYear = ""
-                name = ""
+                name = "Pulumi Power Platform Provider"
                 packaging = "jar"
                 description = "A Pulumi provider for managing Microsoft Power Platform resources."
 
@@ -108,15 +108,15 @@ publishing {
 
                 licenses {
                     license {
-                        name = ""
-                        url = ""
+                        name = "MIT"
+                        url = "https://opensource.org/licenses/MIT"
                     }
                 }
 
                 developers {
                     developer {
-                        id = ""
-                        name = ""
+                        id = "rpothin"
+                        name = "rpothin"
                         email = ""
                     }
                 }
