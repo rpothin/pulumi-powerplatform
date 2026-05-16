@@ -29,6 +29,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &DataRecord{}
 	case "powerplatform:index:DlpPolicy":
 		r = &DlpPolicy{}
+	case "powerplatform:index:EnterprisePolicyLink":
+		r = &EnterprisePolicyLink{}
 	case "powerplatform:index:Environment":
 		r = &Environment{}
 	case "powerplatform:index:EnvironmentApplicationAdmin":

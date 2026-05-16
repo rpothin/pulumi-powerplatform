@@ -25,6 +25,7 @@
         "config/vars.ts",
         "dataRecord.ts",
         "dlpPolicy.ts",
+        "enterprisePolicyLink.ts",
         "environment.ts",
         "environmentApplicationAdmin.ts",
         "environmentBackup.ts",

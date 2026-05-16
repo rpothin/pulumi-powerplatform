@@ -38,6 +38,7 @@ from rpothin_powerplatform.resources.admin_management_application import AdminMa
 from rpothin_powerplatform.resources.billing_policy import BillingPolicyResource
 from rpothin_powerplatform.resources.data_record import DataRecordResource
 from rpothin_powerplatform.resources.dlp_policy import DlpPolicyResource
+from rpothin_powerplatform.resources.enterprise_policy_link import EnterprisePolicyLinkResource
 from rpothin_powerplatform.resources.environment import EnvironmentResource
 from rpothin_powerplatform.resources.environment_application_admin import EnvironmentApplicationAdminResource
 from rpothin_powerplatform.resources.environment_backup import EnvironmentBackupResource
@@ -62,6 +63,7 @@ _ISV_CONTRACT = "powerplatform:index:IsvContract"
 _ENVIRONMENT = "powerplatform:index:Environment"
 _ENVIRONMENT_SETTINGS = "powerplatform:index:EnvironmentSettings"
 _TENANT_SETTINGS = "powerplatform:index:TenantSettings"
+_ENTERPRISE_POLICY_LINK = "powerplatform:index:EnterprisePolicyLink"
 
 # Function tokens.
 _GET_DATA_RECORDS = "powerplatform:index:getDataRecords"
@@ -116,6 +118,7 @@ class PowerPlatformProvider(Provider):
         self._environment: Optional[EnvironmentResource] = None
         self._env_settings: Optional[EnvironmentSettingsResource] = None
         self._tenant_settings: Optional[TenantSettingsResource] = None
+        self._enterprise_policy_link: Optional[EnterprisePolicyLinkResource] = None
         self._get_envs: Optional[GetEnvironmentsFunction] = None
         self._get_connectors: Optional[GetConnectorsFunction] = None
         self._get_apps: Optional[GetAppsFunction] = None
@@ -146,6 +149,7 @@ class PowerPlatformProvider(Provider):
         self._environment = EnvironmentResource(self._client)
         self._env_settings = EnvironmentSettingsResource(self._client)
         self._tenant_settings = TenantSettingsResource(self._client)
+        self._enterprise_policy_link = EnterprisePolicyLinkResource(self._client)
         self._get_envs = GetEnvironmentsFunction(self._client)
         self._get_connectors = GetConnectorsFunction(self._client)
         self._get_apps = GetAppsFunction(self._client)
@@ -244,5 +248,6 @@ class PowerPlatformProvider(Provider):
             _ENVIRONMENT: self._environment,
             _ENVIRONMENT_SETTINGS: self._env_settings,
             _TENANT_SETTINGS: self._tenant_settings,
+            _ENTERPRISE_POLICY_LINK: self._enterprise_policy_link,
         }
         return handlers.get(resource_type)
