@@ -162,6 +162,28 @@ class TestRawApiClientRequest:
         assert call_kwargs[1]["params"]["api-version"] == "2021-04-01"
 
     @pytest.mark.asyncio
+    async def test_api_version_none_omits_param(self):
+        """Passing api_version=None should omit the api-version query parameter entirely."""
+        cred = _fake_credential()
+        client = RawApiClient(token_provider=cred, base_url="https://test.local")
+
+        fake_response = httpx.Response(
+            200,
+            json={"value": []},
+            request=httpx.Request("GET", "https://test.local/api/data/v9.2/entities"),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            await client.request("GET", "/api/data/v9.2/entities", api_version=None)
+
+        call_kwargs = mock_http.request.call_args
+        assert "api-version" not in call_kwargs[1]["params"]
+
+    @pytest.mark.asyncio
     async def test_empty_body_returns_none(self):
         """A 200 response with empty content should return None."""
         cred = _fake_credential()

@@ -104,7 +104,7 @@ export interface BillingPolicyArgs {
     /**
      * The billing instrument (Azure subscription) details.
      */
-    billingInstrument?: pulumi.Input<inputs.BillingInstrumentArgs | undefined>;
+    billingInstrument?: pulumi.Input<inputs.BillingInstrumentArgs>;
     /**
      * The geographic location for the billing policy (e.g., unitedstates, europe).
      */
@@ -116,5 +116,5 @@ export interface BillingPolicyArgs {
     /**
      * The status of the billing policy: Enabled or Disabled.
      */
-    status?: pulumi.Input<string | undefined>;
+    status?: pulumi.Input<string>;
 }

@@ -25,6 +25,7 @@
         "config/vars.ts",
         "dlpPolicy.ts",
         "environment.ts",
+        "environmentApplicationAdmin.ts",
         "environmentBackup.ts",
         "environmentGroup.ts",
         "environmentSettings.ts",

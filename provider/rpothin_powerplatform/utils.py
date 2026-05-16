@@ -5,9 +5,12 @@ from __future__ import annotations
 import json
 import logging
 import random
-from typing import Any, Awaitable, Callable, Optional, TypeVar
+from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional, TypeVar
 
 from pulumi.provider.experimental.property_value import PropertyValue
+
+if TYPE_CHECKING:
+    from rpothin_powerplatform.raw_api import RawApiClient
 
 logger = logging.getLogger(__name__)
 
@@ -135,3 +138,32 @@ async def retry_with_backoff(
     # Should not reach here, but satisfy type checker
     assert last_exc is not None
     raise last_exc
+
+
+async def resolve_dataverse_url(raw_client: RawApiClient, env_id: str) -> str:
+    """Resolve the Dataverse instance URL for a Power Platform environment.
+
+    Parameters
+    ----------
+    raw_client:
+        A ``RawApiClient`` configured for the BAP admin API.
+    env_id:
+        The GUID of the environment.
+
+    Returns
+    -------
+    The Dataverse ``instanceUrl`` (e.g. ``https://org123.crm.dynamics.com/``),
+    or an empty string when the environment has no Dataverse instance.
+    """
+    env = await retry_with_backoff(
+        lambda: raw_client.request(
+            "GET",
+            f"/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments/{env_id}",
+            api_version="2023-06-01",
+        )
+    )
+    try:
+        url: str = env["properties"]["linkedEnvironmentMetadata"]["instanceUrl"]
+    except (KeyError, TypeError):
+        url = ""
+    return url or ""

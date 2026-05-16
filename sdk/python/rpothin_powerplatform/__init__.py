@@ -4,6 +4,7 @@ from .admin_management_application import AdminManagementApplication
 from .billing_policy import BillingPolicy
 from .dlp_policy import DlpPolicy
 from .environment import Environment, EnvironmentDataverse, EnvironmentDataverseArgs
+from .environment_application_admin import EnvironmentApplicationAdmin
 from .environment_backup import EnvironmentBackup
 from .environment_group import EnvironmentGroup
 from .environment_settings import EnvironmentSettings
@@ -19,6 +20,7 @@ from .tenant_settings import TenantSettings
 
 __all__ = [
     "AdminManagementApplication",
+    "EnvironmentApplicationAdmin",
     "Provider",
     "Environment",
     "EnvironmentDataverse",

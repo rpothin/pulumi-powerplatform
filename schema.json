@@ -1192,6 +1192,42 @@
             "required": [
                 "applicationId"
             ]
+        },
+        "powerplatform:index:EnvironmentApplicationAdmin": {
+            "description": "Adds a service principal as System Administrator in a Dataverse-enabled Power Platform environment. Creates a systemuser record via the Dataverse Web API. Both environmentId and applicationId are immutable — any change triggers resource replacement.",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The GUID of the Power Platform environment. Must have a Dataverse instance. Immutable after creation."
+                },
+                "applicationId": {
+                    "type": "string",
+                    "description": "The GUID of the service principal (application) to add as System Administrator. Immutable after creation."
+                }
+            },
+            "requiredInputs": [
+                "environmentId",
+                "applicationId"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The GUID of the Power Platform environment."
+                },
+                "applicationId": {
+                    "type": "string",
+                    "description": "The GUID of the registered service principal."
+                },
+                "systemUserId": {
+                    "type": "string",
+                    "description": "The Dataverse systemuser record GUID for the registered application user."
+                }
+            },
+            "required": [
+                "environmentId",
+                "applicationId",
+                "systemUserId"
+            ]
         }
     },
     "functions": {
