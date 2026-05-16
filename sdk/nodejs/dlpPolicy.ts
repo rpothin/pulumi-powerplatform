@@ -99,5 +99,5 @@ export interface DlpPolicyArgs {
     /**
      * The rule sets that define the DLP policy rules.
      */
-    ruleSets?: pulumi.Input<pulumi.Input<inputs.RuleSetArgs>[]>;
+    ruleSets?: pulumi.Input<pulumi.Input<inputs.RuleSetArgs>[] | undefined>;
 }

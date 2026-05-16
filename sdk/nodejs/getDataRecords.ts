@@ -83,19 +83,19 @@ export interface GetDataRecordsOutputArgs {
     /**
      * List of navigation properties to expand in the response.
      */
-    expand?: pulumi.Input<pulumi.Input<inputs.DataRecordsExpandParamArgs>[]>;
+    expand?: pulumi.Input<pulumi.Input<inputs.DataRecordsExpandParamArgs>[] | undefined>;
     /**
      * OData $filter expression (e.g. "name eq 'My Pipeline'").
      */
-    filter?: pulumi.Input<string>;
+    filter?: pulumi.Input<string | undefined>;
     /**
      * OData $orderby expression (e.g. "createdon desc").
      */
-    orderby?: pulumi.Input<string>;
+    orderby?: pulumi.Input<string | undefined>;
     /**
      * List of column logical names to include in the response.
      */
-    select?: pulumi.Input<pulumi.Input<string>[]>;
+    select?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
      */
@@ -103,5 +103,5 @@ export interface GetDataRecordsOutputArgs {
     /**
      * Maximum number of records to return ($top). Use to limit large result sets.
      */
-    top?: pulumi.Input<number>;
+    top?: pulumi.Input<number | undefined>;
 }
