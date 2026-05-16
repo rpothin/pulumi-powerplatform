@@ -68,7 +68,7 @@ class RawApiClient:
         path: str,
         *,
         body: Optional[dict[str, Any]] = None,
-        api_version: str = "2023-06-01",
+        api_version: Optional[str] = "2023-06-01",
     ) -> Any:
         """Send an HTTP request to the Power Platform BAP admin API.
 
@@ -101,7 +101,7 @@ class RawApiClient:
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json",
             }
-            params = {"api-version": api_version}
+            params = {"api-version": api_version} if api_version else {}
 
             response = await client.request(
                 method,

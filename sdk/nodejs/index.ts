@@ -25,6 +25,11 @@ export type Environment = import("./environment").Environment;
 export const Environment: typeof import("./environment").Environment = null as any;
 utilities.lazyLoad(exports, ["Environment"], () => require("./environment"));
 
+export { EnvironmentApplicationAdminArgs } from "./environmentApplicationAdmin";
+export type EnvironmentApplicationAdmin = import("./environmentApplicationAdmin").EnvironmentApplicationAdmin;
+export const EnvironmentApplicationAdmin: typeof import("./environmentApplicationAdmin").EnvironmentApplicationAdmin = null as any;
+utilities.lazyLoad(exports, ["EnvironmentApplicationAdmin"], () => require("./environmentApplicationAdmin"));
+
 export { EnvironmentBackupArgs } from "./environmentBackup";
 export type EnvironmentBackup = import("./environmentBackup").EnvironmentBackup;
 export const EnvironmentBackup: typeof import("./environmentBackup").EnvironmentBackup = null as any;
@@ -107,6 +112,8 @@ const _module = {
                 return new DlpPolicy(name, <any>undefined, { urn })
             case "powerplatform:index:Environment":
                 return new Environment(name, <any>undefined, { urn })
+            case "powerplatform:index:EnvironmentApplicationAdmin":
+                return new EnvironmentApplicationAdmin(name, <any>undefined, { urn })
             case "powerplatform:index:EnvironmentBackup":
                 return new EnvironmentBackup(name, <any>undefined, { urn })
             case "powerplatform:index:EnvironmentGroup":
