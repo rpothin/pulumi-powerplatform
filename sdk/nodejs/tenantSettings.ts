@@ -73,6 +73,10 @@ export class TenantSettings extends pulumi.CustomResource {
      */
     declare public readonly powerPlatform: pulumi.Output<outputs.TenantPowerPlatformSettings | undefined>;
     /**
+     * The ID of the tenant.
+     */
+    declare public /*out*/ readonly tenantId: pulumi.Output<string | undefined>;
+    /**
      * Walk Me opt-out setting.
      */
     declare public readonly walkMeOptOut: pulumi.Output<boolean | undefined>;
@@ -98,6 +102,7 @@ export class TenantSettings extends pulumi.CustomResource {
             resourceInputs["disableTrialEnvironmentCreationByNonAdminUsers"] = args?.disableTrialEnvironmentCreationByNonAdminUsers;
             resourceInputs["powerPlatform"] = args?.powerPlatform;
             resourceInputs["walkMeOptOut"] = args?.walkMeOptOut;
+            resourceInputs["tenantId"] = undefined /*out*/;
         } else {
             resourceInputs["disableCapacityAllocationByEnvironmentAdmins"] = undefined /*out*/;
             resourceInputs["disableEnvironmentCreationByNonAdminUsers"] = undefined /*out*/;
@@ -108,6 +113,7 @@ export class TenantSettings extends pulumi.CustomResource {
             resourceInputs["disableSurveyFeedback"] = undefined /*out*/;
             resourceInputs["disableTrialEnvironmentCreationByNonAdminUsers"] = undefined /*out*/;
             resourceInputs["powerPlatform"] = undefined /*out*/;
+            resourceInputs["tenantId"] = undefined /*out*/;
             resourceInputs["walkMeOptOut"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);

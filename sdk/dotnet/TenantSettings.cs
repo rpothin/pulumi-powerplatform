@@ -70,6 +70,12 @@ namespace Pulumi.Powerplatform
         public Output<Outputs.TenantPowerPlatformSettings?> PowerPlatform { get; private set; } = null!;
 
         /// <summary>
+        /// The ID of the tenant.
+        /// </summary>
+        [Output("tenantId")]
+        public Output<string?> TenantId { get; private set; } = null!;
+
+        /// <summary>
         /// Walk Me opt-out setting.
         /// </summary>
         [Output("walkMeOptOut")]

@@ -33,6 +33,8 @@ type TenantSettings struct {
 	DisableTrialEnvironmentCreationByNonAdminUsers pulumi.BoolPtrOutput `pulumi:"disableTrialEnvironmentCreationByNonAdminUsers"`
 	// Nested workload-specific tenant settings.
 	PowerPlatform TenantPowerPlatformSettingsPtrOutput `pulumi:"powerPlatform"`
+	// The ID of the tenant.
+	TenantId pulumi.StringPtrOutput `pulumi:"tenantId"`
 	// Walk Me opt-out setting.
 	WalkMeOptOut pulumi.BoolPtrOutput `pulumi:"walkMeOptOut"`
 }
@@ -203,6 +205,11 @@ func (o TenantSettingsOutput) DisableTrialEnvironmentCreationByNonAdminUsers() p
 // Nested workload-specific tenant settings.
 func (o TenantSettingsOutput) PowerPlatform() TenantPowerPlatformSettingsPtrOutput {
 	return o.ApplyT(func(v *TenantSettings) TenantPowerPlatformSettingsPtrOutput { return v.PowerPlatform }).(TenantPowerPlatformSettingsPtrOutput)
+}
+
+// The ID of the tenant.
+func (o TenantSettingsOutput) TenantId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *TenantSettings) pulumi.StringPtrOutput { return v.TenantId }).(pulumi.StringPtrOutput)
 }
 
 // Walk Me opt-out setting.

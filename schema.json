@@ -1126,6 +1126,10 @@
             },
             "requiredInputs": [],
             "properties": {
+                "tenantId": {
+                    "type": "string",
+                    "description": "The ID of the tenant."
+                },
                 "walkMeOptOut": {
                     "type": "boolean",
                     "description": "Walk Me opt-out setting."

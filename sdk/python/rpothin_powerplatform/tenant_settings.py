@@ -9,6 +9,7 @@ import pulumi
 class TenantSettings(pulumi.CustomResource):
     """Manages tenant-level Power Platform settings."""
 
+    tenant_id: pulumi.Output[str]
     walk_me_opt_out: pulumi.Output[bool]
     disable_environment_creation_by_non_admin_users: pulumi.Output[bool]
     disable_trial_environment_creation_by_non_admin_users: pulumi.Output[bool]

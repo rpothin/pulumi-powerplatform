@@ -11,6 +11,7 @@ import io.github.rpothin.powerplatform.TenantSettingsArgs;
 import io.github.rpothin.powerplatform.Utilities;
 import io.github.rpothin.powerplatform.outputs.TenantPowerPlatformSettings;
 import java.lang.Boolean;
+import java.lang.String;
 import java.util.Optional;
 import javax.annotation.Nullable;
 
@@ -145,6 +146,20 @@ public class TenantSettings extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<TenantPowerPlatformSettings>> powerPlatform() {
         return Codegen.optional(this.powerPlatform);
+    }
+    /**
+     * The ID of the tenant.
+     * 
+     */
+    @Export(name="tenantId", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> tenantId;
+
+    /**
+     * @return The ID of the tenant.
+     * 
+     */
+    public Output<Optional<String>> tenantId() {
+        return Codegen.optional(this.tenantId);
     }
     /**
      * Walk Me opt-out setting.

@@ -235,6 +235,12 @@ class TenantSettingsResource:
         )
         settings = _extract_tenant_settings(response)
         if settings is None:
+            if response:
+                raise RuntimeError(
+                    "listTenantSettings returned a non-empty unrecognized response; "
+                    "refusing to treat as empty to avoid silently overwriting tenant settings. "
+                    f"Top-level keys: {sorted(response.keys())}"
+                )
             return {}
         if not isinstance(settings, dict):
             raise RuntimeError("listTenantSettings returned a non-object tenant settings payload.")

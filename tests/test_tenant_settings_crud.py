@@ -319,3 +319,28 @@ class TestTenantSettingsDelete:
             "newManagedFlag": "from-user",
             "unmanagedServerFlag": "keep",
         }
+
+
+class TestListTenantSettingsFailClosed:
+    """Verify that _list_tenant_settings raises on unrecognized non-empty responses."""
+
+    @pytest.mark.asyncio
+    async def test_unrecognized_non_empty_response_raises(self, handler, mock_client):
+        mock_client.raw.request.return_value = {"unexpected_key": "some_value"}
+
+        with pytest.raises(RuntimeError, match="non-empty unrecognized response"):
+            await handler._list_tenant_settings()
+
+    @pytest.mark.asyncio
+    async def test_empty_response_returns_empty_dict(self, handler, mock_client):
+        mock_client.raw.request.return_value = {}
+
+        result = await handler._list_tenant_settings()
+        assert result == {}
+
+    @pytest.mark.asyncio
+    async def test_recognized_tenant_settings_key_succeeds(self, handler, mock_client):
+        mock_client.raw.request.return_value = {"tenantSettings": {"walkMeOptOut": True}}
+
+        result = await handler._list_tenant_settings()
+        assert result == {"walkMeOptOut": True}
