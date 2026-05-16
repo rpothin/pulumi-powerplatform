@@ -93,7 +93,7 @@ export interface EnvironmentGroupArgs {
     /**
      * A description of the environment group.
      */
-    description?: pulumi.Input<string>;
+    description?: pulumi.Input<string | undefined>;
     /**
      * The display name for the environment group.
      */
@@ -101,5 +101,5 @@ export interface EnvironmentGroupArgs {
     /**
      * The ID of the parent environment group, if this is a nested group.
      */
-    parentGroupId?: pulumi.Input<string>;
+    parentGroupId?: pulumi.Input<string | undefined>;
 }

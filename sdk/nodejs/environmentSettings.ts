@@ -103,21 +103,21 @@ export interface EnvironmentSettingsArgs {
     /**
      * Whether activity logging is enabled (true or false).
      */
-    isActivityLoggingEnabled?: pulumi.Input<string>;
+    isActivityLoggingEnabled?: pulumi.Input<string | undefined>;
     /**
      * Whether auditing is enabled (true or false).
      */
-    isAuditEnabled?: pulumi.Input<string>;
+    isAuditEnabled?: pulumi.Input<string | undefined>;
     /**
      * Whether user access auditing is enabled (true or false).
      */
-    isUserAccessAuditEnabled?: pulumi.Input<string>;
+    isUserAccessAuditEnabled?: pulumi.Input<string | undefined>;
     /**
      * Maximum file upload size in bytes.
      */
-    maxUploadFileSize?: pulumi.Input<string>;
+    maxUploadFileSize?: pulumi.Input<string | undefined>;
     /**
      * Plugin trace log setting (Off, Exception, All).
      */
-    pluginTraceLogSetting?: pulumi.Input<string>;
+    pluginTraceLogSetting?: pulumi.Input<string | undefined>;
 }
