@@ -42,6 +42,7 @@ from rpothin_powerplatform.resources.environment_settings import EnvironmentSett
 from rpothin_powerplatform.resources.isv_contract import IsvContractResource
 from rpothin_powerplatform.resources.managed_environment import ManagedEnvironmentResource
 from rpothin_powerplatform.resources.role_assignment import RoleAssignmentResource
+from rpothin_powerplatform.resources.tenant_settings import TenantSettingsResource
 
 # Resource type tokens.
 _ENVIRONMENT_GROUP = "powerplatform:index:EnvironmentGroup"
@@ -53,6 +54,7 @@ _ROLE_ASSIGNMENT = "powerplatform:index:RoleAssignment"
 _ISV_CONTRACT = "powerplatform:index:IsvContract"
 _ENVIRONMENT = "powerplatform:index:Environment"
 _ENVIRONMENT_SETTINGS = "powerplatform:index:EnvironmentSettings"
+_TENANT_SETTINGS = "powerplatform:index:TenantSettings"
 
 # Function tokens.
 _GET_ENVIRONMENTS = "powerplatform:index:getEnvironments"
@@ -102,6 +104,7 @@ class PowerPlatformProvider(Provider):
         self._isv_contract: Optional[IsvContractResource] = None
         self._environment: Optional[EnvironmentResource] = None
         self._env_settings: Optional[EnvironmentSettingsResource] = None
+        self._tenant_settings: Optional[TenantSettingsResource] = None
         self._get_envs: Optional[GetEnvironmentsFunction] = None
         self._get_connectors: Optional[GetConnectorsFunction] = None
         self._get_apps: Optional[GetAppsFunction] = None
@@ -127,6 +130,7 @@ class PowerPlatformProvider(Provider):
         self._isv_contract = IsvContractResource(self._client)
         self._environment = EnvironmentResource(self._client)
         self._env_settings = EnvironmentSettingsResource(self._client)
+        self._tenant_settings = TenantSettingsResource(self._client)
         self._get_envs = GetEnvironmentsFunction(self._client)
         self._get_connectors = GetConnectorsFunction(self._client)
         self._get_apps = GetAppsFunction(self._client)
@@ -218,5 +222,6 @@ class PowerPlatformProvider(Provider):
             _ISV_CONTRACT: self._isv_contract,
             _ENVIRONMENT: self._environment,
             _ENVIRONMENT_SETTINGS: self._env_settings,
+            _TENANT_SETTINGS: self._tenant_settings,
         }
         return handlers.get(resource_type)

@@ -36,6 +36,7 @@
         "managedEnvironment.ts",
         "provider.ts",
         "roleAssignment.ts",
+        "tenantSettings.ts",
         "types/index.ts",
         "types/input.ts",
         "types/output.ts",

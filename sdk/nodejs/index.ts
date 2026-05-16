@@ -75,6 +75,11 @@ export type RoleAssignment = import("./roleAssignment").RoleAssignment;
 export const RoleAssignment: typeof import("./roleAssignment").RoleAssignment = null as any;
 utilities.lazyLoad(exports, ["RoleAssignment"], () => require("./roleAssignment"));
 
+export { TenantSettingsArgs } from "./tenantSettings";
+export type TenantSettings = import("./tenantSettings").TenantSettings;
+export const TenantSettings: typeof import("./tenantSettings").TenantSettings = null as any;
+utilities.lazyLoad(exports, ["TenantSettings"], () => require("./tenantSettings"));
+
 
 // Export sub-modules:
 import * as config from "./config";
@@ -107,6 +112,8 @@ const _module = {
                 return new ManagedEnvironment(name, <any>undefined, { urn })
             case "powerplatform:index:RoleAssignment":
                 return new RoleAssignment(name, <any>undefined, { urn })
+            case "powerplatform:index:TenantSettings":
+                return new TenantSettings(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

@@ -1111,6 +1111,2714 @@ func (o RuleSetArrayOutput) Index(i pulumi.IntInput) RuleSetOutput {
 	}).(RuleSetOutput)
 }
 
+// Catalog settings.
+type TenantCatalogSettings struct {
+	// Power Catalog audience setting.
+	PowerCatalogAudienceSetting *string `pulumi:"powerCatalogAudienceSetting"`
+}
+
+// TenantCatalogSettingsInput is an input type that accepts TenantCatalogSettingsArgs and TenantCatalogSettingsOutput values.
+// You can construct a concrete instance of `TenantCatalogSettingsInput` via:
+//
+//	TenantCatalogSettingsArgs{...}
+type TenantCatalogSettingsInput interface {
+	pulumi.Input
+
+	ToTenantCatalogSettingsOutput() TenantCatalogSettingsOutput
+	ToTenantCatalogSettingsOutputWithContext(context.Context) TenantCatalogSettingsOutput
+}
+
+// Catalog settings.
+type TenantCatalogSettingsArgs struct {
+	// Power Catalog audience setting.
+	PowerCatalogAudienceSetting pulumi.StringPtrInput `pulumi:"powerCatalogAudienceSetting"`
+}
+
+func (TenantCatalogSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantCatalogSettings)(nil)).Elem()
+}
+
+func (i TenantCatalogSettingsArgs) ToTenantCatalogSettingsOutput() TenantCatalogSettingsOutput {
+	return i.ToTenantCatalogSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantCatalogSettingsArgs) ToTenantCatalogSettingsOutputWithContext(ctx context.Context) TenantCatalogSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantCatalogSettingsOutput)
+}
+
+func (i TenantCatalogSettingsArgs) ToTenantCatalogSettingsPtrOutput() TenantCatalogSettingsPtrOutput {
+	return i.ToTenantCatalogSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantCatalogSettingsArgs) ToTenantCatalogSettingsPtrOutputWithContext(ctx context.Context) TenantCatalogSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantCatalogSettingsOutput).ToTenantCatalogSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantCatalogSettingsPtrInput is an input type that accepts TenantCatalogSettingsArgs, TenantCatalogSettingsPtr and TenantCatalogSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantCatalogSettingsPtrInput` via:
+//
+//	        TenantCatalogSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantCatalogSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantCatalogSettingsPtrOutput() TenantCatalogSettingsPtrOutput
+	ToTenantCatalogSettingsPtrOutputWithContext(context.Context) TenantCatalogSettingsPtrOutput
+}
+
+type tenantCatalogSettingsPtrType TenantCatalogSettingsArgs
+
+func TenantCatalogSettingsPtr(v *TenantCatalogSettingsArgs) TenantCatalogSettingsPtrInput {
+	return (*tenantCatalogSettingsPtrType)(v)
+}
+
+func (*tenantCatalogSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantCatalogSettings)(nil)).Elem()
+}
+
+func (i *tenantCatalogSettingsPtrType) ToTenantCatalogSettingsPtrOutput() TenantCatalogSettingsPtrOutput {
+	return i.ToTenantCatalogSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantCatalogSettingsPtrType) ToTenantCatalogSettingsPtrOutputWithContext(ctx context.Context) TenantCatalogSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantCatalogSettingsPtrOutput)
+}
+
+// Catalog settings.
+type TenantCatalogSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantCatalogSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantCatalogSettings)(nil)).Elem()
+}
+
+func (o TenantCatalogSettingsOutput) ToTenantCatalogSettingsOutput() TenantCatalogSettingsOutput {
+	return o
+}
+
+func (o TenantCatalogSettingsOutput) ToTenantCatalogSettingsOutputWithContext(ctx context.Context) TenantCatalogSettingsOutput {
+	return o
+}
+
+func (o TenantCatalogSettingsOutput) ToTenantCatalogSettingsPtrOutput() TenantCatalogSettingsPtrOutput {
+	return o.ToTenantCatalogSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantCatalogSettingsOutput) ToTenantCatalogSettingsPtrOutputWithContext(ctx context.Context) TenantCatalogSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantCatalogSettings) *TenantCatalogSettings {
+		return &v
+	}).(TenantCatalogSettingsPtrOutput)
+}
+
+// Power Catalog audience setting.
+func (o TenantCatalogSettingsOutput) PowerCatalogAudienceSetting() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v TenantCatalogSettings) *string { return v.PowerCatalogAudienceSetting }).(pulumi.StringPtrOutput)
+}
+
+type TenantCatalogSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantCatalogSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantCatalogSettings)(nil)).Elem()
+}
+
+func (o TenantCatalogSettingsPtrOutput) ToTenantCatalogSettingsPtrOutput() TenantCatalogSettingsPtrOutput {
+	return o
+}
+
+func (o TenantCatalogSettingsPtrOutput) ToTenantCatalogSettingsPtrOutputWithContext(ctx context.Context) TenantCatalogSettingsPtrOutput {
+	return o
+}
+
+func (o TenantCatalogSettingsPtrOutput) Elem() TenantCatalogSettingsOutput {
+	return o.ApplyT(func(v *TenantCatalogSettings) TenantCatalogSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantCatalogSettings
+		return ret
+	}).(TenantCatalogSettingsOutput)
+}
+
+// Power Catalog audience setting.
+func (o TenantCatalogSettingsPtrOutput) PowerCatalogAudienceSetting() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *TenantCatalogSettings) *string {
+		if v == nil {
+			return nil
+		}
+		return v.PowerCatalogAudienceSetting
+	}).(pulumi.StringPtrOutput)
+}
+
+// Champions settings.
+type TenantChampionsSettings struct {
+	// Disable champions invitation reachout.
+	DisableChampionsInvitationReachout *bool `pulumi:"disableChampionsInvitationReachout"`
+	// Disable skills match invitation reachout.
+	DisableSkillsMatchInvitationReachout *bool `pulumi:"disableSkillsMatchInvitationReachout"`
+}
+
+// TenantChampionsSettingsInput is an input type that accepts TenantChampionsSettingsArgs and TenantChampionsSettingsOutput values.
+// You can construct a concrete instance of `TenantChampionsSettingsInput` via:
+//
+//	TenantChampionsSettingsArgs{...}
+type TenantChampionsSettingsInput interface {
+	pulumi.Input
+
+	ToTenantChampionsSettingsOutput() TenantChampionsSettingsOutput
+	ToTenantChampionsSettingsOutputWithContext(context.Context) TenantChampionsSettingsOutput
+}
+
+// Champions settings.
+type TenantChampionsSettingsArgs struct {
+	// Disable champions invitation reachout.
+	DisableChampionsInvitationReachout pulumi.BoolPtrInput `pulumi:"disableChampionsInvitationReachout"`
+	// Disable skills match invitation reachout.
+	DisableSkillsMatchInvitationReachout pulumi.BoolPtrInput `pulumi:"disableSkillsMatchInvitationReachout"`
+}
+
+func (TenantChampionsSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantChampionsSettings)(nil)).Elem()
+}
+
+func (i TenantChampionsSettingsArgs) ToTenantChampionsSettingsOutput() TenantChampionsSettingsOutput {
+	return i.ToTenantChampionsSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantChampionsSettingsArgs) ToTenantChampionsSettingsOutputWithContext(ctx context.Context) TenantChampionsSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantChampionsSettingsOutput)
+}
+
+func (i TenantChampionsSettingsArgs) ToTenantChampionsSettingsPtrOutput() TenantChampionsSettingsPtrOutput {
+	return i.ToTenantChampionsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantChampionsSettingsArgs) ToTenantChampionsSettingsPtrOutputWithContext(ctx context.Context) TenantChampionsSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantChampionsSettingsOutput).ToTenantChampionsSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantChampionsSettingsPtrInput is an input type that accepts TenantChampionsSettingsArgs, TenantChampionsSettingsPtr and TenantChampionsSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantChampionsSettingsPtrInput` via:
+//
+//	        TenantChampionsSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantChampionsSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantChampionsSettingsPtrOutput() TenantChampionsSettingsPtrOutput
+	ToTenantChampionsSettingsPtrOutputWithContext(context.Context) TenantChampionsSettingsPtrOutput
+}
+
+type tenantChampionsSettingsPtrType TenantChampionsSettingsArgs
+
+func TenantChampionsSettingsPtr(v *TenantChampionsSettingsArgs) TenantChampionsSettingsPtrInput {
+	return (*tenantChampionsSettingsPtrType)(v)
+}
+
+func (*tenantChampionsSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantChampionsSettings)(nil)).Elem()
+}
+
+func (i *tenantChampionsSettingsPtrType) ToTenantChampionsSettingsPtrOutput() TenantChampionsSettingsPtrOutput {
+	return i.ToTenantChampionsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantChampionsSettingsPtrType) ToTenantChampionsSettingsPtrOutputWithContext(ctx context.Context) TenantChampionsSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantChampionsSettingsPtrOutput)
+}
+
+// Champions settings.
+type TenantChampionsSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantChampionsSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantChampionsSettings)(nil)).Elem()
+}
+
+func (o TenantChampionsSettingsOutput) ToTenantChampionsSettingsOutput() TenantChampionsSettingsOutput {
+	return o
+}
+
+func (o TenantChampionsSettingsOutput) ToTenantChampionsSettingsOutputWithContext(ctx context.Context) TenantChampionsSettingsOutput {
+	return o
+}
+
+func (o TenantChampionsSettingsOutput) ToTenantChampionsSettingsPtrOutput() TenantChampionsSettingsPtrOutput {
+	return o.ToTenantChampionsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantChampionsSettingsOutput) ToTenantChampionsSettingsPtrOutputWithContext(ctx context.Context) TenantChampionsSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantChampionsSettings) *TenantChampionsSettings {
+		return &v
+	}).(TenantChampionsSettingsPtrOutput)
+}
+
+// Disable champions invitation reachout.
+func (o TenantChampionsSettingsOutput) DisableChampionsInvitationReachout() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantChampionsSettings) *bool { return v.DisableChampionsInvitationReachout }).(pulumi.BoolPtrOutput)
+}
+
+// Disable skills match invitation reachout.
+func (o TenantChampionsSettingsOutput) DisableSkillsMatchInvitationReachout() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantChampionsSettings) *bool { return v.DisableSkillsMatchInvitationReachout }).(pulumi.BoolPtrOutput)
+}
+
+type TenantChampionsSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantChampionsSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantChampionsSettings)(nil)).Elem()
+}
+
+func (o TenantChampionsSettingsPtrOutput) ToTenantChampionsSettingsPtrOutput() TenantChampionsSettingsPtrOutput {
+	return o
+}
+
+func (o TenantChampionsSettingsPtrOutput) ToTenantChampionsSettingsPtrOutputWithContext(ctx context.Context) TenantChampionsSettingsPtrOutput {
+	return o
+}
+
+func (o TenantChampionsSettingsPtrOutput) Elem() TenantChampionsSettingsOutput {
+	return o.ApplyT(func(v *TenantChampionsSettings) TenantChampionsSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantChampionsSettings
+		return ret
+	}).(TenantChampionsSettingsOutput)
+}
+
+// Disable champions invitation reachout.
+func (o TenantChampionsSettingsPtrOutput) DisableChampionsInvitationReachout() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantChampionsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableChampionsInvitationReachout
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable skills match invitation reachout.
+func (o TenantChampionsSettingsPtrOutput) DisableSkillsMatchInvitationReachout() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantChampionsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableSkillsMatchInvitationReachout
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Environment settings.
+type TenantEnvironmentsSettings struct {
+	// Disable preferred data location for Teams environment creation.
+	DisablePreferredDataLocationForTeamsEnvironment *bool `pulumi:"disablePreferredDataLocationForTeamsEnvironment"`
+}
+
+// TenantEnvironmentsSettingsInput is an input type that accepts TenantEnvironmentsSettingsArgs and TenantEnvironmentsSettingsOutput values.
+// You can construct a concrete instance of `TenantEnvironmentsSettingsInput` via:
+//
+//	TenantEnvironmentsSettingsArgs{...}
+type TenantEnvironmentsSettingsInput interface {
+	pulumi.Input
+
+	ToTenantEnvironmentsSettingsOutput() TenantEnvironmentsSettingsOutput
+	ToTenantEnvironmentsSettingsOutputWithContext(context.Context) TenantEnvironmentsSettingsOutput
+}
+
+// Environment settings.
+type TenantEnvironmentsSettingsArgs struct {
+	// Disable preferred data location for Teams environment creation.
+	DisablePreferredDataLocationForTeamsEnvironment pulumi.BoolPtrInput `pulumi:"disablePreferredDataLocationForTeamsEnvironment"`
+}
+
+func (TenantEnvironmentsSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantEnvironmentsSettings)(nil)).Elem()
+}
+
+func (i TenantEnvironmentsSettingsArgs) ToTenantEnvironmentsSettingsOutput() TenantEnvironmentsSettingsOutput {
+	return i.ToTenantEnvironmentsSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantEnvironmentsSettingsArgs) ToTenantEnvironmentsSettingsOutputWithContext(ctx context.Context) TenantEnvironmentsSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantEnvironmentsSettingsOutput)
+}
+
+func (i TenantEnvironmentsSettingsArgs) ToTenantEnvironmentsSettingsPtrOutput() TenantEnvironmentsSettingsPtrOutput {
+	return i.ToTenantEnvironmentsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantEnvironmentsSettingsArgs) ToTenantEnvironmentsSettingsPtrOutputWithContext(ctx context.Context) TenantEnvironmentsSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantEnvironmentsSettingsOutput).ToTenantEnvironmentsSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantEnvironmentsSettingsPtrInput is an input type that accepts TenantEnvironmentsSettingsArgs, TenantEnvironmentsSettingsPtr and TenantEnvironmentsSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantEnvironmentsSettingsPtrInput` via:
+//
+//	        TenantEnvironmentsSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantEnvironmentsSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantEnvironmentsSettingsPtrOutput() TenantEnvironmentsSettingsPtrOutput
+	ToTenantEnvironmentsSettingsPtrOutputWithContext(context.Context) TenantEnvironmentsSettingsPtrOutput
+}
+
+type tenantEnvironmentsSettingsPtrType TenantEnvironmentsSettingsArgs
+
+func TenantEnvironmentsSettingsPtr(v *TenantEnvironmentsSettingsArgs) TenantEnvironmentsSettingsPtrInput {
+	return (*tenantEnvironmentsSettingsPtrType)(v)
+}
+
+func (*tenantEnvironmentsSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantEnvironmentsSettings)(nil)).Elem()
+}
+
+func (i *tenantEnvironmentsSettingsPtrType) ToTenantEnvironmentsSettingsPtrOutput() TenantEnvironmentsSettingsPtrOutput {
+	return i.ToTenantEnvironmentsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantEnvironmentsSettingsPtrType) ToTenantEnvironmentsSettingsPtrOutputWithContext(ctx context.Context) TenantEnvironmentsSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantEnvironmentsSettingsPtrOutput)
+}
+
+// Environment settings.
+type TenantEnvironmentsSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantEnvironmentsSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantEnvironmentsSettings)(nil)).Elem()
+}
+
+func (o TenantEnvironmentsSettingsOutput) ToTenantEnvironmentsSettingsOutput() TenantEnvironmentsSettingsOutput {
+	return o
+}
+
+func (o TenantEnvironmentsSettingsOutput) ToTenantEnvironmentsSettingsOutputWithContext(ctx context.Context) TenantEnvironmentsSettingsOutput {
+	return o
+}
+
+func (o TenantEnvironmentsSettingsOutput) ToTenantEnvironmentsSettingsPtrOutput() TenantEnvironmentsSettingsPtrOutput {
+	return o.ToTenantEnvironmentsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantEnvironmentsSettingsOutput) ToTenantEnvironmentsSettingsPtrOutputWithContext(ctx context.Context) TenantEnvironmentsSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantEnvironmentsSettings) *TenantEnvironmentsSettings {
+		return &v
+	}).(TenantEnvironmentsSettingsPtrOutput)
+}
+
+// Disable preferred data location for Teams environment creation.
+func (o TenantEnvironmentsSettingsOutput) DisablePreferredDataLocationForTeamsEnvironment() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantEnvironmentsSettings) *bool { return v.DisablePreferredDataLocationForTeamsEnvironment }).(pulumi.BoolPtrOutput)
+}
+
+type TenantEnvironmentsSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantEnvironmentsSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantEnvironmentsSettings)(nil)).Elem()
+}
+
+func (o TenantEnvironmentsSettingsPtrOutput) ToTenantEnvironmentsSettingsPtrOutput() TenantEnvironmentsSettingsPtrOutput {
+	return o
+}
+
+func (o TenantEnvironmentsSettingsPtrOutput) ToTenantEnvironmentsSettingsPtrOutputWithContext(ctx context.Context) TenantEnvironmentsSettingsPtrOutput {
+	return o
+}
+
+func (o TenantEnvironmentsSettingsPtrOutput) Elem() TenantEnvironmentsSettingsOutput {
+	return o.ApplyT(func(v *TenantEnvironmentsSettings) TenantEnvironmentsSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantEnvironmentsSettings
+		return ret
+	}).(TenantEnvironmentsSettingsOutput)
+}
+
+// Disable preferred data location for Teams environment creation.
+func (o TenantEnvironmentsSettingsPtrOutput) DisablePreferredDataLocationForTeamsEnvironment() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantEnvironmentsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisablePreferredDataLocationForTeamsEnvironment
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Governance policy settings.
+type TenantGovernancePolicySettings struct {
+	// Enable desktop flow data policy management.
+	EnableDesktopFlowDataPolicyManagement *bool `pulumi:"enableDesktopFlowDataPolicyManagement"`
+}
+
+// TenantGovernancePolicySettingsInput is an input type that accepts TenantGovernancePolicySettingsArgs and TenantGovernancePolicySettingsOutput values.
+// You can construct a concrete instance of `TenantGovernancePolicySettingsInput` via:
+//
+//	TenantGovernancePolicySettingsArgs{...}
+type TenantGovernancePolicySettingsInput interface {
+	pulumi.Input
+
+	ToTenantGovernancePolicySettingsOutput() TenantGovernancePolicySettingsOutput
+	ToTenantGovernancePolicySettingsOutputWithContext(context.Context) TenantGovernancePolicySettingsOutput
+}
+
+// Governance policy settings.
+type TenantGovernancePolicySettingsArgs struct {
+	// Enable desktop flow data policy management.
+	EnableDesktopFlowDataPolicyManagement pulumi.BoolPtrInput `pulumi:"enableDesktopFlowDataPolicyManagement"`
+}
+
+func (TenantGovernancePolicySettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantGovernancePolicySettings)(nil)).Elem()
+}
+
+func (i TenantGovernancePolicySettingsArgs) ToTenantGovernancePolicySettingsOutput() TenantGovernancePolicySettingsOutput {
+	return i.ToTenantGovernancePolicySettingsOutputWithContext(context.Background())
+}
+
+func (i TenantGovernancePolicySettingsArgs) ToTenantGovernancePolicySettingsOutputWithContext(ctx context.Context) TenantGovernancePolicySettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantGovernancePolicySettingsOutput)
+}
+
+func (i TenantGovernancePolicySettingsArgs) ToTenantGovernancePolicySettingsPtrOutput() TenantGovernancePolicySettingsPtrOutput {
+	return i.ToTenantGovernancePolicySettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantGovernancePolicySettingsArgs) ToTenantGovernancePolicySettingsPtrOutputWithContext(ctx context.Context) TenantGovernancePolicySettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantGovernancePolicySettingsOutput).ToTenantGovernancePolicySettingsPtrOutputWithContext(ctx)
+}
+
+// TenantGovernancePolicySettingsPtrInput is an input type that accepts TenantGovernancePolicySettingsArgs, TenantGovernancePolicySettingsPtr and TenantGovernancePolicySettingsPtrOutput values.
+// You can construct a concrete instance of `TenantGovernancePolicySettingsPtrInput` via:
+//
+//	        TenantGovernancePolicySettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantGovernancePolicySettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantGovernancePolicySettingsPtrOutput() TenantGovernancePolicySettingsPtrOutput
+	ToTenantGovernancePolicySettingsPtrOutputWithContext(context.Context) TenantGovernancePolicySettingsPtrOutput
+}
+
+type tenantGovernancePolicySettingsPtrType TenantGovernancePolicySettingsArgs
+
+func TenantGovernancePolicySettingsPtr(v *TenantGovernancePolicySettingsArgs) TenantGovernancePolicySettingsPtrInput {
+	return (*tenantGovernancePolicySettingsPtrType)(v)
+}
+
+func (*tenantGovernancePolicySettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantGovernancePolicySettings)(nil)).Elem()
+}
+
+func (i *tenantGovernancePolicySettingsPtrType) ToTenantGovernancePolicySettingsPtrOutput() TenantGovernancePolicySettingsPtrOutput {
+	return i.ToTenantGovernancePolicySettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantGovernancePolicySettingsPtrType) ToTenantGovernancePolicySettingsPtrOutputWithContext(ctx context.Context) TenantGovernancePolicySettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantGovernancePolicySettingsPtrOutput)
+}
+
+// Governance policy settings.
+type TenantGovernancePolicySettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantGovernancePolicySettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantGovernancePolicySettings)(nil)).Elem()
+}
+
+func (o TenantGovernancePolicySettingsOutput) ToTenantGovernancePolicySettingsOutput() TenantGovernancePolicySettingsOutput {
+	return o
+}
+
+func (o TenantGovernancePolicySettingsOutput) ToTenantGovernancePolicySettingsOutputWithContext(ctx context.Context) TenantGovernancePolicySettingsOutput {
+	return o
+}
+
+func (o TenantGovernancePolicySettingsOutput) ToTenantGovernancePolicySettingsPtrOutput() TenantGovernancePolicySettingsPtrOutput {
+	return o.ToTenantGovernancePolicySettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantGovernancePolicySettingsOutput) ToTenantGovernancePolicySettingsPtrOutputWithContext(ctx context.Context) TenantGovernancePolicySettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantGovernancePolicySettings) *TenantGovernancePolicySettings {
+		return &v
+	}).(TenantGovernancePolicySettingsPtrOutput)
+}
+
+// Enable desktop flow data policy management.
+func (o TenantGovernancePolicySettingsOutput) EnableDesktopFlowDataPolicyManagement() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantGovernancePolicySettings) *bool { return v.EnableDesktopFlowDataPolicyManagement }).(pulumi.BoolPtrOutput)
+}
+
+type TenantGovernancePolicySettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantGovernancePolicySettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantGovernancePolicySettings)(nil)).Elem()
+}
+
+func (o TenantGovernancePolicySettingsPtrOutput) ToTenantGovernancePolicySettingsPtrOutput() TenantGovernancePolicySettingsPtrOutput {
+	return o
+}
+
+func (o TenantGovernancePolicySettingsPtrOutput) ToTenantGovernancePolicySettingsPtrOutputWithContext(ctx context.Context) TenantGovernancePolicySettingsPtrOutput {
+	return o
+}
+
+func (o TenantGovernancePolicySettingsPtrOutput) Elem() TenantGovernancePolicySettingsOutput {
+	return o.ApplyT(func(v *TenantGovernancePolicySettings) TenantGovernancePolicySettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantGovernancePolicySettings
+		return ret
+	}).(TenantGovernancePolicySettingsOutput)
+}
+
+// Enable desktop flow data policy management.
+func (o TenantGovernancePolicySettingsPtrOutput) EnableDesktopFlowDataPolicyManagement() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantGovernancePolicySettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableDesktopFlowDataPolicyManagement
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Governance settings.
+type TenantGovernanceSettings struct {
+	// Disable admin digest.
+	DisableAdminDigest *bool `pulumi:"disableAdminDigest"`
+	// Disable developer environment creation by non-admin users.
+	DisableDeveloperEnvironmentCreationByNonAdminUsers *bool `pulumi:"disableDeveloperEnvironmentCreationByNonAdminUsers"`
+	// Enable default environment routing.
+	EnableDefaultEnvironmentRouting *bool `pulumi:"enableDefaultEnvironmentRouting"`
+	// Route all makers to personal dev environments.
+	EnvironmentRoutingAllMakers *bool `pulumi:"environmentRoutingAllMakers"`
+	// Target environment group for default environment routing.
+	EnvironmentRoutingTargetEnvironmentGroupId *string `pulumi:"environmentRoutingTargetEnvironmentGroupId"`
+	// Target security group for default environment routing.
+	EnvironmentRoutingTargetSecurityGroupId *string `pulumi:"environmentRoutingTargetSecurityGroupId"`
+	// Governance policy settings.
+	Policy *TenantGovernancePolicySettings `pulumi:"policy"`
+}
+
+// TenantGovernanceSettingsInput is an input type that accepts TenantGovernanceSettingsArgs and TenantGovernanceSettingsOutput values.
+// You can construct a concrete instance of `TenantGovernanceSettingsInput` via:
+//
+//	TenantGovernanceSettingsArgs{...}
+type TenantGovernanceSettingsInput interface {
+	pulumi.Input
+
+	ToTenantGovernanceSettingsOutput() TenantGovernanceSettingsOutput
+	ToTenantGovernanceSettingsOutputWithContext(context.Context) TenantGovernanceSettingsOutput
+}
+
+// Governance settings.
+type TenantGovernanceSettingsArgs struct {
+	// Disable admin digest.
+	DisableAdminDigest pulumi.BoolPtrInput `pulumi:"disableAdminDigest"`
+	// Disable developer environment creation by non-admin users.
+	DisableDeveloperEnvironmentCreationByNonAdminUsers pulumi.BoolPtrInput `pulumi:"disableDeveloperEnvironmentCreationByNonAdminUsers"`
+	// Enable default environment routing.
+	EnableDefaultEnvironmentRouting pulumi.BoolPtrInput `pulumi:"enableDefaultEnvironmentRouting"`
+	// Route all makers to personal dev environments.
+	EnvironmentRoutingAllMakers pulumi.BoolPtrInput `pulumi:"environmentRoutingAllMakers"`
+	// Target environment group for default environment routing.
+	EnvironmentRoutingTargetEnvironmentGroupId pulumi.StringPtrInput `pulumi:"environmentRoutingTargetEnvironmentGroupId"`
+	// Target security group for default environment routing.
+	EnvironmentRoutingTargetSecurityGroupId pulumi.StringPtrInput `pulumi:"environmentRoutingTargetSecurityGroupId"`
+	// Governance policy settings.
+	Policy TenantGovernancePolicySettingsPtrInput `pulumi:"policy"`
+}
+
+func (TenantGovernanceSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantGovernanceSettings)(nil)).Elem()
+}
+
+func (i TenantGovernanceSettingsArgs) ToTenantGovernanceSettingsOutput() TenantGovernanceSettingsOutput {
+	return i.ToTenantGovernanceSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantGovernanceSettingsArgs) ToTenantGovernanceSettingsOutputWithContext(ctx context.Context) TenantGovernanceSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantGovernanceSettingsOutput)
+}
+
+func (i TenantGovernanceSettingsArgs) ToTenantGovernanceSettingsPtrOutput() TenantGovernanceSettingsPtrOutput {
+	return i.ToTenantGovernanceSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantGovernanceSettingsArgs) ToTenantGovernanceSettingsPtrOutputWithContext(ctx context.Context) TenantGovernanceSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantGovernanceSettingsOutput).ToTenantGovernanceSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantGovernanceSettingsPtrInput is an input type that accepts TenantGovernanceSettingsArgs, TenantGovernanceSettingsPtr and TenantGovernanceSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantGovernanceSettingsPtrInput` via:
+//
+//	        TenantGovernanceSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantGovernanceSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantGovernanceSettingsPtrOutput() TenantGovernanceSettingsPtrOutput
+	ToTenantGovernanceSettingsPtrOutputWithContext(context.Context) TenantGovernanceSettingsPtrOutput
+}
+
+type tenantGovernanceSettingsPtrType TenantGovernanceSettingsArgs
+
+func TenantGovernanceSettingsPtr(v *TenantGovernanceSettingsArgs) TenantGovernanceSettingsPtrInput {
+	return (*tenantGovernanceSettingsPtrType)(v)
+}
+
+func (*tenantGovernanceSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantGovernanceSettings)(nil)).Elem()
+}
+
+func (i *tenantGovernanceSettingsPtrType) ToTenantGovernanceSettingsPtrOutput() TenantGovernanceSettingsPtrOutput {
+	return i.ToTenantGovernanceSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantGovernanceSettingsPtrType) ToTenantGovernanceSettingsPtrOutputWithContext(ctx context.Context) TenantGovernanceSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantGovernanceSettingsPtrOutput)
+}
+
+// Governance settings.
+type TenantGovernanceSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantGovernanceSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantGovernanceSettings)(nil)).Elem()
+}
+
+func (o TenantGovernanceSettingsOutput) ToTenantGovernanceSettingsOutput() TenantGovernanceSettingsOutput {
+	return o
+}
+
+func (o TenantGovernanceSettingsOutput) ToTenantGovernanceSettingsOutputWithContext(ctx context.Context) TenantGovernanceSettingsOutput {
+	return o
+}
+
+func (o TenantGovernanceSettingsOutput) ToTenantGovernanceSettingsPtrOutput() TenantGovernanceSettingsPtrOutput {
+	return o.ToTenantGovernanceSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantGovernanceSettingsOutput) ToTenantGovernanceSettingsPtrOutputWithContext(ctx context.Context) TenantGovernanceSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantGovernanceSettings) *TenantGovernanceSettings {
+		return &v
+	}).(TenantGovernanceSettingsPtrOutput)
+}
+
+// Disable admin digest.
+func (o TenantGovernanceSettingsOutput) DisableAdminDigest() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *bool { return v.DisableAdminDigest }).(pulumi.BoolPtrOutput)
+}
+
+// Disable developer environment creation by non-admin users.
+func (o TenantGovernanceSettingsOutput) DisableDeveloperEnvironmentCreationByNonAdminUsers() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *bool { return v.DisableDeveloperEnvironmentCreationByNonAdminUsers }).(pulumi.BoolPtrOutput)
+}
+
+// Enable default environment routing.
+func (o TenantGovernanceSettingsOutput) EnableDefaultEnvironmentRouting() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *bool { return v.EnableDefaultEnvironmentRouting }).(pulumi.BoolPtrOutput)
+}
+
+// Route all makers to personal dev environments.
+func (o TenantGovernanceSettingsOutput) EnvironmentRoutingAllMakers() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *bool { return v.EnvironmentRoutingAllMakers }).(pulumi.BoolPtrOutput)
+}
+
+// Target environment group for default environment routing.
+func (o TenantGovernanceSettingsOutput) EnvironmentRoutingTargetEnvironmentGroupId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *string { return v.EnvironmentRoutingTargetEnvironmentGroupId }).(pulumi.StringPtrOutput)
+}
+
+// Target security group for default environment routing.
+func (o TenantGovernanceSettingsOutput) EnvironmentRoutingTargetSecurityGroupId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *string { return v.EnvironmentRoutingTargetSecurityGroupId }).(pulumi.StringPtrOutput)
+}
+
+// Governance policy settings.
+func (o TenantGovernanceSettingsOutput) Policy() TenantGovernancePolicySettingsPtrOutput {
+	return o.ApplyT(func(v TenantGovernanceSettings) *TenantGovernancePolicySettings { return v.Policy }).(TenantGovernancePolicySettingsPtrOutput)
+}
+
+type TenantGovernanceSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantGovernanceSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantGovernanceSettings)(nil)).Elem()
+}
+
+func (o TenantGovernanceSettingsPtrOutput) ToTenantGovernanceSettingsPtrOutput() TenantGovernanceSettingsPtrOutput {
+	return o
+}
+
+func (o TenantGovernanceSettingsPtrOutput) ToTenantGovernanceSettingsPtrOutputWithContext(ctx context.Context) TenantGovernanceSettingsPtrOutput {
+	return o
+}
+
+func (o TenantGovernanceSettingsPtrOutput) Elem() TenantGovernanceSettingsOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) TenantGovernanceSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantGovernanceSettings
+		return ret
+	}).(TenantGovernanceSettingsOutput)
+}
+
+// Disable admin digest.
+func (o TenantGovernanceSettingsPtrOutput) DisableAdminDigest() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableAdminDigest
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable developer environment creation by non-admin users.
+func (o TenantGovernanceSettingsPtrOutput) DisableDeveloperEnvironmentCreationByNonAdminUsers() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableDeveloperEnvironmentCreationByNonAdminUsers
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Enable default environment routing.
+func (o TenantGovernanceSettingsPtrOutput) EnableDefaultEnvironmentRouting() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableDefaultEnvironmentRouting
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Route all makers to personal dev environments.
+func (o TenantGovernanceSettingsPtrOutput) EnvironmentRoutingAllMakers() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnvironmentRoutingAllMakers
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Target environment group for default environment routing.
+func (o TenantGovernanceSettingsPtrOutput) EnvironmentRoutingTargetEnvironmentGroupId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *string {
+		if v == nil {
+			return nil
+		}
+		return v.EnvironmentRoutingTargetEnvironmentGroupId
+	}).(pulumi.StringPtrOutput)
+}
+
+// Target security group for default environment routing.
+func (o TenantGovernanceSettingsPtrOutput) EnvironmentRoutingTargetSecurityGroupId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *string {
+		if v == nil {
+			return nil
+		}
+		return v.EnvironmentRoutingTargetSecurityGroupId
+	}).(pulumi.StringPtrOutput)
+}
+
+// Governance policy settings.
+func (o TenantGovernanceSettingsPtrOutput) Policy() TenantGovernancePolicySettingsPtrOutput {
+	return o.ApplyT(func(v *TenantGovernanceSettings) *TenantGovernancePolicySettings {
+		if v == nil {
+			return nil
+		}
+		return v.Policy
+	}).(TenantGovernancePolicySettingsPtrOutput)
+}
+
+// Intelligence settings.
+type TenantIntelligenceSettings struct {
+	// Disable Copilot.
+	DisableCopilot *bool `pulumi:"disableCopilot"`
+	// Enable OpenAI bot publishing.
+	EnableOpenAiBotPublishing *bool `pulumi:"enableOpenAiBotPublishing"`
+}
+
+// TenantIntelligenceSettingsInput is an input type that accepts TenantIntelligenceSettingsArgs and TenantIntelligenceSettingsOutput values.
+// You can construct a concrete instance of `TenantIntelligenceSettingsInput` via:
+//
+//	TenantIntelligenceSettingsArgs{...}
+type TenantIntelligenceSettingsInput interface {
+	pulumi.Input
+
+	ToTenantIntelligenceSettingsOutput() TenantIntelligenceSettingsOutput
+	ToTenantIntelligenceSettingsOutputWithContext(context.Context) TenantIntelligenceSettingsOutput
+}
+
+// Intelligence settings.
+type TenantIntelligenceSettingsArgs struct {
+	// Disable Copilot.
+	DisableCopilot pulumi.BoolPtrInput `pulumi:"disableCopilot"`
+	// Enable OpenAI bot publishing.
+	EnableOpenAiBotPublishing pulumi.BoolPtrInput `pulumi:"enableOpenAiBotPublishing"`
+}
+
+func (TenantIntelligenceSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantIntelligenceSettings)(nil)).Elem()
+}
+
+func (i TenantIntelligenceSettingsArgs) ToTenantIntelligenceSettingsOutput() TenantIntelligenceSettingsOutput {
+	return i.ToTenantIntelligenceSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantIntelligenceSettingsArgs) ToTenantIntelligenceSettingsOutputWithContext(ctx context.Context) TenantIntelligenceSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantIntelligenceSettingsOutput)
+}
+
+func (i TenantIntelligenceSettingsArgs) ToTenantIntelligenceSettingsPtrOutput() TenantIntelligenceSettingsPtrOutput {
+	return i.ToTenantIntelligenceSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantIntelligenceSettingsArgs) ToTenantIntelligenceSettingsPtrOutputWithContext(ctx context.Context) TenantIntelligenceSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantIntelligenceSettingsOutput).ToTenantIntelligenceSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantIntelligenceSettingsPtrInput is an input type that accepts TenantIntelligenceSettingsArgs, TenantIntelligenceSettingsPtr and TenantIntelligenceSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantIntelligenceSettingsPtrInput` via:
+//
+//	        TenantIntelligenceSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantIntelligenceSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantIntelligenceSettingsPtrOutput() TenantIntelligenceSettingsPtrOutput
+	ToTenantIntelligenceSettingsPtrOutputWithContext(context.Context) TenantIntelligenceSettingsPtrOutput
+}
+
+type tenantIntelligenceSettingsPtrType TenantIntelligenceSettingsArgs
+
+func TenantIntelligenceSettingsPtr(v *TenantIntelligenceSettingsArgs) TenantIntelligenceSettingsPtrInput {
+	return (*tenantIntelligenceSettingsPtrType)(v)
+}
+
+func (*tenantIntelligenceSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantIntelligenceSettings)(nil)).Elem()
+}
+
+func (i *tenantIntelligenceSettingsPtrType) ToTenantIntelligenceSettingsPtrOutput() TenantIntelligenceSettingsPtrOutput {
+	return i.ToTenantIntelligenceSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantIntelligenceSettingsPtrType) ToTenantIntelligenceSettingsPtrOutputWithContext(ctx context.Context) TenantIntelligenceSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantIntelligenceSettingsPtrOutput)
+}
+
+// Intelligence settings.
+type TenantIntelligenceSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantIntelligenceSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantIntelligenceSettings)(nil)).Elem()
+}
+
+func (o TenantIntelligenceSettingsOutput) ToTenantIntelligenceSettingsOutput() TenantIntelligenceSettingsOutput {
+	return o
+}
+
+func (o TenantIntelligenceSettingsOutput) ToTenantIntelligenceSettingsOutputWithContext(ctx context.Context) TenantIntelligenceSettingsOutput {
+	return o
+}
+
+func (o TenantIntelligenceSettingsOutput) ToTenantIntelligenceSettingsPtrOutput() TenantIntelligenceSettingsPtrOutput {
+	return o.ToTenantIntelligenceSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantIntelligenceSettingsOutput) ToTenantIntelligenceSettingsPtrOutputWithContext(ctx context.Context) TenantIntelligenceSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantIntelligenceSettings) *TenantIntelligenceSettings {
+		return &v
+	}).(TenantIntelligenceSettingsPtrOutput)
+}
+
+// Disable Copilot.
+func (o TenantIntelligenceSettingsOutput) DisableCopilot() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantIntelligenceSettings) *bool { return v.DisableCopilot }).(pulumi.BoolPtrOutput)
+}
+
+// Enable OpenAI bot publishing.
+func (o TenantIntelligenceSettingsOutput) EnableOpenAiBotPublishing() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantIntelligenceSettings) *bool { return v.EnableOpenAiBotPublishing }).(pulumi.BoolPtrOutput)
+}
+
+type TenantIntelligenceSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantIntelligenceSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantIntelligenceSettings)(nil)).Elem()
+}
+
+func (o TenantIntelligenceSettingsPtrOutput) ToTenantIntelligenceSettingsPtrOutput() TenantIntelligenceSettingsPtrOutput {
+	return o
+}
+
+func (o TenantIntelligenceSettingsPtrOutput) ToTenantIntelligenceSettingsPtrOutputWithContext(ctx context.Context) TenantIntelligenceSettingsPtrOutput {
+	return o
+}
+
+func (o TenantIntelligenceSettingsPtrOutput) Elem() TenantIntelligenceSettingsOutput {
+	return o.ApplyT(func(v *TenantIntelligenceSettings) TenantIntelligenceSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantIntelligenceSettings
+		return ret
+	}).(TenantIntelligenceSettingsOutput)
+}
+
+// Disable Copilot.
+func (o TenantIntelligenceSettingsPtrOutput) DisableCopilot() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantIntelligenceSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableCopilot
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Enable OpenAI bot publishing.
+func (o TenantIntelligenceSettingsPtrOutput) EnableOpenAiBotPublishing() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantIntelligenceSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableOpenAiBotPublishing
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Licensing settings.
+type TenantLicensingSettings struct {
+	// Disable billing policy creation by non-admin users.
+	DisableBillingPolicyCreationByNonAdminUsers *bool `pulumi:"disableBillingPolicyCreationByNonAdminUsers"`
+	// Disable use of unassigned AI Builder credits.
+	DisableUseOfUnassignedAIBuilderCredits *bool `pulumi:"disableUseOfUnassignedAIBuilderCredits"`
+	// Enable tenant capacity report for environment admins.
+	EnableTenantCapacityReportForEnvironmentAdmins *bool `pulumi:"enableTenantCapacityReportForEnvironmentAdmins"`
+	// Enable tenant licensing report for environment admins.
+	EnableTenantLicensingReportForEnvironmentAdmins *bool `pulumi:"enableTenantLicensingReportForEnvironmentAdmins"`
+	// Storage capacity consumption warning threshold.
+	StorageCapacityConsumptionWarningThreshold *int `pulumi:"storageCapacityConsumptionWarningThreshold"`
+}
+
+// TenantLicensingSettingsInput is an input type that accepts TenantLicensingSettingsArgs and TenantLicensingSettingsOutput values.
+// You can construct a concrete instance of `TenantLicensingSettingsInput` via:
+//
+//	TenantLicensingSettingsArgs{...}
+type TenantLicensingSettingsInput interface {
+	pulumi.Input
+
+	ToTenantLicensingSettingsOutput() TenantLicensingSettingsOutput
+	ToTenantLicensingSettingsOutputWithContext(context.Context) TenantLicensingSettingsOutput
+}
+
+// Licensing settings.
+type TenantLicensingSettingsArgs struct {
+	// Disable billing policy creation by non-admin users.
+	DisableBillingPolicyCreationByNonAdminUsers pulumi.BoolPtrInput `pulumi:"disableBillingPolicyCreationByNonAdminUsers"`
+	// Disable use of unassigned AI Builder credits.
+	DisableUseOfUnassignedAIBuilderCredits pulumi.BoolPtrInput `pulumi:"disableUseOfUnassignedAIBuilderCredits"`
+	// Enable tenant capacity report for environment admins.
+	EnableTenantCapacityReportForEnvironmentAdmins pulumi.BoolPtrInput `pulumi:"enableTenantCapacityReportForEnvironmentAdmins"`
+	// Enable tenant licensing report for environment admins.
+	EnableTenantLicensingReportForEnvironmentAdmins pulumi.BoolPtrInput `pulumi:"enableTenantLicensingReportForEnvironmentAdmins"`
+	// Storage capacity consumption warning threshold.
+	StorageCapacityConsumptionWarningThreshold pulumi.IntPtrInput `pulumi:"storageCapacityConsumptionWarningThreshold"`
+}
+
+func (TenantLicensingSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantLicensingSettings)(nil)).Elem()
+}
+
+func (i TenantLicensingSettingsArgs) ToTenantLicensingSettingsOutput() TenantLicensingSettingsOutput {
+	return i.ToTenantLicensingSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantLicensingSettingsArgs) ToTenantLicensingSettingsOutputWithContext(ctx context.Context) TenantLicensingSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantLicensingSettingsOutput)
+}
+
+func (i TenantLicensingSettingsArgs) ToTenantLicensingSettingsPtrOutput() TenantLicensingSettingsPtrOutput {
+	return i.ToTenantLicensingSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantLicensingSettingsArgs) ToTenantLicensingSettingsPtrOutputWithContext(ctx context.Context) TenantLicensingSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantLicensingSettingsOutput).ToTenantLicensingSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantLicensingSettingsPtrInput is an input type that accepts TenantLicensingSettingsArgs, TenantLicensingSettingsPtr and TenantLicensingSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantLicensingSettingsPtrInput` via:
+//
+//	        TenantLicensingSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantLicensingSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantLicensingSettingsPtrOutput() TenantLicensingSettingsPtrOutput
+	ToTenantLicensingSettingsPtrOutputWithContext(context.Context) TenantLicensingSettingsPtrOutput
+}
+
+type tenantLicensingSettingsPtrType TenantLicensingSettingsArgs
+
+func TenantLicensingSettingsPtr(v *TenantLicensingSettingsArgs) TenantLicensingSettingsPtrInput {
+	return (*tenantLicensingSettingsPtrType)(v)
+}
+
+func (*tenantLicensingSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantLicensingSettings)(nil)).Elem()
+}
+
+func (i *tenantLicensingSettingsPtrType) ToTenantLicensingSettingsPtrOutput() TenantLicensingSettingsPtrOutput {
+	return i.ToTenantLicensingSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantLicensingSettingsPtrType) ToTenantLicensingSettingsPtrOutputWithContext(ctx context.Context) TenantLicensingSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantLicensingSettingsPtrOutput)
+}
+
+// Licensing settings.
+type TenantLicensingSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantLicensingSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantLicensingSettings)(nil)).Elem()
+}
+
+func (o TenantLicensingSettingsOutput) ToTenantLicensingSettingsOutput() TenantLicensingSettingsOutput {
+	return o
+}
+
+func (o TenantLicensingSettingsOutput) ToTenantLicensingSettingsOutputWithContext(ctx context.Context) TenantLicensingSettingsOutput {
+	return o
+}
+
+func (o TenantLicensingSettingsOutput) ToTenantLicensingSettingsPtrOutput() TenantLicensingSettingsPtrOutput {
+	return o.ToTenantLicensingSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantLicensingSettingsOutput) ToTenantLicensingSettingsPtrOutputWithContext(ctx context.Context) TenantLicensingSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantLicensingSettings) *TenantLicensingSettings {
+		return &v
+	}).(TenantLicensingSettingsPtrOutput)
+}
+
+// Disable billing policy creation by non-admin users.
+func (o TenantLicensingSettingsOutput) DisableBillingPolicyCreationByNonAdminUsers() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantLicensingSettings) *bool { return v.DisableBillingPolicyCreationByNonAdminUsers }).(pulumi.BoolPtrOutput)
+}
+
+// Disable use of unassigned AI Builder credits.
+func (o TenantLicensingSettingsOutput) DisableUseOfUnassignedAIBuilderCredits() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantLicensingSettings) *bool { return v.DisableUseOfUnassignedAIBuilderCredits }).(pulumi.BoolPtrOutput)
+}
+
+// Enable tenant capacity report for environment admins.
+func (o TenantLicensingSettingsOutput) EnableTenantCapacityReportForEnvironmentAdmins() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantLicensingSettings) *bool { return v.EnableTenantCapacityReportForEnvironmentAdmins }).(pulumi.BoolPtrOutput)
+}
+
+// Enable tenant licensing report for environment admins.
+func (o TenantLicensingSettingsOutput) EnableTenantLicensingReportForEnvironmentAdmins() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantLicensingSettings) *bool { return v.EnableTenantLicensingReportForEnvironmentAdmins }).(pulumi.BoolPtrOutput)
+}
+
+// Storage capacity consumption warning threshold.
+func (o TenantLicensingSettingsOutput) StorageCapacityConsumptionWarningThreshold() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v TenantLicensingSettings) *int { return v.StorageCapacityConsumptionWarningThreshold }).(pulumi.IntPtrOutput)
+}
+
+type TenantLicensingSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantLicensingSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantLicensingSettings)(nil)).Elem()
+}
+
+func (o TenantLicensingSettingsPtrOutput) ToTenantLicensingSettingsPtrOutput() TenantLicensingSettingsPtrOutput {
+	return o
+}
+
+func (o TenantLicensingSettingsPtrOutput) ToTenantLicensingSettingsPtrOutputWithContext(ctx context.Context) TenantLicensingSettingsPtrOutput {
+	return o
+}
+
+func (o TenantLicensingSettingsPtrOutput) Elem() TenantLicensingSettingsOutput {
+	return o.ApplyT(func(v *TenantLicensingSettings) TenantLicensingSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantLicensingSettings
+		return ret
+	}).(TenantLicensingSettingsOutput)
+}
+
+// Disable billing policy creation by non-admin users.
+func (o TenantLicensingSettingsPtrOutput) DisableBillingPolicyCreationByNonAdminUsers() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantLicensingSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableBillingPolicyCreationByNonAdminUsers
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable use of unassigned AI Builder credits.
+func (o TenantLicensingSettingsPtrOutput) DisableUseOfUnassignedAIBuilderCredits() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantLicensingSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableUseOfUnassignedAIBuilderCredits
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Enable tenant capacity report for environment admins.
+func (o TenantLicensingSettingsPtrOutput) EnableTenantCapacityReportForEnvironmentAdmins() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantLicensingSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableTenantCapacityReportForEnvironmentAdmins
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Enable tenant licensing report for environment admins.
+func (o TenantLicensingSettingsPtrOutput) EnableTenantLicensingReportForEnvironmentAdmins() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantLicensingSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableTenantLicensingReportForEnvironmentAdmins
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Storage capacity consumption warning threshold.
+func (o TenantLicensingSettingsPtrOutput) StorageCapacityConsumptionWarningThreshold() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *TenantLicensingSettings) *int {
+		if v == nil {
+			return nil
+		}
+		return v.StorageCapacityConsumptionWarningThreshold
+	}).(pulumi.IntPtrOutput)
+}
+
+// Model experimentation settings.
+type TenantModelExperimentationSettings struct {
+	// Disable data logging.
+	DisableDataLogging *bool `pulumi:"disableDataLogging"`
+	// Enable model data sharing.
+	EnableModelDataSharing *bool `pulumi:"enableModelDataSharing"`
+}
+
+// TenantModelExperimentationSettingsInput is an input type that accepts TenantModelExperimentationSettingsArgs and TenantModelExperimentationSettingsOutput values.
+// You can construct a concrete instance of `TenantModelExperimentationSettingsInput` via:
+//
+//	TenantModelExperimentationSettingsArgs{...}
+type TenantModelExperimentationSettingsInput interface {
+	pulumi.Input
+
+	ToTenantModelExperimentationSettingsOutput() TenantModelExperimentationSettingsOutput
+	ToTenantModelExperimentationSettingsOutputWithContext(context.Context) TenantModelExperimentationSettingsOutput
+}
+
+// Model experimentation settings.
+type TenantModelExperimentationSettingsArgs struct {
+	// Disable data logging.
+	DisableDataLogging pulumi.BoolPtrInput `pulumi:"disableDataLogging"`
+	// Enable model data sharing.
+	EnableModelDataSharing pulumi.BoolPtrInput `pulumi:"enableModelDataSharing"`
+}
+
+func (TenantModelExperimentationSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantModelExperimentationSettings)(nil)).Elem()
+}
+
+func (i TenantModelExperimentationSettingsArgs) ToTenantModelExperimentationSettingsOutput() TenantModelExperimentationSettingsOutput {
+	return i.ToTenantModelExperimentationSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantModelExperimentationSettingsArgs) ToTenantModelExperimentationSettingsOutputWithContext(ctx context.Context) TenantModelExperimentationSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantModelExperimentationSettingsOutput)
+}
+
+func (i TenantModelExperimentationSettingsArgs) ToTenantModelExperimentationSettingsPtrOutput() TenantModelExperimentationSettingsPtrOutput {
+	return i.ToTenantModelExperimentationSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantModelExperimentationSettingsArgs) ToTenantModelExperimentationSettingsPtrOutputWithContext(ctx context.Context) TenantModelExperimentationSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantModelExperimentationSettingsOutput).ToTenantModelExperimentationSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantModelExperimentationSettingsPtrInput is an input type that accepts TenantModelExperimentationSettingsArgs, TenantModelExperimentationSettingsPtr and TenantModelExperimentationSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantModelExperimentationSettingsPtrInput` via:
+//
+//	        TenantModelExperimentationSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantModelExperimentationSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantModelExperimentationSettingsPtrOutput() TenantModelExperimentationSettingsPtrOutput
+	ToTenantModelExperimentationSettingsPtrOutputWithContext(context.Context) TenantModelExperimentationSettingsPtrOutput
+}
+
+type tenantModelExperimentationSettingsPtrType TenantModelExperimentationSettingsArgs
+
+func TenantModelExperimentationSettingsPtr(v *TenantModelExperimentationSettingsArgs) TenantModelExperimentationSettingsPtrInput {
+	return (*tenantModelExperimentationSettingsPtrType)(v)
+}
+
+func (*tenantModelExperimentationSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantModelExperimentationSettings)(nil)).Elem()
+}
+
+func (i *tenantModelExperimentationSettingsPtrType) ToTenantModelExperimentationSettingsPtrOutput() TenantModelExperimentationSettingsPtrOutput {
+	return i.ToTenantModelExperimentationSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantModelExperimentationSettingsPtrType) ToTenantModelExperimentationSettingsPtrOutputWithContext(ctx context.Context) TenantModelExperimentationSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantModelExperimentationSettingsPtrOutput)
+}
+
+// Model experimentation settings.
+type TenantModelExperimentationSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantModelExperimentationSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantModelExperimentationSettings)(nil)).Elem()
+}
+
+func (o TenantModelExperimentationSettingsOutput) ToTenantModelExperimentationSettingsOutput() TenantModelExperimentationSettingsOutput {
+	return o
+}
+
+func (o TenantModelExperimentationSettingsOutput) ToTenantModelExperimentationSettingsOutputWithContext(ctx context.Context) TenantModelExperimentationSettingsOutput {
+	return o
+}
+
+func (o TenantModelExperimentationSettingsOutput) ToTenantModelExperimentationSettingsPtrOutput() TenantModelExperimentationSettingsPtrOutput {
+	return o.ToTenantModelExperimentationSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantModelExperimentationSettingsOutput) ToTenantModelExperimentationSettingsPtrOutputWithContext(ctx context.Context) TenantModelExperimentationSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantModelExperimentationSettings) *TenantModelExperimentationSettings {
+		return &v
+	}).(TenantModelExperimentationSettingsPtrOutput)
+}
+
+// Disable data logging.
+func (o TenantModelExperimentationSettingsOutput) DisableDataLogging() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantModelExperimentationSettings) *bool { return v.DisableDataLogging }).(pulumi.BoolPtrOutput)
+}
+
+// Enable model data sharing.
+func (o TenantModelExperimentationSettingsOutput) EnableModelDataSharing() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantModelExperimentationSettings) *bool { return v.EnableModelDataSharing }).(pulumi.BoolPtrOutput)
+}
+
+type TenantModelExperimentationSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantModelExperimentationSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantModelExperimentationSettings)(nil)).Elem()
+}
+
+func (o TenantModelExperimentationSettingsPtrOutput) ToTenantModelExperimentationSettingsPtrOutput() TenantModelExperimentationSettingsPtrOutput {
+	return o
+}
+
+func (o TenantModelExperimentationSettingsPtrOutput) ToTenantModelExperimentationSettingsPtrOutputWithContext(ctx context.Context) TenantModelExperimentationSettingsPtrOutput {
+	return o
+}
+
+func (o TenantModelExperimentationSettingsPtrOutput) Elem() TenantModelExperimentationSettingsOutput {
+	return o.ApplyT(func(v *TenantModelExperimentationSettings) TenantModelExperimentationSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantModelExperimentationSettings
+		return ret
+	}).(TenantModelExperimentationSettingsOutput)
+}
+
+// Disable data logging.
+func (o TenantModelExperimentationSettingsPtrOutput) DisableDataLogging() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantModelExperimentationSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableDataLogging
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Enable model data sharing.
+func (o TenantModelExperimentationSettingsPtrOutput) EnableModelDataSharing() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantModelExperimentationSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableModelDataSharing
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Power Apps settings.
+type TenantPowerAppsSettings struct {
+	// Disable connection sharing with everyone.
+	DisableConnectionSharingWithEveryone *bool `pulumi:"disableConnectionSharingWithEveryone"`
+	// Disable create from Figma.
+	DisableCreateFromFigma *bool `pulumi:"disableCreateFromFigma"`
+	// Disable create from image.
+	DisableCreateFromImage *bool `pulumi:"disableCreateFromImage"`
+	// Disable maker match.
+	DisableMakerMatch *bool `pulumi:"disableMakerMatch"`
+	// Disable share with everyone.
+	DisableShareWithEveryone *bool `pulumi:"disableShareWithEveryone"`
+	// Disable unused license assignment.
+	DisableUnusedLicenseAssignment *bool `pulumi:"disableUnusedLicenseAssignment"`
+	// Enable guests to make apps.
+	EnableGuestsToMake *bool `pulumi:"enableGuestsToMake"`
+}
+
+// TenantPowerAppsSettingsInput is an input type that accepts TenantPowerAppsSettingsArgs and TenantPowerAppsSettingsOutput values.
+// You can construct a concrete instance of `TenantPowerAppsSettingsInput` via:
+//
+//	TenantPowerAppsSettingsArgs{...}
+type TenantPowerAppsSettingsInput interface {
+	pulumi.Input
+
+	ToTenantPowerAppsSettingsOutput() TenantPowerAppsSettingsOutput
+	ToTenantPowerAppsSettingsOutputWithContext(context.Context) TenantPowerAppsSettingsOutput
+}
+
+// Power Apps settings.
+type TenantPowerAppsSettingsArgs struct {
+	// Disable connection sharing with everyone.
+	DisableConnectionSharingWithEveryone pulumi.BoolPtrInput `pulumi:"disableConnectionSharingWithEveryone"`
+	// Disable create from Figma.
+	DisableCreateFromFigma pulumi.BoolPtrInput `pulumi:"disableCreateFromFigma"`
+	// Disable create from image.
+	DisableCreateFromImage pulumi.BoolPtrInput `pulumi:"disableCreateFromImage"`
+	// Disable maker match.
+	DisableMakerMatch pulumi.BoolPtrInput `pulumi:"disableMakerMatch"`
+	// Disable share with everyone.
+	DisableShareWithEveryone pulumi.BoolPtrInput `pulumi:"disableShareWithEveryone"`
+	// Disable unused license assignment.
+	DisableUnusedLicenseAssignment pulumi.BoolPtrInput `pulumi:"disableUnusedLicenseAssignment"`
+	// Enable guests to make apps.
+	EnableGuestsToMake pulumi.BoolPtrInput `pulumi:"enableGuestsToMake"`
+}
+
+func (TenantPowerAppsSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerAppsSettings)(nil)).Elem()
+}
+
+func (i TenantPowerAppsSettingsArgs) ToTenantPowerAppsSettingsOutput() TenantPowerAppsSettingsOutput {
+	return i.ToTenantPowerAppsSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantPowerAppsSettingsArgs) ToTenantPowerAppsSettingsOutputWithContext(ctx context.Context) TenantPowerAppsSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerAppsSettingsOutput)
+}
+
+func (i TenantPowerAppsSettingsArgs) ToTenantPowerAppsSettingsPtrOutput() TenantPowerAppsSettingsPtrOutput {
+	return i.ToTenantPowerAppsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantPowerAppsSettingsArgs) ToTenantPowerAppsSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAppsSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerAppsSettingsOutput).ToTenantPowerAppsSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantPowerAppsSettingsPtrInput is an input type that accepts TenantPowerAppsSettingsArgs, TenantPowerAppsSettingsPtr and TenantPowerAppsSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantPowerAppsSettingsPtrInput` via:
+//
+//	        TenantPowerAppsSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantPowerAppsSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantPowerAppsSettingsPtrOutput() TenantPowerAppsSettingsPtrOutput
+	ToTenantPowerAppsSettingsPtrOutputWithContext(context.Context) TenantPowerAppsSettingsPtrOutput
+}
+
+type tenantPowerAppsSettingsPtrType TenantPowerAppsSettingsArgs
+
+func TenantPowerAppsSettingsPtr(v *TenantPowerAppsSettingsArgs) TenantPowerAppsSettingsPtrInput {
+	return (*tenantPowerAppsSettingsPtrType)(v)
+}
+
+func (*tenantPowerAppsSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerAppsSettings)(nil)).Elem()
+}
+
+func (i *tenantPowerAppsSettingsPtrType) ToTenantPowerAppsSettingsPtrOutput() TenantPowerAppsSettingsPtrOutput {
+	return i.ToTenantPowerAppsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantPowerAppsSettingsPtrType) ToTenantPowerAppsSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAppsSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerAppsSettingsPtrOutput)
+}
+
+// Power Apps settings.
+type TenantPowerAppsSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerAppsSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerAppsSettings)(nil)).Elem()
+}
+
+func (o TenantPowerAppsSettingsOutput) ToTenantPowerAppsSettingsOutput() TenantPowerAppsSettingsOutput {
+	return o
+}
+
+func (o TenantPowerAppsSettingsOutput) ToTenantPowerAppsSettingsOutputWithContext(ctx context.Context) TenantPowerAppsSettingsOutput {
+	return o
+}
+
+func (o TenantPowerAppsSettingsOutput) ToTenantPowerAppsSettingsPtrOutput() TenantPowerAppsSettingsPtrOutput {
+	return o.ToTenantPowerAppsSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantPowerAppsSettingsOutput) ToTenantPowerAppsSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAppsSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantPowerAppsSettings) *TenantPowerAppsSettings {
+		return &v
+	}).(TenantPowerAppsSettingsPtrOutput)
+}
+
+// Disable connection sharing with everyone.
+func (o TenantPowerAppsSettingsOutput) DisableConnectionSharingWithEveryone() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.DisableConnectionSharingWithEveryone }).(pulumi.BoolPtrOutput)
+}
+
+// Disable create from Figma.
+func (o TenantPowerAppsSettingsOutput) DisableCreateFromFigma() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.DisableCreateFromFigma }).(pulumi.BoolPtrOutput)
+}
+
+// Disable create from image.
+func (o TenantPowerAppsSettingsOutput) DisableCreateFromImage() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.DisableCreateFromImage }).(pulumi.BoolPtrOutput)
+}
+
+// Disable maker match.
+func (o TenantPowerAppsSettingsOutput) DisableMakerMatch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.DisableMakerMatch }).(pulumi.BoolPtrOutput)
+}
+
+// Disable share with everyone.
+func (o TenantPowerAppsSettingsOutput) DisableShareWithEveryone() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.DisableShareWithEveryone }).(pulumi.BoolPtrOutput)
+}
+
+// Disable unused license assignment.
+func (o TenantPowerAppsSettingsOutput) DisableUnusedLicenseAssignment() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.DisableUnusedLicenseAssignment }).(pulumi.BoolPtrOutput)
+}
+
+// Enable guests to make apps.
+func (o TenantPowerAppsSettingsOutput) EnableGuestsToMake() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAppsSettings) *bool { return v.EnableGuestsToMake }).(pulumi.BoolPtrOutput)
+}
+
+type TenantPowerAppsSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerAppsSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerAppsSettings)(nil)).Elem()
+}
+
+func (o TenantPowerAppsSettingsPtrOutput) ToTenantPowerAppsSettingsPtrOutput() TenantPowerAppsSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerAppsSettingsPtrOutput) ToTenantPowerAppsSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAppsSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerAppsSettingsPtrOutput) Elem() TenantPowerAppsSettingsOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) TenantPowerAppsSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantPowerAppsSettings
+		return ret
+	}).(TenantPowerAppsSettingsOutput)
+}
+
+// Disable connection sharing with everyone.
+func (o TenantPowerAppsSettingsPtrOutput) DisableConnectionSharingWithEveryone() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableConnectionSharingWithEveryone
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable create from Figma.
+func (o TenantPowerAppsSettingsPtrOutput) DisableCreateFromFigma() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableCreateFromFigma
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable create from image.
+func (o TenantPowerAppsSettingsPtrOutput) DisableCreateFromImage() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableCreateFromImage
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable maker match.
+func (o TenantPowerAppsSettingsPtrOutput) DisableMakerMatch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableMakerMatch
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable share with everyone.
+func (o TenantPowerAppsSettingsPtrOutput) DisableShareWithEveryone() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableShareWithEveryone
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable unused license assignment.
+func (o TenantPowerAppsSettingsPtrOutput) DisableUnusedLicenseAssignment() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableUnusedLicenseAssignment
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Enable guests to make apps.
+func (o TenantPowerAppsSettingsPtrOutput) EnableGuestsToMake() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAppsSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableGuestsToMake
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Power Automate settings.
+type TenantPowerAutomateSettings struct {
+	// Disable Copilot for Power Automate.
+	DisableCopilot *bool `pulumi:"disableCopilot"`
+}
+
+// TenantPowerAutomateSettingsInput is an input type that accepts TenantPowerAutomateSettingsArgs and TenantPowerAutomateSettingsOutput values.
+// You can construct a concrete instance of `TenantPowerAutomateSettingsInput` via:
+//
+//	TenantPowerAutomateSettingsArgs{...}
+type TenantPowerAutomateSettingsInput interface {
+	pulumi.Input
+
+	ToTenantPowerAutomateSettingsOutput() TenantPowerAutomateSettingsOutput
+	ToTenantPowerAutomateSettingsOutputWithContext(context.Context) TenantPowerAutomateSettingsOutput
+}
+
+// Power Automate settings.
+type TenantPowerAutomateSettingsArgs struct {
+	// Disable Copilot for Power Automate.
+	DisableCopilot pulumi.BoolPtrInput `pulumi:"disableCopilot"`
+}
+
+func (TenantPowerAutomateSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerAutomateSettings)(nil)).Elem()
+}
+
+func (i TenantPowerAutomateSettingsArgs) ToTenantPowerAutomateSettingsOutput() TenantPowerAutomateSettingsOutput {
+	return i.ToTenantPowerAutomateSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantPowerAutomateSettingsArgs) ToTenantPowerAutomateSettingsOutputWithContext(ctx context.Context) TenantPowerAutomateSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerAutomateSettingsOutput)
+}
+
+func (i TenantPowerAutomateSettingsArgs) ToTenantPowerAutomateSettingsPtrOutput() TenantPowerAutomateSettingsPtrOutput {
+	return i.ToTenantPowerAutomateSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantPowerAutomateSettingsArgs) ToTenantPowerAutomateSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAutomateSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerAutomateSettingsOutput).ToTenantPowerAutomateSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantPowerAutomateSettingsPtrInput is an input type that accepts TenantPowerAutomateSettingsArgs, TenantPowerAutomateSettingsPtr and TenantPowerAutomateSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantPowerAutomateSettingsPtrInput` via:
+//
+//	        TenantPowerAutomateSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantPowerAutomateSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantPowerAutomateSettingsPtrOutput() TenantPowerAutomateSettingsPtrOutput
+	ToTenantPowerAutomateSettingsPtrOutputWithContext(context.Context) TenantPowerAutomateSettingsPtrOutput
+}
+
+type tenantPowerAutomateSettingsPtrType TenantPowerAutomateSettingsArgs
+
+func TenantPowerAutomateSettingsPtr(v *TenantPowerAutomateSettingsArgs) TenantPowerAutomateSettingsPtrInput {
+	return (*tenantPowerAutomateSettingsPtrType)(v)
+}
+
+func (*tenantPowerAutomateSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerAutomateSettings)(nil)).Elem()
+}
+
+func (i *tenantPowerAutomateSettingsPtrType) ToTenantPowerAutomateSettingsPtrOutput() TenantPowerAutomateSettingsPtrOutput {
+	return i.ToTenantPowerAutomateSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantPowerAutomateSettingsPtrType) ToTenantPowerAutomateSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAutomateSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerAutomateSettingsPtrOutput)
+}
+
+// Power Automate settings.
+type TenantPowerAutomateSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerAutomateSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerAutomateSettings)(nil)).Elem()
+}
+
+func (o TenantPowerAutomateSettingsOutput) ToTenantPowerAutomateSettingsOutput() TenantPowerAutomateSettingsOutput {
+	return o
+}
+
+func (o TenantPowerAutomateSettingsOutput) ToTenantPowerAutomateSettingsOutputWithContext(ctx context.Context) TenantPowerAutomateSettingsOutput {
+	return o
+}
+
+func (o TenantPowerAutomateSettingsOutput) ToTenantPowerAutomateSettingsPtrOutput() TenantPowerAutomateSettingsPtrOutput {
+	return o.ToTenantPowerAutomateSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantPowerAutomateSettingsOutput) ToTenantPowerAutomateSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAutomateSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantPowerAutomateSettings) *TenantPowerAutomateSettings {
+		return &v
+	}).(TenantPowerAutomateSettingsPtrOutput)
+}
+
+// Disable Copilot for Power Automate.
+func (o TenantPowerAutomateSettingsOutput) DisableCopilot() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantPowerAutomateSettings) *bool { return v.DisableCopilot }).(pulumi.BoolPtrOutput)
+}
+
+type TenantPowerAutomateSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerAutomateSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerAutomateSettings)(nil)).Elem()
+}
+
+func (o TenantPowerAutomateSettingsPtrOutput) ToTenantPowerAutomateSettingsPtrOutput() TenantPowerAutomateSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerAutomateSettingsPtrOutput) ToTenantPowerAutomateSettingsPtrOutputWithContext(ctx context.Context) TenantPowerAutomateSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerAutomateSettingsPtrOutput) Elem() TenantPowerAutomateSettingsOutput {
+	return o.ApplyT(func(v *TenantPowerAutomateSettings) TenantPowerAutomateSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantPowerAutomateSettings
+		return ret
+	}).(TenantPowerAutomateSettingsOutput)
+}
+
+// Disable Copilot for Power Automate.
+func (o TenantPowerAutomateSettingsPtrOutput) DisableCopilot() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantPowerAutomateSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableCopilot
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Power Pages settings.
+type TenantPowerPagesSettings struct {
+}
+
+// TenantPowerPagesSettingsInput is an input type that accepts TenantPowerPagesSettingsArgs and TenantPowerPagesSettingsOutput values.
+// You can construct a concrete instance of `TenantPowerPagesSettingsInput` via:
+//
+//	TenantPowerPagesSettingsArgs{...}
+type TenantPowerPagesSettingsInput interface {
+	pulumi.Input
+
+	ToTenantPowerPagesSettingsOutput() TenantPowerPagesSettingsOutput
+	ToTenantPowerPagesSettingsOutputWithContext(context.Context) TenantPowerPagesSettingsOutput
+}
+
+// Power Pages settings.
+type TenantPowerPagesSettingsArgs struct {
+}
+
+func (TenantPowerPagesSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerPagesSettings)(nil)).Elem()
+}
+
+func (i TenantPowerPagesSettingsArgs) ToTenantPowerPagesSettingsOutput() TenantPowerPagesSettingsOutput {
+	return i.ToTenantPowerPagesSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantPowerPagesSettingsArgs) ToTenantPowerPagesSettingsOutputWithContext(ctx context.Context) TenantPowerPagesSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerPagesSettingsOutput)
+}
+
+func (i TenantPowerPagesSettingsArgs) ToTenantPowerPagesSettingsPtrOutput() TenantPowerPagesSettingsPtrOutput {
+	return i.ToTenantPowerPagesSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantPowerPagesSettingsArgs) ToTenantPowerPagesSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPagesSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerPagesSettingsOutput).ToTenantPowerPagesSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantPowerPagesSettingsPtrInput is an input type that accepts TenantPowerPagesSettingsArgs, TenantPowerPagesSettingsPtr and TenantPowerPagesSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantPowerPagesSettingsPtrInput` via:
+//
+//	        TenantPowerPagesSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantPowerPagesSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantPowerPagesSettingsPtrOutput() TenantPowerPagesSettingsPtrOutput
+	ToTenantPowerPagesSettingsPtrOutputWithContext(context.Context) TenantPowerPagesSettingsPtrOutput
+}
+
+type tenantPowerPagesSettingsPtrType TenantPowerPagesSettingsArgs
+
+func TenantPowerPagesSettingsPtr(v *TenantPowerPagesSettingsArgs) TenantPowerPagesSettingsPtrInput {
+	return (*tenantPowerPagesSettingsPtrType)(v)
+}
+
+func (*tenantPowerPagesSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerPagesSettings)(nil)).Elem()
+}
+
+func (i *tenantPowerPagesSettingsPtrType) ToTenantPowerPagesSettingsPtrOutput() TenantPowerPagesSettingsPtrOutput {
+	return i.ToTenantPowerPagesSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantPowerPagesSettingsPtrType) ToTenantPowerPagesSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPagesSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerPagesSettingsPtrOutput)
+}
+
+// Power Pages settings.
+type TenantPowerPagesSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerPagesSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerPagesSettings)(nil)).Elem()
+}
+
+func (o TenantPowerPagesSettingsOutput) ToTenantPowerPagesSettingsOutput() TenantPowerPagesSettingsOutput {
+	return o
+}
+
+func (o TenantPowerPagesSettingsOutput) ToTenantPowerPagesSettingsOutputWithContext(ctx context.Context) TenantPowerPagesSettingsOutput {
+	return o
+}
+
+func (o TenantPowerPagesSettingsOutput) ToTenantPowerPagesSettingsPtrOutput() TenantPowerPagesSettingsPtrOutput {
+	return o.ToTenantPowerPagesSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantPowerPagesSettingsOutput) ToTenantPowerPagesSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPagesSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantPowerPagesSettings) *TenantPowerPagesSettings {
+		return &v
+	}).(TenantPowerPagesSettingsPtrOutput)
+}
+
+type TenantPowerPagesSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerPagesSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerPagesSettings)(nil)).Elem()
+}
+
+func (o TenantPowerPagesSettingsPtrOutput) ToTenantPowerPagesSettingsPtrOutput() TenantPowerPagesSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerPagesSettingsPtrOutput) ToTenantPowerPagesSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPagesSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerPagesSettingsPtrOutput) Elem() TenantPowerPagesSettingsOutput {
+	return o.ApplyT(func(v *TenantPowerPagesSettings) TenantPowerPagesSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantPowerPagesSettings
+		return ret
+	}).(TenantPowerPagesSettingsOutput)
+}
+
+// Power Platform workload settings at tenant scope.
+type TenantPowerPlatformSettings struct {
+	// Catalog settings.
+	CatalogSettings *TenantCatalogSettings `pulumi:"catalogSettings"`
+	// Champions settings.
+	Champions *TenantChampionsSettings `pulumi:"champions"`
+	// Environment settings.
+	Environments *TenantEnvironmentsSettings `pulumi:"environments"`
+	// Governance settings.
+	Governance *TenantGovernanceSettings `pulumi:"governance"`
+	// Intelligence settings.
+	Intelligence *TenantIntelligenceSettings `pulumi:"intelligence"`
+	// Licensing settings.
+	Licensing *TenantLicensingSettings `pulumi:"licensing"`
+	// Model experimentation settings.
+	ModelExperimentation *TenantModelExperimentationSettings `pulumi:"modelExperimentation"`
+	// Power Apps settings.
+	PowerApps *TenantPowerAppsSettings `pulumi:"powerApps"`
+	// Power Automate settings.
+	PowerAutomate *TenantPowerAutomateSettings `pulumi:"powerAutomate"`
+	// Power Pages settings.
+	PowerPages *TenantPowerPagesSettings `pulumi:"powerPages"`
+	// Search settings.
+	Search *TenantSearchSettings `pulumi:"search"`
+	// Teams integration settings.
+	TeamsIntegration *TenantTeamsIntegrationSettings `pulumi:"teamsIntegration"`
+	// User management settings.
+	UserManagementSettings *TenantUserManagementSettings `pulumi:"userManagementSettings"`
+}
+
+// TenantPowerPlatformSettingsInput is an input type that accepts TenantPowerPlatformSettingsArgs and TenantPowerPlatformSettingsOutput values.
+// You can construct a concrete instance of `TenantPowerPlatformSettingsInput` via:
+//
+//	TenantPowerPlatformSettingsArgs{...}
+type TenantPowerPlatformSettingsInput interface {
+	pulumi.Input
+
+	ToTenantPowerPlatformSettingsOutput() TenantPowerPlatformSettingsOutput
+	ToTenantPowerPlatformSettingsOutputWithContext(context.Context) TenantPowerPlatformSettingsOutput
+}
+
+// Power Platform workload settings at tenant scope.
+type TenantPowerPlatformSettingsArgs struct {
+	// Catalog settings.
+	CatalogSettings TenantCatalogSettingsPtrInput `pulumi:"catalogSettings"`
+	// Champions settings.
+	Champions TenantChampionsSettingsPtrInput `pulumi:"champions"`
+	// Environment settings.
+	Environments TenantEnvironmentsSettingsPtrInput `pulumi:"environments"`
+	// Governance settings.
+	Governance TenantGovernanceSettingsPtrInput `pulumi:"governance"`
+	// Intelligence settings.
+	Intelligence TenantIntelligenceSettingsPtrInput `pulumi:"intelligence"`
+	// Licensing settings.
+	Licensing TenantLicensingSettingsPtrInput `pulumi:"licensing"`
+	// Model experimentation settings.
+	ModelExperimentation TenantModelExperimentationSettingsPtrInput `pulumi:"modelExperimentation"`
+	// Power Apps settings.
+	PowerApps TenantPowerAppsSettingsPtrInput `pulumi:"powerApps"`
+	// Power Automate settings.
+	PowerAutomate TenantPowerAutomateSettingsPtrInput `pulumi:"powerAutomate"`
+	// Power Pages settings.
+	PowerPages TenantPowerPagesSettingsPtrInput `pulumi:"powerPages"`
+	// Search settings.
+	Search TenantSearchSettingsPtrInput `pulumi:"search"`
+	// Teams integration settings.
+	TeamsIntegration TenantTeamsIntegrationSettingsPtrInput `pulumi:"teamsIntegration"`
+	// User management settings.
+	UserManagementSettings TenantUserManagementSettingsPtrInput `pulumi:"userManagementSettings"`
+}
+
+func (TenantPowerPlatformSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerPlatformSettings)(nil)).Elem()
+}
+
+func (i TenantPowerPlatformSettingsArgs) ToTenantPowerPlatformSettingsOutput() TenantPowerPlatformSettingsOutput {
+	return i.ToTenantPowerPlatformSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantPowerPlatformSettingsArgs) ToTenantPowerPlatformSettingsOutputWithContext(ctx context.Context) TenantPowerPlatformSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerPlatformSettingsOutput)
+}
+
+func (i TenantPowerPlatformSettingsArgs) ToTenantPowerPlatformSettingsPtrOutput() TenantPowerPlatformSettingsPtrOutput {
+	return i.ToTenantPowerPlatformSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantPowerPlatformSettingsArgs) ToTenantPowerPlatformSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPlatformSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerPlatformSettingsOutput).ToTenantPowerPlatformSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantPowerPlatformSettingsPtrInput is an input type that accepts TenantPowerPlatformSettingsArgs, TenantPowerPlatformSettingsPtr and TenantPowerPlatformSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantPowerPlatformSettingsPtrInput` via:
+//
+//	        TenantPowerPlatformSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantPowerPlatformSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantPowerPlatformSettingsPtrOutput() TenantPowerPlatformSettingsPtrOutput
+	ToTenantPowerPlatformSettingsPtrOutputWithContext(context.Context) TenantPowerPlatformSettingsPtrOutput
+}
+
+type tenantPowerPlatformSettingsPtrType TenantPowerPlatformSettingsArgs
+
+func TenantPowerPlatformSettingsPtr(v *TenantPowerPlatformSettingsArgs) TenantPowerPlatformSettingsPtrInput {
+	return (*tenantPowerPlatformSettingsPtrType)(v)
+}
+
+func (*tenantPowerPlatformSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerPlatformSettings)(nil)).Elem()
+}
+
+func (i *tenantPowerPlatformSettingsPtrType) ToTenantPowerPlatformSettingsPtrOutput() TenantPowerPlatformSettingsPtrOutput {
+	return i.ToTenantPowerPlatformSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantPowerPlatformSettingsPtrType) ToTenantPowerPlatformSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPlatformSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantPowerPlatformSettingsPtrOutput)
+}
+
+// Power Platform workload settings at tenant scope.
+type TenantPowerPlatformSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerPlatformSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantPowerPlatformSettings)(nil)).Elem()
+}
+
+func (o TenantPowerPlatformSettingsOutput) ToTenantPowerPlatformSettingsOutput() TenantPowerPlatformSettingsOutput {
+	return o
+}
+
+func (o TenantPowerPlatformSettingsOutput) ToTenantPowerPlatformSettingsOutputWithContext(ctx context.Context) TenantPowerPlatformSettingsOutput {
+	return o
+}
+
+func (o TenantPowerPlatformSettingsOutput) ToTenantPowerPlatformSettingsPtrOutput() TenantPowerPlatformSettingsPtrOutput {
+	return o.ToTenantPowerPlatformSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantPowerPlatformSettingsOutput) ToTenantPowerPlatformSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPlatformSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantPowerPlatformSettings) *TenantPowerPlatformSettings {
+		return &v
+	}).(TenantPowerPlatformSettingsPtrOutput)
+}
+
+// Catalog settings.
+func (o TenantPowerPlatformSettingsOutput) CatalogSettings() TenantCatalogSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantCatalogSettings { return v.CatalogSettings }).(TenantCatalogSettingsPtrOutput)
+}
+
+// Champions settings.
+func (o TenantPowerPlatformSettingsOutput) Champions() TenantChampionsSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantChampionsSettings { return v.Champions }).(TenantChampionsSettingsPtrOutput)
+}
+
+// Environment settings.
+func (o TenantPowerPlatformSettingsOutput) Environments() TenantEnvironmentsSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantEnvironmentsSettings { return v.Environments }).(TenantEnvironmentsSettingsPtrOutput)
+}
+
+// Governance settings.
+func (o TenantPowerPlatformSettingsOutput) Governance() TenantGovernanceSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantGovernanceSettings { return v.Governance }).(TenantGovernanceSettingsPtrOutput)
+}
+
+// Intelligence settings.
+func (o TenantPowerPlatformSettingsOutput) Intelligence() TenantIntelligenceSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantIntelligenceSettings { return v.Intelligence }).(TenantIntelligenceSettingsPtrOutput)
+}
+
+// Licensing settings.
+func (o TenantPowerPlatformSettingsOutput) Licensing() TenantLicensingSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantLicensingSettings { return v.Licensing }).(TenantLicensingSettingsPtrOutput)
+}
+
+// Model experimentation settings.
+func (o TenantPowerPlatformSettingsOutput) ModelExperimentation() TenantModelExperimentationSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantModelExperimentationSettings { return v.ModelExperimentation }).(TenantModelExperimentationSettingsPtrOutput)
+}
+
+// Power Apps settings.
+func (o TenantPowerPlatformSettingsOutput) PowerApps() TenantPowerAppsSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantPowerAppsSettings { return v.PowerApps }).(TenantPowerAppsSettingsPtrOutput)
+}
+
+// Power Automate settings.
+func (o TenantPowerPlatformSettingsOutput) PowerAutomate() TenantPowerAutomateSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantPowerAutomateSettings { return v.PowerAutomate }).(TenantPowerAutomateSettingsPtrOutput)
+}
+
+// Power Pages settings.
+func (o TenantPowerPlatformSettingsOutput) PowerPages() TenantPowerPagesSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantPowerPagesSettings { return v.PowerPages }).(TenantPowerPagesSettingsPtrOutput)
+}
+
+// Search settings.
+func (o TenantPowerPlatformSettingsOutput) Search() TenantSearchSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantSearchSettings { return v.Search }).(TenantSearchSettingsPtrOutput)
+}
+
+// Teams integration settings.
+func (o TenantPowerPlatformSettingsOutput) TeamsIntegration() TenantTeamsIntegrationSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantTeamsIntegrationSettings { return v.TeamsIntegration }).(TenantTeamsIntegrationSettingsPtrOutput)
+}
+
+// User management settings.
+func (o TenantPowerPlatformSettingsOutput) UserManagementSettings() TenantUserManagementSettingsPtrOutput {
+	return o.ApplyT(func(v TenantPowerPlatformSettings) *TenantUserManagementSettings { return v.UserManagementSettings }).(TenantUserManagementSettingsPtrOutput)
+}
+
+type TenantPowerPlatformSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantPowerPlatformSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantPowerPlatformSettings)(nil)).Elem()
+}
+
+func (o TenantPowerPlatformSettingsPtrOutput) ToTenantPowerPlatformSettingsPtrOutput() TenantPowerPlatformSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerPlatformSettingsPtrOutput) ToTenantPowerPlatformSettingsPtrOutputWithContext(ctx context.Context) TenantPowerPlatformSettingsPtrOutput {
+	return o
+}
+
+func (o TenantPowerPlatformSettingsPtrOutput) Elem() TenantPowerPlatformSettingsOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) TenantPowerPlatformSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantPowerPlatformSettings
+		return ret
+	}).(TenantPowerPlatformSettingsOutput)
+}
+
+// Catalog settings.
+func (o TenantPowerPlatformSettingsPtrOutput) CatalogSettings() TenantCatalogSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantCatalogSettings {
+		if v == nil {
+			return nil
+		}
+		return v.CatalogSettings
+	}).(TenantCatalogSettingsPtrOutput)
+}
+
+// Champions settings.
+func (o TenantPowerPlatformSettingsPtrOutput) Champions() TenantChampionsSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantChampionsSettings {
+		if v == nil {
+			return nil
+		}
+		return v.Champions
+	}).(TenantChampionsSettingsPtrOutput)
+}
+
+// Environment settings.
+func (o TenantPowerPlatformSettingsPtrOutput) Environments() TenantEnvironmentsSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantEnvironmentsSettings {
+		if v == nil {
+			return nil
+		}
+		return v.Environments
+	}).(TenantEnvironmentsSettingsPtrOutput)
+}
+
+// Governance settings.
+func (o TenantPowerPlatformSettingsPtrOutput) Governance() TenantGovernanceSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantGovernanceSettings {
+		if v == nil {
+			return nil
+		}
+		return v.Governance
+	}).(TenantGovernanceSettingsPtrOutput)
+}
+
+// Intelligence settings.
+func (o TenantPowerPlatformSettingsPtrOutput) Intelligence() TenantIntelligenceSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantIntelligenceSettings {
+		if v == nil {
+			return nil
+		}
+		return v.Intelligence
+	}).(TenantIntelligenceSettingsPtrOutput)
+}
+
+// Licensing settings.
+func (o TenantPowerPlatformSettingsPtrOutput) Licensing() TenantLicensingSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantLicensingSettings {
+		if v == nil {
+			return nil
+		}
+		return v.Licensing
+	}).(TenantLicensingSettingsPtrOutput)
+}
+
+// Model experimentation settings.
+func (o TenantPowerPlatformSettingsPtrOutput) ModelExperimentation() TenantModelExperimentationSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantModelExperimentationSettings {
+		if v == nil {
+			return nil
+		}
+		return v.ModelExperimentation
+	}).(TenantModelExperimentationSettingsPtrOutput)
+}
+
+// Power Apps settings.
+func (o TenantPowerPlatformSettingsPtrOutput) PowerApps() TenantPowerAppsSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantPowerAppsSettings {
+		if v == nil {
+			return nil
+		}
+		return v.PowerApps
+	}).(TenantPowerAppsSettingsPtrOutput)
+}
+
+// Power Automate settings.
+func (o TenantPowerPlatformSettingsPtrOutput) PowerAutomate() TenantPowerAutomateSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantPowerAutomateSettings {
+		if v == nil {
+			return nil
+		}
+		return v.PowerAutomate
+	}).(TenantPowerAutomateSettingsPtrOutput)
+}
+
+// Power Pages settings.
+func (o TenantPowerPlatformSettingsPtrOutput) PowerPages() TenantPowerPagesSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantPowerPagesSettings {
+		if v == nil {
+			return nil
+		}
+		return v.PowerPages
+	}).(TenantPowerPagesSettingsPtrOutput)
+}
+
+// Search settings.
+func (o TenantPowerPlatformSettingsPtrOutput) Search() TenantSearchSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantSearchSettings {
+		if v == nil {
+			return nil
+		}
+		return v.Search
+	}).(TenantSearchSettingsPtrOutput)
+}
+
+// Teams integration settings.
+func (o TenantPowerPlatformSettingsPtrOutput) TeamsIntegration() TenantTeamsIntegrationSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantTeamsIntegrationSettings {
+		if v == nil {
+			return nil
+		}
+		return v.TeamsIntegration
+	}).(TenantTeamsIntegrationSettingsPtrOutput)
+}
+
+// User management settings.
+func (o TenantPowerPlatformSettingsPtrOutput) UserManagementSettings() TenantUserManagementSettingsPtrOutput {
+	return o.ApplyT(func(v *TenantPowerPlatformSettings) *TenantUserManagementSettings {
+		if v == nil {
+			return nil
+		}
+		return v.UserManagementSettings
+	}).(TenantUserManagementSettingsPtrOutput)
+}
+
+// Search settings.
+type TenantSearchSettings struct {
+	// Disable Bing video search.
+	DisableBingVideoSearch *bool `pulumi:"disableBingVideoSearch"`
+	// Disable community search.
+	DisableCommunitySearch *bool `pulumi:"disableCommunitySearch"`
+	// Disable docs search.
+	DisableDocsSearch *bool `pulumi:"disableDocsSearch"`
+}
+
+// TenantSearchSettingsInput is an input type that accepts TenantSearchSettingsArgs and TenantSearchSettingsOutput values.
+// You can construct a concrete instance of `TenantSearchSettingsInput` via:
+//
+//	TenantSearchSettingsArgs{...}
+type TenantSearchSettingsInput interface {
+	pulumi.Input
+
+	ToTenantSearchSettingsOutput() TenantSearchSettingsOutput
+	ToTenantSearchSettingsOutputWithContext(context.Context) TenantSearchSettingsOutput
+}
+
+// Search settings.
+type TenantSearchSettingsArgs struct {
+	// Disable Bing video search.
+	DisableBingVideoSearch pulumi.BoolPtrInput `pulumi:"disableBingVideoSearch"`
+	// Disable community search.
+	DisableCommunitySearch pulumi.BoolPtrInput `pulumi:"disableCommunitySearch"`
+	// Disable docs search.
+	DisableDocsSearch pulumi.BoolPtrInput `pulumi:"disableDocsSearch"`
+}
+
+func (TenantSearchSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantSearchSettings)(nil)).Elem()
+}
+
+func (i TenantSearchSettingsArgs) ToTenantSearchSettingsOutput() TenantSearchSettingsOutput {
+	return i.ToTenantSearchSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantSearchSettingsArgs) ToTenantSearchSettingsOutputWithContext(ctx context.Context) TenantSearchSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantSearchSettingsOutput)
+}
+
+func (i TenantSearchSettingsArgs) ToTenantSearchSettingsPtrOutput() TenantSearchSettingsPtrOutput {
+	return i.ToTenantSearchSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantSearchSettingsArgs) ToTenantSearchSettingsPtrOutputWithContext(ctx context.Context) TenantSearchSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantSearchSettingsOutput).ToTenantSearchSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantSearchSettingsPtrInput is an input type that accepts TenantSearchSettingsArgs, TenantSearchSettingsPtr and TenantSearchSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantSearchSettingsPtrInput` via:
+//
+//	        TenantSearchSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantSearchSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantSearchSettingsPtrOutput() TenantSearchSettingsPtrOutput
+	ToTenantSearchSettingsPtrOutputWithContext(context.Context) TenantSearchSettingsPtrOutput
+}
+
+type tenantSearchSettingsPtrType TenantSearchSettingsArgs
+
+func TenantSearchSettingsPtr(v *TenantSearchSettingsArgs) TenantSearchSettingsPtrInput {
+	return (*tenantSearchSettingsPtrType)(v)
+}
+
+func (*tenantSearchSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantSearchSettings)(nil)).Elem()
+}
+
+func (i *tenantSearchSettingsPtrType) ToTenantSearchSettingsPtrOutput() TenantSearchSettingsPtrOutput {
+	return i.ToTenantSearchSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantSearchSettingsPtrType) ToTenantSearchSettingsPtrOutputWithContext(ctx context.Context) TenantSearchSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantSearchSettingsPtrOutput)
+}
+
+// Search settings.
+type TenantSearchSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantSearchSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantSearchSettings)(nil)).Elem()
+}
+
+func (o TenantSearchSettingsOutput) ToTenantSearchSettingsOutput() TenantSearchSettingsOutput {
+	return o
+}
+
+func (o TenantSearchSettingsOutput) ToTenantSearchSettingsOutputWithContext(ctx context.Context) TenantSearchSettingsOutput {
+	return o
+}
+
+func (o TenantSearchSettingsOutput) ToTenantSearchSettingsPtrOutput() TenantSearchSettingsPtrOutput {
+	return o.ToTenantSearchSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantSearchSettingsOutput) ToTenantSearchSettingsPtrOutputWithContext(ctx context.Context) TenantSearchSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantSearchSettings) *TenantSearchSettings {
+		return &v
+	}).(TenantSearchSettingsPtrOutput)
+}
+
+// Disable Bing video search.
+func (o TenantSearchSettingsOutput) DisableBingVideoSearch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantSearchSettings) *bool { return v.DisableBingVideoSearch }).(pulumi.BoolPtrOutput)
+}
+
+// Disable community search.
+func (o TenantSearchSettingsOutput) DisableCommunitySearch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantSearchSettings) *bool { return v.DisableCommunitySearch }).(pulumi.BoolPtrOutput)
+}
+
+// Disable docs search.
+func (o TenantSearchSettingsOutput) DisableDocsSearch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantSearchSettings) *bool { return v.DisableDocsSearch }).(pulumi.BoolPtrOutput)
+}
+
+type TenantSearchSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantSearchSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantSearchSettings)(nil)).Elem()
+}
+
+func (o TenantSearchSettingsPtrOutput) ToTenantSearchSettingsPtrOutput() TenantSearchSettingsPtrOutput {
+	return o
+}
+
+func (o TenantSearchSettingsPtrOutput) ToTenantSearchSettingsPtrOutputWithContext(ctx context.Context) TenantSearchSettingsPtrOutput {
+	return o
+}
+
+func (o TenantSearchSettingsPtrOutput) Elem() TenantSearchSettingsOutput {
+	return o.ApplyT(func(v *TenantSearchSettings) TenantSearchSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantSearchSettings
+		return ret
+	}).(TenantSearchSettingsOutput)
+}
+
+// Disable Bing video search.
+func (o TenantSearchSettingsPtrOutput) DisableBingVideoSearch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantSearchSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableBingVideoSearch
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable community search.
+func (o TenantSearchSettingsPtrOutput) DisableCommunitySearch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantSearchSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableCommunitySearch
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Disable docs search.
+func (o TenantSearchSettingsPtrOutput) DisableDocsSearch() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantSearchSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.DisableDocsSearch
+	}).(pulumi.BoolPtrOutput)
+}
+
+// Teams integration settings.
+type TenantTeamsIntegrationSettings struct {
+	// Share with colleagues user limit.
+	ShareWithColleaguesUserLimit *int `pulumi:"shareWithColleaguesUserLimit"`
+}
+
+// TenantTeamsIntegrationSettingsInput is an input type that accepts TenantTeamsIntegrationSettingsArgs and TenantTeamsIntegrationSettingsOutput values.
+// You can construct a concrete instance of `TenantTeamsIntegrationSettingsInput` via:
+//
+//	TenantTeamsIntegrationSettingsArgs{...}
+type TenantTeamsIntegrationSettingsInput interface {
+	pulumi.Input
+
+	ToTenantTeamsIntegrationSettingsOutput() TenantTeamsIntegrationSettingsOutput
+	ToTenantTeamsIntegrationSettingsOutputWithContext(context.Context) TenantTeamsIntegrationSettingsOutput
+}
+
+// Teams integration settings.
+type TenantTeamsIntegrationSettingsArgs struct {
+	// Share with colleagues user limit.
+	ShareWithColleaguesUserLimit pulumi.IntPtrInput `pulumi:"shareWithColleaguesUserLimit"`
+}
+
+func (TenantTeamsIntegrationSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantTeamsIntegrationSettings)(nil)).Elem()
+}
+
+func (i TenantTeamsIntegrationSettingsArgs) ToTenantTeamsIntegrationSettingsOutput() TenantTeamsIntegrationSettingsOutput {
+	return i.ToTenantTeamsIntegrationSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantTeamsIntegrationSettingsArgs) ToTenantTeamsIntegrationSettingsOutputWithContext(ctx context.Context) TenantTeamsIntegrationSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantTeamsIntegrationSettingsOutput)
+}
+
+func (i TenantTeamsIntegrationSettingsArgs) ToTenantTeamsIntegrationSettingsPtrOutput() TenantTeamsIntegrationSettingsPtrOutput {
+	return i.ToTenantTeamsIntegrationSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantTeamsIntegrationSettingsArgs) ToTenantTeamsIntegrationSettingsPtrOutputWithContext(ctx context.Context) TenantTeamsIntegrationSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantTeamsIntegrationSettingsOutput).ToTenantTeamsIntegrationSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantTeamsIntegrationSettingsPtrInput is an input type that accepts TenantTeamsIntegrationSettingsArgs, TenantTeamsIntegrationSettingsPtr and TenantTeamsIntegrationSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantTeamsIntegrationSettingsPtrInput` via:
+//
+//	        TenantTeamsIntegrationSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantTeamsIntegrationSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantTeamsIntegrationSettingsPtrOutput() TenantTeamsIntegrationSettingsPtrOutput
+	ToTenantTeamsIntegrationSettingsPtrOutputWithContext(context.Context) TenantTeamsIntegrationSettingsPtrOutput
+}
+
+type tenantTeamsIntegrationSettingsPtrType TenantTeamsIntegrationSettingsArgs
+
+func TenantTeamsIntegrationSettingsPtr(v *TenantTeamsIntegrationSettingsArgs) TenantTeamsIntegrationSettingsPtrInput {
+	return (*tenantTeamsIntegrationSettingsPtrType)(v)
+}
+
+func (*tenantTeamsIntegrationSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantTeamsIntegrationSettings)(nil)).Elem()
+}
+
+func (i *tenantTeamsIntegrationSettingsPtrType) ToTenantTeamsIntegrationSettingsPtrOutput() TenantTeamsIntegrationSettingsPtrOutput {
+	return i.ToTenantTeamsIntegrationSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantTeamsIntegrationSettingsPtrType) ToTenantTeamsIntegrationSettingsPtrOutputWithContext(ctx context.Context) TenantTeamsIntegrationSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantTeamsIntegrationSettingsPtrOutput)
+}
+
+// Teams integration settings.
+type TenantTeamsIntegrationSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantTeamsIntegrationSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantTeamsIntegrationSettings)(nil)).Elem()
+}
+
+func (o TenantTeamsIntegrationSettingsOutput) ToTenantTeamsIntegrationSettingsOutput() TenantTeamsIntegrationSettingsOutput {
+	return o
+}
+
+func (o TenantTeamsIntegrationSettingsOutput) ToTenantTeamsIntegrationSettingsOutputWithContext(ctx context.Context) TenantTeamsIntegrationSettingsOutput {
+	return o
+}
+
+func (o TenantTeamsIntegrationSettingsOutput) ToTenantTeamsIntegrationSettingsPtrOutput() TenantTeamsIntegrationSettingsPtrOutput {
+	return o.ToTenantTeamsIntegrationSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantTeamsIntegrationSettingsOutput) ToTenantTeamsIntegrationSettingsPtrOutputWithContext(ctx context.Context) TenantTeamsIntegrationSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantTeamsIntegrationSettings) *TenantTeamsIntegrationSettings {
+		return &v
+	}).(TenantTeamsIntegrationSettingsPtrOutput)
+}
+
+// Share with colleagues user limit.
+func (o TenantTeamsIntegrationSettingsOutput) ShareWithColleaguesUserLimit() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v TenantTeamsIntegrationSettings) *int { return v.ShareWithColleaguesUserLimit }).(pulumi.IntPtrOutput)
+}
+
+type TenantTeamsIntegrationSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantTeamsIntegrationSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantTeamsIntegrationSettings)(nil)).Elem()
+}
+
+func (o TenantTeamsIntegrationSettingsPtrOutput) ToTenantTeamsIntegrationSettingsPtrOutput() TenantTeamsIntegrationSettingsPtrOutput {
+	return o
+}
+
+func (o TenantTeamsIntegrationSettingsPtrOutput) ToTenantTeamsIntegrationSettingsPtrOutputWithContext(ctx context.Context) TenantTeamsIntegrationSettingsPtrOutput {
+	return o
+}
+
+func (o TenantTeamsIntegrationSettingsPtrOutput) Elem() TenantTeamsIntegrationSettingsOutput {
+	return o.ApplyT(func(v *TenantTeamsIntegrationSettings) TenantTeamsIntegrationSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantTeamsIntegrationSettings
+		return ret
+	}).(TenantTeamsIntegrationSettingsOutput)
+}
+
+// Share with colleagues user limit.
+func (o TenantTeamsIntegrationSettingsPtrOutput) ShareWithColleaguesUserLimit() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *TenantTeamsIntegrationSettings) *int {
+		if v == nil {
+			return nil
+		}
+		return v.ShareWithColleaguesUserLimit
+	}).(pulumi.IntPtrOutput)
+}
+
+// User management settings.
+type TenantUserManagementSettings struct {
+	// Enable delete disabled user in all environments.
+	EnableDeleteDisabledUserInAllEnvironments *bool `pulumi:"enableDeleteDisabledUserInAllEnvironments"`
+}
+
+// TenantUserManagementSettingsInput is an input type that accepts TenantUserManagementSettingsArgs and TenantUserManagementSettingsOutput values.
+// You can construct a concrete instance of `TenantUserManagementSettingsInput` via:
+//
+//	TenantUserManagementSettingsArgs{...}
+type TenantUserManagementSettingsInput interface {
+	pulumi.Input
+
+	ToTenantUserManagementSettingsOutput() TenantUserManagementSettingsOutput
+	ToTenantUserManagementSettingsOutputWithContext(context.Context) TenantUserManagementSettingsOutput
+}
+
+// User management settings.
+type TenantUserManagementSettingsArgs struct {
+	// Enable delete disabled user in all environments.
+	EnableDeleteDisabledUserInAllEnvironments pulumi.BoolPtrInput `pulumi:"enableDeleteDisabledUserInAllEnvironments"`
+}
+
+func (TenantUserManagementSettingsArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantUserManagementSettings)(nil)).Elem()
+}
+
+func (i TenantUserManagementSettingsArgs) ToTenantUserManagementSettingsOutput() TenantUserManagementSettingsOutput {
+	return i.ToTenantUserManagementSettingsOutputWithContext(context.Background())
+}
+
+func (i TenantUserManagementSettingsArgs) ToTenantUserManagementSettingsOutputWithContext(ctx context.Context) TenantUserManagementSettingsOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantUserManagementSettingsOutput)
+}
+
+func (i TenantUserManagementSettingsArgs) ToTenantUserManagementSettingsPtrOutput() TenantUserManagementSettingsPtrOutput {
+	return i.ToTenantUserManagementSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i TenantUserManagementSettingsArgs) ToTenantUserManagementSettingsPtrOutputWithContext(ctx context.Context) TenantUserManagementSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantUserManagementSettingsOutput).ToTenantUserManagementSettingsPtrOutputWithContext(ctx)
+}
+
+// TenantUserManagementSettingsPtrInput is an input type that accepts TenantUserManagementSettingsArgs, TenantUserManagementSettingsPtr and TenantUserManagementSettingsPtrOutput values.
+// You can construct a concrete instance of `TenantUserManagementSettingsPtrInput` via:
+//
+//	        TenantUserManagementSettingsArgs{...}
+//
+//	or:
+//
+//	        nil
+type TenantUserManagementSettingsPtrInput interface {
+	pulumi.Input
+
+	ToTenantUserManagementSettingsPtrOutput() TenantUserManagementSettingsPtrOutput
+	ToTenantUserManagementSettingsPtrOutputWithContext(context.Context) TenantUserManagementSettingsPtrOutput
+}
+
+type tenantUserManagementSettingsPtrType TenantUserManagementSettingsArgs
+
+func TenantUserManagementSettingsPtr(v *TenantUserManagementSettingsArgs) TenantUserManagementSettingsPtrInput {
+	return (*tenantUserManagementSettingsPtrType)(v)
+}
+
+func (*tenantUserManagementSettingsPtrType) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantUserManagementSettings)(nil)).Elem()
+}
+
+func (i *tenantUserManagementSettingsPtrType) ToTenantUserManagementSettingsPtrOutput() TenantUserManagementSettingsPtrOutput {
+	return i.ToTenantUserManagementSettingsPtrOutputWithContext(context.Background())
+}
+
+func (i *tenantUserManagementSettingsPtrType) ToTenantUserManagementSettingsPtrOutputWithContext(ctx context.Context) TenantUserManagementSettingsPtrOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(TenantUserManagementSettingsPtrOutput)
+}
+
+// User management settings.
+type TenantUserManagementSettingsOutput struct{ *pulumi.OutputState }
+
+func (TenantUserManagementSettingsOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*TenantUserManagementSettings)(nil)).Elem()
+}
+
+func (o TenantUserManagementSettingsOutput) ToTenantUserManagementSettingsOutput() TenantUserManagementSettingsOutput {
+	return o
+}
+
+func (o TenantUserManagementSettingsOutput) ToTenantUserManagementSettingsOutputWithContext(ctx context.Context) TenantUserManagementSettingsOutput {
+	return o
+}
+
+func (o TenantUserManagementSettingsOutput) ToTenantUserManagementSettingsPtrOutput() TenantUserManagementSettingsPtrOutput {
+	return o.ToTenantUserManagementSettingsPtrOutputWithContext(context.Background())
+}
+
+func (o TenantUserManagementSettingsOutput) ToTenantUserManagementSettingsPtrOutputWithContext(ctx context.Context) TenantUserManagementSettingsPtrOutput {
+	return o.ApplyTWithContext(ctx, func(_ context.Context, v TenantUserManagementSettings) *TenantUserManagementSettings {
+		return &v
+	}).(TenantUserManagementSettingsPtrOutput)
+}
+
+// Enable delete disabled user in all environments.
+func (o TenantUserManagementSettingsOutput) EnableDeleteDisabledUserInAllEnvironments() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v TenantUserManagementSettings) *bool { return v.EnableDeleteDisabledUserInAllEnvironments }).(pulumi.BoolPtrOutput)
+}
+
+type TenantUserManagementSettingsPtrOutput struct{ *pulumi.OutputState }
+
+func (TenantUserManagementSettingsPtrOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((**TenantUserManagementSettings)(nil)).Elem()
+}
+
+func (o TenantUserManagementSettingsPtrOutput) ToTenantUserManagementSettingsPtrOutput() TenantUserManagementSettingsPtrOutput {
+	return o
+}
+
+func (o TenantUserManagementSettingsPtrOutput) ToTenantUserManagementSettingsPtrOutputWithContext(ctx context.Context) TenantUserManagementSettingsPtrOutput {
+	return o
+}
+
+func (o TenantUserManagementSettingsPtrOutput) Elem() TenantUserManagementSettingsOutput {
+	return o.ApplyT(func(v *TenantUserManagementSettings) TenantUserManagementSettings {
+		if v != nil {
+			return *v
+		}
+		var ret TenantUserManagementSettings
+		return ret
+	}).(TenantUserManagementSettingsOutput)
+}
+
+// Enable delete disabled user in all environments.
+func (o TenantUserManagementSettingsPtrOutput) EnableDeleteDisabledUserInAllEnvironments() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *TenantUserManagementSettings) *bool {
+		if v == nil {
+			return nil
+		}
+		return v.EnableDeleteDisabledUserInAllEnvironments
+	}).(pulumi.BoolPtrOutput)
+}
+
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentInput)(nil)).Elem(), BillingInstrumentArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentPtrInput)(nil)).Elem(), BillingInstrumentArgs{})
@@ -1120,6 +3828,36 @@ func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*EnterprisePolicyArrayInput)(nil)).Elem(), EnterprisePolicyArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*RuleSetInput)(nil)).Elem(), RuleSetArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*RuleSetArrayInput)(nil)).Elem(), RuleSetArray{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantCatalogSettingsInput)(nil)).Elem(), TenantCatalogSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantCatalogSettingsPtrInput)(nil)).Elem(), TenantCatalogSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantChampionsSettingsInput)(nil)).Elem(), TenantChampionsSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantChampionsSettingsPtrInput)(nil)).Elem(), TenantChampionsSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantEnvironmentsSettingsInput)(nil)).Elem(), TenantEnvironmentsSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantEnvironmentsSettingsPtrInput)(nil)).Elem(), TenantEnvironmentsSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantGovernancePolicySettingsInput)(nil)).Elem(), TenantGovernancePolicySettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantGovernancePolicySettingsPtrInput)(nil)).Elem(), TenantGovernancePolicySettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantGovernanceSettingsInput)(nil)).Elem(), TenantGovernanceSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantGovernanceSettingsPtrInput)(nil)).Elem(), TenantGovernanceSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantIntelligenceSettingsInput)(nil)).Elem(), TenantIntelligenceSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantIntelligenceSettingsPtrInput)(nil)).Elem(), TenantIntelligenceSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantLicensingSettingsInput)(nil)).Elem(), TenantLicensingSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantLicensingSettingsPtrInput)(nil)).Elem(), TenantLicensingSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantModelExperimentationSettingsInput)(nil)).Elem(), TenantModelExperimentationSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantModelExperimentationSettingsPtrInput)(nil)).Elem(), TenantModelExperimentationSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerAppsSettingsInput)(nil)).Elem(), TenantPowerAppsSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerAppsSettingsPtrInput)(nil)).Elem(), TenantPowerAppsSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerAutomateSettingsInput)(nil)).Elem(), TenantPowerAutomateSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerAutomateSettingsPtrInput)(nil)).Elem(), TenantPowerAutomateSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerPagesSettingsInput)(nil)).Elem(), TenantPowerPagesSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerPagesSettingsPtrInput)(nil)).Elem(), TenantPowerPagesSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerPlatformSettingsInput)(nil)).Elem(), TenantPowerPlatformSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantPowerPlatformSettingsPtrInput)(nil)).Elem(), TenantPowerPlatformSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantSearchSettingsInput)(nil)).Elem(), TenantSearchSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantSearchSettingsPtrInput)(nil)).Elem(), TenantSearchSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantTeamsIntegrationSettingsInput)(nil)).Elem(), TenantTeamsIntegrationSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantTeamsIntegrationSettingsPtrInput)(nil)).Elem(), TenantTeamsIntegrationSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantUserManagementSettingsInput)(nil)).Elem(), TenantUserManagementSettingsArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*TenantUserManagementSettingsPtrInput)(nil)).Elem(), TenantUserManagementSettingsArgs{})
 	pulumi.RegisterOutputType(AppSummaryOutput{})
 	pulumi.RegisterOutputType(AppSummaryArrayOutput{})
 	pulumi.RegisterOutputType(BillingInstrumentOutput{})
@@ -1136,4 +3874,34 @@ func init() {
 	pulumi.RegisterOutputType(FlowSummaryArrayOutput{})
 	pulumi.RegisterOutputType(RuleSetOutput{})
 	pulumi.RegisterOutputType(RuleSetArrayOutput{})
+	pulumi.RegisterOutputType(TenantCatalogSettingsOutput{})
+	pulumi.RegisterOutputType(TenantCatalogSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantChampionsSettingsOutput{})
+	pulumi.RegisterOutputType(TenantChampionsSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantEnvironmentsSettingsOutput{})
+	pulumi.RegisterOutputType(TenantEnvironmentsSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantGovernancePolicySettingsOutput{})
+	pulumi.RegisterOutputType(TenantGovernancePolicySettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantGovernanceSettingsOutput{})
+	pulumi.RegisterOutputType(TenantGovernanceSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantIntelligenceSettingsOutput{})
+	pulumi.RegisterOutputType(TenantIntelligenceSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantLicensingSettingsOutput{})
+	pulumi.RegisterOutputType(TenantLicensingSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantModelExperimentationSettingsOutput{})
+	pulumi.RegisterOutputType(TenantModelExperimentationSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantPowerAppsSettingsOutput{})
+	pulumi.RegisterOutputType(TenantPowerAppsSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantPowerAutomateSettingsOutput{})
+	pulumi.RegisterOutputType(TenantPowerAutomateSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantPowerPagesSettingsOutput{})
+	pulumi.RegisterOutputType(TenantPowerPagesSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantPowerPlatformSettingsOutput{})
+	pulumi.RegisterOutputType(TenantPowerPlatformSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantSearchSettingsOutput{})
+	pulumi.RegisterOutputType(TenantSearchSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantTeamsIntegrationSettingsOutput{})
+	pulumi.RegisterOutputType(TenantTeamsIntegrationSettingsPtrOutput{})
+	pulumi.RegisterOutputType(TenantUserManagementSettingsOutput{})
+	pulumi.RegisterOutputType(TenantUserManagementSettingsPtrOutput{})
 }

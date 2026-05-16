@@ -15,6 +15,8 @@ import sys
 from pathlib import Path
 
 NODEJS_SDK_DIR = Path(sys.argv[1]) if len(sys.argv) > 1 else None
+REPO_ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_NODEJS_PACKAGE = REPO_ROOT / "sdk" / "nodejs" / "package.json"
 
 if NODEJS_SDK_DIR is None:
     print("usage: normalize-nodejs-sdk.py <nodejs-sdk-dir>", file=sys.stderr)
@@ -28,6 +30,14 @@ if not pkg_path.exists():
 with pkg_path.open(encoding="utf-8") as f:
     pkg = json.load(f)
 
+# Keep dependency ranges stable across pulumi CLI generator versions.
+# CI compares generated output with committed sdk/nodejs exactly, and
+# generator-updated dependency ranges can create false out-of-sync failures.
+canonical_pkg = {}
+if CANONICAL_NODEJS_PACKAGE.exists():
+    with CANONICAL_NODEJS_PACKAGE.open(encoding="utf-8") as f:
+        canonical_pkg = json.load(f)
+
 # Insert the manually-maintained fields after "license" so the key order
 # matches the hand-edited committed file.
 updated = {}
@@ -37,6 +47,11 @@ for key, value in pkg.items():
         updated["main"] = "bin/index.js"
         updated["types"] = "bin/index.d.ts"
         updated["files"] = ["bin"]
+
+if "dependencies" in canonical_pkg:
+    updated["dependencies"] = canonical_pkg["dependencies"]
+if "devDependencies" in canonical_pkg:
+    updated["devDependencies"] = canonical_pkg["devDependencies"]
 
 if updated == pkg:
     print(f"normalize-nodejs-sdk: fields already present in {pkg_path}")

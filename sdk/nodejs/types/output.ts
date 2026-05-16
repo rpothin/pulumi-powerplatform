@@ -237,3 +237,281 @@ export interface RuleSet {
     version?: string;
 }
 
+/**
+ * Catalog settings.
+ */
+export interface TenantCatalogSettings {
+    /**
+     * Power Catalog audience setting.
+     */
+    powerCatalogAudienceSetting?: string;
+}
+
+/**
+ * Champions settings.
+ */
+export interface TenantChampionsSettings {
+    /**
+     * Disable champions invitation reachout.
+     */
+    disableChampionsInvitationReachout?: boolean;
+    /**
+     * Disable skills match invitation reachout.
+     */
+    disableSkillsMatchInvitationReachout?: boolean;
+}
+
+/**
+ * Environment settings.
+ */
+export interface TenantEnvironmentsSettings {
+    /**
+     * Disable preferred data location for Teams environment creation.
+     */
+    disablePreferredDataLocationForTeamsEnvironment?: boolean;
+}
+
+/**
+ * Governance policy settings.
+ */
+export interface TenantGovernancePolicySettings {
+    /**
+     * Enable desktop flow data policy management.
+     */
+    enableDesktopFlowDataPolicyManagement?: boolean;
+}
+
+/**
+ * Governance settings.
+ */
+export interface TenantGovernanceSettings {
+    /**
+     * Disable admin digest.
+     */
+    disableAdminDigest?: boolean;
+    /**
+     * Disable developer environment creation by non-admin users.
+     */
+    disableDeveloperEnvironmentCreationByNonAdminUsers?: boolean;
+    /**
+     * Enable default environment routing.
+     */
+    enableDefaultEnvironmentRouting?: boolean;
+    /**
+     * Route all makers to personal dev environments.
+     */
+    environmentRoutingAllMakers?: boolean;
+    /**
+     * Target environment group for default environment routing.
+     */
+    environmentRoutingTargetEnvironmentGroupId?: string;
+    /**
+     * Target security group for default environment routing.
+     */
+    environmentRoutingTargetSecurityGroupId?: string;
+    /**
+     * Governance policy settings.
+     */
+    policy?: outputs.TenantGovernancePolicySettings;
+}
+
+/**
+ * Intelligence settings.
+ */
+export interface TenantIntelligenceSettings {
+    /**
+     * Disable Copilot.
+     */
+    disableCopilot?: boolean;
+    /**
+     * Enable OpenAI bot publishing.
+     */
+    enableOpenAiBotPublishing?: boolean;
+}
+
+/**
+ * Licensing settings.
+ */
+export interface TenantLicensingSettings {
+    /**
+     * Disable billing policy creation by non-admin users.
+     */
+    disableBillingPolicyCreationByNonAdminUsers?: boolean;
+    /**
+     * Disable use of unassigned AI Builder credits.
+     */
+    disableUseOfUnassignedAIBuilderCredits?: boolean;
+    /**
+     * Enable tenant capacity report for environment admins.
+     */
+    enableTenantCapacityReportForEnvironmentAdmins?: boolean;
+    /**
+     * Enable tenant licensing report for environment admins.
+     */
+    enableTenantLicensingReportForEnvironmentAdmins?: boolean;
+    /**
+     * Storage capacity consumption warning threshold.
+     */
+    storageCapacityConsumptionWarningThreshold?: number;
+}
+
+/**
+ * Model experimentation settings.
+ */
+export interface TenantModelExperimentationSettings {
+    /**
+     * Disable data logging.
+     */
+    disableDataLogging?: boolean;
+    /**
+     * Enable model data sharing.
+     */
+    enableModelDataSharing?: boolean;
+}
+
+/**
+ * Power Apps settings.
+ */
+export interface TenantPowerAppsSettings {
+    /**
+     * Disable connection sharing with everyone.
+     */
+    disableConnectionSharingWithEveryone?: boolean;
+    /**
+     * Disable create from Figma.
+     */
+    disableCreateFromFigma?: boolean;
+    /**
+     * Disable create from image.
+     */
+    disableCreateFromImage?: boolean;
+    /**
+     * Disable maker match.
+     */
+    disableMakerMatch?: boolean;
+    /**
+     * Disable share with everyone.
+     */
+    disableShareWithEveryone?: boolean;
+    /**
+     * Disable unused license assignment.
+     */
+    disableUnusedLicenseAssignment?: boolean;
+    /**
+     * Enable guests to make apps.
+     */
+    enableGuestsToMake?: boolean;
+}
+
+/**
+ * Power Automate settings.
+ */
+export interface TenantPowerAutomateSettings {
+    /**
+     * Disable Copilot for Power Automate.
+     */
+    disableCopilot?: boolean;
+}
+
+/**
+ * Power Pages settings.
+ */
+export interface TenantPowerPagesSettings {
+}
+
+/**
+ * Power Platform workload settings at tenant scope.
+ */
+export interface TenantPowerPlatformSettings {
+    /**
+     * Catalog settings.
+     */
+    catalogSettings?: outputs.TenantCatalogSettings;
+    /**
+     * Champions settings.
+     */
+    champions?: outputs.TenantChampionsSettings;
+    /**
+     * Environment settings.
+     */
+    environments?: outputs.TenantEnvironmentsSettings;
+    /**
+     * Governance settings.
+     */
+    governance?: outputs.TenantGovernanceSettings;
+    /**
+     * Intelligence settings.
+     */
+    intelligence?: outputs.TenantIntelligenceSettings;
+    /**
+     * Licensing settings.
+     */
+    licensing?: outputs.TenantLicensingSettings;
+    /**
+     * Model experimentation settings.
+     */
+    modelExperimentation?: outputs.TenantModelExperimentationSettings;
+    /**
+     * Power Apps settings.
+     */
+    powerApps?: outputs.TenantPowerAppsSettings;
+    /**
+     * Power Automate settings.
+     */
+    powerAutomate?: outputs.TenantPowerAutomateSettings;
+    /**
+     * Power Pages settings.
+     */
+    powerPages?: outputs.TenantPowerPagesSettings;
+    /**
+     * Search settings.
+     */
+    search?: outputs.TenantSearchSettings;
+    /**
+     * Teams integration settings.
+     */
+    teamsIntegration?: outputs.TenantTeamsIntegrationSettings;
+    /**
+     * User management settings.
+     */
+    userManagementSettings?: outputs.TenantUserManagementSettings;
+}
+
+/**
+ * Search settings.
+ */
+export interface TenantSearchSettings {
+    /**
+     * Disable Bing video search.
+     */
+    disableBingVideoSearch?: boolean;
+    /**
+     * Disable community search.
+     */
+    disableCommunitySearch?: boolean;
+    /**
+     * Disable docs search.
+     */
+    disableDocsSearch?: boolean;
+}
+
+/**
+ * Teams integration settings.
+ */
+export interface TenantTeamsIntegrationSettings {
+    /**
+     * Share with colleagues user limit.
+     */
+    shareWithColleaguesUserLimit?: number;
+}
+
+/**
+ * User management settings.
+ */
+export interface TenantUserManagementSettings {
+    /**
+     * Enable delete disabled user in all environments.
+     */
+    enableDeleteDisabledUserInAllEnvironments?: boolean;
+}
+
