@@ -25,6 +25,11 @@ export type DlpPolicy = import("./dlpPolicy").DlpPolicy;
 export const DlpPolicy: typeof import("./dlpPolicy").DlpPolicy = null as any;
 utilities.lazyLoad(exports, ["DlpPolicy"], () => require("./dlpPolicy"));
 
+export { EnterprisePolicyLinkArgs } from "./enterprisePolicyLink";
+export type EnterprisePolicyLink = import("./enterprisePolicyLink").EnterprisePolicyLink;
+export const EnterprisePolicyLink: typeof import("./enterprisePolicyLink").EnterprisePolicyLink = null as any;
+utilities.lazyLoad(exports, ["EnterprisePolicyLink"], () => require("./enterprisePolicyLink"));
+
 export { EnvironmentArgs } from "./environment";
 export type Environment = import("./environment").Environment;
 export const Environment: typeof import("./environment").Environment = null as any;
@@ -122,6 +127,8 @@ const _module = {
                 return new DataRecord(name, <any>undefined, { urn })
             case "powerplatform:index:DlpPolicy":
                 return new DlpPolicy(name, <any>undefined, { urn })
+            case "powerplatform:index:EnterprisePolicyLink":
+                return new EnterprisePolicyLink(name, <any>undefined, { urn })
             case "powerplatform:index:Environment":
                 return new Environment(name, <any>undefined, { urn })
             case "powerplatform:index:EnvironmentApplicationAdmin":

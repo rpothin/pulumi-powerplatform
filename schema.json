@@ -1320,6 +1320,47 @@
                 "tableLogicalName",
                 "dataRecordId"
             ]
+        },
+        "powerplatform:index:EnterprisePolicyLink": {
+            "description": "Links an Azure enterprise policy to a Power Platform environment using an async POST/poll lifecycle. All properties are immutable — any change triggers a full replacement (delete-then-create). Supported policy types: NetworkInjection, Encryption, Identity.",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The GUID of the Power Platform environment to link the enterprise policy to. Immutable after creation."
+                },
+                "policyType": {
+                    "type": "string",
+                    "description": "The type of enterprise policy to link. Must be one of: NetworkInjection, Encryption, Identity. Immutable after creation."
+                },
+                "systemId": {
+                    "type": "string",
+                    "description": "The ARM resource ID of the enterprise policy. Expected format: /regions/{location}/providers/Microsoft.PowerPlatform/enterprisePolicies/{guid}. Immutable after creation."
+                }
+            },
+            "requiredInputs": [
+                "environmentId",
+                "policyType",
+                "systemId"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The GUID of the Power Platform environment."
+                },
+                "policyType": {
+                    "type": "string",
+                    "description": "The type of enterprise policy. One of: NetworkInjection, Encryption, Identity."
+                },
+                "systemId": {
+                    "type": "string",
+                    "description": "The ARM resource ID of the linked enterprise policy."
+                }
+            },
+            "required": [
+                "environmentId",
+                "policyType",
+                "systemId"
+            ]
         }
     },
     "functions": {
