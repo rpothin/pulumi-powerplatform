@@ -205,6 +205,132 @@ class TestRawApiClientRequest:
         assert result is None
 
 
+class TestRawApiClientReturnHeaders:
+    """Tests for the ``return_headers=True`` option."""
+
+    @pytest.mark.asyncio
+    async def test_return_headers_returns_tuple(self):
+        """When return_headers=True, request() should return (body, headers) tuple."""
+        cred = _fake_credential()
+        client = RawApiClient(token_provider=cred, base_url="https://test.local")
+
+        fake_response = httpx.Response(
+            201,
+            json={"id": "new-record"},
+            headers={"OData-EntityId": "https://test.local/api/data/v9.2/accounts(some-guid)"},
+            request=httpx.Request("POST", "https://test.local/resources"),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            result = await client.request("POST", "/resources", body={}, return_headers=True)
+
+        assert isinstance(result, tuple)
+        body, headers = result
+        assert body == {"id": "new-record"}
+        assert "odata-entityid" in headers or "OData-EntityId" in headers
+
+    @pytest.mark.asyncio
+    async def test_return_headers_204_returns_none_body(self):
+        """204 + return_headers=True should return (None, headers)."""
+        cred = _fake_credential()
+        client = RawApiClient(token_provider=cred, base_url="https://test.local")
+
+        entity_id_url = "https://test.local/api/data/v9.2/accounts(guid-here)"
+        fake_response = httpx.Response(
+            204,
+            headers={"OData-EntityId": entity_id_url},
+            request=httpx.Request("POST", "https://test.local/api/data/v9.2/accounts"),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            result = await client.request("POST", "/api/data/v9.2/accounts", return_headers=True)
+
+        body, headers = result
+        assert body is None
+        assert any("entityid" in k.lower() for k in headers)
+
+    @pytest.mark.asyncio
+    async def test_return_headers_false_returns_body_only(self):
+        """When return_headers=False (default), only body is returned."""
+        cred = _fake_credential()
+        client = RawApiClient(token_provider=cred, base_url="https://test.local")
+
+        fake_response = httpx.Response(
+            200,
+            json={"foo": "bar"},
+            request=httpx.Request("GET", "https://test.local/path"),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            result = await client.request("GET", "/path")
+
+        assert result == {"foo": "bar"}
+        assert not isinstance(result, tuple)
+
+
+class TestRawApiClientAbsoluteUrl:
+    """Tests for absolute URL support (path starting with 'http')."""
+
+    @pytest.mark.asyncio
+    async def test_absolute_url_used_verbatim(self):
+        """An absolute URL should be sent directly without prepending base_url."""
+        cred = _fake_credential()
+        client = RawApiClient(token_provider=cred, base_url="https://test.local")
+
+        abs_url = "https://org.crm.dynamics.com/api/data/v9.2/accounts"
+        fake_response = httpx.Response(
+            200,
+            json={"value": []},
+            request=httpx.Request("GET", abs_url),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            await client.request("GET", abs_url, api_version=None)
+
+        call_kwargs = mock_http.request.call_args
+        actual_url = call_kwargs[0][1]
+        assert actual_url == abs_url
+
+    @pytest.mark.asyncio
+    async def test_relative_path_prepends_base_url(self):
+        """A relative path should be joined with base_url."""
+        cred = _fake_credential()
+        client = RawApiClient(token_provider=cred, base_url="https://test.local")
+
+        fake_response = httpx.Response(
+            200,
+            json={},
+            request=httpx.Request("GET", "https://test.local/api/data"),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            await client.request("GET", "/api/data", api_version=None)
+
+        call_kwargs = mock_http.request.call_args
+        actual_url = call_kwargs[0][1]
+        assert actual_url == "https://test.local/api/data"
+
+
 class TestRawApiClientClose:
     """Tests for the close method."""
 

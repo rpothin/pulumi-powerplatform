@@ -69,6 +69,8 @@ class RawApiClient:
         *,
         body: Optional[dict[str, Any]] = None,
         api_version: Optional[str] = "2023-06-01",
+        extra_headers: Optional[dict[str, str]] = None,
+        return_headers: bool = False,
     ) -> Any:
         """Send an HTTP request to the Power Platform BAP admin API.
 
@@ -77,15 +79,23 @@ class RawApiClient:
         method:
             HTTP method (GET, POST, PUT, PATCH, DELETE).
         path:
-            API path relative to ``BASE_URL``.
+            API path relative to ``BASE_URL``, or a full URL (must share the
+            same host as ``base_url`` — never pass user-controlled values here).
         body:
             Optional JSON body for POST/PUT/PATCH requests.
         api_version:
-            ``api-version`` query parameter.
+            ``api-version`` query parameter. Pass ``None`` to omit it.
+        extra_headers:
+            Additional request headers to merge with the default headers.
+        return_headers:
+            When ``True``, returns a ``(body, response_headers)`` tuple instead
+            of just the body. Useful for inspecting response headers such as
+            ``OData-EntityId`` on Dataverse POST responses.
 
         Returns
         -------
         The parsed JSON response, or ``None`` for 204/empty responses.
+        When ``return_headers=True``, returns a tuple ``(body, dict[str, str])``.
 
         Raises
         ------
@@ -96,11 +106,15 @@ class RawApiClient:
         async def _do_request() -> Any:
             client = await self._get_http()
             token = await self._get_token()
-            url = f"{self._base_url}{path}"
+            # Support absolute URLs (e.g. Location/OData-EntityId headers) — only
+            # call this with paths sourced from our own API responses, not user input.
+            url = path if path.startswith("http") else f"{self._base_url}{path}"
             headers = {
                 "Authorization": f"Bearer {token}",
                 "Content-Type": "application/json",
             }
+            if extra_headers:
+                headers.update(extra_headers)
             params = {"api-version": api_version} if api_version else {}
 
             response = await client.request(
@@ -119,10 +133,16 @@ class RawApiClient:
                     headers=resp_headers,
                 )
 
-            if response.status_code == 204 or not response.content:
-                return None
+            resp_headers_dict = {k: v for k, v in response.headers.items()}
 
-            return response.json()
+            if response.status_code == 204 or not response.content:
+                parsed = None
+            else:
+                parsed = response.json()
+
+            if return_headers:
+                return (parsed, resp_headers_dict)
+            return parsed
 
         return await retry_with_backoff(_do_request)
 

@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import random
+from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any, Awaitable, Callable, Optional, TypeVar
 
 from pulumi.provider.experimental.property_value import PropertyValue
@@ -40,11 +41,15 @@ def _pv_to_python(pv: Optional[PropertyValue]) -> Any:
     val = pv.value
     if isinstance(val, (str, bool, float, int)):
         return val
-    if isinstance(val, list):
+    if isinstance(val, (list, tuple)):
         return [_pv_to_python(item) for item in val]
-    if isinstance(val, dict):
+    if isinstance(val, Mapping):
         return {k: _pv_to_python(v) for k, v in val.items()}
     return val
+
+
+# Public alias — import this in new code instead of the private name.
+pv_to_python = _pv_to_python
 
 
 class HttpError(Exception):

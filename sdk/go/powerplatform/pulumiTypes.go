@@ -318,6 +318,132 @@ func (o ConnectorSummaryArrayOutput) Index(i pulumi.IntInput) ConnectorSummaryOu
 	}).(ConnectorSummaryOutput)
 }
 
+// A reference to a related Dataverse record used as a lookup (single-valued) or many-to-many relationship value.
+type DataRecordLookup struct {
+	// The GUID of the related record.
+	DataRecordId string `pulumi:"dataRecordId"`
+	// The logical name of the related Dataverse table (e.g. systemuser, account, deploymentstage).
+	TableLogicalName string `pulumi:"tableLogicalName"`
+}
+
+// OData $expand parameter for a navigation property in getDataRecords.
+type DataRecordsExpandParam struct {
+	// OData filter expression for the expanded entity.
+	Filter *string `pulumi:"filter"`
+	// The navigation property name to expand.
+	NavigationProperty string `pulumi:"navigationProperty"`
+	// Comma-separated list of columns to include for the expanded entity.
+	Select *string `pulumi:"select"`
+}
+
+// DataRecordsExpandParamInput is an input type that accepts DataRecordsExpandParamArgs and DataRecordsExpandParamOutput values.
+// You can construct a concrete instance of `DataRecordsExpandParamInput` via:
+//
+//	DataRecordsExpandParamArgs{...}
+type DataRecordsExpandParamInput interface {
+	pulumi.Input
+
+	ToDataRecordsExpandParamOutput() DataRecordsExpandParamOutput
+	ToDataRecordsExpandParamOutputWithContext(context.Context) DataRecordsExpandParamOutput
+}
+
+// OData $expand parameter for a navigation property in getDataRecords.
+type DataRecordsExpandParamArgs struct {
+	// OData filter expression for the expanded entity.
+	Filter pulumi.StringPtrInput `pulumi:"filter"`
+	// The navigation property name to expand.
+	NavigationProperty pulumi.StringInput `pulumi:"navigationProperty"`
+	// Comma-separated list of columns to include for the expanded entity.
+	Select pulumi.StringPtrInput `pulumi:"select"`
+}
+
+func (DataRecordsExpandParamArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*DataRecordsExpandParam)(nil)).Elem()
+}
+
+func (i DataRecordsExpandParamArgs) ToDataRecordsExpandParamOutput() DataRecordsExpandParamOutput {
+	return i.ToDataRecordsExpandParamOutputWithContext(context.Background())
+}
+
+func (i DataRecordsExpandParamArgs) ToDataRecordsExpandParamOutputWithContext(ctx context.Context) DataRecordsExpandParamOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataRecordsExpandParamOutput)
+}
+
+// DataRecordsExpandParamArrayInput is an input type that accepts DataRecordsExpandParamArray and DataRecordsExpandParamArrayOutput values.
+// You can construct a concrete instance of `DataRecordsExpandParamArrayInput` via:
+//
+//	DataRecordsExpandParamArray{ DataRecordsExpandParamArgs{...} }
+type DataRecordsExpandParamArrayInput interface {
+	pulumi.Input
+
+	ToDataRecordsExpandParamArrayOutput() DataRecordsExpandParamArrayOutput
+	ToDataRecordsExpandParamArrayOutputWithContext(context.Context) DataRecordsExpandParamArrayOutput
+}
+
+type DataRecordsExpandParamArray []DataRecordsExpandParamInput
+
+func (DataRecordsExpandParamArray) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]DataRecordsExpandParam)(nil)).Elem()
+}
+
+func (i DataRecordsExpandParamArray) ToDataRecordsExpandParamArrayOutput() DataRecordsExpandParamArrayOutput {
+	return i.ToDataRecordsExpandParamArrayOutputWithContext(context.Background())
+}
+
+func (i DataRecordsExpandParamArray) ToDataRecordsExpandParamArrayOutputWithContext(ctx context.Context) DataRecordsExpandParamArrayOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(DataRecordsExpandParamArrayOutput)
+}
+
+// OData $expand parameter for a navigation property in getDataRecords.
+type DataRecordsExpandParamOutput struct{ *pulumi.OutputState }
+
+func (DataRecordsExpandParamOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*DataRecordsExpandParam)(nil)).Elem()
+}
+
+func (o DataRecordsExpandParamOutput) ToDataRecordsExpandParamOutput() DataRecordsExpandParamOutput {
+	return o
+}
+
+func (o DataRecordsExpandParamOutput) ToDataRecordsExpandParamOutputWithContext(ctx context.Context) DataRecordsExpandParamOutput {
+	return o
+}
+
+// OData filter expression for the expanded entity.
+func (o DataRecordsExpandParamOutput) Filter() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DataRecordsExpandParam) *string { return v.Filter }).(pulumi.StringPtrOutput)
+}
+
+// The navigation property name to expand.
+func (o DataRecordsExpandParamOutput) NavigationProperty() pulumi.StringOutput {
+	return o.ApplyT(func(v DataRecordsExpandParam) string { return v.NavigationProperty }).(pulumi.StringOutput)
+}
+
+// Comma-separated list of columns to include for the expanded entity.
+func (o DataRecordsExpandParamOutput) Select() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DataRecordsExpandParam) *string { return v.Select }).(pulumi.StringPtrOutput)
+}
+
+type DataRecordsExpandParamArrayOutput struct{ *pulumi.OutputState }
+
+func (DataRecordsExpandParamArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]DataRecordsExpandParam)(nil)).Elem()
+}
+
+func (o DataRecordsExpandParamArrayOutput) ToDataRecordsExpandParamArrayOutput() DataRecordsExpandParamArrayOutput {
+	return o
+}
+
+func (o DataRecordsExpandParamArrayOutput) ToDataRecordsExpandParamArrayOutputWithContext(ctx context.Context) DataRecordsExpandParamArrayOutput {
+	return o
+}
+
+func (o DataRecordsExpandParamArrayOutput) Index(i pulumi.IntInput) DataRecordsExpandParamOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) DataRecordsExpandParam {
+		return vs[0].([]DataRecordsExpandParam)[vs[1].(int)]
+	}).(DataRecordsExpandParamOutput)
+}
+
 // Configuration for the Dataverse database associated with a Power Platform environment.
 type Dataverse struct {
 	// Whether the Dataverse instance is in administration mode.
@@ -3822,6 +3948,8 @@ func (o TenantUserManagementSettingsPtrOutput) EnableDeleteDisabledUserInAllEnvi
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentInput)(nil)).Elem(), BillingInstrumentArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*BillingInstrumentPtrInput)(nil)).Elem(), BillingInstrumentArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataRecordsExpandParamInput)(nil)).Elem(), DataRecordsExpandParamArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*DataRecordsExpandParamArrayInput)(nil)).Elem(), DataRecordsExpandParamArray{})
 	pulumi.RegisterInputType(reflect.TypeOf((*DataverseInput)(nil)).Elem(), DataverseArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*DataversePtrInput)(nil)).Elem(), DataverseArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*EnterprisePolicyInput)(nil)).Elem(), EnterprisePolicyArgs{})
@@ -3864,6 +3992,8 @@ func init() {
 	pulumi.RegisterOutputType(BillingInstrumentPtrOutput{})
 	pulumi.RegisterOutputType(ConnectorSummaryOutput{})
 	pulumi.RegisterOutputType(ConnectorSummaryArrayOutput{})
+	pulumi.RegisterOutputType(DataRecordsExpandParamOutput{})
+	pulumi.RegisterOutputType(DataRecordsExpandParamArrayOutput{})
 	pulumi.RegisterOutputType(DataverseOutput{})
 	pulumi.RegisterOutputType(DataversePtrOutput{})
 	pulumi.RegisterOutputType(EnterprisePolicyOutput{})
