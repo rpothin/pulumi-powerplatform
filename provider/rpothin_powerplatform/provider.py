@@ -31,10 +31,12 @@ from rpothin_powerplatform.client import PowerPlatformClient
 from rpothin_powerplatform.config import resolve_client
 from rpothin_powerplatform.functions.get_apps import GetAppsFunction
 from rpothin_powerplatform.functions.get_connectors import GetConnectorsFunction
+from rpothin_powerplatform.functions.get_data_records import GetDataRecordsFunction
 from rpothin_powerplatform.functions.get_environments import GetEnvironmentsFunction
 from rpothin_powerplatform.functions.get_flows import GetFlowsFunction
 from rpothin_powerplatform.resources.admin_management_application import AdminManagementApplicationResource
 from rpothin_powerplatform.resources.billing_policy import BillingPolicyResource
+from rpothin_powerplatform.resources.data_record import DataRecordResource
 from rpothin_powerplatform.resources.dlp_policy import DlpPolicyResource
 from rpothin_powerplatform.resources.environment import EnvironmentResource
 from rpothin_powerplatform.resources.environment_application_admin import EnvironmentApplicationAdminResource
@@ -48,6 +50,7 @@ from rpothin_powerplatform.resources.tenant_settings import TenantSettingsResour
 
 # Resource type tokens.
 _ADMIN_MANAGEMENT_APPLICATION = "powerplatform:index:AdminManagementApplication"
+_DATA_RECORD = "powerplatform:index:DataRecord"
 _ENVIRONMENT_APPLICATION_ADMIN = "powerplatform:index:EnvironmentApplicationAdmin"
 _ENVIRONMENT_GROUP = "powerplatform:index:EnvironmentGroup"
 _DLP_POLICY = "powerplatform:index:DlpPolicy"
@@ -61,6 +64,7 @@ _ENVIRONMENT_SETTINGS = "powerplatform:index:EnvironmentSettings"
 _TENANT_SETTINGS = "powerplatform:index:TenantSettings"
 
 # Function tokens.
+_GET_DATA_RECORDS = "powerplatform:index:getDataRecords"
 _GET_ENVIRONMENTS = "powerplatform:index:getEnvironments"
 _GET_CONNECTORS = "powerplatform:index:getConnectors"
 _GET_APPS = "powerplatform:index:getApps"
@@ -100,6 +104,7 @@ class PowerPlatformProvider(Provider):
         super().__init__()
         self._client: Optional[PowerPlatformClient] = None
         self._admin_mgmt_app: Optional[AdminManagementApplicationResource] = None
+        self._data_record: Optional[DataRecordResource] = None
         self._env_app_admin: Optional[EnvironmentApplicationAdminResource] = None
         self._env_group: Optional[EnvironmentGroupResource] = None
         self._dlp_policy: Optional[DlpPolicyResource] = None
@@ -114,6 +119,7 @@ class PowerPlatformProvider(Provider):
         self._get_envs: Optional[GetEnvironmentsFunction] = None
         self._get_connectors: Optional[GetConnectorsFunction] = None
         self._get_apps: Optional[GetAppsFunction] = None
+        self._get_data_records: Optional[GetDataRecordsFunction] = None
         self._get_flows: Optional[GetFlowsFunction] = None
 
     # ---- Schema ----
@@ -128,6 +134,7 @@ class PowerPlatformProvider(Provider):
 
         # Initialize resource/function handlers with the configured client.
         self._admin_mgmt_app = AdminManagementApplicationResource(self._client)
+        self._data_record = DataRecordResource(self._client)
         self._env_app_admin = EnvironmentApplicationAdminResource(self._client)
         self._env_group = EnvironmentGroupResource(self._client)
         self._dlp_policy = DlpPolicyResource(self._client)
@@ -142,6 +149,7 @@ class PowerPlatformProvider(Provider):
         self._get_envs = GetEnvironmentsFunction(self._client)
         self._get_connectors = GetConnectorsFunction(self._client)
         self._get_apps = GetAppsFunction(self._client)
+        self._get_data_records = GetDataRecordsFunction(self._client)
         self._get_flows = GetFlowsFunction(self._client)
 
         return ConfigureResponse(
@@ -206,6 +214,8 @@ class PowerPlatformProvider(Provider):
     # ---- Invoke (functions / data sources) ----
 
     async def invoke(self, request: InvokeRequest) -> InvokeResponse:
+        if request.tok == _GET_DATA_RECORDS and self._get_data_records:
+            return await self._get_data_records.invoke(request)
         if request.tok == _GET_ENVIRONMENTS and self._get_envs:
             return await self._get_envs.invoke(request)
         if request.tok == _GET_CONNECTORS and self._get_connectors:
@@ -222,6 +232,7 @@ class PowerPlatformProvider(Provider):
         """Return the appropriate resource handler for the given type token."""
         handlers = {
             _ADMIN_MANAGEMENT_APPLICATION: self._admin_mgmt_app,
+            _DATA_RECORD: self._data_record,
             _ENVIRONMENT_APPLICATION_ADMIN: self._env_app_admin,
             _ENVIRONMENT_GROUP: self._env_group,
             _DLP_POLICY: self._dlp_policy,

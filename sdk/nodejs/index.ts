@@ -15,6 +15,11 @@ export type BillingPolicy = import("./billingPolicy").BillingPolicy;
 export const BillingPolicy: typeof import("./billingPolicy").BillingPolicy = null as any;
 utilities.lazyLoad(exports, ["BillingPolicy"], () => require("./billingPolicy"));
 
+export { DataRecordArgs } from "./dataRecord";
+export type DataRecord = import("./dataRecord").DataRecord;
+export const DataRecord: typeof import("./dataRecord").DataRecord = null as any;
+utilities.lazyLoad(exports, ["DataRecord"], () => require("./dataRecord"));
+
 export { DlpPolicyArgs } from "./dlpPolicy";
 export type DlpPolicy = import("./dlpPolicy").DlpPolicy;
 export const DlpPolicy: typeof import("./dlpPolicy").DlpPolicy = null as any;
@@ -54,6 +59,11 @@ export { GetConnectorsArgs, GetConnectorsResult, GetConnectorsOutputArgs } from 
 export const getConnectors: typeof import("./getConnectors").getConnectors = null as any;
 export const getConnectorsOutput: typeof import("./getConnectors").getConnectorsOutput = null as any;
 utilities.lazyLoad(exports, ["getConnectors","getConnectorsOutput"], () => require("./getConnectors"));
+
+export { GetDataRecordsArgs, GetDataRecordsResult, GetDataRecordsOutputArgs } from "./getDataRecords";
+export const getDataRecords: typeof import("./getDataRecords").getDataRecords = null as any;
+export const getDataRecordsOutput: typeof import("./getDataRecords").getDataRecordsOutput = null as any;
+utilities.lazyLoad(exports, ["getDataRecords","getDataRecordsOutput"], () => require("./getDataRecords"));
 
 export { GetEnvironmentsArgs, GetEnvironmentsResult, GetEnvironmentsOutputArgs } from "./getEnvironments";
 export const getEnvironments: typeof import("./getEnvironments").getEnvironments = null as any;
@@ -108,6 +118,8 @@ const _module = {
                 return new AdminManagementApplication(name, <any>undefined, { urn })
             case "powerplatform:index:BillingPolicy":
                 return new BillingPolicy(name, <any>undefined, { urn })
+            case "powerplatform:index:DataRecord":
+                return new DataRecord(name, <any>undefined, { urn })
             case "powerplatform:index:DlpPolicy":
                 return new DlpPolicy(name, <any>undefined, { urn })
             case "powerplatform:index:Environment":

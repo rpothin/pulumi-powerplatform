@@ -25,6 +25,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &AdminManagementApplication{}
 	case "powerplatform:index:BillingPolicy":
 		r = &BillingPolicy{}
+	case "powerplatform:index:DataRecord":
+		r = &DataRecord{}
 	case "powerplatform:index:DlpPolicy":
 		r = &DlpPolicy{}
 	case "powerplatform:index:Environment":

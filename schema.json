@@ -545,6 +545,40 @@
                     "description": "Enable delete disabled user in all environments."
                 }
             }
+        },
+        "powerplatform:index:DataRecordLookup": {
+            "type": "object",
+            "description": "A reference to a related Dataverse record used as a lookup (single-valued) or many-to-many relationship value.",
+            "properties": {
+                "tableLogicalName": {
+                    "type": "string",
+                    "description": "The logical name of the related Dataverse table (e.g. systemuser, account, deploymentstage)."
+                },
+                "dataRecordId": {
+                    "type": "string",
+                    "description": "The GUID of the related record."
+                }
+            },
+            "required": ["tableLogicalName", "dataRecordId"]
+        },
+        "powerplatform:index:DataRecordsExpandParam": {
+            "type": "object",
+            "description": "OData $expand parameter for a navigation property in getDataRecords.",
+            "properties": {
+                "navigationProperty": {
+                    "type": "string",
+                    "description": "The navigation property name to expand."
+                },
+                "select": {
+                    "type": "string",
+                    "description": "Comma-separated list of columns to include for the expanded entity."
+                },
+                "filter": {
+                    "type": "string",
+                    "description": "OData filter expression for the expanded entity."
+                }
+            },
+            "required": ["navigationProperty"]
         }
     },
     "resources": {
@@ -1228,6 +1262,64 @@
                 "applicationId",
                 "systemUserId"
             ]
+        },
+        "powerplatform:index:DataRecord": {
+            "description": "Manages a generic Dataverse table record via the OData Web API. Supports scalar columns, single-valued lookups (via @odata.bind), and many-to-many relationships (via $ref). Both environmentId and tableLogicalName are immutable — any change triggers resource replacement. Column values may be scalars (string/number/bool), lookup objects (DataRecordLookup), or lists of lookup objects for M2M relationships.",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The GUID of the Power Platform environment containing the Dataverse instance. Immutable after creation."
+                },
+                "tableLogicalName": {
+                    "type": "string",
+                    "description": "The logical name of the Dataverse table (e.g. deploymentpipeline, account). Immutable after creation."
+                },
+                "columns": {
+                    "type": "object",
+                    "description": "Map of column logical name to value. Scalars (string/number/bool), null, DataRecordLookup objects, or lists of DataRecordLookup objects for M2M relationships.",
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    }
+                },
+                "disableOnDestroy": {
+                    "type": "boolean",
+                    "description": "When true, deactivate the record (statecode=1) before deleting it. Required for Dataverse tables that cannot be directly deleted while active (e.g. workflow definitions). Defaults to false."
+                }
+            },
+            "requiredInputs": [
+                "environmentId",
+                "tableLogicalName"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "The GUID of the Power Platform environment."
+                },
+                "tableLogicalName": {
+                    "type": "string",
+                    "description": "The logical name of the Dataverse table."
+                },
+                "columns": {
+                    "type": "object",
+                    "description": "The column values stored on the record.",
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    }
+                },
+                "disableOnDestroy": {
+                    "type": "boolean",
+                    "description": "Whether to deactivate the record before deletion."
+                },
+                "dataRecordId": {
+                    "type": "string",
+                    "description": "The GUID of the Dataverse record. Use this to reference the record in lookup or M2M column values of other DataRecord resources."
+                }
+            },
+            "required": [
+                "environmentId",
+                "tableLogicalName",
+                "dataRecordId"
+            ]
         }
     },
     "functions": {
@@ -1341,6 +1433,65 @@
                 },
                 "required": [
                     "flows"
+                ]
+            }
+        },
+        "powerplatform:index:getDataRecords": {
+            "description": "Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "type": "string",
+                        "description": "The GUID of the Power Platform environment containing the Dataverse instance."
+                    },
+                    "tableLogicalName": {
+                        "type": "string",
+                        "description": "The logical name of the Dataverse table to query (e.g. account, deploymentpipeline)."
+                    },
+                    "filter": {
+                        "type": "string",
+                        "description": "OData $filter expression (e.g. \"name eq 'My Pipeline'\")."
+                    },
+                    "select": {
+                        "type": "array",
+                        "description": "List of column logical names to include in the response.",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "orderby": {
+                        "type": "string",
+                        "description": "OData $orderby expression (e.g. \"createdon desc\")."
+                    },
+                    "top": {
+                        "type": "integer",
+                        "description": "Maximum number of records to return ($top). Use to limit large result sets."
+                    },
+                    "expand": {
+                        "type": "array",
+                        "description": "List of navigation properties to expand in the response.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:DataRecordsExpandParam"
+                        }
+                    }
+                },
+                "required": [
+                    "environmentId",
+                    "tableLogicalName"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "records": {
+                        "type": "array",
+                        "description": "The list of matching Dataverse records. Each record is a map of column name to value.",
+                        "items": {
+                            "$ref": "pulumi.json#/Any"
+                        }
+                    }
+                },
+                "required": [
+                    "records"
                 ]
             }
         }

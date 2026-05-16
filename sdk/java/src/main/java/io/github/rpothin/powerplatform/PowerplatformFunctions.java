@@ -13,12 +13,15 @@ import io.github.rpothin.powerplatform.inputs.GetAppsArgs;
 import io.github.rpothin.powerplatform.inputs.GetAppsPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetConnectorsArgs;
 import io.github.rpothin.powerplatform.inputs.GetConnectorsPlainArgs;
+import io.github.rpothin.powerplatform.inputs.GetDataRecordsArgs;
+import io.github.rpothin.powerplatform.inputs.GetDataRecordsPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetEnvironmentsArgs;
 import io.github.rpothin.powerplatform.inputs.GetEnvironmentsPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetFlowsArgs;
 import io.github.rpothin.powerplatform.inputs.GetFlowsPlainArgs;
 import io.github.rpothin.powerplatform.outputs.GetAppsResult;
 import io.github.rpothin.powerplatform.outputs.GetConnectorsResult;
+import io.github.rpothin.powerplatform.outputs.GetDataRecordsResult;
 import io.github.rpothin.powerplatform.outputs.GetEnvironmentsResult;
 import io.github.rpothin.powerplatform.outputs.GetFlowsResult;
 import java.util.concurrent.CompletableFuture;
@@ -93,6 +96,41 @@ public final class PowerplatformFunctions {
      */
     public static CompletableFuture<GetConnectorsResult> getConnectorsPlain(GetConnectorsPlainArgs args, InvokeOptions options) {
         return Deployment.getInstance().invokeAsync("powerplatform:index:getConnectors", TypeShape.of(GetConnectorsResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * 
+     */
+    public static Output<GetDataRecordsResult> getDataRecords(GetDataRecordsArgs args) {
+        return getDataRecords(args, InvokeOptions.Empty);
+    }
+    /**
+     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * 
+     */
+    public static CompletableFuture<GetDataRecordsResult> getDataRecordsPlain(GetDataRecordsPlainArgs args) {
+        return getDataRecordsPlain(args, InvokeOptions.Empty);
+    }
+    /**
+     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * 
+     */
+    public static Output<GetDataRecordsResult> getDataRecords(GetDataRecordsArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getDataRecords", TypeShape.of(GetDataRecordsResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * 
+     */
+    public static Output<GetDataRecordsResult> getDataRecords(GetDataRecordsArgs args, InvokeOutputOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getDataRecords", TypeShape.of(GetDataRecordsResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * 
+     */
+    public static CompletableFuture<GetDataRecordsResult> getDataRecordsPlain(GetDataRecordsPlainArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invokeAsync("powerplatform:index:getDataRecords", TypeShape.of(GetDataRecordsResult.class), args, Utilities.withVersion(options));
     }
     /**
      * Retrieves a list of Power Platform environments available for the authenticated user.
