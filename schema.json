@@ -1171,6 +1171,27 @@
                     "description": "Nested workload-specific tenant settings."
                 }
             }
+        },
+        "powerplatform:index:AdminManagementApplication": {
+            "description": "Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable — any change to applicationId triggers a replacement.",
+            "inputProperties": {
+                "applicationId": {
+                    "type": "string",
+                    "description": "The GUID of the service principal to register as a Power Platform admin management application. Immutable after creation."
+                }
+            },
+            "requiredInputs": [
+                "applicationId"
+            ],
+            "properties": {
+                "applicationId": {
+                    "type": "string",
+                    "description": "The GUID of the registered service principal."
+                }
+            },
+            "required": [
+                "applicationId"
+            ]
         }
     },
     "functions": {
