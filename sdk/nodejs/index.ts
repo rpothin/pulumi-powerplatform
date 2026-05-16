@@ -5,6 +5,11 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "./utilities";
 
 // Export members:
+export { AdminManagementApplicationArgs } from "./adminManagementApplication";
+export type AdminManagementApplication = import("./adminManagementApplication").AdminManagementApplication;
+export const AdminManagementApplication: typeof import("./adminManagementApplication").AdminManagementApplication = null as any;
+utilities.lazyLoad(exports, ["AdminManagementApplication"], () => require("./adminManagementApplication"));
+
 export { BillingPolicyArgs } from "./billingPolicy";
 export type BillingPolicy = import("./billingPolicy").BillingPolicy;
 export const BillingPolicy: typeof import("./billingPolicy").BillingPolicy = null as any;
@@ -94,6 +99,8 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
+            case "powerplatform:index:AdminManagementApplication":
+                return new AdminManagementApplication(name, <any>undefined, { urn })
             case "powerplatform:index:BillingPolicy":
                 return new BillingPolicy(name, <any>undefined, { urn })
             case "powerplatform:index:DlpPolicy":

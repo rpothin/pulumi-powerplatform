@@ -1,5 +1,6 @@
 """Pulumi SDK for Microsoft Power Platform."""
 
+from .admin_management_application import AdminManagementApplication
 from .billing_policy import BillingPolicy
 from .dlp_policy import DlpPolicy
 from .environment import Environment, EnvironmentDataverse, EnvironmentDataverseArgs
@@ -17,6 +18,7 @@ from .role_assignment import RoleAssignment
 from .tenant_settings import TenantSettings
 
 __all__ = [
+    "AdminManagementApplication",
     "Provider",
     "Environment",
     "EnvironmentDataverse",

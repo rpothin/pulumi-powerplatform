@@ -33,6 +33,7 @@ from rpothin_powerplatform.functions.get_apps import GetAppsFunction
 from rpothin_powerplatform.functions.get_connectors import GetConnectorsFunction
 from rpothin_powerplatform.functions.get_environments import GetEnvironmentsFunction
 from rpothin_powerplatform.functions.get_flows import GetFlowsFunction
+from rpothin_powerplatform.resources.admin_management_application import AdminManagementApplicationResource
 from rpothin_powerplatform.resources.billing_policy import BillingPolicyResource
 from rpothin_powerplatform.resources.dlp_policy import DlpPolicyResource
 from rpothin_powerplatform.resources.environment import EnvironmentResource
@@ -45,6 +46,7 @@ from rpothin_powerplatform.resources.role_assignment import RoleAssignmentResour
 from rpothin_powerplatform.resources.tenant_settings import TenantSettingsResource
 
 # Resource type tokens.
+_ADMIN_MANAGEMENT_APPLICATION = "powerplatform:index:AdminManagementApplication"
 _ENVIRONMENT_GROUP = "powerplatform:index:EnvironmentGroup"
 _DLP_POLICY = "powerplatform:index:DlpPolicy"
 _BILLING_POLICY = "powerplatform:index:BillingPolicy"
@@ -95,6 +97,7 @@ class PowerPlatformProvider(Provider):
     def __init__(self) -> None:
         super().__init__()
         self._client: Optional[PowerPlatformClient] = None
+        self._admin_mgmt_app: Optional[AdminManagementApplicationResource] = None
         self._env_group: Optional[EnvironmentGroupResource] = None
         self._dlp_policy: Optional[DlpPolicyResource] = None
         self._billing_policy: Optional[BillingPolicyResource] = None
@@ -121,6 +124,7 @@ class PowerPlatformProvider(Provider):
         self._client = resolve_client(request.args)
 
         # Initialize resource/function handlers with the configured client.
+        self._admin_mgmt_app = AdminManagementApplicationResource(self._client)
         self._env_group = EnvironmentGroupResource(self._client)
         self._dlp_policy = DlpPolicyResource(self._client)
         self._billing_policy = BillingPolicyResource(self._client)
@@ -213,6 +217,7 @@ class PowerPlatformProvider(Provider):
     def _handler_for_type(self, resource_type: str):
         """Return the appropriate resource handler for the given type token."""
         handlers = {
+            _ADMIN_MANAGEMENT_APPLICATION: self._admin_mgmt_app,
             _ENVIRONMENT_GROUP: self._env_group,
             _DLP_POLICY: self._dlp_policy,
             _BILLING_POLICY: self._billing_policy,
