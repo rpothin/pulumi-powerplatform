@@ -21,10 +21,12 @@ from rpothin_powerplatform.utils import HttpError
 
 _URN = "urn:pulumi:test::test::powerplatform:index:EnvironmentSettings::my-settings"
 _ENV_ID = "env-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+_INSTANCE_URL = "https://org-test.crm.dynamics.com/"
+_ORG_ID = "ffffffff-1111-2222-3333-gggggggggggg"
 
 
 def _fake_settings_response() -> dict:
-    """Return a fake API settings response."""
+    """Return a fake Power Platform API settings response (Tier-1)."""
     return {
         "maxUploadFileSize": 52428800,
         "pluginTraceLogSetting": "Exception",
@@ -34,13 +36,50 @@ def _fake_settings_response() -> dict:
     }
 
 
+def _fake_dv_org_response() -> dict:
+    """Return a fake Dataverse organizations GET response (Tier-2)."""
+    return {
+        "organizationid": _ORG_ID,
+        "isreadauditenabled": True,
+        "auditretentionperiodv2": 90,
+        "allowapplicationuseraccess": False,
+        "allowmicrosofttrustedservicetags": True,
+        "reverseproxyipaddresses": "10.0.0.0/8",
+        "iscustomcontrolsincanvasappsenabled": True,
+        "bounddashboarddefaultcardexpanded": False,
+    }
+
+
+def _fake_dv_org_list() -> dict:
+    """Return a fake Dataverse organizations list (for org ID lookup)."""
+    return {"value": [{"organizationid": _ORG_ID}]}
+
+
 def _mock_client() -> MagicMock:
-    """Build a MagicMock that mimics PowerPlatformClient with raw_pp API client."""
+    """Build a MagicMock PowerPlatformClient with raw_pp and raw API clients."""
     client = MagicMock(spec=PowerPlatformClient)
     raw_pp_mock = MagicMock()
     raw_pp_mock.request = AsyncMock()
     type(client).raw_pp = PropertyMock(return_value=raw_pp_mock)
+    raw_mock = MagicMock()
+    raw_mock.request = AsyncMock()
+    type(client).raw = PropertyMock(return_value=raw_mock)
+    client.credential = MagicMock()
     return client
+
+
+def _mock_dv_client() -> MagicMock:
+    """Build a MagicMock Dataverse RawApiClient."""
+    dv = MagicMock()
+    dv.request = AsyncMock()
+    return dv
+
+
+def _make_handler_with_dv(mock_client: MagicMock, dv_mock: MagicMock) -> EnvironmentSettingsResource:
+    """Create a handler with an injected Dataverse client mock."""
+    handler = EnvironmentSettingsResource(client=mock_client)
+    handler._make_dataverse_client = MagicMock(return_value=dv_mock)
+    return handler
 
 
 @pytest.fixture
@@ -51,6 +90,16 @@ def mock_client():
 @pytest.fixture
 def handler(mock_client):
     return EnvironmentSettingsResource(client=mock_client)
+
+
+@pytest.fixture
+def dv_mock():
+    return _mock_dv_client()
+
+
+@pytest.fixture
+def handler_with_dv(mock_client, dv_mock):
+    return _make_handler_with_dv(mock_client, dv_mock)
 
 
 class TestEnvironmentSettingsCheck:
@@ -85,6 +134,99 @@ class TestEnvironmentSettingsCheck:
         response = await handler.check(request)
         assert response.failures is not None
         assert any(f.property == "environmentId" for f in response.failures)
+
+    @pytest.mark.asyncio
+    async def test_check_audit_retention_valid_forever(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(-1.0),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_audit_retention_valid_range(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(90.0),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_audit_retention_invalid_range(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(10.0),  # too low
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is not None
+        assert any(f.property == "auditRetentionPeriodInDays" for f in response.failures)
+
+    @pytest.mark.asyncio
+    async def test_check_audit_retention_invalid_negative(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(-5.0),  # only -1 is valid
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is not None
+        assert any(f.property == "auditRetentionPeriodInDays" for f in response.failures)
+
+    @pytest.mark.asyncio
+    async def test_check_audit_retention_max_boundary(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(24855.0),  # max valid
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_valid_dv_props(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+                "allowApplicationUserAccess": PropertyValue(False),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
 
 
 class TestEnvironmentSettingsDiff:
@@ -123,7 +265,7 @@ class TestEnvironmentSettingsDiff:
         assert response.detailed_diff["environmentId"].kind == PropertyDiffKind.UPDATE_REPLACE
 
     @pytest.mark.asyncio
-    async def test_diff_settings_are_update(self):
+    async def test_diff_tier1_settings_are_update(self):
         handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
         request = DiffRequest(
             urn=_URN,
@@ -143,12 +285,72 @@ class TestEnvironmentSettingsDiff:
         assert "isAuditEnabled" in response.diffs
         assert response.detailed_diff["isAuditEnabled"].kind == PropertyDiffKind.UPDATE
 
-
-class TestEnvironmentSettingsCreate:
-    """Tests for the create method."""
+    @pytest.mark.asyncio
+    async def test_diff_dv_bool_prop_changed(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            old_state={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(False),
+            },
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+        assert response.changes is True
+        assert "isReadAuditEnabled" in response.diffs
+        assert response.detailed_diff["isReadAuditEnabled"].kind == PropertyDiffKind.UPDATE
 
     @pytest.mark.asyncio
-    async def test_create_applies_settings_and_returns_outputs(self, handler, mock_client):
+    async def test_diff_dv_int_prop_changed(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            old_state={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(30.0),
+            },
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "auditRetentionPeriodInDays": PropertyValue(90.0),
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+        assert response.changes is True
+        assert "auditRetentionPeriodInDays" in response.diffs
+
+    @pytest.mark.asyncio
+    async def test_diff_dv_prop_no_change(self):
+        handler = EnvironmentSettingsResource(client=None)  # type: ignore[arg-type]
+        request = DiffRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            old_state={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+            },
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+            },
+            ignore_changes=[],
+        )
+        response = await handler.diff(request)
+        assert response.changes is False
+
+
+class TestEnvironmentSettingsCreate:
+    """Tests for the create method — Tier-1 only."""
+
+    @pytest.mark.asyncio
+    async def test_create_tier1_only_applies_settings_and_returns_outputs(self, handler, mock_client):
         # First call: PATCH settings. Second call: GET settings.
         mock_client.raw_pp.request.side_effect = [None, _fake_settings_response()]
 
@@ -186,11 +388,101 @@ class TestEnvironmentSettingsCreate:
         mock_client.raw_pp.request.assert_not_awaited()
 
 
+class TestEnvironmentSettingsCreateWithDataverse:
+    """Tests for create() with Dataverse (Tier-2) settings."""
+
+    @pytest.mark.asyncio
+    async def test_create_with_dv_props_preflights_and_writes_both_tiers(
+        self, handler_with_dv, mock_client, dv_mock
+    ):
+        # Calls: resolve_dataverse_url (via raw.request),
+        #        DV org ID list, PP PATCH, DV PATCH, PP GET, DV GET
+        mock_client.raw.request.return_value = {
+            "properties": {"linkedEnvironmentMetadata": {"instanceUrl": _INSTANCE_URL}}
+        }
+        dv_mock.request.side_effect = [
+            _fake_dv_org_list(),          # GET organizations?$select=organizationid
+            None,                          # PATCH organizations({org_id})
+            _fake_dv_org_response(),       # GET organizations({org_id})?$select=...
+        ]
+        mock_client.raw_pp.request.side_effect = [
+            None,                          # PATCH PP settings
+            _fake_settings_response(),     # GET PP settings
+        ]
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isAuditEnabled": PropertyValue("true"),
+                "isReadAuditEnabled": PropertyValue(True),
+                "auditRetentionPeriodInDays": PropertyValue(90.0),
+            },
+            timeout=300,
+            preview=False,
+        )
+        response = await handler_with_dv.create(request)
+
+        assert response.resource_id == _ENV_ID
+        # Tier-1 props
+        assert response.properties["isAuditEnabled"].value == "true"
+        # Tier-2 props — native bool/int
+        assert response.properties["isReadAuditEnabled"].value is True
+        assert response.properties["auditRetentionPeriodInDays"].value == 90
+
+    @pytest.mark.asyncio
+    async def test_create_with_dv_raises_when_no_dataverse_instance(
+        self, mock_client
+    ):
+        """If DV props are specified but the environment has no Dataverse, raise."""
+        mock_client.raw.request.return_value = {"properties": {}}  # no Dataverse
+
+        handler = EnvironmentSettingsResource(client=mock_client)
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with pytest.raises(RuntimeError, match="no Dataverse instance"):
+            await handler.create(request)
+
+    @pytest.mark.asyncio
+    async def test_create_preflight_happens_before_pp_patch(
+        self, mock_client, dv_mock
+    ):
+        """Dataverse preflight must occur before PP PATCH to avoid partial state."""
+        # Simulate a Dataverse error so we can verify PP PATCH was never called.
+        mock_client.raw.request.return_value = {"properties": {}}  # no Dataverse
+
+        handler = EnvironmentSettingsResource(client=mock_client)
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+                "isAuditEnabled": PropertyValue("true"),
+            },
+            timeout=300,
+            preview=False,
+        )
+        with pytest.raises(RuntimeError):
+            await handler.create(request)
+
+        # PP PATCH must NOT have been called — preflight failed first.
+        mock_client.raw_pp.request.assert_not_awaited()
+
+
 class TestEnvironmentSettingsRead:
     """Tests for the read method."""
 
     @pytest.mark.asyncio
-    async def test_read_existing_returns_settings(self, handler, mock_client):
+    async def test_read_tier1_only_returns_settings(self, handler, mock_client):
         mock_client.raw_pp.request.return_value = _fake_settings_response()
 
         request = ReadRequest(
@@ -223,15 +515,60 @@ class TestEnvironmentSettingsRead:
         assert response.resource_id == ""
         assert response.properties == {}
 
+    @pytest.mark.asyncio
+    async def test_read_with_dv_inputs_reads_dv_settings(
+        self, handler_with_dv, mock_client, dv_mock
+    ):
+        mock_client.raw.request.return_value = {
+            "properties": {"linkedEnvironmentMetadata": {"instanceUrl": _INSTANCE_URL}}
+        }
+        dv_mock.request.side_effect = [
+            _fake_dv_org_list(),       # org ID lookup
+            _fake_dv_org_response(),   # settings GET
+        ]
+        mock_client.raw_pp.request.return_value = _fake_settings_response()
+
+        request = ReadRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            properties={},
+            inputs={"isReadAuditEnabled": PropertyValue(True)},
+        )
+        with patch(
+            "rpothin_powerplatform.resources.environment_settings.resolve_dataverse_url",
+            new=AsyncMock(return_value=_INSTANCE_URL),
+        ):
+            response = await handler_with_dv.read(request)
+
+        assert response.properties["isReadAuditEnabled"].value is True
+        assert response.properties["auditRetentionPeriodInDays"].value == 90
+        assert response.properties["allowMicrosoftTrustedServiceTags"].value is True
+
+    @pytest.mark.asyncio
+    async def test_read_without_dv_inputs_skips_dv(self, handler, mock_client):
+        mock_client.raw_pp.request.return_value = _fake_settings_response()
+
+        request = ReadRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            properties={},
+            inputs={"isAuditEnabled": PropertyValue("true")},
+        )
+        response = await handler.read(request)
+
+        # No DV props should appear in outputs.
+        assert "isReadAuditEnabled" not in response.properties
+        # raw (BAP) client should NOT have been called.
+        mock_client.raw.request.assert_not_awaited()
+
 
 class TestEnvironmentSettingsUpdate:
     """Tests for the update method."""
 
     @pytest.mark.asyncio
-    async def test_update_patches_and_returns_settings(self, handler, mock_client):
+    async def test_update_tier1_patches_and_returns_settings(self, handler, mock_client):
         updated_settings = _fake_settings_response()
         updated_settings["isAuditEnabled"] = False
-        # First call: PATCH. Second call: GET.
         mock_client.raw_pp.request.side_effect = [None, updated_settings]
 
         request = UpdateRequest(
@@ -251,6 +588,62 @@ class TestEnvironmentSettingsUpdate:
         )
         response = await handler.update(request)
 
+        assert response.properties["isAuditEnabled"].value == "false"
+
+    @pytest.mark.asyncio
+    async def test_update_with_dv_writes_and_reads_both_tiers(
+        self, handler_with_dv, mock_client, dv_mock
+    ):
+        mock_client.raw.request.return_value = {
+            "properties": {"linkedEnvironmentMetadata": {"instanceUrl": _INSTANCE_URL}}
+        }
+        dv_mock.request.side_effect = [
+            _fake_dv_org_list(),      # org ID preflight
+            None,                      # DV PATCH
+            _fake_dv_org_response(),   # DV GET read-back
+        ]
+        mock_client.raw_pp.request.side_effect = [
+            None,                      # PP PATCH
+            _fake_settings_response(), # PP GET read-back
+        ]
+
+        request = UpdateRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            olds={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(False),
+            },
+            news={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isReadAuditEnabled": PropertyValue(True),
+                "isAuditEnabled": PropertyValue("true"),
+            },
+            timeout=300,
+            preview=False,
+            ignore_changes=[],
+        )
+        response = await handler_with_dv.update(request)
+
+        assert response.properties["isReadAuditEnabled"].value is True
+        assert response.properties["isAuditEnabled"].value == "true"
+
+    @pytest.mark.asyncio
+    async def test_update_preview_returns_news(self, handler, mock_client):
+        request = UpdateRequest(
+            urn=_URN,
+            resource_id=_ENV_ID,
+            olds={"environmentId": PropertyValue(_ENV_ID)},
+            news={
+                "environmentId": PropertyValue(_ENV_ID),
+                "isAuditEnabled": PropertyValue("false"),
+            },
+            timeout=300,
+            preview=True,
+            ignore_changes=[],
+        )
+        response = await handler.update(request)
+        mock_client.raw_pp.request.assert_not_awaited()
         assert response.properties["isAuditEnabled"].value == "false"
 
 
@@ -274,3 +667,4 @@ class TestEnvironmentSettingsDelete:
 
         # Should NOT call the API — it's a no-op
         mock_client.raw_pp.request.assert_not_awaited()
+

@@ -6,6 +6,8 @@ package io.github.rpothin.powerplatform;
 import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import java.lang.Boolean;
+import java.lang.Integer;
 import java.lang.String;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,6 +17,51 @@ import javax.annotation.Nullable;
 public final class EnvironmentSettingsArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final EnvironmentSettingsArgs Empty = new EnvironmentSettingsArgs();
+
+    /**
+     * Whether service principal (application user) access is allowed.
+     * 
+     */
+    @Import(name="allowApplicationUserAccess")
+    private @Nullable Output<Boolean> allowApplicationUserAccess;
+
+    /**
+     * @return Whether service principal (application user) access is allowed.
+     * 
+     */
+    public Optional<Output<Boolean>> allowApplicationUserAccess() {
+        return Optional.ofNullable(this.allowApplicationUserAccess);
+    }
+
+    /**
+     * Whether Microsoft trusted Azure service tags are allowed for connectivity.
+     * 
+     */
+    @Import(name="allowMicrosoftTrustedServiceTags")
+    private @Nullable Output<Boolean> allowMicrosoftTrustedServiceTags;
+
+    /**
+     * @return Whether Microsoft trusted Azure service tags are allowed for connectivity.
+     * 
+     */
+    public Optional<Output<Boolean>> allowMicrosoftTrustedServiceTags() {
+        return Optional.ofNullable(this.allowMicrosoftTrustedServiceTags);
+    }
+
+    /**
+     * Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+     * 
+     */
+    @Import(name="auditRetentionPeriodInDays")
+    private @Nullable Output<Integer> auditRetentionPeriodInDays;
+
+    /**
+     * @return Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+     * 
+     */
+    public Optional<Output<Integer>> auditRetentionPeriodInDays() {
+        return Optional.ofNullable(this.auditRetentionPeriodInDays);
+    }
 
     /**
      * The ID of the environment to manage settings for. Immutable after creation.
@@ -62,6 +109,21 @@ public final class EnvironmentSettingsArgs extends com.pulumi.resources.Resource
     }
 
     /**
+     * Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+     * 
+     */
+    @Import(name="isReadAuditEnabled")
+    private @Nullable Output<Boolean> isReadAuditEnabled;
+
+    /**
+     * @return Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+     * 
+     */
+    public Optional<Output<Boolean>> isReadAuditEnabled() {
+        return Optional.ofNullable(this.isReadAuditEnabled);
+    }
+
+    /**
      * Whether user access auditing is enabled (true or false).
      * 
      */
@@ -106,15 +168,67 @@ public final class EnvironmentSettingsArgs extends com.pulumi.resources.Resource
         return Optional.ofNullable(this.pluginTraceLogSetting);
     }
 
+    /**
+     * Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+     * 
+     */
+    @Import(name="powerAppsComponentFrameworkForCanvasApps")
+    private @Nullable Output<Boolean> powerAppsComponentFrameworkForCanvasApps;
+
+    /**
+     * @return Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+     * 
+     */
+    public Optional<Output<Boolean>> powerAppsComponentFrameworkForCanvasApps() {
+        return Optional.ofNullable(this.powerAppsComponentFrameworkForCanvasApps);
+    }
+
+    /**
+     * Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+     * 
+     */
+    @Import(name="reverseProxyIpAddresses")
+    private @Nullable Output<String> reverseProxyIpAddresses;
+
+    /**
+     * @return Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+     * 
+     */
+    public Optional<Output<String>> reverseProxyIpAddresses() {
+        return Optional.ofNullable(this.reverseProxyIpAddresses);
+    }
+
+    /**
+     * Whether dashboard cards are shown in expanded state by default.
+     * 
+     */
+    @Import(name="showDashboardCardsInExpandedState")
+    private @Nullable Output<Boolean> showDashboardCardsInExpandedState;
+
+    /**
+     * @return Whether dashboard cards are shown in expanded state by default.
+     * 
+     */
+    public Optional<Output<Boolean>> showDashboardCardsInExpandedState() {
+        return Optional.ofNullable(this.showDashboardCardsInExpandedState);
+    }
+
     private EnvironmentSettingsArgs() {}
 
     private EnvironmentSettingsArgs(EnvironmentSettingsArgs $) {
+        this.allowApplicationUserAccess = $.allowApplicationUserAccess;
+        this.allowMicrosoftTrustedServiceTags = $.allowMicrosoftTrustedServiceTags;
+        this.auditRetentionPeriodInDays = $.auditRetentionPeriodInDays;
         this.environmentId = $.environmentId;
         this.isActivityLoggingEnabled = $.isActivityLoggingEnabled;
         this.isAuditEnabled = $.isAuditEnabled;
+        this.isReadAuditEnabled = $.isReadAuditEnabled;
         this.isUserAccessAuditEnabled = $.isUserAccessAuditEnabled;
         this.maxUploadFileSize = $.maxUploadFileSize;
         this.pluginTraceLogSetting = $.pluginTraceLogSetting;
+        this.powerAppsComponentFrameworkForCanvasApps = $.powerAppsComponentFrameworkForCanvasApps;
+        this.reverseProxyIpAddresses = $.reverseProxyIpAddresses;
+        this.showDashboardCardsInExpandedState = $.showDashboardCardsInExpandedState;
     }
 
     public static Builder builder() {
@@ -133,6 +247,69 @@ public final class EnvironmentSettingsArgs extends com.pulumi.resources.Resource
 
         public Builder(EnvironmentSettingsArgs defaults) {
             $ = new EnvironmentSettingsArgs(Objects.requireNonNull(defaults));
+        }
+
+        /**
+         * @param allowApplicationUserAccess Whether service principal (application user) access is allowed.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowApplicationUserAccess(@Nullable Output<Boolean> allowApplicationUserAccess) {
+            $.allowApplicationUserAccess = allowApplicationUserAccess;
+            return this;
+        }
+
+        /**
+         * @param allowApplicationUserAccess Whether service principal (application user) access is allowed.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowApplicationUserAccess(Boolean allowApplicationUserAccess) {
+            return allowApplicationUserAccess(Output.of(allowApplicationUserAccess));
+        }
+
+        /**
+         * @param allowMicrosoftTrustedServiceTags Whether Microsoft trusted Azure service tags are allowed for connectivity.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowMicrosoftTrustedServiceTags(@Nullable Output<Boolean> allowMicrosoftTrustedServiceTags) {
+            $.allowMicrosoftTrustedServiceTags = allowMicrosoftTrustedServiceTags;
+            return this;
+        }
+
+        /**
+         * @param allowMicrosoftTrustedServiceTags Whether Microsoft trusted Azure service tags are allowed for connectivity.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder allowMicrosoftTrustedServiceTags(Boolean allowMicrosoftTrustedServiceTags) {
+            return allowMicrosoftTrustedServiceTags(Output.of(allowMicrosoftTrustedServiceTags));
+        }
+
+        /**
+         * @param auditRetentionPeriodInDays Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder auditRetentionPeriodInDays(@Nullable Output<Integer> auditRetentionPeriodInDays) {
+            $.auditRetentionPeriodInDays = auditRetentionPeriodInDays;
+            return this;
+        }
+
+        /**
+         * @param auditRetentionPeriodInDays Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder auditRetentionPeriodInDays(Integer auditRetentionPeriodInDays) {
+            return auditRetentionPeriodInDays(Output.of(auditRetentionPeriodInDays));
         }
 
         /**
@@ -199,6 +376,27 @@ public final class EnvironmentSettingsArgs extends com.pulumi.resources.Resource
         }
 
         /**
+         * @param isReadAuditEnabled Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder isReadAuditEnabled(@Nullable Output<Boolean> isReadAuditEnabled) {
+            $.isReadAuditEnabled = isReadAuditEnabled;
+            return this;
+        }
+
+        /**
+         * @param isReadAuditEnabled Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder isReadAuditEnabled(Boolean isReadAuditEnabled) {
+            return isReadAuditEnabled(Output.of(isReadAuditEnabled));
+        }
+
+        /**
          * @param isUserAccessAuditEnabled Whether user access auditing is enabled (true or false).
          * 
          * @return builder
@@ -259,6 +457,69 @@ public final class EnvironmentSettingsArgs extends com.pulumi.resources.Resource
          */
         public Builder pluginTraceLogSetting(String pluginTraceLogSetting) {
             return pluginTraceLogSetting(Output.of(pluginTraceLogSetting));
+        }
+
+        /**
+         * @param powerAppsComponentFrameworkForCanvasApps Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder powerAppsComponentFrameworkForCanvasApps(@Nullable Output<Boolean> powerAppsComponentFrameworkForCanvasApps) {
+            $.powerAppsComponentFrameworkForCanvasApps = powerAppsComponentFrameworkForCanvasApps;
+            return this;
+        }
+
+        /**
+         * @param powerAppsComponentFrameworkForCanvasApps Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder powerAppsComponentFrameworkForCanvasApps(Boolean powerAppsComponentFrameworkForCanvasApps) {
+            return powerAppsComponentFrameworkForCanvasApps(Output.of(powerAppsComponentFrameworkForCanvasApps));
+        }
+
+        /**
+         * @param reverseProxyIpAddresses Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder reverseProxyIpAddresses(@Nullable Output<String> reverseProxyIpAddresses) {
+            $.reverseProxyIpAddresses = reverseProxyIpAddresses;
+            return this;
+        }
+
+        /**
+         * @param reverseProxyIpAddresses Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder reverseProxyIpAddresses(String reverseProxyIpAddresses) {
+            return reverseProxyIpAddresses(Output.of(reverseProxyIpAddresses));
+        }
+
+        /**
+         * @param showDashboardCardsInExpandedState Whether dashboard cards are shown in expanded state by default.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder showDashboardCardsInExpandedState(@Nullable Output<Boolean> showDashboardCardsInExpandedState) {
+            $.showDashboardCardsInExpandedState = showDashboardCardsInExpandedState;
+            return this;
+        }
+
+        /**
+         * @param showDashboardCardsInExpandedState Whether dashboard cards are shown in expanded state by default.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder showDashboardCardsInExpandedState(Boolean showDashboardCardsInExpandedState) {
+            return showDashboardCardsInExpandedState(Output.of(showDashboardCardsInExpandedState));
         }
 
         public EnvironmentSettingsArgs build() {

@@ -16,18 +16,32 @@ import (
 type EnvironmentSettings struct {
 	pulumi.CustomResourceState
 
+	// Whether service principal (application user) access is allowed.
+	AllowApplicationUserAccess pulumi.BoolPtrOutput `pulumi:"allowApplicationUserAccess"`
+	// Whether Microsoft trusted Azure service tags are allowed.
+	AllowMicrosoftTrustedServiceTags pulumi.BoolPtrOutput `pulumi:"allowMicrosoftTrustedServiceTags"`
+	// Audit log retention period in days.
+	AuditRetentionPeriodInDays pulumi.IntPtrOutput `pulumi:"auditRetentionPeriodInDays"`
 	// The ID of the environment.
 	EnvironmentId pulumi.StringOutput `pulumi:"environmentId"`
 	// Whether activity logging is enabled.
 	IsActivityLoggingEnabled pulumi.StringPtrOutput `pulumi:"isActivityLoggingEnabled"`
 	// Whether auditing is enabled.
 	IsAuditEnabled pulumi.StringPtrOutput `pulumi:"isAuditEnabled"`
+	// Whether read auditing is enabled.
+	IsReadAuditEnabled pulumi.BoolPtrOutput `pulumi:"isReadAuditEnabled"`
 	// Whether user access auditing is enabled.
 	IsUserAccessAuditEnabled pulumi.StringPtrOutput `pulumi:"isUserAccessAuditEnabled"`
 	// Maximum file upload size in bytes.
 	MaxUploadFileSize pulumi.StringPtrOutput `pulumi:"maxUploadFileSize"`
 	// Plugin trace log setting.
 	PluginTraceLogSetting pulumi.StringPtrOutput `pulumi:"pluginTraceLogSetting"`
+	// Whether PCF controls are enabled for canvas apps.
+	PowerAppsComponentFrameworkForCanvasApps pulumi.BoolPtrOutput `pulumi:"powerAppsComponentFrameworkForCanvasApps"`
+	// Allowed reverse proxy IP addresses or CIDR ranges.
+	ReverseProxyIpAddresses pulumi.StringPtrOutput `pulumi:"reverseProxyIpAddresses"`
+	// Whether dashboard cards are shown in expanded state by default.
+	ShowDashboardCardsInExpandedState pulumi.BoolPtrOutput `pulumi:"showDashboardCardsInExpandedState"`
 }
 
 // NewEnvironmentSettings registers a new resource with the given unique name, arguments, and options.
@@ -73,34 +87,62 @@ func (EnvironmentSettingsState) ElementType() reflect.Type {
 }
 
 type environmentSettingsArgs struct {
+	// Whether service principal (application user) access is allowed.
+	AllowApplicationUserAccess *bool `pulumi:"allowApplicationUserAccess"`
+	// Whether Microsoft trusted Azure service tags are allowed for connectivity.
+	AllowMicrosoftTrustedServiceTags *bool `pulumi:"allowMicrosoftTrustedServiceTags"`
+	// Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+	AuditRetentionPeriodInDays *int `pulumi:"auditRetentionPeriodInDays"`
 	// The ID of the environment to manage settings for. Immutable after creation.
 	EnvironmentId string `pulumi:"environmentId"`
 	// Whether activity logging is enabled (true or false).
 	IsActivityLoggingEnabled *string `pulumi:"isActivityLoggingEnabled"`
 	// Whether auditing is enabled (true or false).
 	IsAuditEnabled *string `pulumi:"isAuditEnabled"`
+	// Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+	IsReadAuditEnabled *bool `pulumi:"isReadAuditEnabled"`
 	// Whether user access auditing is enabled (true or false).
 	IsUserAccessAuditEnabled *string `pulumi:"isUserAccessAuditEnabled"`
 	// Maximum file upload size in bytes.
 	MaxUploadFileSize *string `pulumi:"maxUploadFileSize"`
 	// Plugin trace log setting (Off, Exception, All).
 	PluginTraceLogSetting *string `pulumi:"pluginTraceLogSetting"`
+	// Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+	PowerAppsComponentFrameworkForCanvasApps *bool `pulumi:"powerAppsComponentFrameworkForCanvasApps"`
+	// Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+	ReverseProxyIpAddresses *string `pulumi:"reverseProxyIpAddresses"`
+	// Whether dashboard cards are shown in expanded state by default.
+	ShowDashboardCardsInExpandedState *bool `pulumi:"showDashboardCardsInExpandedState"`
 }
 
 // The set of arguments for constructing a EnvironmentSettings resource.
 type EnvironmentSettingsArgs struct {
+	// Whether service principal (application user) access is allowed.
+	AllowApplicationUserAccess pulumi.BoolPtrInput
+	// Whether Microsoft trusted Azure service tags are allowed for connectivity.
+	AllowMicrosoftTrustedServiceTags pulumi.BoolPtrInput
+	// Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+	AuditRetentionPeriodInDays pulumi.IntPtrInput
 	// The ID of the environment to manage settings for. Immutable after creation.
 	EnvironmentId pulumi.StringInput
 	// Whether activity logging is enabled (true or false).
 	IsActivityLoggingEnabled pulumi.StringPtrInput
 	// Whether auditing is enabled (true or false).
 	IsAuditEnabled pulumi.StringPtrInput
+	// Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+	IsReadAuditEnabled pulumi.BoolPtrInput
 	// Whether user access auditing is enabled (true or false).
 	IsUserAccessAuditEnabled pulumi.StringPtrInput
 	// Maximum file upload size in bytes.
 	MaxUploadFileSize pulumi.StringPtrInput
 	// Plugin trace log setting (Off, Exception, All).
 	PluginTraceLogSetting pulumi.StringPtrInput
+	// Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+	PowerAppsComponentFrameworkForCanvasApps pulumi.BoolPtrInput
+	// Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+	ReverseProxyIpAddresses pulumi.StringPtrInput
+	// Whether dashboard cards are shown in expanded state by default.
+	ShowDashboardCardsInExpandedState pulumi.BoolPtrInput
 }
 
 func (EnvironmentSettingsArgs) ElementType() reflect.Type {
@@ -140,6 +182,21 @@ func (o EnvironmentSettingsOutput) ToEnvironmentSettingsOutputWithContext(ctx co
 	return o
 }
 
+// Whether service principal (application user) access is allowed.
+func (o EnvironmentSettingsOutput) AllowApplicationUserAccess() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.BoolPtrOutput { return v.AllowApplicationUserAccess }).(pulumi.BoolPtrOutput)
+}
+
+// Whether Microsoft trusted Azure service tags are allowed.
+func (o EnvironmentSettingsOutput) AllowMicrosoftTrustedServiceTags() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.BoolPtrOutput { return v.AllowMicrosoftTrustedServiceTags }).(pulumi.BoolPtrOutput)
+}
+
+// Audit log retention period in days.
+func (o EnvironmentSettingsOutput) AuditRetentionPeriodInDays() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.IntPtrOutput { return v.AuditRetentionPeriodInDays }).(pulumi.IntPtrOutput)
+}
+
 // The ID of the environment.
 func (o EnvironmentSettingsOutput) EnvironmentId() pulumi.StringOutput {
 	return o.ApplyT(func(v *EnvironmentSettings) pulumi.StringOutput { return v.EnvironmentId }).(pulumi.StringOutput)
@@ -155,6 +212,11 @@ func (o EnvironmentSettingsOutput) IsAuditEnabled() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *EnvironmentSettings) pulumi.StringPtrOutput { return v.IsAuditEnabled }).(pulumi.StringPtrOutput)
 }
 
+// Whether read auditing is enabled.
+func (o EnvironmentSettingsOutput) IsReadAuditEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.BoolPtrOutput { return v.IsReadAuditEnabled }).(pulumi.BoolPtrOutput)
+}
+
 // Whether user access auditing is enabled.
 func (o EnvironmentSettingsOutput) IsUserAccessAuditEnabled() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *EnvironmentSettings) pulumi.StringPtrOutput { return v.IsUserAccessAuditEnabled }).(pulumi.StringPtrOutput)
@@ -168,6 +230,21 @@ func (o EnvironmentSettingsOutput) MaxUploadFileSize() pulumi.StringPtrOutput {
 // Plugin trace log setting.
 func (o EnvironmentSettingsOutput) PluginTraceLogSetting() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v *EnvironmentSettings) pulumi.StringPtrOutput { return v.PluginTraceLogSetting }).(pulumi.StringPtrOutput)
+}
+
+// Whether PCF controls are enabled for canvas apps.
+func (o EnvironmentSettingsOutput) PowerAppsComponentFrameworkForCanvasApps() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.BoolPtrOutput { return v.PowerAppsComponentFrameworkForCanvasApps }).(pulumi.BoolPtrOutput)
+}
+
+// Allowed reverse proxy IP addresses or CIDR ranges.
+func (o EnvironmentSettingsOutput) ReverseProxyIpAddresses() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.StringPtrOutput { return v.ReverseProxyIpAddresses }).(pulumi.StringPtrOutput)
+}
+
+// Whether dashboard cards are shown in expanded state by default.
+func (o EnvironmentSettingsOutput) ShowDashboardCardsInExpandedState() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v *EnvironmentSettings) pulumi.BoolPtrOutput { return v.ShowDashboardCardsInExpandedState }).(pulumi.BoolPtrOutput)
 }
 
 func init() {
