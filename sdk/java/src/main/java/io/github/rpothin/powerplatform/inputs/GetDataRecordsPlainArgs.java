@@ -19,6 +19,36 @@ public final class GetDataRecordsPlainArgs extends com.pulumi.resources.InvokeAr
     public static final GetDataRecordsPlainArgs Empty = new GetDataRecordsPlainArgs();
 
     /**
+     * OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+     * 
+     */
+    @Import(name="apply")
+    private @Nullable String apply;
+
+    /**
+     * @return OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+     * 
+     */
+    public Optional<String> apply() {
+        return Optional.ofNullable(this.apply);
+    }
+
+    /**
+     * The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+     * 
+     */
+    @Import(name="entityCollection", required=true)
+    private String entityCollection;
+
+    /**
+     * @return The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+     * 
+     */
+    public String entityCollection() {
+        return this.entityCollection;
+    }
+
+    /**
      * The GUID of the Power Platform environment containing the Dataverse instance.
      * 
      */
@@ -94,21 +124,6 @@ public final class GetDataRecordsPlainArgs extends com.pulumi.resources.InvokeAr
     }
 
     /**
-     * The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-     * 
-     */
-    @Import(name="tableLogicalName", required=true)
-    private String tableLogicalName;
-
-    /**
-     * @return The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-     * 
-     */
-    public String tableLogicalName() {
-        return this.tableLogicalName;
-    }
-
-    /**
      * Maximum number of records to return ($top). Use to limit large result sets.
      * 
      */
@@ -126,12 +141,13 @@ public final class GetDataRecordsPlainArgs extends com.pulumi.resources.InvokeAr
     private GetDataRecordsPlainArgs() {}
 
     private GetDataRecordsPlainArgs(GetDataRecordsPlainArgs $) {
+        this.apply = $.apply;
+        this.entityCollection = $.entityCollection;
         this.environmentId = $.environmentId;
         this.expand = $.expand;
         this.filter = $.filter;
         this.orderby = $.orderby;
         this.select = $.select;
-        this.tableLogicalName = $.tableLogicalName;
         this.top = $.top;
     }
 
@@ -151,6 +167,28 @@ public final class GetDataRecordsPlainArgs extends com.pulumi.resources.InvokeAr
 
         public Builder(GetDataRecordsPlainArgs defaults) {
             $ = new GetDataRecordsPlainArgs(Objects.requireNonNull(defaults));
+        }
+
+        /**
+         * @param apply OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder apply(@Nullable String apply) {
+            $.apply = apply;
+            return this;
+        }
+
+        /**
+         * @param entityCollection The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder entityCollection(String entityCollection) {
+            $.entityCollection = entityCollection;
+            return this;
         }
 
         /**
@@ -229,17 +267,6 @@ public final class GetDataRecordsPlainArgs extends com.pulumi.resources.InvokeAr
         }
 
         /**
-         * @param tableLogicalName The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-         * 
-         * @return builder
-         * 
-         */
-        public Builder tableLogicalName(String tableLogicalName) {
-            $.tableLogicalName = tableLogicalName;
-            return this;
-        }
-
-        /**
          * @param top Maximum number of records to return ($top). Use to limit large result sets.
          * 
          * @return builder
@@ -251,11 +278,11 @@ public final class GetDataRecordsPlainArgs extends com.pulumi.resources.InvokeAr
         }
 
         public GetDataRecordsPlainArgs build() {
+            if ($.entityCollection == null) {
+                throw new MissingRequiredPropertyException("GetDataRecordsPlainArgs", "entityCollection");
+            }
             if ($.environmentId == null) {
                 throw new MissingRequiredPropertyException("GetDataRecordsPlainArgs", "environmentId");
-            }
-            if ($.tableLogicalName == null) {
-                throw new MissingRequiredPropertyException("GetDataRecordsPlainArgs", "tableLogicalName");
             }
             return $;
         }

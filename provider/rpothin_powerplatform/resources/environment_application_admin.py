@@ -263,7 +263,7 @@ class EnvironmentApplicationAdminResource:
             await dv_client.request(
                 "PATCH",
                 f"/api/data/v9.2/systemusers({system_user_id})",
-                body={"isdisabled": True},
+                body={"isdisabled": True, "applicationid": app_id},
                 api_version=None,
             )
         except HttpError as exc:
@@ -318,7 +318,7 @@ class EnvironmentApplicationAdminResource:
         """
         path = (
             f"/api/data/v9.2/systemusers"
-            f"?$select=systemuserid&$filter=applicationid eq {app_id}"
+            f"?$select=systemuserid&$filter=applicationid eq '{app_id}'"
         )
         for attempt in range(max_attempts):
             response = await dv_client.request("GET", path, api_version=None)

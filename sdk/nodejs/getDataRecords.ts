@@ -7,22 +7,31 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
+ * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
  */
 export function getDataRecords(args: GetDataRecordsArgs, opts?: pulumi.InvokeOptions): Promise<GetDataRecordsResult> {
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("powerplatform:index:getDataRecords", {
+        "apply": args.apply,
+        "entityCollection": args.entityCollection,
         "environmentId": args.environmentId,
         "expand": args.expand,
         "filter": args.filter,
         "orderby": args.orderby,
         "select": args.select,
-        "tableLogicalName": args.tableLogicalName,
         "top": args.top,
     }, opts);
 }
 
 export interface GetDataRecordsArgs {
+    /**
+     * OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
+     */
+    apply?: string;
+    /**
+     * The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+     */
+    entityCollection: string;
     /**
      * The GUID of the Power Platform environment containing the Dataverse instance.
      */
@@ -44,10 +53,6 @@ export interface GetDataRecordsArgs {
      */
     select?: string[];
     /**
-     * The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-     */
-    tableLogicalName: string;
-    /**
      * Maximum number of records to return ($top). Use to limit large result sets.
      */
     top?: number;
@@ -58,24 +63,41 @@ export interface GetDataRecordsResult {
      * The list of matching Dataverse records. Each record is a map of column name to value.
      */
     readonly records: any[];
+    /**
+     * Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+     */
+    readonly totalRowsCount: number;
+    /**
+     * True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+     */
+    readonly totalRowsCountLimitExceeded: boolean;
 }
 /**
- * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
+ * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
  */
 export function getDataRecordsOutput(args: GetDataRecordsOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetDataRecordsResult> {
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invokeOutput("powerplatform:index:getDataRecords", {
+        "apply": args.apply,
+        "entityCollection": args.entityCollection,
         "environmentId": args.environmentId,
         "expand": args.expand,
         "filter": args.filter,
         "orderby": args.orderby,
         "select": args.select,
-        "tableLogicalName": args.tableLogicalName,
         "top": args.top,
     }, opts);
 }
 
 export interface GetDataRecordsOutputArgs {
+    /**
+     * OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
+     */
+    apply?: pulumi.Input<string>;
+    /**
+     * The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+     */
+    entityCollection: pulumi.Input<string>;
     /**
      * The GUID of the Power Platform environment containing the Dataverse instance.
      */
@@ -83,25 +105,21 @@ export interface GetDataRecordsOutputArgs {
     /**
      * List of navigation properties to expand in the response.
      */
-    expand?: pulumi.Input<pulumi.Input<inputs.DataRecordsExpandParamArgs>[] | undefined>;
+    expand?: pulumi.Input<pulumi.Input<inputs.DataRecordsExpandParamArgs>[]>;
     /**
      * OData $filter expression (e.g. "name eq 'My Pipeline'").
      */
-    filter?: pulumi.Input<string | undefined>;
+    filter?: pulumi.Input<string>;
     /**
      * OData $orderby expression (e.g. "createdon desc").
      */
-    orderby?: pulumi.Input<string | undefined>;
+    orderby?: pulumi.Input<string>;
     /**
      * List of column logical names to include in the response.
      */
-    select?: pulumi.Input<pulumi.Input<string>[] | undefined>;
-    /**
-     * The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-     */
-    tableLogicalName: pulumi.Input<string>;
+    select?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Maximum number of records to return ($top). Use to limit large result sets.
      */
-    top?: pulumi.Input<number | undefined>;
+    top?: pulumi.Input<number>;
 }

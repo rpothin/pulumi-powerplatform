@@ -12,19 +12,19 @@ namespace Pulumi.Powerplatform
     public static class GetDataRecords
     {
         /// <summary>
-        /// Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
+        /// Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
         /// </summary>
         public static Task<GetDataRecordsResult> InvokeAsync(GetDataRecordsArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetDataRecordsResult>("powerplatform:index:getDataRecords", args ?? new GetDataRecordsArgs(), options.WithDefaults());
 
         /// <summary>
-        /// Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
+        /// Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
         /// </summary>
         public static Output<GetDataRecordsResult> Invoke(GetDataRecordsInvokeArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.Invoke<GetDataRecordsResult>("powerplatform:index:getDataRecords", args ?? new GetDataRecordsInvokeArgs(), options.WithDefaults());
 
         /// <summary>
-        /// Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
+        /// Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
         /// </summary>
         public static Output<GetDataRecordsResult> Invoke(GetDataRecordsInvokeArgs args, InvokeOutputOptions options)
             => global::Pulumi.Deployment.Instance.Invoke<GetDataRecordsResult>("powerplatform:index:getDataRecords", args ?? new GetDataRecordsInvokeArgs(), options.WithDefaults());
@@ -33,6 +33,18 @@ namespace Pulumi.Powerplatform
 
     public sealed class GetDataRecordsArgs : global::Pulumi.InvokeArgs
     {
+        /// <summary>
+        /// OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
+        /// </summary>
+        [Input("apply")]
+        public string? Apply { get; set; }
+
+        /// <summary>
+        /// The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+        /// </summary>
+        [Input("entityCollection", required: true)]
+        public string EntityCollection { get; set; } = null!;
+
         /// <summary>
         /// The GUID of the Power Platform environment containing the Dataverse instance.
         /// </summary>
@@ -76,12 +88,6 @@ namespace Pulumi.Powerplatform
         }
 
         /// <summary>
-        /// The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-        /// </summary>
-        [Input("tableLogicalName", required: true)]
-        public string TableLogicalName { get; set; } = null!;
-
-        /// <summary>
         /// Maximum number of records to return ($top). Use to limit large result sets.
         /// </summary>
         [Input("top")]
@@ -95,6 +101,18 @@ namespace Pulumi.Powerplatform
 
     public sealed class GetDataRecordsInvokeArgs : global::Pulumi.InvokeArgs
     {
+        /// <summary>
+        /// OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
+        /// </summary>
+        [Input("apply")]
+        public Input<string>? Apply { get; set; }
+
+        /// <summary>
+        /// The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+        /// </summary>
+        [Input("entityCollection", required: true)]
+        public Input<string> EntityCollection { get; set; } = null!;
+
         /// <summary>
         /// The GUID of the Power Platform environment containing the Dataverse instance.
         /// </summary>
@@ -138,12 +156,6 @@ namespace Pulumi.Powerplatform
         }
 
         /// <summary>
-        /// The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-        /// </summary>
-        [Input("tableLogicalName", required: true)]
-        public Input<string> TableLogicalName { get; set; } = null!;
-
-        /// <summary>
         /// Maximum number of records to return ($top). Use to limit large result sets.
         /// </summary>
         [Input("top")]
@@ -163,11 +175,26 @@ namespace Pulumi.Powerplatform
         /// The list of matching Dataverse records. Each record is a map of column name to value.
         /// </summary>
         public readonly ImmutableArray<object> Records;
+        /// <summary>
+        /// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+        /// </summary>
+        public readonly int TotalRowsCount;
+        /// <summary>
+        /// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+        /// </summary>
+        public readonly bool TotalRowsCountLimitExceeded;
 
         [OutputConstructor]
-        private GetDataRecordsResult(ImmutableArray<object> records)
+        private GetDataRecordsResult(
+            ImmutableArray<object> records,
+
+            int totalRowsCount,
+
+            bool totalRowsCountLimitExceeded)
         {
             Records = records;
+            TotalRowsCount = totalRowsCount;
+            TotalRowsCountLimitExceeded = totalRowsCountLimitExceeded;
         }
     }
 }

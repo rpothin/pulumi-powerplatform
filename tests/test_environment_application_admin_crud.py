@@ -197,7 +197,7 @@ class TestEnvironmentApplicationAdminCreate:
         dv_call = dv_mock.request.call_args
         assert dv_call[0][0] == "GET"
         assert "systemusers" in dv_call[0][1]
-        assert _APP_ID in dv_call[0][1]
+        assert f"applicationid eq '{_APP_ID}'" in dv_call[0][1]
         assert dv_call[1]["api_version"] is None
         assert response.properties["systemUserId"].value == _SYSTEM_USER_ID
 
@@ -309,7 +309,7 @@ class TestEnvironmentApplicationAdminDelete:
         assert patch_call[0][0] == "PATCH"
         assert _SYSTEM_USER_ID in patch_call[0][1]
         assert "v9.2" in patch_call[0][1]
-        assert patch_call[1]["body"] == {"isdisabled": True}
+        assert patch_call[1]["body"] == {"isdisabled": True, "applicationid": _APP_ID}
         assert patch_call[1]["api_version"] is None
 
         delete_call = calls[1]

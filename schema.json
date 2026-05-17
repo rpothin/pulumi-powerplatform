@@ -1272,7 +1272,8 @@
       "inputProperties": {
         "applicationId": {
           "type": "string",
-          "description": "The GUID of the service principal to register as a Power Platform admin management application. Immutable after creation."
+          "description": "The GUID of the service principal to register as a Power Platform admin management application. Immutable after creation.",
+          "replaceOnChanges": true
         }
       },
       "requiredInputs": [
@@ -1293,11 +1294,13 @@
       "inputProperties": {
         "environmentId": {
           "type": "string",
-          "description": "The GUID of the Power Platform environment. Must have a Dataverse instance. Immutable after creation."
+          "description": "The GUID of the Power Platform environment. Must have a Dataverse instance. Immutable after creation.",
+          "replaceOnChanges": true
         },
         "applicationId": {
           "type": "string",
-          "description": "The GUID of the service principal (application) to add as System Administrator. Immutable after creation."
+          "description": "The GUID of the service principal (application) to add as System Administrator. Immutable after creation.",
+          "replaceOnChanges": true
         }
       },
       "requiredInputs": [
@@ -1329,11 +1332,13 @@
       "inputProperties": {
         "environmentId": {
           "type": "string",
-          "description": "The GUID of the Power Platform environment containing the Dataverse instance. Immutable after creation."
+          "description": "The GUID of the Power Platform environment containing the Dataverse instance. Immutable after creation.",
+          "replaceOnChanges": true
         },
         "tableLogicalName": {
           "type": "string",
-          "description": "The logical name of the Dataverse table (e.g. deploymentpipeline, account). Immutable after creation."
+          "description": "The logical name of the Dataverse table (e.g. deploymentpipeline, account). Immutable after creation.",
+          "replaceOnChanges": true
         },
         "columns": {
           "type": "object",
@@ -1387,15 +1392,18 @@
       "inputProperties": {
         "environmentId": {
           "type": "string",
-          "description": "The GUID of the Power Platform environment to link the enterprise policy to. Immutable after creation."
+          "description": "The GUID of the Power Platform environment to link the enterprise policy to. Immutable after creation.",
+          "replaceOnChanges": true
         },
         "policyType": {
           "type": "string",
-          "description": "The type of enterprise policy to link. Must be one of: NetworkInjection, Encryption, Identity. Immutable after creation."
+          "description": "The type of enterprise policy to link. Must be one of: NetworkInjection, Encryption, Identity. Immutable after creation.",
+          "replaceOnChanges": true
         },
         "systemId": {
           "type": "string",
-          "description": "The ARM resource ID of the enterprise policy. Expected format: /regions/{location}/providers/Microsoft.PowerPlatform/enterprisePolicies/{guid}. Immutable after creation."
+          "description": "The ARM resource ID of the enterprise policy. Expected format: /regions/{location}/providers/Microsoft.PowerPlatform/enterprisePolicies/{guid}. Immutable after creation.",
+          "replaceOnChanges": true
         }
       },
       "requiredInputs": [
@@ -1539,16 +1547,20 @@
       }
     },
     "powerplatform:index:getDataRecords": {
-      "description": "Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.",
+      "description": "Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.",
       "inputs": {
         "properties": {
           "environmentId": {
             "type": "string",
             "description": "The GUID of the Power Platform environment containing the Dataverse instance."
           },
-          "tableLogicalName": {
+          "entityCollection": {
             "type": "string",
-            "description": "The logical name of the Dataverse table to query (e.g. account, deploymentpipeline)."
+            "description": "The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines)."
+          },
+          "apply": {
+            "type": "string",
+            "description": "OData $apply aggregation expression (e.g. \"aggregate(revenue with sum as revenue_sum)\")."
           },
           "filter": {
             "type": "string",
@@ -1579,7 +1591,7 @@
         },
         "required": [
           "environmentId",
-          "tableLogicalName"
+          "entityCollection"
         ]
       },
       "outputs": {
@@ -1590,10 +1602,20 @@
             "items": {
               "$ref": "pulumi.json#/Any"
             }
+          },
+          "totalRowsCount": {
+            "type": "integer",
+            "description": "Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent."
+          },
+          "totalRowsCountLimitExceeded": {
+            "type": "boolean",
+            "description": "True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded)."
           }
         },
         "required": [
-          "records"
+          "records",
+          "totalRowsCount",
+          "totalRowsCountLimitExceeded"
         ]
       }
     }

@@ -20,6 +20,36 @@ public final class GetDataRecordsArgs extends com.pulumi.resources.InvokeArgs {
     public static final GetDataRecordsArgs Empty = new GetDataRecordsArgs();
 
     /**
+     * OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+     * 
+     */
+    @Import(name="apply")
+    private @Nullable Output<String> apply;
+
+    /**
+     * @return OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+     * 
+     */
+    public Optional<Output<String>> apply() {
+        return Optional.ofNullable(this.apply);
+    }
+
+    /**
+     * The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+     * 
+     */
+    @Import(name="entityCollection", required=true)
+    private Output<String> entityCollection;
+
+    /**
+     * @return The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+     * 
+     */
+    public Output<String> entityCollection() {
+        return this.entityCollection;
+    }
+
+    /**
      * The GUID of the Power Platform environment containing the Dataverse instance.
      * 
      */
@@ -95,21 +125,6 @@ public final class GetDataRecordsArgs extends com.pulumi.resources.InvokeArgs {
     }
 
     /**
-     * The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-     * 
-     */
-    @Import(name="tableLogicalName", required=true)
-    private Output<String> tableLogicalName;
-
-    /**
-     * @return The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-     * 
-     */
-    public Output<String> tableLogicalName() {
-        return this.tableLogicalName;
-    }
-
-    /**
      * Maximum number of records to return ($top). Use to limit large result sets.
      * 
      */
@@ -127,12 +142,13 @@ public final class GetDataRecordsArgs extends com.pulumi.resources.InvokeArgs {
     private GetDataRecordsArgs() {}
 
     private GetDataRecordsArgs(GetDataRecordsArgs $) {
+        this.apply = $.apply;
+        this.entityCollection = $.entityCollection;
         this.environmentId = $.environmentId;
         this.expand = $.expand;
         this.filter = $.filter;
         this.orderby = $.orderby;
         this.select = $.select;
-        this.tableLogicalName = $.tableLogicalName;
         this.top = $.top;
     }
 
@@ -152,6 +168,48 @@ public final class GetDataRecordsArgs extends com.pulumi.resources.InvokeArgs {
 
         public Builder(GetDataRecordsArgs defaults) {
             $ = new GetDataRecordsArgs(Objects.requireNonNull(defaults));
+        }
+
+        /**
+         * @param apply OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder apply(@Nullable Output<String> apply) {
+            $.apply = apply;
+            return this;
+        }
+
+        /**
+         * @param apply OData $apply aggregation expression (e.g. &#34;aggregate(revenue with sum as revenue_sum)&#34;).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder apply(String apply) {
+            return apply(Output.of(apply));
+        }
+
+        /**
+         * @param entityCollection The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder entityCollection(Output<String> entityCollection) {
+            $.entityCollection = entityCollection;
+            return this;
+        }
+
+        /**
+         * @param entityCollection The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder entityCollection(String entityCollection) {
+            return entityCollection(Output.of(entityCollection));
         }
 
         /**
@@ -280,27 +338,6 @@ public final class GetDataRecordsArgs extends com.pulumi.resources.InvokeArgs {
         }
 
         /**
-         * @param tableLogicalName The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-         * 
-         * @return builder
-         * 
-         */
-        public Builder tableLogicalName(Output<String> tableLogicalName) {
-            $.tableLogicalName = tableLogicalName;
-            return this;
-        }
-
-        /**
-         * @param tableLogicalName The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-         * 
-         * @return builder
-         * 
-         */
-        public Builder tableLogicalName(String tableLogicalName) {
-            return tableLogicalName(Output.of(tableLogicalName));
-        }
-
-        /**
          * @param top Maximum number of records to return ($top). Use to limit large result sets.
          * 
          * @return builder
@@ -322,11 +359,11 @@ public final class GetDataRecordsArgs extends com.pulumi.resources.InvokeArgs {
         }
 
         public GetDataRecordsArgs build() {
+            if ($.entityCollection == null) {
+                throw new MissingRequiredPropertyException("GetDataRecordsArgs", "entityCollection");
+            }
             if ($.environmentId == null) {
                 throw new MissingRequiredPropertyException("GetDataRecordsArgs", "environmentId");
-            }
-            if ($.tableLogicalName == null) {
-                throw new MissingRequiredPropertyException("GetDataRecordsArgs", "tableLogicalName");
             }
             return $;
         }

@@ -98,35 +98,35 @@ public final class PowerplatformFunctions {
         return Deployment.getInstance().invokeAsync("powerplatform:index:getConnectors", TypeShape.of(GetConnectorsResult.class), args, Utilities.withVersion(options));
     }
     /**
-     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
      * 
      */
     public static Output<GetDataRecordsResult> getDataRecords(GetDataRecordsArgs args) {
         return getDataRecords(args, InvokeOptions.Empty);
     }
     /**
-     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
      * 
      */
     public static CompletableFuture<GetDataRecordsResult> getDataRecordsPlain(GetDataRecordsPlainArgs args) {
         return getDataRecordsPlain(args, InvokeOptions.Empty);
     }
     /**
-     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
      * 
      */
     public static Output<GetDataRecordsResult> getDataRecords(GetDataRecordsArgs args, InvokeOptions options) {
         return Deployment.getInstance().invoke("powerplatform:index:getDataRecords", TypeShape.of(GetDataRecordsResult.class), args, Utilities.withVersion(options));
     }
     /**
-     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
      * 
      */
     public static Output<GetDataRecordsResult> getDataRecords(GetDataRecordsArgs args, InvokeOutputOptions options) {
         return Deployment.getInstance().invoke("powerplatform:index:getDataRecords", TypeShape.of(GetDataRecordsResult.class), args, Utilities.withVersion(options));
     }
     /**
-     * Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
+     * Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the &#39;top&#39; parameter to control result count for large tables.
      * 
      */
     public static CompletableFuture<GetDataRecordsResult> getDataRecordsPlain(GetDataRecordsPlainArgs args, InvokeOptions options) {
