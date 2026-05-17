@@ -14,11 +14,12 @@ See `README.md` and `CONTRIBUTING.md` for architecture and development details.
 3. **If `schema.json` was modified**, regenerate non-Python SDKs and stage
    the output as part of the same commit as the schema change:
    ```bash
-   pulumi package gen-sdk . --language nodejs --out sdk
-   pulumi package gen-sdk . --language go     --out sdk
-   pulumi package gen-sdk . --language dotnet --out sdk
-   pulumi package gen-sdk . --language java   --out sdk
+   bash scripts/regen-sdks.sh
    ```
+   > CI pins **Pulumi CLI v3.230.0** for deterministic output — install that
+   > exact version before running the script to avoid spurious diff failures:
+   > `curl -fsSL https://get.pulumi.com | sh -s -- --version 3.230.0 && export PATH="$HOME/.pulumi/bin:$PATH"`
+   >
    > `sdk/python/` is maintained manually — do not regenerate it.
 
 ### Branching
