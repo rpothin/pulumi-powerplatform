@@ -33,10 +33,10 @@ class GetDataRecordsFunction:
         args = request.args
 
         env_id = _pv_str(args.get("environmentId"))
-        table_name = _pv_str(args.get("tableLogicalName"))
+        entity_collection = _pv_str(args.get("entityCollection"))
 
-        if not env_id or not table_name:
-            raise ValueError("environmentId and tableLogicalName are required.")
+        if not env_id or not entity_collection:
+            raise ValueError("environmentId and entityCollection are required.")
 
         instance_url = await resolve_dataverse_url(self._client.raw, env_id)
         if not instance_url:
@@ -44,16 +44,12 @@ class GetDataRecordsFunction:
 
         dv_client = self._make_dataverse_client(instance_url)
 
-        # Resolve the OData collection name
-        entity_meta = await dv_client.request(
-            "GET",
-            f"/api/data/v9.2/EntityDefinitions(LogicalName='{table_name}')?$select=LogicalCollectionName",
-            api_version=None,
-        )
-        collection = entity_meta["LogicalCollectionName"]
-
         # Build query string
         params: list[str] = []
+
+        apply = _pv_str(args.get("apply"))
+        if apply:
+            params.append(f"$apply={apply}")
 
         odata_filter = _pv_str(args.get("filter"))
         if odata_filter:
@@ -97,8 +93,11 @@ class GetDataRecordsFunction:
             if expand_clauses:
                 params.append(f"$expand={','.join(expand_clauses)}")
 
+        # Always request total row count so callers can inspect it.
+        params.append("$count=true")
+
         query_string = "&".join(params)
-        path = f"/api/data/v9.2/{collection}"
+        path = f"/api/data/v9.2/{entity_collection}"
         if query_string:
             path = f"{path}?{query_string}"
 
@@ -114,7 +113,18 @@ class GetDataRecordsFunction:
         records: list[Any] = result.get("value", [])
         records_pv = PropertyValue([_record_to_pv(r) for r in records])
 
-        return InvokeResponse(return_value={"records": records_pv})
+        total_rows_count: int = result.get("@odata.count", 0)
+        limit_exceeded: bool = result.get(
+            "@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded", False
+        )
+
+        return InvokeResponse(
+            return_value={
+                "records": records_pv,
+                "totalRowsCount": PropertyValue(float(total_rows_count)),
+                "totalRowsCountLimitExceeded": PropertyValue(bool(limit_exceeded)),
+            }
+        )
 
     def _make_dataverse_client(self, instance_url: str) -> RawApiClient:
         """Create a RawApiClient scoped to the given Dataverse instance URL."""
@@ -131,7 +141,13 @@ def _record_to_pv(record: Any) -> PropertyValue:
     """Recursively convert a plain record dict to a PropertyValue."""
     if record is None:
         return PropertyValue(None)
-    if isinstance(record, (bool, int, float, str)):
+    if isinstance(record, bool):
+        return PropertyValue(record)
+    if isinstance(record, int):
+        return PropertyValue(float(record))
+    if isinstance(record, float):
+        return PropertyValue(record)
+    if isinstance(record, str):
         return PropertyValue(record)
     if isinstance(record, dict):
         return PropertyValue({k: _record_to_pv(v) for k, v in record.items()})

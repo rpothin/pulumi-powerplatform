@@ -57,7 +57,8 @@ class DataRecord(pulumi.CustomResource):
 
 def get_data_records(
     environment_id: str,
-    table_logical_name: str,
+    entity_collection: str,
+    apply: Optional[str] = None,
     filter: Optional[str] = None,
     select: Optional[list[str]] = None,
     orderby: Optional[str] = None,
@@ -65,25 +66,33 @@ def get_data_records(
     expand: Optional[list[Any]] = None,
     opts: Optional[pulumi.InvokeOptions] = None,
 ) -> pulumi.Output[Any]:
-    """Queries Dataverse records from *table_logical_name* using OData
-    parameters.
+    """Queries Dataverse records from *entity_collection* using OData parameters.
 
     Returns the first page of matching records.  Use *top* to limit large
     result sets.
 
     :param environment_id: GUID of the Power Platform environment.
-    :param table_logical_name: Logical name of the Dataverse table to query.
+    :param entity_collection: Plural OData collection name (e.g. ``"accounts"``).
+    :param apply: OData ``$apply`` aggregation expression.
     :param filter: OData ``$filter`` expression.
     :param select: Column logical names to include in the response.
     :param orderby: OData ``$orderby`` expression.
     :param top: Maximum number of records to return.
     :param expand: Navigation properties to expand (list of dicts with
         ``navigationProperty``, optional ``select`` and ``filter``).
+
+    The result dict contains:
+
+    * ``records`` — list of matching records.
+    * ``totalRowsCount`` — total matching records (from ``@odata.count``).
+    * ``totalRowsCountLimitExceeded`` — True when the CRM count limit was hit.
     """
     args: dict[str, Any] = {
         "environmentId": environment_id,
-        "tableLogicalName": table_logical_name,
+        "entityCollection": entity_collection,
     }
+    if apply is not None:
+        args["apply"] = apply
     if filter is not None:
         args["filter"] = filter
     if select is not None:

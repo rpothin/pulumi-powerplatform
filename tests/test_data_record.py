@@ -180,6 +180,63 @@ class TestDataRecordCheck:
         response = await handler.check(request)
         assert response.failures is None
 
+    @pytest.mark.asyncio
+    async def test_check_rejects_preexportsteprequired_on_non_root_stage(self, handler):
+        """preexportsteprequired=True on a deploymentstage without pipelineid is rejected."""
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(True),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is not None
+        assert any(f.property == "columns" for f in response.failures)
+        assert any("root stage" in f.reason for f in response.failures)
+
+    @pytest.mark.asyncio
+    async def test_check_accepts_preexportsteprequired_on_root_stage(self, handler):
+        """preexportsteprequired=True is allowed when pipelineid is present (root stage)."""
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(True),
+                    "pipelineid": PropertyValue("dddddddd-5555-6666-7777-eeeeeeeeeeee"),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_accepts_preexportsteprequired_false_without_pipelineid(self, handler):
+        """preexportsteprequired=False is always allowed regardless of pipelineid."""
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(False),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
 
 # ---- diff() ----------------------------------------------------------------
 

@@ -11,7 +11,7 @@ import (
 	"github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform/internal"
 )
 
-// Queries Dataverse records from a table using OData filter, select, orderby, top, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
+// Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.
 func GetDataRecords(ctx *pulumi.Context, args *GetDataRecordsArgs, opts ...pulumi.InvokeOption) (*GetDataRecordsResult, error) {
 	opts = internal.PkgInvokeDefaultOpts(opts)
 	var rv GetDataRecordsResult
@@ -23,6 +23,10 @@ func GetDataRecords(ctx *pulumi.Context, args *GetDataRecordsArgs, opts ...pulum
 }
 
 type GetDataRecordsArgs struct {
+	// OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
+	Apply *string `pulumi:"apply"`
+	// The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+	EntityCollection string `pulumi:"entityCollection"`
 	// The GUID of the Power Platform environment containing the Dataverse instance.
 	EnvironmentId string `pulumi:"environmentId"`
 	// List of navigation properties to expand in the response.
@@ -33,8 +37,6 @@ type GetDataRecordsArgs struct {
 	Orderby *string `pulumi:"orderby"`
 	// List of column logical names to include in the response.
 	Select []string `pulumi:"select"`
-	// The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-	TableLogicalName string `pulumi:"tableLogicalName"`
 	// Maximum number of records to return ($top). Use to limit large result sets.
 	Top *int `pulumi:"top"`
 }
@@ -42,6 +44,10 @@ type GetDataRecordsArgs struct {
 type GetDataRecordsResult struct {
 	// The list of matching Dataverse records. Each record is a map of column name to value.
 	Records []interface{} `pulumi:"records"`
+	// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+	TotalRowsCount int `pulumi:"totalRowsCount"`
+	// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+	TotalRowsCountLimitExceeded bool `pulumi:"totalRowsCountLimitExceeded"`
 }
 
 func GetDataRecordsOutput(ctx *pulumi.Context, args GetDataRecordsOutputArgs, opts ...pulumi.InvokeOption) GetDataRecordsResultOutput {
@@ -54,6 +60,10 @@ func GetDataRecordsOutput(ctx *pulumi.Context, args GetDataRecordsOutputArgs, op
 }
 
 type GetDataRecordsOutputArgs struct {
+	// OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
+	Apply pulumi.StringPtrInput `pulumi:"apply"`
+	// The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
+	EntityCollection pulumi.StringInput `pulumi:"entityCollection"`
 	// The GUID of the Power Platform environment containing the Dataverse instance.
 	EnvironmentId pulumi.StringInput `pulumi:"environmentId"`
 	// List of navigation properties to expand in the response.
@@ -64,8 +74,6 @@ type GetDataRecordsOutputArgs struct {
 	Orderby pulumi.StringPtrInput `pulumi:"orderby"`
 	// List of column logical names to include in the response.
 	Select pulumi.StringArrayInput `pulumi:"select"`
-	// The logical name of the Dataverse table to query (e.g. account, deploymentpipeline).
-	TableLogicalName pulumi.StringInput `pulumi:"tableLogicalName"`
 	// Maximum number of records to return ($top). Use to limit large result sets.
 	Top pulumi.IntPtrInput `pulumi:"top"`
 }
@@ -91,6 +99,16 @@ func (o GetDataRecordsResultOutput) ToGetDataRecordsResultOutputWithContext(ctx 
 // The list of matching Dataverse records. Each record is a map of column name to value.
 func (o GetDataRecordsResultOutput) Records() pulumi.ArrayOutput {
 	return o.ApplyT(func(v GetDataRecordsResult) []interface{} { return v.Records }).(pulumi.ArrayOutput)
+}
+
+// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+func (o GetDataRecordsResultOutput) TotalRowsCount() pulumi.IntOutput {
+	return o.ApplyT(func(v GetDataRecordsResult) int { return v.TotalRowsCount }).(pulumi.IntOutput)
+}
+
+// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+func (o GetDataRecordsResultOutput) TotalRowsCountLimitExceeded() pulumi.BoolOutput {
+	return o.ApplyT(func(v GetDataRecordsResult) bool { return v.TotalRowsCountLimitExceeded }).(pulumi.BoolOutput)
 }
 
 func init() {

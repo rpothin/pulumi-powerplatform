@@ -5,6 +5,8 @@ package io.github.rpothin.powerplatform.outputs;
 
 import com.pulumi.core.annotations.CustomType;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import java.lang.Boolean;
+import java.lang.Integer;
 import java.lang.Object;
 import java.util.List;
 import java.util.Objects;
@@ -16,6 +18,16 @@ public final class GetDataRecordsResult {
      * 
      */
     private List<Object> records;
+    /**
+     * @return Total number of records matching the query filter (from {@literal @}odata.count). Always 0 when the count annotation is absent.
+     * 
+     */
+    private Integer totalRowsCount;
+    /**
+     * @return True when the total row count exceeded the Dataverse limit ({@literal @}Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+     * 
+     */
+    private Boolean totalRowsCountLimitExceeded;
 
     private GetDataRecordsResult() {}
     /**
@@ -24,6 +36,20 @@ public final class GetDataRecordsResult {
      */
     public List<Object> records() {
         return this.records;
+    }
+    /**
+     * @return Total number of records matching the query filter (from {@literal @}odata.count). Always 0 when the count annotation is absent.
+     * 
+     */
+    public Integer totalRowsCount() {
+        return this.totalRowsCount;
+    }
+    /**
+     * @return True when the total row count exceeded the Dataverse limit ({@literal @}Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+     * 
+     */
+    public Boolean totalRowsCountLimitExceeded() {
+        return this.totalRowsCountLimitExceeded;
     }
 
     public static Builder builder() {
@@ -36,10 +62,14 @@ public final class GetDataRecordsResult {
     @CustomType.Builder
     public static final class Builder {
         private List<Object> records;
+        private Integer totalRowsCount;
+        private Boolean totalRowsCountLimitExceeded;
         public Builder() {}
         public Builder(GetDataRecordsResult defaults) {
     	      Objects.requireNonNull(defaults);
     	      this.records = defaults.records;
+    	      this.totalRowsCount = defaults.totalRowsCount;
+    	      this.totalRowsCountLimitExceeded = defaults.totalRowsCountLimitExceeded;
         }
 
         @CustomType.Setter
@@ -53,9 +83,27 @@ public final class GetDataRecordsResult {
         public Builder records(Object... records) {
             return records(List.of(records));
         }
+        @CustomType.Setter
+        public Builder totalRowsCount(Integer totalRowsCount) {
+            if (totalRowsCount == null) {
+              throw new MissingRequiredPropertyException("GetDataRecordsResult", "totalRowsCount");
+            }
+            this.totalRowsCount = totalRowsCount;
+            return this;
+        }
+        @CustomType.Setter
+        public Builder totalRowsCountLimitExceeded(Boolean totalRowsCountLimitExceeded) {
+            if (totalRowsCountLimitExceeded == null) {
+              throw new MissingRequiredPropertyException("GetDataRecordsResult", "totalRowsCountLimitExceeded");
+            }
+            this.totalRowsCountLimitExceeded = totalRowsCountLimitExceeded;
+            return this;
+        }
         public GetDataRecordsResult build() {
             final var _resultValue = new GetDataRecordsResult();
             _resultValue.records = records;
+            _resultValue.totalRowsCount = totalRowsCount;
+            _resultValue.totalRowsCountLimitExceeded = totalRowsCountLimitExceeded;
             return _resultValue;
         }
     }

@@ -322,6 +322,13 @@ class DataRecordResource:
                 property=_TABLE_PROP,
                 reason=f"tableLogicalName must be a lowercase Dataverse logical name, got: {table_name!r}.",
             ))
+        elif table_name == "deploymentstage":
+            cols_raw = pv_to_python(inputs.get(_COLUMNS_PROP)) or {}
+            if cols_raw.get("preexportsteprequired") is True and not cols_raw.get("pipelineid"):
+                failures.append(CheckFailure(
+                    property=_COLUMNS_PROP,
+                    reason="preexportsteprequired can only be true on the root stage",
+                ))
 
         return CheckResponse(inputs=inputs, failures=failures if failures else None)
 
