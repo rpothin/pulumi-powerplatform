@@ -2,6 +2,11 @@
 
 from __future__ import annotations
 
+from kiota_abstractions.api_error import APIError
+from kiota_abstractions.base_request_configuration import RequestConfiguration
+from mspp_management.powerapps.environments.item.apps.apps_request_builder import (
+    AppsRequestBuilder,
+)
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import (
     InvokeRequest,
@@ -9,6 +14,8 @@ from pulumi.provider.experimental.provider import (
 )
 
 from rpothin_powerplatform.client import PowerPlatformClient
+
+_API_VERSION = "2024-10-01"
 
 
 class GetAppsFunction:
@@ -26,7 +33,20 @@ class GetAppsFunction:
             raise ValueError("environmentId is required.")
         env_id = str(env_id_pv.value)
 
-        result = await self._client.sdk.powerapps.environments.by_environment_id(env_id).apps.get()
+        query_params = AppsRequestBuilder.AppsRequestBuilderGetQueryParameters(
+            api_version=_API_VERSION,
+        )
+        config = RequestConfiguration(query_parameters=query_params)
+
+        try:
+            result = await self._client.sdk.powerapps.environments.by_environment_id(env_id).apps.get(
+                request_configuration=config
+            )
+        except APIError as e:
+            raise RuntimeError(
+                f"getApps failed with status {e.response_status_code}: {e.message}. "
+                f"Response body: {getattr(e, 'response_body', 'unavailable')}"
+            ) from e
 
         app_list: list[PropertyValue] = []
         if result and result.value:

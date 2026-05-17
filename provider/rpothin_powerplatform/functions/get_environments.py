@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+from kiota_abstractions.api_error import APIError
 from kiota_abstractions.base_request_configuration import RequestConfiguration
 from mspp_management.environmentmanagement.environments.environments_request_builder import (
     EnvironmentsRequestBuilder,
@@ -15,6 +16,8 @@ from pulumi.provider.experimental.provider import (
 )
 
 from rpothin_powerplatform.client import PowerPlatformClient
+
+_API_VERSION = "2024-10-01"
 
 
 class GetEnvironmentsFunction:
@@ -41,10 +44,17 @@ class GetEnvironmentsFunction:
         query_params = EnvironmentsRequestBuilder.EnvironmentsRequestBuilderGetQueryParameters(
             filter=odata_filter,
             top=top,
+            api_version=_API_VERSION,
         )
         config = RequestConfiguration(query_parameters=query_params)
 
-        result = await self._client.sdk.environmentmanagement.environments.get(request_configuration=config)
+        try:
+            result = await self._client.sdk.environmentmanagement.environments.get(request_configuration=config)
+        except APIError as e:
+            raise RuntimeError(
+                f"getEnvironments failed with status {e.response_status_code}: {e.message}. "
+                f"Response body: {getattr(e, 'response_body', 'unavailable')}"
+            ) from e
 
         env_list: list[PropertyValue] = []
         if result and result.value:
