@@ -96,11 +96,11 @@ export interface DataRecordArgs {
     /**
      * Map of column logical name to value. Scalars (string/number/bool), null, DataRecordLookup objects, or lists of DataRecordLookup objects for M2M relationships.
      */
-    columns?: pulumi.Input<{[key: string]: any} | undefined>;
+    columns?: pulumi.Input<{[key: string]: any}>;
     /**
      * When true, deactivate the record (statecode=1) before deleting it. Required for Dataverse tables that cannot be directly deleted while active (e.g. workflow definitions). Defaults to false.
      */
-    disableOnDestroy?: pulumi.Input<boolean | undefined>;
+    disableOnDestroy?: pulumi.Input<boolean>;
     /**
      * The GUID of the Power Platform environment containing the Dataverse instance. Immutable after creation.
      */

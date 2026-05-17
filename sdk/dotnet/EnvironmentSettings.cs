@@ -16,6 +16,24 @@ namespace Pulumi.Powerplatform
     public partial class EnvironmentSettings : global::Pulumi.CustomResource
     {
         /// <summary>
+        /// Whether service principal (application user) access is allowed.
+        /// </summary>
+        [Output("allowApplicationUserAccess")]
+        public Output<bool?> AllowApplicationUserAccess { get; private set; } = null!;
+
+        /// <summary>
+        /// Whether Microsoft trusted Azure service tags are allowed.
+        /// </summary>
+        [Output("allowMicrosoftTrustedServiceTags")]
+        public Output<bool?> AllowMicrosoftTrustedServiceTags { get; private set; } = null!;
+
+        /// <summary>
+        /// Audit log retention period in days.
+        /// </summary>
+        [Output("auditRetentionPeriodInDays")]
+        public Output<int?> AuditRetentionPeriodInDays { get; private set; } = null!;
+
+        /// <summary>
         /// The ID of the environment.
         /// </summary>
         [Output("environmentId")]
@@ -34,6 +52,12 @@ namespace Pulumi.Powerplatform
         public Output<string?> IsAuditEnabled { get; private set; } = null!;
 
         /// <summary>
+        /// Whether read auditing is enabled.
+        /// </summary>
+        [Output("isReadAuditEnabled")]
+        public Output<bool?> IsReadAuditEnabled { get; private set; } = null!;
+
+        /// <summary>
         /// Whether user access auditing is enabled.
         /// </summary>
         [Output("isUserAccessAuditEnabled")]
@@ -50,6 +74,24 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Output("pluginTraceLogSetting")]
         public Output<string?> PluginTraceLogSetting { get; private set; } = null!;
+
+        /// <summary>
+        /// Whether PCF controls are enabled for canvas apps.
+        /// </summary>
+        [Output("powerAppsComponentFrameworkForCanvasApps")]
+        public Output<bool?> PowerAppsComponentFrameworkForCanvasApps { get; private set; } = null!;
+
+        /// <summary>
+        /// Allowed reverse proxy IP addresses or CIDR ranges.
+        /// </summary>
+        [Output("reverseProxyIpAddresses")]
+        public Output<string?> ReverseProxyIpAddresses { get; private set; } = null!;
+
+        /// <summary>
+        /// Whether dashboard cards are shown in expanded state by default.
+        /// </summary>
+        [Output("showDashboardCardsInExpandedState")]
+        public Output<bool?> ShowDashboardCardsInExpandedState { get; private set; } = null!;
 
 
         /// <summary>
@@ -98,6 +140,24 @@ namespace Pulumi.Powerplatform
     public sealed class EnvironmentSettingsArgs : global::Pulumi.ResourceArgs
     {
         /// <summary>
+        /// Whether service principal (application user) access is allowed.
+        /// </summary>
+        [Input("allowApplicationUserAccess")]
+        public Input<bool>? AllowApplicationUserAccess { get; set; }
+
+        /// <summary>
+        /// Whether Microsoft trusted Azure service tags are allowed for connectivity.
+        /// </summary>
+        [Input("allowMicrosoftTrustedServiceTags")]
+        public Input<bool>? AllowMicrosoftTrustedServiceTags { get; set; }
+
+        /// <summary>
+        /// Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+        /// </summary>
+        [Input("auditRetentionPeriodInDays")]
+        public Input<int>? AuditRetentionPeriodInDays { get; set; }
+
+        /// <summary>
         /// The ID of the environment to manage settings for. Immutable after creation.
         /// </summary>
         [Input("environmentId", required: true)]
@@ -116,6 +176,12 @@ namespace Pulumi.Powerplatform
         public Input<string>? IsAuditEnabled { get; set; }
 
         /// <summary>
+        /// Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+        /// </summary>
+        [Input("isReadAuditEnabled")]
+        public Input<bool>? IsReadAuditEnabled { get; set; }
+
+        /// <summary>
         /// Whether user access auditing is enabled (true or false).
         /// </summary>
         [Input("isUserAccessAuditEnabled")]
@@ -132,6 +198,24 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Input("pluginTraceLogSetting")]
         public Input<string>? PluginTraceLogSetting { get; set; }
+
+        /// <summary>
+        /// Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+        /// </summary>
+        [Input("powerAppsComponentFrameworkForCanvasApps")]
+        public Input<bool>? PowerAppsComponentFrameworkForCanvasApps { get; set; }
+
+        /// <summary>
+        /// Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+        /// </summary>
+        [Input("reverseProxyIpAddresses")]
+        public Input<string>? ReverseProxyIpAddresses { get; set; }
+
+        /// <summary>
+        /// Whether dashboard cards are shown in expanded state by default.
+        /// </summary>
+        [Input("showDashboardCardsInExpandedState")]
+        public Input<bool>? ShowDashboardCardsInExpandedState { get; set; }
 
         public EnvironmentSettingsArgs()
         {

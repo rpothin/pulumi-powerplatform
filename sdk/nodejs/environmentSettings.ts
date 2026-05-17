@@ -35,6 +35,18 @@ export class EnvironmentSettings extends pulumi.CustomResource {
     }
 
     /**
+     * Whether service principal (application user) access is allowed.
+     */
+    declare public readonly allowApplicationUserAccess: pulumi.Output<boolean | undefined>;
+    /**
+     * Whether Microsoft trusted Azure service tags are allowed.
+     */
+    declare public readonly allowMicrosoftTrustedServiceTags: pulumi.Output<boolean | undefined>;
+    /**
+     * Audit log retention period in days.
+     */
+    declare public readonly auditRetentionPeriodInDays: pulumi.Output<number | undefined>;
+    /**
      * The ID of the environment.
      */
     declare public readonly environmentId: pulumi.Output<string>;
@@ -47,6 +59,10 @@ export class EnvironmentSettings extends pulumi.CustomResource {
      */
     declare public readonly isAuditEnabled: pulumi.Output<string | undefined>;
     /**
+     * Whether read auditing is enabled.
+     */
+    declare public readonly isReadAuditEnabled: pulumi.Output<boolean | undefined>;
+    /**
      * Whether user access auditing is enabled.
      */
     declare public readonly isUserAccessAuditEnabled: pulumi.Output<string | undefined>;
@@ -58,6 +74,18 @@ export class EnvironmentSettings extends pulumi.CustomResource {
      * Plugin trace log setting.
      */
     declare public readonly pluginTraceLogSetting: pulumi.Output<string | undefined>;
+    /**
+     * Whether PCF controls are enabled for canvas apps.
+     */
+    declare public readonly powerAppsComponentFrameworkForCanvasApps: pulumi.Output<boolean | undefined>;
+    /**
+     * Allowed reverse proxy IP addresses or CIDR ranges.
+     */
+    declare public readonly reverseProxyIpAddresses: pulumi.Output<string | undefined>;
+    /**
+     * Whether dashboard cards are shown in expanded state by default.
+     */
+    declare public readonly showDashboardCardsInExpandedState: pulumi.Output<boolean | undefined>;
 
     /**
      * Create a EnvironmentSettings resource with the given unique name, arguments, and options.
@@ -73,19 +101,33 @@ export class EnvironmentSettings extends pulumi.CustomResource {
             if (args?.environmentId === undefined && !opts.urn) {
                 throw new Error("Missing required property 'environmentId'");
             }
+            resourceInputs["allowApplicationUserAccess"] = args?.allowApplicationUserAccess;
+            resourceInputs["allowMicrosoftTrustedServiceTags"] = args?.allowMicrosoftTrustedServiceTags;
+            resourceInputs["auditRetentionPeriodInDays"] = args?.auditRetentionPeriodInDays;
             resourceInputs["environmentId"] = args?.environmentId;
             resourceInputs["isActivityLoggingEnabled"] = args?.isActivityLoggingEnabled;
             resourceInputs["isAuditEnabled"] = args?.isAuditEnabled;
+            resourceInputs["isReadAuditEnabled"] = args?.isReadAuditEnabled;
             resourceInputs["isUserAccessAuditEnabled"] = args?.isUserAccessAuditEnabled;
             resourceInputs["maxUploadFileSize"] = args?.maxUploadFileSize;
             resourceInputs["pluginTraceLogSetting"] = args?.pluginTraceLogSetting;
+            resourceInputs["powerAppsComponentFrameworkForCanvasApps"] = args?.powerAppsComponentFrameworkForCanvasApps;
+            resourceInputs["reverseProxyIpAddresses"] = args?.reverseProxyIpAddresses;
+            resourceInputs["showDashboardCardsInExpandedState"] = args?.showDashboardCardsInExpandedState;
         } else {
+            resourceInputs["allowApplicationUserAccess"] = undefined /*out*/;
+            resourceInputs["allowMicrosoftTrustedServiceTags"] = undefined /*out*/;
+            resourceInputs["auditRetentionPeriodInDays"] = undefined /*out*/;
             resourceInputs["environmentId"] = undefined /*out*/;
             resourceInputs["isActivityLoggingEnabled"] = undefined /*out*/;
             resourceInputs["isAuditEnabled"] = undefined /*out*/;
+            resourceInputs["isReadAuditEnabled"] = undefined /*out*/;
             resourceInputs["isUserAccessAuditEnabled"] = undefined /*out*/;
             resourceInputs["maxUploadFileSize"] = undefined /*out*/;
             resourceInputs["pluginTraceLogSetting"] = undefined /*out*/;
+            resourceInputs["powerAppsComponentFrameworkForCanvasApps"] = undefined /*out*/;
+            resourceInputs["reverseProxyIpAddresses"] = undefined /*out*/;
+            resourceInputs["showDashboardCardsInExpandedState"] = undefined /*out*/;
         }
         opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts);
         super(EnvironmentSettings.__pulumiType, name, resourceInputs, opts);
@@ -97,27 +139,55 @@ export class EnvironmentSettings extends pulumi.CustomResource {
  */
 export interface EnvironmentSettingsArgs {
     /**
+     * Whether service principal (application user) access is allowed.
+     */
+    allowApplicationUserAccess?: pulumi.Input<boolean>;
+    /**
+     * Whether Microsoft trusted Azure service tags are allowed for connectivity.
+     */
+    allowMicrosoftTrustedServiceTags?: pulumi.Input<boolean>;
+    /**
+     * Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
+     */
+    auditRetentionPeriodInDays?: pulumi.Input<number>;
+    /**
      * The ID of the environment to manage settings for. Immutable after creation.
      */
     environmentId: pulumi.Input<string>;
     /**
      * Whether activity logging is enabled (true or false).
      */
-    isActivityLoggingEnabled?: pulumi.Input<string | undefined>;
+    isActivityLoggingEnabled?: pulumi.Input<string>;
     /**
      * Whether auditing is enabled (true or false).
      */
-    isAuditEnabled?: pulumi.Input<string | undefined>;
+    isAuditEnabled?: pulumi.Input<string>;
+    /**
+     * Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
+     */
+    isReadAuditEnabled?: pulumi.Input<boolean>;
     /**
      * Whether user access auditing is enabled (true or false).
      */
-    isUserAccessAuditEnabled?: pulumi.Input<string | undefined>;
+    isUserAccessAuditEnabled?: pulumi.Input<string>;
     /**
      * Maximum file upload size in bytes.
      */
-    maxUploadFileSize?: pulumi.Input<string | undefined>;
+    maxUploadFileSize?: pulumi.Input<string>;
     /**
      * Plugin trace log setting (Off, Exception, All).
      */
-    pluginTraceLogSetting?: pulumi.Input<string | undefined>;
+    pluginTraceLogSetting?: pulumi.Input<string>;
+    /**
+     * Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
+     */
+    powerAppsComponentFrameworkForCanvasApps?: pulumi.Input<boolean>;
+    /**
+     * Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
+     */
+    reverseProxyIpAddresses?: pulumi.Input<string>;
+    /**
+     * Whether dashboard cards are shown in expanded state by default.
+     */
+    showDashboardCardsInExpandedState?: pulumi.Input<boolean>;
 }

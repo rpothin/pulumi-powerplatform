@@ -9,6 +9,8 @@ import com.pulumi.core.annotations.ResourceType;
 import com.pulumi.core.internal.Codegen;
 import io.github.rpothin.powerplatform.EnvironmentSettingsArgs;
 import io.github.rpothin.powerplatform.Utilities;
+import java.lang.Boolean;
+import java.lang.Integer;
 import java.lang.String;
 import java.util.Optional;
 import javax.annotation.Nullable;
@@ -19,6 +21,48 @@ import javax.annotation.Nullable;
  */
 @ResourceType(type="powerplatform:index:EnvironmentSettings")
 public class EnvironmentSettings extends com.pulumi.resources.CustomResource {
+    /**
+     * Whether service principal (application user) access is allowed.
+     * 
+     */
+    @Export(name="allowApplicationUserAccess", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> allowApplicationUserAccess;
+
+    /**
+     * @return Whether service principal (application user) access is allowed.
+     * 
+     */
+    public Output<Optional<Boolean>> allowApplicationUserAccess() {
+        return Codegen.optional(this.allowApplicationUserAccess);
+    }
+    /**
+     * Whether Microsoft trusted Azure service tags are allowed.
+     * 
+     */
+    @Export(name="allowMicrosoftTrustedServiceTags", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> allowMicrosoftTrustedServiceTags;
+
+    /**
+     * @return Whether Microsoft trusted Azure service tags are allowed.
+     * 
+     */
+    public Output<Optional<Boolean>> allowMicrosoftTrustedServiceTags() {
+        return Codegen.optional(this.allowMicrosoftTrustedServiceTags);
+    }
+    /**
+     * Audit log retention period in days.
+     * 
+     */
+    @Export(name="auditRetentionPeriodInDays", refs={Integer.class}, tree="[0]")
+    private Output</* @Nullable */ Integer> auditRetentionPeriodInDays;
+
+    /**
+     * @return Audit log retention period in days.
+     * 
+     */
+    public Output<Optional<Integer>> auditRetentionPeriodInDays() {
+        return Codegen.optional(this.auditRetentionPeriodInDays);
+    }
     /**
      * The ID of the environment.
      * 
@@ -62,6 +106,20 @@ public class EnvironmentSettings extends com.pulumi.resources.CustomResource {
         return Codegen.optional(this.isAuditEnabled);
     }
     /**
+     * Whether read auditing is enabled.
+     * 
+     */
+    @Export(name="isReadAuditEnabled", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> isReadAuditEnabled;
+
+    /**
+     * @return Whether read auditing is enabled.
+     * 
+     */
+    public Output<Optional<Boolean>> isReadAuditEnabled() {
+        return Codegen.optional(this.isReadAuditEnabled);
+    }
+    /**
      * Whether user access auditing is enabled.
      * 
      */
@@ -102,6 +160,48 @@ public class EnvironmentSettings extends com.pulumi.resources.CustomResource {
      */
     public Output<Optional<String>> pluginTraceLogSetting() {
         return Codegen.optional(this.pluginTraceLogSetting);
+    }
+    /**
+     * Whether PCF controls are enabled for canvas apps.
+     * 
+     */
+    @Export(name="powerAppsComponentFrameworkForCanvasApps", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> powerAppsComponentFrameworkForCanvasApps;
+
+    /**
+     * @return Whether PCF controls are enabled for canvas apps.
+     * 
+     */
+    public Output<Optional<Boolean>> powerAppsComponentFrameworkForCanvasApps() {
+        return Codegen.optional(this.powerAppsComponentFrameworkForCanvasApps);
+    }
+    /**
+     * Allowed reverse proxy IP addresses or CIDR ranges.
+     * 
+     */
+    @Export(name="reverseProxyIpAddresses", refs={String.class}, tree="[0]")
+    private Output</* @Nullable */ String> reverseProxyIpAddresses;
+
+    /**
+     * @return Allowed reverse proxy IP addresses or CIDR ranges.
+     * 
+     */
+    public Output<Optional<String>> reverseProxyIpAddresses() {
+        return Codegen.optional(this.reverseProxyIpAddresses);
+    }
+    /**
+     * Whether dashboard cards are shown in expanded state by default.
+     * 
+     */
+    @Export(name="showDashboardCardsInExpandedState", refs={Boolean.class}, tree="[0]")
+    private Output</* @Nullable */ Boolean> showDashboardCardsInExpandedState;
+
+    /**
+     * @return Whether dashboard cards are shown in expanded state by default.
+     * 
+     */
+    public Output<Optional<Boolean>> showDashboardCardsInExpandedState() {
+        return Codegen.optional(this.showDashboardCardsInExpandedState);
     }
 
     /**
