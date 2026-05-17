@@ -44,7 +44,7 @@ type GetDataRecordsArgs struct {
 type GetDataRecordsResult struct {
 	// The list of matching Dataverse records. Each record is a map of column name to value.
 	Records []interface{} `pulumi:"records"`
-	// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+	// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode).
 	TotalRowsCount int `pulumi:"totalRowsCount"`
 	// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
 	TotalRowsCountLimitExceeded bool `pulumi:"totalRowsCountLimitExceeded"`
@@ -101,7 +101,7 @@ func (o GetDataRecordsResultOutput) Records() pulumi.ArrayOutput {
 	return o.ApplyT(func(v GetDataRecordsResult) []interface{} { return v.Records }).(pulumi.ArrayOutput)
 }
 
-// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode).
 func (o GetDataRecordsResultOutput) TotalRowsCount() pulumi.IntOutput {
 	return o.ApplyT(func(v GetDataRecordsResult) int { return v.TotalRowsCount }).(pulumi.IntOutput)
 }
