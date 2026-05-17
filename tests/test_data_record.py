@@ -237,6 +237,49 @@ class TestDataRecordCheck:
         response = await handler.check(request)
         assert response.failures is None
 
+    @pytest.mark.asyncio
+    async def test_check_rejects_preexportsteprequired_with_empty_pipelineid(self, handler):
+        """preexportsteprequired=True with pipelineid='' is rejected (empty string is not a root-stage marker)."""
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(True),
+                    "pipelineid": PropertyValue(""),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is not None
+        assert any(f.property == "columns" for f in response.failures)
+        assert any("root stage" in f.reason for f in response.failures)
+
+    @pytest.mark.asyncio
+    async def test_check_accepts_preexportsteprequired_with_lookup_pipelineid(self, handler):
+        """preexportsteprequired=True is allowed when pipelineid is a lookup dict with a valid dataRecordId."""
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(True),
+                    "pipelineid": PropertyValue({
+                        "tableLogicalName": PropertyValue("deploymentpipeline"),
+                        "dataRecordId": PropertyValue("dddddddd-5555-6666-7777-eeeeeeeeeeee"),
+                    }),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
 
 # ---- diff() ----------------------------------------------------------------
 

@@ -19,7 +19,7 @@ public final class GetDataRecordsResult {
      */
     private List<Object> records;
     /**
-     * @return Total number of records matching the query filter (from {@literal @}odata.count). Always 0 when the count annotation is absent.
+     * @return Total number of records matching the query filter (from {@literal @}odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode).
      * 
      */
     private Integer totalRowsCount;
@@ -38,7 +38,7 @@ public final class GetDataRecordsResult {
         return this.records;
     }
     /**
-     * @return Total number of records matching the query filter (from {@literal @}odata.count). Always 0 when the count annotation is absent.
+     * @return Total number of records matching the query filter (from {@literal @}odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode).
      * 
      */
     public Integer totalRowsCount() {

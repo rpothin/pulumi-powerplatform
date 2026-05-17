@@ -1605,7 +1605,7 @@
           },
           "totalRowsCount": {
             "type": "integer",
-            "description": "Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent."
+            "description": "Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode)."
           },
           "totalRowsCountLimitExceeded": {
             "type": "boolean",

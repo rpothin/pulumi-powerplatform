@@ -176,7 +176,7 @@ namespace Pulumi.Powerplatform
         /// </summary>
         public readonly ImmutableArray<object> Records;
         /// <summary>
-        /// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent.
+        /// Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode).
         /// </summary>
         public readonly int TotalRowsCount;
         /// <summary>
