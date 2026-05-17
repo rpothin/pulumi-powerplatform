@@ -100,11 +100,11 @@ jobs:
             echo "ERROR: The following non-Python SDKs are out of sync with schema.json:"
             printf "$STALE\n"
             echo ""
-            echo "Regenerate them and commit the result (see AGENTS.md):"
-            echo "  pulumi package gen-sdk . --language nodejs --out sdk"
-            echo "  pulumi package gen-sdk . --language go     --out sdk"
-            echo "  pulumi package gen-sdk . --language dotnet --out sdk"
-            echo "  pulumi package gen-sdk . --language java   --out sdk"
+            echo "Regenerate them with the helper script and commit the result (see AGENTS.md):"
+            echo "  bash scripts/regen-sdks.sh"
+            echo ""
+            echo "Ensure Pulumi CLI v3.230.0 is installed first for deterministic output:"
+            echo "  curl -fsSL https://get.pulumi.com | sh -s -- --version 3.230.0"
             exit 1
           fi
 
