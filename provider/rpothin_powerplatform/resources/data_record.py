@@ -324,7 +324,15 @@ class DataRecordResource:
             ))
         elif table_name == "deploymentstage":
             cols_raw = pv_to_python(inputs.get(_COLUMNS_PROP)) or {}
-            if cols_raw.get("preexportsteprequired") is True and not cols_raw.get("pipelineid"):
+            pipeline_id = cols_raw.get("pipelineid")
+            has_pipeline_id = (
+                isinstance(pipeline_id, str) and bool(pipeline_id.strip())
+            ) or (
+                isinstance(pipeline_id, dict)
+                and isinstance(pipeline_id.get("dataRecordId"), str)
+                and bool(pipeline_id["dataRecordId"].strip())
+            )
+            if cols_raw.get("preexportsteprequired") is True and not has_pipeline_id:
                 failures.append(CheckFailure(
                     property=_COLUMNS_PROP,
                     reason="preexportsteprequired can only be true on the root stage",

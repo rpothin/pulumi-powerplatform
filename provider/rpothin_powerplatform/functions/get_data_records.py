@@ -93,8 +93,11 @@ class GetDataRecordsFunction:
             if expand_clauses:
                 params.append(f"$expand={','.join(expand_clauses)}")
 
-        # Always request total row count so callers can inspect it.
-        params.append("$count=true")
+        # Request total row count only when $apply is not used.
+        # When $apply is set, $count and $apply are semantically incompatible
+        # (Dataverse may reject or return the count of aggregated rows instead).
+        if not apply:
+            params.append("$count=true")
 
         query_string = "&".join(params)
         path = f"/api/data/v9.2/{entity_collection}"
@@ -113,14 +116,21 @@ class GetDataRecordsFunction:
         records: list[Any] = result.get("value", [])
         records_pv = PropertyValue([_record_to_pv(r) for r in records])
 
-        total_rows_count: int = result.get("@odata.count", 0)
-        limit_exceeded: bool = result.get(
-            "@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded", False
-        )
+        # When $apply is set, $count is not sent, so row count is not meaningful.
+        if apply:
+            total_rows_count: int = 0
+            limit_exceeded: bool = False
+        else:
+            total_rows_count = result.get("@odata.count", 0)
+            limit_exceeded = bool(result.get(
+                "@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded", False
+            ))
 
         return InvokeResponse(
             return_value={
                 "records": records_pv,
+                # PropertyValue only accepts float for numbers; the schema declares integer
+                # and Pulumi coerces at the wire level. float(int) is always exact for counts.
                 "totalRowsCount": PropertyValue(float(total_rows_count)),
                 "totalRowsCountLimitExceeded": PropertyValue(bool(limit_exceeded)),
             }

@@ -120,7 +120,7 @@ class TestGetDataRecordsInvoke:
 
     @pytest.mark.asyncio
     async def test_invoke_always_includes_count(self, handler, mock_client, dv_mock):
-        """$count=true is always added to the OData query."""
+        """$count=true is added to the OData query when apply is not set."""
         mock_client.raw.request.return_value = _ENV_RESPONSE
         dv_mock.request.return_value = {"value": [], "@odata.count": 0}
 
@@ -254,7 +254,30 @@ class TestGetDataRecordsInvoke:
         get_call = dv_mock.request.call_args_list[0]
         url = get_call[0][1]
         assert "$apply=aggregate(revenue with sum as revenue_sum)" in url
-        assert "$count=true" in url
+        assert "$count=true" not in url
+
+    @pytest.mark.asyncio
+    async def test_invoke_apply_emits_zero_total_rows_count(self, handler, mock_client, dv_mock):
+        """When apply is set, totalRowsCount is 0 and totalRowsCountLimitExceeded is False."""
+        mock_client.raw.request.return_value = _ENV_RESPONSE
+        dv_mock.request.return_value = {
+            "value": [{"revenue_sum": 1000.0}],
+            "@odata.count": 99,
+            "@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded": True,
+        }
+
+        request = InvokeRequest(
+            tok="powerplatform:index:getDataRecords",
+            args={
+                "environmentId": PropertyValue(_ENV_ID),
+                "entityCollection": PropertyValue(_COLLECTION),
+                "apply": PropertyValue("aggregate(revenue with sum as revenue_sum)"),
+            },
+        )
+        response = await handler.invoke(request)
+
+        assert response.return_value["totalRowsCount"].value == 0
+        assert response.return_value["totalRowsCountLimitExceeded"].value is False
 
     @pytest.mark.asyncio
     async def test_invoke_returns_total_rows_count(self, handler, mock_client, dv_mock):
@@ -274,7 +297,8 @@ class TestGetDataRecordsInvoke:
         )
         response = await handler.invoke(request)
 
-        assert response.return_value["totalRowsCount"].value == 42
+        total = response.return_value["totalRowsCount"].value
+        assert total == 42
 
     @pytest.mark.asyncio
     async def test_invoke_returns_total_rows_count_limit_exceeded(self, handler, mock_client, dv_mock):
