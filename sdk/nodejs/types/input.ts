@@ -12,15 +12,15 @@ export interface BillingInstrumentArgs {
     /**
      * The billing instrument identifier.
      */
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     /**
      * The Azure resource group within the subscription.
      */
-    resourceGroup?: pulumi.Input<string>;
+    resourceGroup?: pulumi.Input<string | undefined>;
     /**
      * The Azure subscription ID.
      */
-    subscriptionId?: pulumi.Input<string>;
+    subscriptionId?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -48,7 +48,7 @@ export interface DataRecordsExpandParamArgs {
     /**
      * OData filter expression for the expanded entity.
      */
-    filter?: pulumi.Input<string>;
+    filter?: pulumi.Input<string | undefined>;
     /**
      * The navigation property name to expand.
      */
@@ -56,7 +56,7 @@ export interface DataRecordsExpandParamArgs {
     /**
      * Comma-separated list of columns to include for the expanded entity.
      */
-    select?: pulumi.Input<string>;
+    select?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -66,51 +66,51 @@ export interface DataverseArgs {
     /**
      * Whether the Dataverse instance is in administration mode.
      */
-    administrationModeEnabled?: pulumi.Input<boolean>;
+    administrationModeEnabled?: pulumi.Input<boolean | undefined>;
     /**
      * Whether background operations are enabled during administration mode.
      */
-    backgroundOperationEnabled?: pulumi.Input<boolean>;
+    backgroundOperationEnabled?: pulumi.Input<boolean | undefined>;
     /**
      * Currency code for the Dataverse database (e.g. USD). Immutable after creation.
      */
-    currencyCode?: pulumi.Input<string>;
+    currencyCode?: pulumi.Input<string | undefined>;
     /**
      * Domain prefix for the Dataverse instance URL.
      */
-    domainName?: pulumi.Input<string>;
+    domainName?: pulumi.Input<string | undefined>;
     /**
      * Base language LCID (e.g. 1033). Immutable after creation.
      */
-    languageCode?: pulumi.Input<number>;
+    languageCode?: pulumi.Input<number | undefined>;
     /**
      * Dataverse organization GUID. Computed.
      */
-    organizationId?: pulumi.Input<string>;
+    organizationId?: pulumi.Input<string | undefined>;
     /**
      * AAD security group GUID restricting environment access.
      */
-    securityGroupId?: pulumi.Input<string>;
+    securityGroupId?: pulumi.Input<string | undefined>;
     /**
      * JSON metadata for provisioning templates. Immutable after creation.
      */
-    templateMetadata?: pulumi.Input<string>;
+    templateMetadata?: pulumi.Input<string | undefined>;
     /**
      * Provisioning templates (e.g. D365_Sales). Immutable after creation.
      */
-    templates?: pulumi.Input<pulumi.Input<string>[]>;
+    templates?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Dataverse unique name. Computed.
      */
-    uniqueName?: pulumi.Input<string>;
+    uniqueName?: pulumi.Input<string | undefined>;
     /**
      * URL of the Dataverse instance. Computed.
      */
-    url?: pulumi.Input<string>;
+    url?: pulumi.Input<string | undefined>;
     /**
      * Dataverse version string. Computed.
      */
-    version?: pulumi.Input<string>;
+    version?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -120,23 +120,23 @@ export interface EnterprisePolicyArgs {
     /**
      * The resource ID of the policy.
      */
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     /**
      * Azure region of the policy.
      */
-    location?: pulumi.Input<string>;
+    location?: pulumi.Input<string | undefined>;
     /**
      * Policy link status (e.g. Linked, Disabled).
      */
-    status?: pulumi.Input<string>;
+    status?: pulumi.Input<string | undefined>;
     /**
      * System-assigned ID of the policy.
      */
-    systemId?: pulumi.Input<string>;
+    systemId?: pulumi.Input<string | undefined>;
     /**
      * Policy type (e.g. NetworkInjection, Encryption, Identity).
      */
-    type?: pulumi.Input<string>;
+    type?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -146,15 +146,15 @@ export interface RuleSetArgs {
     /**
      * The unique identifier of the rule set.
      */
-    id?: pulumi.Input<string>;
+    id?: pulumi.Input<string | undefined>;
     /**
      * The inputs for the rule set, which may vary based on the rule.
      */
-    inputs?: pulumi.Input<{[key: string]: any}>;
+    inputs?: pulumi.Input<{[key: string]: any} | undefined>;
     /**
      * The version of the rule set.
      */
-    version?: pulumi.Input<string>;
+    version?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -164,7 +164,7 @@ export interface TenantCatalogSettingsArgs {
     /**
      * Power Catalog audience setting.
      */
-    powerCatalogAudienceSetting?: pulumi.Input<string>;
+    powerCatalogAudienceSetting?: pulumi.Input<string | undefined>;
 }
 
 /**
@@ -174,11 +174,11 @@ export interface TenantChampionsSettingsArgs {
     /**
      * Disable champions invitation reachout.
      */
-    disableChampionsInvitationReachout?: pulumi.Input<boolean>;
+    disableChampionsInvitationReachout?: pulumi.Input<boolean | undefined>;
     /**
      * Disable skills match invitation reachout.
      */
-    disableSkillsMatchInvitationReachout?: pulumi.Input<boolean>;
+    disableSkillsMatchInvitationReachout?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -188,7 +188,7 @@ export interface TenantEnvironmentsSettingsArgs {
     /**
      * Disable preferred data location for Teams environment creation.
      */
-    disablePreferredDataLocationForTeamsEnvironment?: pulumi.Input<boolean>;
+    disablePreferredDataLocationForTeamsEnvironment?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -198,7 +198,7 @@ export interface TenantGovernancePolicySettingsArgs {
     /**
      * Enable desktop flow data policy management.
      */
-    enableDesktopFlowDataPolicyManagement?: pulumi.Input<boolean>;
+    enableDesktopFlowDataPolicyManagement?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -208,31 +208,31 @@ export interface TenantGovernanceSettingsArgs {
     /**
      * Disable admin digest.
      */
-    disableAdminDigest?: pulumi.Input<boolean>;
+    disableAdminDigest?: pulumi.Input<boolean | undefined>;
     /**
      * Disable developer environment creation by non-admin users.
      */
-    disableDeveloperEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    disableDeveloperEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean | undefined>;
     /**
      * Enable default environment routing.
      */
-    enableDefaultEnvironmentRouting?: pulumi.Input<boolean>;
+    enableDefaultEnvironmentRouting?: pulumi.Input<boolean | undefined>;
     /**
      * Route all makers to personal dev environments.
      */
-    environmentRoutingAllMakers?: pulumi.Input<boolean>;
+    environmentRoutingAllMakers?: pulumi.Input<boolean | undefined>;
     /**
      * Target environment group for default environment routing.
      */
-    environmentRoutingTargetEnvironmentGroupId?: pulumi.Input<string>;
+    environmentRoutingTargetEnvironmentGroupId?: pulumi.Input<string | undefined>;
     /**
      * Target security group for default environment routing.
      */
-    environmentRoutingTargetSecurityGroupId?: pulumi.Input<string>;
+    environmentRoutingTargetSecurityGroupId?: pulumi.Input<string | undefined>;
     /**
      * Governance policy settings.
      */
-    policy?: pulumi.Input<inputs.TenantGovernancePolicySettingsArgs>;
+    policy?: pulumi.Input<inputs.TenantGovernancePolicySettingsArgs | undefined>;
 }
 
 /**
@@ -242,11 +242,11 @@ export interface TenantIntelligenceSettingsArgs {
     /**
      * Disable Copilot.
      */
-    disableCopilot?: pulumi.Input<boolean>;
+    disableCopilot?: pulumi.Input<boolean | undefined>;
     /**
      * Enable OpenAI bot publishing.
      */
-    enableOpenAiBotPublishing?: pulumi.Input<boolean>;
+    enableOpenAiBotPublishing?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -256,23 +256,23 @@ export interface TenantLicensingSettingsArgs {
     /**
      * Disable billing policy creation by non-admin users.
      */
-    disableBillingPolicyCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    disableBillingPolicyCreationByNonAdminUsers?: pulumi.Input<boolean | undefined>;
     /**
      * Disable use of unassigned AI Builder credits.
      */
-    disableUseOfUnassignedAIBuilderCredits?: pulumi.Input<boolean>;
+    disableUseOfUnassignedAIBuilderCredits?: pulumi.Input<boolean | undefined>;
     /**
      * Enable tenant capacity report for environment admins.
      */
-    enableTenantCapacityReportForEnvironmentAdmins?: pulumi.Input<boolean>;
+    enableTenantCapacityReportForEnvironmentAdmins?: pulumi.Input<boolean | undefined>;
     /**
      * Enable tenant licensing report for environment admins.
      */
-    enableTenantLicensingReportForEnvironmentAdmins?: pulumi.Input<boolean>;
+    enableTenantLicensingReportForEnvironmentAdmins?: pulumi.Input<boolean | undefined>;
     /**
      * Storage capacity consumption warning threshold.
      */
-    storageCapacityConsumptionWarningThreshold?: pulumi.Input<number>;
+    storageCapacityConsumptionWarningThreshold?: pulumi.Input<number | undefined>;
 }
 
 /**
@@ -282,11 +282,11 @@ export interface TenantModelExperimentationSettingsArgs {
     /**
      * Disable data logging.
      */
-    disableDataLogging?: pulumi.Input<boolean>;
+    disableDataLogging?: pulumi.Input<boolean | undefined>;
     /**
      * Enable model data sharing.
      */
-    enableModelDataSharing?: pulumi.Input<boolean>;
+    enableModelDataSharing?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -296,31 +296,31 @@ export interface TenantPowerAppsSettingsArgs {
     /**
      * Disable connection sharing with everyone.
      */
-    disableConnectionSharingWithEveryone?: pulumi.Input<boolean>;
+    disableConnectionSharingWithEveryone?: pulumi.Input<boolean | undefined>;
     /**
      * Disable create from Figma.
      */
-    disableCreateFromFigma?: pulumi.Input<boolean>;
+    disableCreateFromFigma?: pulumi.Input<boolean | undefined>;
     /**
      * Disable create from image.
      */
-    disableCreateFromImage?: pulumi.Input<boolean>;
+    disableCreateFromImage?: pulumi.Input<boolean | undefined>;
     /**
      * Disable maker match.
      */
-    disableMakerMatch?: pulumi.Input<boolean>;
+    disableMakerMatch?: pulumi.Input<boolean | undefined>;
     /**
      * Disable share with everyone.
      */
-    disableShareWithEveryone?: pulumi.Input<boolean>;
+    disableShareWithEveryone?: pulumi.Input<boolean | undefined>;
     /**
      * Disable unused license assignment.
      */
-    disableUnusedLicenseAssignment?: pulumi.Input<boolean>;
+    disableUnusedLicenseAssignment?: pulumi.Input<boolean | undefined>;
     /**
      * Enable guests to make apps.
      */
-    enableGuestsToMake?: pulumi.Input<boolean>;
+    enableGuestsToMake?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -330,7 +330,7 @@ export interface TenantPowerAutomateSettingsArgs {
     /**
      * Disable Copilot for Power Automate.
      */
-    disableCopilot?: pulumi.Input<boolean>;
+    disableCopilot?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -346,55 +346,55 @@ export interface TenantPowerPlatformSettingsArgs {
     /**
      * Catalog settings.
      */
-    catalogSettings?: pulumi.Input<inputs.TenantCatalogSettingsArgs>;
+    catalogSettings?: pulumi.Input<inputs.TenantCatalogSettingsArgs | undefined>;
     /**
      * Champions settings.
      */
-    champions?: pulumi.Input<inputs.TenantChampionsSettingsArgs>;
+    champions?: pulumi.Input<inputs.TenantChampionsSettingsArgs | undefined>;
     /**
      * Environment settings.
      */
-    environments?: pulumi.Input<inputs.TenantEnvironmentsSettingsArgs>;
+    environments?: pulumi.Input<inputs.TenantEnvironmentsSettingsArgs | undefined>;
     /**
      * Governance settings.
      */
-    governance?: pulumi.Input<inputs.TenantGovernanceSettingsArgs>;
+    governance?: pulumi.Input<inputs.TenantGovernanceSettingsArgs | undefined>;
     /**
      * Intelligence settings.
      */
-    intelligence?: pulumi.Input<inputs.TenantIntelligenceSettingsArgs>;
+    intelligence?: pulumi.Input<inputs.TenantIntelligenceSettingsArgs | undefined>;
     /**
      * Licensing settings.
      */
-    licensing?: pulumi.Input<inputs.TenantLicensingSettingsArgs>;
+    licensing?: pulumi.Input<inputs.TenantLicensingSettingsArgs | undefined>;
     /**
      * Model experimentation settings.
      */
-    modelExperimentation?: pulumi.Input<inputs.TenantModelExperimentationSettingsArgs>;
+    modelExperimentation?: pulumi.Input<inputs.TenantModelExperimentationSettingsArgs | undefined>;
     /**
      * Power Apps settings.
      */
-    powerApps?: pulumi.Input<inputs.TenantPowerAppsSettingsArgs>;
+    powerApps?: pulumi.Input<inputs.TenantPowerAppsSettingsArgs | undefined>;
     /**
      * Power Automate settings.
      */
-    powerAutomate?: pulumi.Input<inputs.TenantPowerAutomateSettingsArgs>;
+    powerAutomate?: pulumi.Input<inputs.TenantPowerAutomateSettingsArgs | undefined>;
     /**
      * Power Pages settings.
      */
-    powerPages?: pulumi.Input<inputs.TenantPowerPagesSettingsArgs>;
+    powerPages?: pulumi.Input<inputs.TenantPowerPagesSettingsArgs | undefined>;
     /**
      * Search settings.
      */
-    search?: pulumi.Input<inputs.TenantSearchSettingsArgs>;
+    search?: pulumi.Input<inputs.TenantSearchSettingsArgs | undefined>;
     /**
      * Teams integration settings.
      */
-    teamsIntegration?: pulumi.Input<inputs.TenantTeamsIntegrationSettingsArgs>;
+    teamsIntegration?: pulumi.Input<inputs.TenantTeamsIntegrationSettingsArgs | undefined>;
     /**
      * User management settings.
      */
-    userManagementSettings?: pulumi.Input<inputs.TenantUserManagementSettingsArgs>;
+    userManagementSettings?: pulumi.Input<inputs.TenantUserManagementSettingsArgs | undefined>;
 }
 
 /**
@@ -404,15 +404,15 @@ export interface TenantSearchSettingsArgs {
     /**
      * Disable Bing video search.
      */
-    disableBingVideoSearch?: pulumi.Input<boolean>;
+    disableBingVideoSearch?: pulumi.Input<boolean | undefined>;
     /**
      * Disable community search.
      */
-    disableCommunitySearch?: pulumi.Input<boolean>;
+    disableCommunitySearch?: pulumi.Input<boolean | undefined>;
     /**
      * Disable docs search.
      */
-    disableDocsSearch?: pulumi.Input<boolean>;
+    disableDocsSearch?: pulumi.Input<boolean | undefined>;
 }
 
 /**
@@ -422,7 +422,7 @@ export interface TenantTeamsIntegrationSettingsArgs {
     /**
      * Share with colleagues user limit.
      */
-    shareWithColleaguesUserLimit?: pulumi.Input<number>;
+    shareWithColleaguesUserLimit?: pulumi.Input<number | undefined>;
 }
 
 /**
@@ -432,5 +432,5 @@ export interface TenantUserManagementSettingsArgs {
     /**
      * Enable delete disabled user in all environments.
      */
-    enableDeleteDisabledUserInAllEnvironments?: pulumi.Input<boolean>;
+    enableDeleteDisabledUserInAllEnvironments?: pulumi.Input<boolean | undefined>;
 }
