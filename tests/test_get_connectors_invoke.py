@@ -97,6 +97,31 @@ class TestGetConnectorsInvoke:
         assert "request_configuration" in call_kwargs, "api-version must be passed via request_configuration"
 
     @pytest.mark.asyncio
+    async def test_invoke_passes_filter_for_environment(self, handler_with_connectors):
+        """The filter query param must be 'environment eq <env_id>' to avoid HTTP 400."""
+        handler, client = handler_with_connectors
+        request = InvokeRequest(
+            tok="powerplatform:index:getConnectors",
+            args={"environmentId": PropertyValue("env-1")},
+        )
+        await handler.invoke(request)
+
+        by_env = client.sdk.connectivity.environments.by_environment_id.return_value
+        call_kwargs = by_env.connectors.get.await_args.kwargs
+        config = call_kwargs.get("request_configuration")
+        assert config is not None
+        # query_parameters is the MagicMock instance returned by the stub constructor.
+        # Retrieve the kwargs that the constructor was called with via the stub mock's call_args.
+        import sys
+        qp_cls = sys.modules.get(
+            "mspp_management.connectivity.environments.item.connectors.connectors_request_builder"
+        )
+        assert qp_cls is not None, "connectors_request_builder stub not found in sys.modules"
+        ctor = qp_cls.ConnectorsRequestBuilder.ConnectorsRequestBuilderGetQueryParameters
+        ctor_kwargs = ctor.call_args.kwargs
+        assert ctor_kwargs.get("filter") == "environment eq 'env-1'"
+
+    @pytest.mark.asyncio
     async def test_api_error_raises_runtime_error(self):
         """APIError from the SDK must be re-raised as RuntimeError with status and message."""
         client = MagicMock(spec=PowerPlatformClient)

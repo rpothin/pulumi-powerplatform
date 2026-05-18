@@ -43,6 +43,12 @@ class GetFlowsFunction:
                 request_configuration=config
             )
         except APIError as e:
+            if e.response_status_code == 401:
+                raise RuntimeError(
+                    "Service principal lacks Power Automate authorization (HTTP 401). "
+                    "Ensure the SP has been granted Power Automate admin role in the target environment. "
+                    "Note: service principals cannot hold per-user Power Automate licenses."
+                ) from e
             raise RuntimeError(
                 f"getFlows failed with status {e.response_status_code}: {e.message}. "
                 f"Response body: {getattr(e, 'response_body', 'unavailable')}"
