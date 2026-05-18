@@ -5,8 +5,12 @@ package io.github.rpothin.powerplatform.inputs;
 
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
+import java.lang.Integer;
 import java.lang.String;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import javax.annotation.Nullable;
 
 
 public final class GetFlowsPlainArgs extends com.pulumi.resources.InvokeArgs {
@@ -28,10 +32,58 @@ public final class GetFlowsPlainArgs extends com.pulumi.resources.InvokeArgs {
         return this.environmentId;
     }
 
+    /**
+     * Additional OData $filter clause appended to the base &#39;category eq 5&#39; filter with &#39;and&#39;. Example: &#34;statecode eq 1&#34; to return only active flows.
+     * 
+     */
+    @Import(name="filter")
+    private @Nullable String filter;
+
+    /**
+     * @return Additional OData $filter clause appended to the base &#39;category eq 5&#39; filter with &#39;and&#39;. Example: &#34;statecode eq 1&#34; to return only active flows.
+     * 
+     */
+    public Optional<String> filter() {
+        return Optional.ofNullable(this.filter);
+    }
+
+    /**
+     * Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+     * 
+     */
+    @Import(name="select")
+    private @Nullable List<String> select;
+
+    /**
+     * @return Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+     * 
+     */
+    public Optional<List<String>> select() {
+        return Optional.ofNullable(this.select);
+    }
+
+    /**
+     * Maximum number of flows to return ($top). Use to limit large result sets.
+     * 
+     */
+    @Import(name="top")
+    private @Nullable Integer top;
+
+    /**
+     * @return Maximum number of flows to return ($top). Use to limit large result sets.
+     * 
+     */
+    public Optional<Integer> top() {
+        return Optional.ofNullable(this.top);
+    }
+
     private GetFlowsPlainArgs() {}
 
     private GetFlowsPlainArgs(GetFlowsPlainArgs $) {
         this.environmentId = $.environmentId;
+        this.filter = $.filter;
+        this.select = $.select;
+        this.top = $.top;
     }
 
     public static Builder builder() {
@@ -60,6 +112,49 @@ public final class GetFlowsPlainArgs extends com.pulumi.resources.InvokeArgs {
          */
         public Builder environmentId(String environmentId) {
             $.environmentId = environmentId;
+            return this;
+        }
+
+        /**
+         * @param filter Additional OData $filter clause appended to the base &#39;category eq 5&#39; filter with &#39;and&#39;. Example: &#34;statecode eq 1&#34; to return only active flows.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder filter(@Nullable String filter) {
+            $.filter = filter;
+            return this;
+        }
+
+        /**
+         * @param select Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder select(@Nullable List<String> select) {
+            $.select = select;
+            return this;
+        }
+
+        /**
+         * @param select Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+         * 
+         * @return builder
+         * 
+         */
+        public Builder select(String... select) {
+            return select(List.of(select));
+        }
+
+        /**
+         * @param top Maximum number of flows to return ($top). Use to limit large result sets.
+         * 
+         * @return builder
+         * 
+         */
+        public Builder top(@Nullable Integer top) {
+            $.top = top;
             return this;
         }
 

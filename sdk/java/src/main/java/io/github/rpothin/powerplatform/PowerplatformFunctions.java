@@ -182,35 +182,35 @@ public final class PowerplatformFunctions {
         return Deployment.getInstance().invokeAsync("powerplatform:index:getEnvironments", TypeShape.of(GetEnvironmentsResult.class), args, Utilities.withVersion(options));
     }
     /**
-     * Lists Cloud Flows in a Power Platform environment.
+     * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the &#39;top&#39; parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
      * 
      */
     public static Output<GetFlowsResult> getFlows(GetFlowsArgs args) {
         return getFlows(args, InvokeOptions.Empty);
     }
     /**
-     * Lists Cloud Flows in a Power Platform environment.
+     * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the &#39;top&#39; parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
      * 
      */
     public static CompletableFuture<GetFlowsResult> getFlowsPlain(GetFlowsPlainArgs args) {
         return getFlowsPlain(args, InvokeOptions.Empty);
     }
     /**
-     * Lists Cloud Flows in a Power Platform environment.
+     * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the &#39;top&#39; parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
      * 
      */
     public static Output<GetFlowsResult> getFlows(GetFlowsArgs args, InvokeOptions options) {
         return Deployment.getInstance().invoke("powerplatform:index:getFlows", TypeShape.of(GetFlowsResult.class), args, Utilities.withVersion(options));
     }
     /**
-     * Lists Cloud Flows in a Power Platform environment.
+     * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the &#39;top&#39; parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
      * 
      */
     public static Output<GetFlowsResult> getFlows(GetFlowsArgs args, InvokeOutputOptions options) {
         return Deployment.getInstance().invoke("powerplatform:index:getFlows", TypeShape.of(GetFlowsResult.class), args, Utilities.withVersion(options));
     }
     /**
-     * Lists Cloud Flows in a Power Platform environment.
+     * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the &#39;top&#39; parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
      * 
      */
     public static CompletableFuture<GetFlowsResult> getFlowsPlain(GetFlowsPlainArgs args, InvokeOptions options) {

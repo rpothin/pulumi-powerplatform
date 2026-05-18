@@ -138,19 +138,23 @@
     },
     "powerplatform:index:FlowSummary": {
       "type": "object",
-      "description": "Summary information about a Cloud Flow.",
+      "description": "Summary information about a Cloud Flow sourced from the Dataverse workflow table.",
       "properties": {
         "id": {
           "type": "string",
-          "description": "The unique identifier of the flow."
+          "description": "The unique identifier (workflowid GUID) of the flow."
         },
         "name": {
           "type": "string",
-          "description": "The internal name of the flow."
+          "description": "The display name of the flow (maps to the Dataverse workflow name attribute)."
         },
         "displayName": {
           "type": "string",
-          "description": "The display name of the flow."
+          "description": "The display name of the flow. Identical to name when sourced from Dataverse."
+        },
+        "stateCode": {
+          "type": "integer",
+          "description": "The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended."
         }
       }
     },
@@ -1519,12 +1523,27 @@
       }
     },
     "powerplatform:index:getFlows": {
-      "description": "Lists Cloud Flows in a Power Platform environment.",
+      "description": "Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).",
       "inputs": {
         "properties": {
           "environmentId": {
             "type": "string",
             "description": "The ID of the environment to list flows for."
+          },
+          "filter": {
+            "type": "string",
+            "description": "Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: \"statecode eq 1\" to return only active flows."
+          },
+          "top": {
+            "type": "integer",
+            "description": "Maximum number of flows to return ($top). Use to limit large result sets."
+          },
+          "select": {
+            "type": "array",
+            "description": "Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
@@ -1539,10 +1558,20 @@
             "items": {
               "$ref": "#/types/powerplatform:index:FlowSummary"
             }
+          },
+          "totalRowsCount": {
+            "type": "integer",
+            "description": "Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent."
+          },
+          "totalRowsCountLimitExceeded": {
+            "type": "boolean",
+            "description": "True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded)."
           }
         },
         "required": [
-          "flows"
+          "flows",
+          "totalRowsCount",
+          "totalRowsCountLimitExceeded"
         ]
       }
     },

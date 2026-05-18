@@ -1059,17 +1059,19 @@ func (o EnvironmentSummaryArrayOutput) Index(i pulumi.IntInput) EnvironmentSumma
 	}).(EnvironmentSummaryOutput)
 }
 
-// Summary information about a Cloud Flow.
+// Summary information about a Cloud Flow sourced from the Dataverse workflow table.
 type FlowSummary struct {
-	// The display name of the flow.
+	// The display name of the flow. Identical to name when sourced from Dataverse.
 	DisplayName *string `pulumi:"displayName"`
-	// The unique identifier of the flow.
+	// The unique identifier (workflowid GUID) of the flow.
 	Id *string `pulumi:"id"`
-	// The internal name of the flow.
+	// The display name of the flow (maps to the Dataverse workflow name attribute).
 	Name *string `pulumi:"name"`
+	// The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.
+	StateCode *int `pulumi:"stateCode"`
 }
 
-// Summary information about a Cloud Flow.
+// Summary information about a Cloud Flow sourced from the Dataverse workflow table.
 type FlowSummaryOutput struct{ *pulumi.OutputState }
 
 func (FlowSummaryOutput) ElementType() reflect.Type {
@@ -1084,19 +1086,24 @@ func (o FlowSummaryOutput) ToFlowSummaryOutputWithContext(ctx context.Context) F
 	return o
 }
 
-// The display name of the flow.
+// The display name of the flow. Identical to name when sourced from Dataverse.
 func (o FlowSummaryOutput) DisplayName() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v FlowSummary) *string { return v.DisplayName }).(pulumi.StringPtrOutput)
 }
 
-// The unique identifier of the flow.
+// The unique identifier (workflowid GUID) of the flow.
 func (o FlowSummaryOutput) Id() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v FlowSummary) *string { return v.Id }).(pulumi.StringPtrOutput)
 }
 
-// The internal name of the flow.
+// The display name of the flow (maps to the Dataverse workflow name attribute).
 func (o FlowSummaryOutput) Name() pulumi.StringPtrOutput {
 	return o.ApplyT(func(v FlowSummary) *string { return v.Name }).(pulumi.StringPtrOutput)
+}
+
+// The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.
+func (o FlowSummaryOutput) StateCode() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v FlowSummary) *int { return v.StateCode }).(pulumi.IntPtrOutput)
 }
 
 type FlowSummaryArrayOutput struct{ *pulumi.OutputState }
