@@ -9,6 +9,7 @@ from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import InvokeRequest
 from rpothin_powerplatform.client import PowerPlatformClient
 from rpothin_powerplatform.functions.get_data_records import GetDataRecordsFunction
+from rpothin_powerplatform.utils import HttpError
 
 _ENV_ID = "aaaaaaaa-1111-2222-3333-bbbbbbbbbbbb"
 _COLLECTION = "accounts"
@@ -339,6 +340,65 @@ class TestGetDataRecordsInvoke:
 
         assert response.return_value["totalRowsCount"].value == 0
         assert response.return_value["totalRowsCountLimitExceeded"].value is False
+
+    @pytest.mark.asyncio
+    async def test_invoke_403_org_member_error_raises_actionable_message(self, handler, mock_client, dv_mock):
+        """HTTP 403 with 0x80072560 raises a clear RuntimeError explaining the Dataverse setup step."""
+        mock_client.raw.request.return_value = _ENV_RESPONSE
+        dv_mock.request.side_effect = HttpError(
+            403,
+            "GET /api/data/v9.2/accounts returned 403: "
+            '{"error":{"code":"0x80072560","message":"The user is not a member of the organization."}}',
+        )
+
+        request = InvokeRequest(
+            tok="powerplatform:index:getDataRecords",
+            args={
+                "environmentId": PropertyValue(_ENV_ID),
+                "entityCollection": PropertyValue(_COLLECTION),
+            },
+        )
+        with pytest.raises(RuntimeError, match="0x80072560") as exc_info:
+            await handler.invoke(request)
+        assert "Application User" in str(exc_info.value)
+        assert "Dataverse" in str(exc_info.value)
+
+    @pytest.mark.asyncio
+    async def test_invoke_403_not_member_phrase_raises_actionable_message(self, handler, mock_client, dv_mock):
+        """HTTP 403 with 'not a member of the organization' phrase also raises the actionable message."""
+        mock_client.raw.request.return_value = _ENV_RESPONSE
+        dv_mock.request.side_effect = HttpError(
+            403,
+            "GET /api/data/v9.2/accounts returned 403: not a member of the organization",
+        )
+
+        request = InvokeRequest(
+            tok="powerplatform:index:getDataRecords",
+            args={
+                "environmentId": PropertyValue(_ENV_ID),
+                "entityCollection": PropertyValue(_COLLECTION),
+            },
+        )
+        with pytest.raises(RuntimeError, match="Application User"):
+            await handler.invoke(request)
+
+    @pytest.mark.asyncio
+    async def test_invoke_403_other_reason_reraises_http_error(self, handler, mock_client, dv_mock):
+        """HTTP 403 without the org-member markers is re-raised as-is (not wrapped)."""
+        mock_client.raw.request.return_value = _ENV_RESPONSE
+        original_err = HttpError(403, "GET /api/data/v9.2/accounts returned 403: Forbidden")
+        dv_mock.request.side_effect = original_err
+
+        request = InvokeRequest(
+            tok="powerplatform:index:getDataRecords",
+            args={
+                "environmentId": PropertyValue(_ENV_ID),
+                "entityCollection": PropertyValue(_COLLECTION),
+            },
+        )
+        with pytest.raises(HttpError) as exc_info:
+            await handler.invoke(request)
+        assert exc_info.value is original_err
 
     @pytest.mark.asyncio
     async def test_invoke_raises_when_no_dataverse_instance(self, handler, mock_client):

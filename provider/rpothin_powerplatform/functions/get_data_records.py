@@ -11,6 +11,7 @@ from pulumi.provider.experimental.provider import InvokeRequest, InvokeResponse
 
 from rpothin_powerplatform.client import PowerPlatformClient
 from rpothin_powerplatform.raw_api import RawApiClient
+from rpothin_powerplatform.utils import HttpError as _HttpError
 from rpothin_powerplatform.utils import pv_str as _pv_str
 from rpothin_powerplatform.utils import pv_to_python, resolve_dataverse_url
 
@@ -104,7 +105,18 @@ class GetDataRecordsFunction:
         if query_string:
             path = f"{path}?{query_string}"
 
-        result = await dv_client.request("GET", path, api_version=None) or {}
+        try:
+            result = await dv_client.request("GET", path, api_version=None) or {}
+        except _HttpError as e:
+            if e.status_code == 403 and (
+                "0x80072560" in str(e) or "not a member of the organization" in str(e).lower()
+            ):
+                raise RuntimeError(
+                    "Service principal is not a Dataverse organization member (HTTP 403, code 0x80072560). "
+                    "Add the service principal as an Application User in the target Dataverse environment "
+                    "and assign a security role with read access to the entity."
+                ) from e
+            raise
 
         if "@odata.nextLink" in result:
             logger.warning(

@@ -96,6 +96,26 @@ class TestGetFlowsInvoke:
         assert "request_configuration" in call_kwargs, "api-version must be passed via request_configuration"
 
     @pytest.mark.asyncio
+    async def test_api_error_401_raises_actionable_runtime_error(self):
+        """HTTP 401 from the SDK must raise a RuntimeError with SP authorization guidance."""
+        client = MagicMock(spec=PowerPlatformClient)
+        api_err = APIError(message="Unauthorized", response_status_code=401)
+        by_env = client.sdk.powerautomate.environments.by_environment_id.return_value
+        by_env.cloud_flows.get = AsyncMock(side_effect=api_err)
+
+        handler = GetFlowsFunction(client=client)
+        request = InvokeRequest(
+            tok="powerplatform:index:getFlows",
+            args={"environmentId": PropertyValue("env-1")},
+        )
+
+        with pytest.raises(RuntimeError, match="Power Automate authorization") as exc_info:
+            await handler.invoke(request)
+        assert "Power Automate admin role" in str(exc_info.value)
+        assert "per-user Power Automate licenses" in str(exc_info.value)
+        assert exc_info.value.__cause__ is api_err
+
+    @pytest.mark.asyncio
     async def test_api_error_raises_runtime_error(self):
         """APIError from the SDK must be re-raised as RuntimeError with status and message."""
         client = MagicMock(spec=PowerPlatformClient)

@@ -33,7 +33,11 @@ class GetConnectorsFunction:
             raise ValueError("environmentId is required.")
         env_id = str(env_id_pv.value)
 
+        # The kiota URL template uses a non-optional RFC 6570 simple expansion for
+        # $filter, so an empty/None filter renders as "$filter=" and causes HTTP 400.
+        # Pass the environment filter so the API returns connectors for this environment.
         query_params = ConnectorsRequestBuilder.ConnectorsRequestBuilderGetQueryParameters(
+            filter=f"environment eq '{env_id}'",
             api_version=_API_VERSION,
         )
         config = RequestConfiguration(query_parameters=query_params)
