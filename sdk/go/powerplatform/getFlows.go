@@ -11,7 +11,7 @@ import (
 	"github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform/internal"
 )
 
-// Lists Cloud Flows in a Power Platform environment.
+// Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
 func GetFlows(ctx *pulumi.Context, args *GetFlowsArgs, opts ...pulumi.InvokeOption) (*GetFlowsResult, error) {
 	opts = internal.PkgInvokeDefaultOpts(opts)
 	var rv GetFlowsResult
@@ -25,11 +25,21 @@ func GetFlows(ctx *pulumi.Context, args *GetFlowsArgs, opts ...pulumi.InvokeOpti
 type GetFlowsArgs struct {
 	// The ID of the environment to list flows for.
 	EnvironmentId string `pulumi:"environmentId"`
+	// Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
+	Filter *string `pulumi:"filter"`
+	// Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+	Select []string `pulumi:"select"`
+	// Maximum number of flows to return ($top). Use to limit large result sets.
+	Top *int `pulumi:"top"`
 }
 
 type GetFlowsResult struct {
 	// The list of Cloud Flows.
 	Flows []FlowSummary `pulumi:"flows"`
+	// Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent.
+	TotalRowsCount int `pulumi:"totalRowsCount"`
+	// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+	TotalRowsCountLimitExceeded bool `pulumi:"totalRowsCountLimitExceeded"`
 }
 
 func GetFlowsOutput(ctx *pulumi.Context, args GetFlowsOutputArgs, opts ...pulumi.InvokeOption) GetFlowsResultOutput {
@@ -44,6 +54,12 @@ func GetFlowsOutput(ctx *pulumi.Context, args GetFlowsOutputArgs, opts ...pulumi
 type GetFlowsOutputArgs struct {
 	// The ID of the environment to list flows for.
 	EnvironmentId pulumi.StringInput `pulumi:"environmentId"`
+	// Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
+	Filter pulumi.StringPtrInput `pulumi:"filter"`
+	// Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+	Select pulumi.StringArrayInput `pulumi:"select"`
+	// Maximum number of flows to return ($top). Use to limit large result sets.
+	Top pulumi.IntPtrInput `pulumi:"top"`
 }
 
 func (GetFlowsOutputArgs) ElementType() reflect.Type {
@@ -67,6 +83,16 @@ func (o GetFlowsResultOutput) ToGetFlowsResultOutputWithContext(ctx context.Cont
 // The list of Cloud Flows.
 func (o GetFlowsResultOutput) Flows() FlowSummaryArrayOutput {
 	return o.ApplyT(func(v GetFlowsResult) []FlowSummary { return v.Flows }).(FlowSummaryArrayOutput)
+}
+
+// Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent.
+func (o GetFlowsResultOutput) TotalRowsCount() pulumi.IntOutput {
+	return o.ApplyT(func(v GetFlowsResult) int { return v.TotalRowsCount }).(pulumi.IntOutput)
+}
+
+// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+func (o GetFlowsResultOutput) TotalRowsCountLimitExceeded() pulumi.BoolOutput {
+	return o.ApplyT(func(v GetFlowsResult) bool { return v.TotalRowsCountLimitExceeded }).(pulumi.BoolOutput)
 }
 
 func init() {

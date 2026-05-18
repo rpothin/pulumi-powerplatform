@@ -4,6 +4,7 @@
 package io.github.rpothin.powerplatform.outputs;
 
 import com.pulumi.core.annotations.CustomType;
+import java.lang.Integer;
 import java.lang.String;
 import java.util.Objects;
 import java.util.Optional;
@@ -12,42 +13,54 @@ import javax.annotation.Nullable;
 @CustomType
 public final class FlowSummary {
     /**
-     * @return The display name of the flow.
+     * @return The display name of the flow. Identical to name when sourced from Dataverse.
      * 
      */
     private @Nullable String displayName;
     /**
-     * @return The unique identifier of the flow.
+     * @return The unique identifier (workflowid GUID) of the flow.
      * 
      */
     private @Nullable String id;
     /**
-     * @return The internal name of the flow.
+     * @return The display name of the flow (maps to the Dataverse workflow name attribute).
      * 
      */
     private @Nullable String name;
+    /**
+     * @return The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.
+     * 
+     */
+    private @Nullable Integer stateCode;
 
     private FlowSummary() {}
     /**
-     * @return The display name of the flow.
+     * @return The display name of the flow. Identical to name when sourced from Dataverse.
      * 
      */
     public Optional<String> displayName() {
         return Optional.ofNullable(this.displayName);
     }
     /**
-     * @return The unique identifier of the flow.
+     * @return The unique identifier (workflowid GUID) of the flow.
      * 
      */
     public Optional<String> id() {
         return Optional.ofNullable(this.id);
     }
     /**
-     * @return The internal name of the flow.
+     * @return The display name of the flow (maps to the Dataverse workflow name attribute).
      * 
      */
     public Optional<String> name() {
         return Optional.ofNullable(this.name);
+    }
+    /**
+     * @return The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.
+     * 
+     */
+    public Optional<Integer> stateCode() {
+        return Optional.ofNullable(this.stateCode);
     }
 
     public static Builder builder() {
@@ -62,12 +75,14 @@ public final class FlowSummary {
         private @Nullable String displayName;
         private @Nullable String id;
         private @Nullable String name;
+        private @Nullable Integer stateCode;
         public Builder() {}
         public Builder(FlowSummary defaults) {
     	      Objects.requireNonNull(defaults);
     	      this.displayName = defaults.displayName;
     	      this.id = defaults.id;
     	      this.name = defaults.name;
+    	      this.stateCode = defaults.stateCode;
         }
 
         @CustomType.Setter
@@ -88,11 +103,18 @@ public final class FlowSummary {
             this.name = name;
             return this;
         }
+        @CustomType.Setter
+        public Builder stateCode(@Nullable Integer stateCode) {
+
+            this.stateCode = stateCode;
+            return this;
+        }
         public FlowSummary build() {
             final var _resultValue = new FlowSummary();
             _resultValue.displayName = displayName;
             _resultValue.id = id;
             _resultValue.name = name;
+            _resultValue.stateCode = stateCode;
             return _resultValue;
         }
     }

@@ -12,19 +12,19 @@ namespace Pulumi.Powerplatform
     public static class GetFlows
     {
         /// <summary>
-        /// Lists Cloud Flows in a Power Platform environment.
+        /// Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
         /// </summary>
         public static Task<GetFlowsResult> InvokeAsync(GetFlowsArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.InvokeAsync<GetFlowsResult>("powerplatform:index:getFlows", args ?? new GetFlowsArgs(), options.WithDefaults());
 
         /// <summary>
-        /// Lists Cloud Flows in a Power Platform environment.
+        /// Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
         /// </summary>
         public static Output<GetFlowsResult> Invoke(GetFlowsInvokeArgs args, InvokeOptions? options = null)
             => global::Pulumi.Deployment.Instance.Invoke<GetFlowsResult>("powerplatform:index:getFlows", args ?? new GetFlowsInvokeArgs(), options.WithDefaults());
 
         /// <summary>
-        /// Lists Cloud Flows in a Power Platform environment.
+        /// Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
         /// </summary>
         public static Output<GetFlowsResult> Invoke(GetFlowsInvokeArgs args, InvokeOutputOptions options)
             => global::Pulumi.Deployment.Instance.Invoke<GetFlowsResult>("powerplatform:index:getFlows", args ?? new GetFlowsInvokeArgs(), options.WithDefaults());
@@ -38,6 +38,30 @@ namespace Pulumi.Powerplatform
         /// </summary>
         [Input("environmentId", required: true)]
         public string EnvironmentId { get; set; } = null!;
+
+        /// <summary>
+        /// Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
+        /// </summary>
+        [Input("filter")]
+        public string? Filter { get; set; }
+
+        [Input("select")]
+        private List<string>? _select;
+
+        /// <summary>
+        /// Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+        /// </summary>
+        public List<string> Select
+        {
+            get => _select ?? (_select = new List<string>());
+            set => _select = value;
+        }
+
+        /// <summary>
+        /// Maximum number of flows to return ($top). Use to limit large result sets.
+        /// </summary>
+        [Input("top")]
+        public int? Top { get; set; }
 
         public GetFlowsArgs()
         {
@@ -53,6 +77,30 @@ namespace Pulumi.Powerplatform
         [Input("environmentId", required: true)]
         public Input<string> EnvironmentId { get; set; } = null!;
 
+        /// <summary>
+        /// Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
+        /// </summary>
+        [Input("filter")]
+        public Input<string>? Filter { get; set; }
+
+        [Input("select")]
+        private InputList<string>? _select;
+
+        /// <summary>
+        /// Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+        /// </summary>
+        public InputList<string> Select
+        {
+            get => _select ?? (_select = new InputList<string>());
+            set => _select = value;
+        }
+
+        /// <summary>
+        /// Maximum number of flows to return ($top). Use to limit large result sets.
+        /// </summary>
+        [Input("top")]
+        public Input<int>? Top { get; set; }
+
         public GetFlowsInvokeArgs()
         {
         }
@@ -67,11 +115,26 @@ namespace Pulumi.Powerplatform
         /// The list of Cloud Flows.
         /// </summary>
         public readonly ImmutableArray<Outputs.FlowSummary> Flows;
+        /// <summary>
+        /// Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent.
+        /// </summary>
+        public readonly int TotalRowsCount;
+        /// <summary>
+        /// True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+        /// </summary>
+        public readonly bool TotalRowsCountLimitExceeded;
 
         [OutputConstructor]
-        private GetFlowsResult(ImmutableArray<Outputs.FlowSummary> flows)
+        private GetFlowsResult(
+            ImmutableArray<Outputs.FlowSummary> flows,
+
+            int totalRowsCount,
+
+            bool totalRowsCountLimitExceeded)
         {
             Flows = flows;
+            TotalRowsCount = totalRowsCount;
+            TotalRowsCountLimitExceeded = totalRowsCountLimitExceeded;
         }
     }
 }

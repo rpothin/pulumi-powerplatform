@@ -6,6 +6,8 @@ package io.github.rpothin.powerplatform.outputs;
 import com.pulumi.core.annotations.CustomType;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
 import io.github.rpothin.powerplatform.outputs.FlowSummary;
+import java.lang.Boolean;
+import java.lang.Integer;
 import java.util.List;
 import java.util.Objects;
 
@@ -16,6 +18,16 @@ public final class GetFlowsResult {
      * 
      */
     private List<FlowSummary> flows;
+    /**
+     * @return Total number of flows matching the query filter (from {@literal @}odata.count). Zero when the count annotation is absent.
+     * 
+     */
+    private Integer totalRowsCount;
+    /**
+     * @return True when the total row count exceeded the Dataverse limit ({@literal @}Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+     * 
+     */
+    private Boolean totalRowsCountLimitExceeded;
 
     private GetFlowsResult() {}
     /**
@@ -24,6 +36,20 @@ public final class GetFlowsResult {
      */
     public List<FlowSummary> flows() {
         return this.flows;
+    }
+    /**
+     * @return Total number of flows matching the query filter (from {@literal @}odata.count). Zero when the count annotation is absent.
+     * 
+     */
+    public Integer totalRowsCount() {
+        return this.totalRowsCount;
+    }
+    /**
+     * @return True when the total row count exceeded the Dataverse limit ({@literal @}Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+     * 
+     */
+    public Boolean totalRowsCountLimitExceeded() {
+        return this.totalRowsCountLimitExceeded;
     }
 
     public static Builder builder() {
@@ -36,10 +62,14 @@ public final class GetFlowsResult {
     @CustomType.Builder
     public static final class Builder {
         private List<FlowSummary> flows;
+        private Integer totalRowsCount;
+        private Boolean totalRowsCountLimitExceeded;
         public Builder() {}
         public Builder(GetFlowsResult defaults) {
     	      Objects.requireNonNull(defaults);
     	      this.flows = defaults.flows;
+    	      this.totalRowsCount = defaults.totalRowsCount;
+    	      this.totalRowsCountLimitExceeded = defaults.totalRowsCountLimitExceeded;
         }
 
         @CustomType.Setter
@@ -53,9 +83,27 @@ public final class GetFlowsResult {
         public Builder flows(FlowSummary... flows) {
             return flows(List.of(flows));
         }
+        @CustomType.Setter
+        public Builder totalRowsCount(Integer totalRowsCount) {
+            if (totalRowsCount == null) {
+              throw new MissingRequiredPropertyException("GetFlowsResult", "totalRowsCount");
+            }
+            this.totalRowsCount = totalRowsCount;
+            return this;
+        }
+        @CustomType.Setter
+        public Builder totalRowsCountLimitExceeded(Boolean totalRowsCountLimitExceeded) {
+            if (totalRowsCountLimitExceeded == null) {
+              throw new MissingRequiredPropertyException("GetFlowsResult", "totalRowsCountLimitExceeded");
+            }
+            this.totalRowsCountLimitExceeded = totalRowsCountLimitExceeded;
+            return this;
+        }
         public GetFlowsResult build() {
             final var _resultValue = new GetFlowsResult();
             _resultValue.flows = flows;
+            _resultValue.totalRowsCount = totalRowsCount;
+            _resultValue.totalRowsCountLimitExceeded = totalRowsCountLimitExceeded;
             return _resultValue;
         }
     }

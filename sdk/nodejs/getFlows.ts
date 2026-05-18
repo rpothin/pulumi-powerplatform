@@ -7,12 +7,15 @@ import * as outputs from "./types/output";
 import * as utilities from "./utilities";
 
 /**
- * Lists Cloud Flows in a Power Platform environment.
+ * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
  */
 export function getFlows(args: GetFlowsArgs, opts?: pulumi.InvokeOptions): Promise<GetFlowsResult> {
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invoke("powerplatform:index:getFlows", {
         "environmentId": args.environmentId,
+        "filter": args.filter,
+        "select": args.select,
+        "top": args.top,
     }, opts);
 }
 
@@ -21,6 +24,18 @@ export interface GetFlowsArgs {
      * The ID of the environment to list flows for.
      */
     environmentId: string;
+    /**
+     * Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
+     */
+    filter?: string;
+    /**
+     * Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+     */
+    select?: string[];
+    /**
+     * Maximum number of flows to return ($top). Use to limit large result sets.
+     */
+    top?: number;
 }
 
 export interface GetFlowsResult {
@@ -28,14 +43,25 @@ export interface GetFlowsResult {
      * The list of Cloud Flows.
      */
     readonly flows: outputs.FlowSummary[];
+    /**
+     * Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent.
+     */
+    readonly totalRowsCount: number;
+    /**
+     * True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).
+     */
+    readonly totalRowsCountLimitExceeded: boolean;
 }
 /**
- * Lists Cloud Flows in a Power Platform environment.
+ * Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
  */
 export function getFlowsOutput(args: GetFlowsOutputArgs, opts?: pulumi.InvokeOutputOptions): pulumi.Output<GetFlowsResult> {
     opts = pulumi.mergeOptions(utilities.resourceOptsDefaults(), opts || {});
     return pulumi.runtime.invokeOutput("powerplatform:index:getFlows", {
         "environmentId": args.environmentId,
+        "filter": args.filter,
+        "select": args.select,
+        "top": args.top,
     }, opts);
 }
 
@@ -44,4 +70,16 @@ export interface GetFlowsOutputArgs {
      * The ID of the environment to list flows for.
      */
     environmentId: pulumi.Input<string>;
+    /**
+     * Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
+     */
+    filter?: pulumi.Input<string>;
+    /**
+     * Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
+     */
+    select?: pulumi.Input<pulumi.Input<string>[]>;
+    /**
+     * Maximum number of flows to return ($top). Use to limit large result sets.
+     */
+    top?: pulumi.Input<number>;
 }

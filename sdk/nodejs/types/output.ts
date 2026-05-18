@@ -202,21 +202,25 @@ export interface EnvironmentSummary {
 }
 
 /**
- * Summary information about a Cloud Flow.
+ * Summary information about a Cloud Flow sourced from the Dataverse workflow table.
  */
 export interface FlowSummary {
     /**
-     * The display name of the flow.
+     * The display name of the flow. Identical to name when sourced from Dataverse.
      */
     displayName?: string;
     /**
-     * The unique identifier of the flow.
+     * The unique identifier (workflowid GUID) of the flow.
      */
     id?: string;
     /**
-     * The internal name of the flow.
+     * The display name of the flow (maps to the Dataverse workflow name attribute).
      */
     name?: string;
+    /**
+     * The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.
+     */
+    stateCode?: number;
 }
 
 /**

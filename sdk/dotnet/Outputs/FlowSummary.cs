@@ -11,23 +11,27 @@ namespace Pulumi.Powerplatform.Outputs
 {
 
     /// <summary>
-    /// Summary information about a Cloud Flow.
+    /// Summary information about a Cloud Flow sourced from the Dataverse workflow table.
     /// </summary>
     [OutputType]
     public sealed class FlowSummary
     {
         /// <summary>
-        /// The display name of the flow.
+        /// The display name of the flow. Identical to name when sourced from Dataverse.
         /// </summary>
         public readonly string? DisplayName;
         /// <summary>
-        /// The unique identifier of the flow.
+        /// The unique identifier (workflowid GUID) of the flow.
         /// </summary>
         public readonly string? Id;
         /// <summary>
-        /// The internal name of the flow.
+        /// The display name of the flow (maps to the Dataverse workflow name attribute).
         /// </summary>
         public readonly string? Name;
+        /// <summary>
+        /// The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.
+        /// </summary>
+        public readonly int? StateCode;
 
         [OutputConstructor]
         private FlowSummary(
@@ -35,11 +39,14 @@ namespace Pulumi.Powerplatform.Outputs
 
             string? id,
 
-            string? name)
+            string? name,
+
+            int? stateCode)
         {
             DisplayName = displayName;
             Id = id;
             Name = name;
+            StateCode = stateCode;
         }
     }
 }
