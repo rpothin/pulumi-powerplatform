@@ -73,13 +73,13 @@ export interface GetFlowsOutputArgs {
     /**
      * Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: "statecode eq 1" to return only active flows.
      */
-    filter?: pulumi.Input<string>;
+    filter?: pulumi.Input<string | undefined>;
     /**
      * Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).
      */
-    select?: pulumi.Input<pulumi.Input<string>[]>;
+    select?: pulumi.Input<pulumi.Input<string>[] | undefined>;
     /**
      * Maximum number of flows to return ($top). Use to limit large result sets.
      */
-    top?: pulumi.Input<number>;
+    top?: pulumi.Input<number | undefined>;
 }
