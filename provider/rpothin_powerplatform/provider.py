@@ -11,6 +11,8 @@ from pulumi.provider.experimental.provider import (
     CheckResponse,
     ConfigureRequest,
     ConfigureResponse,
+    ConstructRequest,
+    ConstructResponse,
     CreateRequest,
     CreateResponse,
     DeleteRequest,
@@ -229,6 +231,30 @@ class PowerPlatformProvider(Provider):
         if request.tok == _GET_FLOWS and self._get_flows:
             return await self._get_flows.invoke(request)
         raise NotImplementedError(f"Unknown function: {request.tok}")
+
+    # ---- Construct (component resources) ----
+
+    async def construct(self, request: ConstructRequest) -> ConstructResponse:
+        """Dispatch a Construct call to the appropriate component factory.
+
+        The experimental server has already unmarshalled ``request.inputs`` into
+        ``dict[str, PropertyValue]`` and resolved ``request.options`` from the
+        gRPC payload before this method is called.
+        """
+        from pulumi.provider.experimental.property_value import PropertyValue
+
+        from .components.poc_component import COMPONENT_TYPE as _POC_TYPE
+        from .components.poc_component import PocComponent
+        from .construct_bridge import pv_to_input, resolve_outputs
+
+        if request.resource_type == _POC_TYPE:
+            label = pv_to_input(request.inputs.get("label", PropertyValue(None)))
+            comp = PocComponent(request.name, label=label, opts=request.options)
+            urn = await comp.urn.future()
+            state = await resolve_outputs({"labelOut": comp.label_out})
+            return ConstructResponse(urn=urn, state=state, state_dependencies={})
+
+        raise NotImplementedError(f"No component handler for type: {request.resource_type}")
 
     # ---- Internal helpers ----
 
