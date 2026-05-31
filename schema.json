@@ -288,6 +288,56 @@
             "requiredInputs": [],
             "type": "object"
         },
+        "powerplatform:components:ResDlpPolicy": {
+            "description": "AVM-aligned Pulumi component for a Power Platform DLP Policy.\n\n    Composes a single ``powerplatform:components:DlpPolicy`` child resource with\n    an opinionated, AVM-compatible interface.\n\n    .. important::\n        DLP policies apply tenant-wide.  Ensure only one stack manages a\n        given policy to prevent conflicts between stacks.\n\n    Example (Python)::\n\n        import rpothin_powerplatform as pp\n\n        policy = pp.components.ResDlpPolicy(\n            \"my-policy\",\n            pp.components.ResDlpPolicyArgs(\n                display_name=\"My DLP Policy\",\n                rule_sets=[\n                    {\n                        \"classification\": \"Business\",\n                        \"connectors\": [\n                            {\"id\": \"/providers/Microsoft.PowerApps/apis/shared_office365\"},\n                        ],\n                    }\n                ],\n            ),\n        )",
+            "inputProperties": {
+                "displayName": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "enableTelemetry": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "ruleSets": {
+                    "items": {
+                        "$ref": "pulumi.json#/Any",
+                        "plain": true
+                    },
+                    "plain": true,
+                    "type": "array"
+                }
+            },
+            "isComponent": true,
+            "properties": {
+                "lastModified": {
+                    "type": "string"
+                },
+                "policyName": {
+                    "type": "string"
+                },
+                "resourceId": {
+                    "type": "string"
+                },
+                "ruleSetCount": {
+                    "type": "integer"
+                },
+                "tenantId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "lastModified",
+                "policyName",
+                "resourceId",
+                "ruleSetCount",
+                "tenantId"
+            ],
+            "requiredInputs": [
+                "displayName"
+            ],
+            "type": "object"
+        },
         "powerplatform:components:ResEnvironment": {
             "description": "AVM-aligned component that manages a Power Platform environment lifecycle.\n\n    Composes:\n\n    * :class:`~rpothin_powerplatform.Environment` — always created.\n    * :class:`~rpothin_powerplatform.ManagedEnvironment` — when\n      ``args.managed_environment_enabled`` is ``True``.\n    * :class:`~rpothin_powerplatform.EnvironmentSettings` — when any settings\n      field is provided.\n\n    All child resources inherit the parent component's provider configuration\n    through ``opts.providers`` / ``opts.provider`` so callers can supply an\n    explicit provider without repeating it for every child.",
             "inputProperties": {
@@ -401,6 +451,74 @@
                 "displayName",
                 "location"
             ],
+            "type": "object"
+        },
+        "powerplatform:components:ResTenantSettings": {
+            "description": "AVM-aligned Pulumi component for Power Platform Tenant Settings.\n\n    Composes a single ``powerplatform:components:TenantSettings`` child resource\n    with an opinionated, AVM-compatible interface.\n\n    .. important::\n        ``TenantSettings`` is a singleton resource — only one exists per AAD\n        tenant.  Assign ownership of this component to a single, dedicated\n        infrastructure stack to avoid conflicts.\n\n    Example (Python)::\n\n        import rpothin_powerplatform as pp\n\n        tenant_cfg = pp.components.ResTenantSettings(\n            \"tenant-settings\",\n            pp.components.ResTenantSettingsArgs(\n                disable_environment_creation_by_non_admin_users=True,\n                disable_trial_environment_creation_by_non_admin_users=True,\n            ),\n        )",
+            "inputProperties": {
+                "disableCapacityAllocationByEnvironmentAdmins": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disableEnvironmentCreationByNonAdminUsers": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disableNewsletterSendout": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disableNpsCommentsReachout": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disablePortalsCreationByNonAdminUsers": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disableSupportTicketsVisibleByAllUsers": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disableSurveyFeedback": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "disableTrialEnvironmentCreationByNonAdminUsers": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "enableTelemetry": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "powerPlatform": {
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any",
+                        "plain": true
+                    },
+                    "plain": true,
+                    "type": "object"
+                },
+                "walkMeOptOut": {
+                    "plain": true,
+                    "type": "boolean"
+                }
+            },
+            "isComponent": true,
+            "properties": {
+                "resourceId": {
+                    "type": "string"
+                },
+                "tenantId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "resourceId",
+                "tenantId"
+            ],
+            "requiredInputs": [],
             "type": "object"
         },
         "powerplatform:index:AdminManagementApplication": {

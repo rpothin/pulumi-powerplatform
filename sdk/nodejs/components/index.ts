@@ -10,10 +10,20 @@ export type PocComponent = import("./pocComponent").PocComponent;
 export const PocComponent: typeof import("./pocComponent").PocComponent = null as any;
 utilities.lazyLoad(exports, ["PocComponent"], () => require("./pocComponent"));
 
+export { ResDlpPolicyArgs } from "./resDlpPolicy";
+export type ResDlpPolicy = import("./resDlpPolicy").ResDlpPolicy;
+export const ResDlpPolicy: typeof import("./resDlpPolicy").ResDlpPolicy = null as any;
+utilities.lazyLoad(exports, ["ResDlpPolicy"], () => require("./resDlpPolicy"));
+
 export { ResEnvironmentArgs } from "./resEnvironment";
 export type ResEnvironment = import("./resEnvironment").ResEnvironment;
 export const ResEnvironment: typeof import("./resEnvironment").ResEnvironment = null as any;
 utilities.lazyLoad(exports, ["ResEnvironment"], () => require("./resEnvironment"));
+
+export { ResTenantSettingsArgs } from "./resTenantSettings";
+export type ResTenantSettings = import("./resTenantSettings").ResTenantSettings;
+export const ResTenantSettings: typeof import("./resTenantSettings").ResTenantSettings = null as any;
+utilities.lazyLoad(exports, ["ResTenantSettings"], () => require("./resTenantSettings"));
 
 
 const _module = {
@@ -22,8 +32,12 @@ const _module = {
         switch (type) {
             case "powerplatform:components:PocComponent":
                 return new PocComponent(name, <any>undefined, { urn })
+            case "powerplatform:components:ResDlpPolicy":
+                return new ResDlpPolicy(name, <any>undefined, { urn })
             case "powerplatform:components:ResEnvironment":
                 return new ResEnvironment(name, <any>undefined, { urn })
+            case "powerplatform:components:ResTenantSettings":
+                return new ResTenantSettings(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

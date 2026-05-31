@@ -23,8 +23,12 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 	switch typ {
 	case "powerplatform:components:PocComponent":
 		r = &PocComponent{}
+	case "powerplatform:components:ResDlpPolicy":
+		r = &ResDlpPolicy{}
 	case "powerplatform:components:ResEnvironment":
 		r = &ResEnvironment{}
+	case "powerplatform:components:ResTenantSettings":
+		r = &ResTenantSettings{}
 	default:
 		return nil, fmt.Errorf("unknown resource type: %s", typ)
 	}
