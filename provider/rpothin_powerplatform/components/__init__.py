@@ -17,6 +17,8 @@ generation and runtime dispatch — no manual listing required.
 import importlib
 from pathlib import Path
 
+from .res_deployment_pipeline import ResDeploymentPipeline  # noqa: F401
+
 _here = Path(__file__).parent
 for _py_file in sorted(_here.glob("*.py")):
     _stem = _py_file.stem

@@ -1325,6 +1325,66 @@ func (o RuleSetArrayOutput) Index(i pulumi.IntInput) RuleSetOutput {
 	}).(RuleSetOutput)
 }
 
+// A Dataverse security role.
+type SecurityRole struct {
+	// Business unit GUID this role belongs to.
+	BusinessUnitId *string `pulumi:"businessUnitId"`
+	// Security role display name.
+	Name *string `pulumi:"name"`
+	// Security role GUID.
+	RoleId *string `pulumi:"roleId"`
+}
+
+// A Dataverse security role.
+type SecurityRoleOutput struct{ *pulumi.OutputState }
+
+func (SecurityRoleOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*SecurityRole)(nil)).Elem()
+}
+
+func (o SecurityRoleOutput) ToSecurityRoleOutput() SecurityRoleOutput {
+	return o
+}
+
+func (o SecurityRoleOutput) ToSecurityRoleOutputWithContext(ctx context.Context) SecurityRoleOutput {
+	return o
+}
+
+// Business unit GUID this role belongs to.
+func (o SecurityRoleOutput) BusinessUnitId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SecurityRole) *string { return v.BusinessUnitId }).(pulumi.StringPtrOutput)
+}
+
+// Security role display name.
+func (o SecurityRoleOutput) Name() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SecurityRole) *string { return v.Name }).(pulumi.StringPtrOutput)
+}
+
+// Security role GUID.
+func (o SecurityRoleOutput) RoleId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v SecurityRole) *string { return v.RoleId }).(pulumi.StringPtrOutput)
+}
+
+type SecurityRoleArrayOutput struct{ *pulumi.OutputState }
+
+func (SecurityRoleArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]SecurityRole)(nil)).Elem()
+}
+
+func (o SecurityRoleArrayOutput) ToSecurityRoleArrayOutput() SecurityRoleArrayOutput {
+	return o
+}
+
+func (o SecurityRoleArrayOutput) ToSecurityRoleArrayOutputWithContext(ctx context.Context) SecurityRoleArrayOutput {
+	return o
+}
+
+func (o SecurityRoleArrayOutput) Index(i pulumi.IntInput) SecurityRoleOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) SecurityRole {
+		return vs[0].([]SecurityRole)[vs[1].(int)]
+	}).(SecurityRoleOutput)
+}
+
 // Catalog settings.
 type TenantCatalogSettings struct {
 	// Power Catalog audience setting.
@@ -4094,6 +4154,8 @@ func init() {
 	pulumi.RegisterOutputType(FlowSummaryArrayOutput{})
 	pulumi.RegisterOutputType(RuleSetOutput{})
 	pulumi.RegisterOutputType(RuleSetArrayOutput{})
+	pulumi.RegisterOutputType(SecurityRoleOutput{})
+	pulumi.RegisterOutputType(SecurityRoleArrayOutput{})
 	pulumi.RegisterOutputType(TenantCatalogSettingsOutput{})
 	pulumi.RegisterOutputType(TenantCatalogSettingsPtrOutput{})
 	pulumi.RegisterOutputType(TenantChampionsSettingsOutput{})

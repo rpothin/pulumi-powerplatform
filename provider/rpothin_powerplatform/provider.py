@@ -40,6 +40,7 @@ from rpothin_powerplatform.functions.get_dlp_policies import GetDlpPoliciesFunct
 from rpothin_powerplatform.functions.get_dlp_policy_migration_config import GetDlpPolicyMigrationConfigFunction
 from rpothin_powerplatform.functions.get_environments import GetEnvironmentsFunction
 from rpothin_powerplatform.functions.get_flows import GetFlowsFunction
+from rpothin_powerplatform.functions.get_security_roles import GetSecurityRolesFunction
 from rpothin_powerplatform.resources.admin_management_application import AdminManagementApplicationResource
 from rpothin_powerplatform.resources.billing_policy import BillingPolicyResource
 from rpothin_powerplatform.resources.data_record import DataRecordResource
@@ -52,6 +53,7 @@ from rpothin_powerplatform.resources.environment_group import EnvironmentGroupRe
 from rpothin_powerplatform.resources.environment_settings import EnvironmentSettingsResource
 from rpothin_powerplatform.resources.isv_contract import IsvContractResource
 from rpothin_powerplatform.resources.managed_environment import ManagedEnvironmentResource
+from rpothin_powerplatform.resources.pipeline_sharing import PipelineSharingResource
 from rpothin_powerplatform.resources.role_assignment import RoleAssignmentResource
 from rpothin_powerplatform.resources.tenant_settings import TenantSettingsResource
 
@@ -70,6 +72,7 @@ _ENVIRONMENT = "powerplatform:index:Environment"
 _ENVIRONMENT_SETTINGS = "powerplatform:index:EnvironmentSettings"
 _TENANT_SETTINGS = "powerplatform:index:TenantSettings"
 _ENTERPRISE_POLICY_LINK = "powerplatform:index:EnterprisePolicyLink"
+_PIPELINE_SHARING = "powerplatform:index:PipelineSharing"
 
 # Function tokens.
 _GET_DATA_RECORDS = "powerplatform:index:getDataRecords"
@@ -79,6 +82,7 @@ _GET_APPS = "powerplatform:index:getApps"
 _GET_FLOWS = "powerplatform:index:getFlows"
 _GET_DLP_POLICIES = "powerplatform:index:getDlpPolicies"
 _GET_DLP_POLICY_MIGRATION_CONFIG = "powerplatform:index:getDlpPolicyMigrationConfig"
+_GET_SECURITY_ROLES = "powerplatform:index:getSecurityRoles"
 
 def _load_schema() -> str:
     """Read the Pulumi Package Schema JSON file once.
@@ -127,6 +131,7 @@ class PowerPlatformProvider(Provider):
         self._env_settings: Optional[EnvironmentSettingsResource] = None
         self._tenant_settings: Optional[TenantSettingsResource] = None
         self._enterprise_policy_link: Optional[EnterprisePolicyLinkResource] = None
+        self._pipeline_sharing: Optional[PipelineSharingResource] = None
         self._get_envs: Optional[GetEnvironmentsFunction] = None
         self._get_connectors: Optional[GetConnectorsFunction] = None
         self._get_apps: Optional[GetAppsFunction] = None
@@ -134,6 +139,7 @@ class PowerPlatformProvider(Provider):
         self._get_flows: Optional[GetFlowsFunction] = None
         self._get_dlp_policies: Optional[GetDlpPoliciesFunction] = None
         self._get_dlp_policy_migration_config: Optional[GetDlpPolicyMigrationConfigFunction] = None
+        self._get_security_roles: Optional[GetSecurityRolesFunction] = None
 
     # ---- Schema ----
 
@@ -160,6 +166,7 @@ class PowerPlatformProvider(Provider):
         self._env_settings = EnvironmentSettingsResource(self._client)
         self._tenant_settings = TenantSettingsResource(self._client)
         self._enterprise_policy_link = EnterprisePolicyLinkResource(self._client)
+        self._pipeline_sharing = PipelineSharingResource(self._client)
         self._get_envs = GetEnvironmentsFunction(self._client)
         self._get_connectors = GetConnectorsFunction(self._client)
         self._get_apps = GetAppsFunction(self._client)
@@ -167,6 +174,7 @@ class PowerPlatformProvider(Provider):
         self._get_flows = GetFlowsFunction(self._client)
         self._get_dlp_policies = GetDlpPoliciesFunction(self._client)
         self._get_dlp_policy_migration_config = GetDlpPolicyMigrationConfigFunction(self._client)
+        self._get_security_roles = GetSecurityRolesFunction(self._client)
 
         return ConfigureResponse(
             accept_secrets=True,
@@ -244,6 +252,8 @@ class PowerPlatformProvider(Provider):
             return await self._get_dlp_policies.invoke(request)
         if request.tok == _GET_DLP_POLICY_MIGRATION_CONFIG and self._get_dlp_policy_migration_config:
             return await self._get_dlp_policy_migration_config.invoke(request)
+        if request.tok == _GET_SECURITY_ROLES and self._get_security_roles:
+            return await self._get_security_roles.invoke(request)
         raise NotImplementedError(f"Unknown function: {request.tok}")
 
     # ---- Construct (component resources) ----
@@ -287,5 +297,6 @@ class PowerPlatformProvider(Provider):
             _ENVIRONMENT_SETTINGS: self._env_settings,
             _TENANT_SETTINGS: self._tenant_settings,
             _ENTERPRISE_POLICY_LINK: self._enterprise_policy_link,
+            _PIPELINE_SHARING: self._pipeline_sharing,
         }
         return handlers.get(resource_type)

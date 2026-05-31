@@ -272,6 +272,24 @@ export interface RuleSet {
 }
 
 /**
+ * A Dataverse security role.
+ */
+export interface SecurityRole {
+    /**
+     * Business unit GUID this role belongs to.
+     */
+    businessUnitId?: string;
+    /**
+     * Security role display name.
+     */
+    name?: string;
+    /**
+     * Security role GUID.
+     */
+    roleId?: string;
+}
+
+/**
  * Catalog settings.
  */
 export interface TenantCatalogSettings {

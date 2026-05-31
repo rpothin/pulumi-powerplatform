@@ -25,6 +25,7 @@ __all__ = [
     'EnvironmentSummary',
     'FlowSummary',
     'RuleSet',
+    'SecurityRole',
     'TenantCatalogSettings',
     'TenantChampionsSettings',
     'TenantEnvironmentsSettings',
@@ -853,6 +854,54 @@ class RuleSet(dict):
         The version of the rule set.
         """
         return pulumi.get(self, "version")
+
+
+@pulumi.output_type
+class SecurityRole(dict):
+    """
+    A Dataverse security role.
+    """
+    def __init__(__self__, *,
+                 business_unit_id: Optional[_builtins.str] = None,
+                 name: Optional[_builtins.str] = None,
+                 role_id: Optional[_builtins.str] = None):
+        """
+        A Dataverse security role.
+
+        :param _builtins.str business_unit_id: Business unit GUID this role belongs to.
+        :param _builtins.str name: Security role display name.
+        :param _builtins.str role_id: Security role GUID.
+        """
+        if business_unit_id is not None:
+            pulumi.set(__self__, "business_unit_id", business_unit_id)
+        if name is not None:
+            pulumi.set(__self__, "name", name)
+        if role_id is not None:
+            pulumi.set(__self__, "role_id", role_id)
+
+    @_builtins.property
+    @pulumi.getter(name="businessUnitId")
+    def business_unit_id(self) -> Optional[_builtins.str]:
+        """
+        Business unit GUID this role belongs to.
+        """
+        return pulumi.get(self, "business_unit_id")
+
+    @_builtins.property
+    @pulumi.getter
+    def name(self) -> Optional[_builtins.str]:
+        """
+        Security role display name.
+        """
+        return pulumi.get(self, "name")
+
+    @_builtins.property
+    @pulumi.getter(name="roleId")
+    def role_id(self) -> Optional[_builtins.str]:
+        """
+        Security role GUID.
+        """
+        return pulumi.get(self, "role_id")
 
 
 @pulumi.output_type

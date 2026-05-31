@@ -456,4 +456,52 @@ export namespace components {
         templateMetadata?: string;
         templates?: string[];
     }
+
+    /**
+     * One environment entry in the ResDeploymentPipeline environments map.
+     */
+    export interface PipelineEnvironmentEntryArgs {
+        /**
+         * Power Platform environment ID (GUID).
+         */
+        id: pulumi.Input<string>;
+        /**
+         * Display name for the deployment environment record.
+         */
+        name: pulumi.Input<string>;
+    }
+
+    /**
+     * Configuration for one deployment stage.
+     */
+    export interface PipelineStageConfigArgs {
+        /**
+         * Service principal client ID for delegated deployment.
+         */
+        deploymentSpnClientId?: pulumi.Input<string>;
+        /**
+         * Optional stage description.
+         */
+        description?: pulumi.Input<string>;
+        /**
+         * Key in the environments map identifying the target environment.
+         */
+        environmentKey: pulumi.Input<string>;
+        /**
+         * Whether sharing is enabled for this stage. Default: true.
+         */
+        isSharingEnabled?: pulumi.Input<boolean>;
+        /**
+         * Require pre-deployment approval. Default: false.
+         */
+        requirePredeploymentApproval?: pulumi.Input<boolean>;
+        /**
+         * Require pre-export approval (stage 0 only). Default: false.
+         */
+        requirePreexportApproval?: pulumi.Input<boolean>;
+        /**
+         * Use delegated deployment. Default: false.
+         */
+        useDelegatedDeployment?: pulumi.Input<boolean>;
+    }
 }

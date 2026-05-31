@@ -5,7 +5,7 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 
 import pytest
-from pulumi.provider.experimental.property_value import PropertyValue
+from pulumi.provider.experimental.property_value import Computed, PropertyValue
 from pulumi.provider.experimental.provider import CheckRequest, DiffRequest, PropertyDiffKind
 from rpothin_powerplatform.resources.data_record import DataRecordResource
 
@@ -273,6 +273,48 @@ class TestDataRecordCheck:
                     "pipelineid": PropertyValue({
                         "tableLogicalName": PropertyValue("deploymentpipeline"),
                         "dataRecordId": PropertyValue("dddddddd-5555-6666-7777-eeeeeeeeeeee"),
+                    }),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_accepts_preexportsteprequired_with_deploymentpipelineid(self, handler):
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(True),
+                    "deploymentpipelineid": PropertyValue({
+                        "tableLogicalName": PropertyValue("deploymentpipeline"),
+                        "dataRecordId": PropertyValue("dddddddd-5555-6666-7777-eeeeeeeeeeee"),
+                    }),
+                }),
+            },
+        )
+        response = await handler.check(request)
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_accepts_preexportsteprequired_with_computed_pipeline_ref(self, handler):
+        request = CheckRequest(
+            urn=_URN,
+            random_seed=b"",
+            old_inputs={},
+            new_inputs={
+                "environmentId": PropertyValue(_ENV_ID),
+                "tableLogicalName": PropertyValue("deploymentstage"),
+                "columns": PropertyValue({
+                    "preexportsteprequired": PropertyValue(True),
+                    "deploymentpipelineid": PropertyValue({
+                        "tableLogicalName": PropertyValue("deploymentpipeline"),
+                        "dataRecordId": PropertyValue(Computed()),
                     }),
                 }),
             },

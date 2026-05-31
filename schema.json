@@ -287,6 +287,38 @@
                     "totalRowsCountLimitExceeded"
                 ]
             }
+        },
+        "powerplatform:index:getSecurityRoles": {
+            "description": "Fetches Dataverse security roles from a Power Platform environment.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "type": "string",
+                        "description": "Environment ID to query roles from."
+                    },
+                    "businessUnitId": {
+                        "type": "string",
+                        "description": "Optional business unit GUID to filter roles."
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "securityRoles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:SecurityRole"
+                        },
+                        "description": "List of security roles."
+                    }
+                },
+                "required": [
+                    "securityRoles"
+                ]
+            }
         }
     },
     "homepage": "https://github.com/rpothin/pulumi-powerplatform",
@@ -319,7 +351,7 @@
     "repository": "https://github.com/rpothin/pulumi-powerplatform",
     "resources": {
         "powerplatform:components:PocComponent": {
-            "description": "Phase 0 / Phase 2 POC component — validates the bidirectional construct bridge.\n\n    Accepts a ``label`` input and echoes it as ``labelOut``.\n    Also exposes a placeholder ``resourceId`` output following AVM conventions.",
+            "description": "Phase 0 / Phase 2 POC component \u2014 validates the bidirectional construct bridge.\n\n    Accepts a ``label`` input and echoes it as ``labelOut``.\n    Also exposes a placeholder ``resourceId`` output following AVM conventions.",
             "inputProperties": {
                 "enableTelemetry": {
                     "plain": true,
@@ -397,7 +429,7 @@
             "type": "object"
         },
         "powerplatform:components:ResEnvironment": {
-            "description": "AVM-aligned component that manages a Power Platform environment lifecycle.\n\n    Composes:\n\n    * :class:`~rpothin_powerplatform.Environment` — always created.\n    * :class:`~rpothin_powerplatform.ManagedEnvironment` — when\n      ``args.managed_environment_enabled`` is ``True``.\n    * :class:`~rpothin_powerplatform.EnvironmentSettings` — when any settings\n      field is provided.\n\n    All child resources inherit the parent component's provider configuration\n    through ``opts.providers`` / ``opts.provider`` so callers can supply an\n    explicit provider without repeating it for every child.",
+            "description": "AVM-aligned component that manages a Power Platform environment lifecycle.\n\n    Composes:\n\n    * :class:`~rpothin_powerplatform.Environment` \u2014 always created.\n    * :class:`~rpothin_powerplatform.ManagedEnvironment` \u2014 when\n      ``args.managed_environment_enabled`` is ``True``.\n    * :class:`~rpothin_powerplatform.EnvironmentSettings` \u2014 when any settings\n      field is provided.\n\n    All child resources inherit the parent component's provider configuration\n    through ``opts.providers`` / ``opts.provider`` so callers can supply an\n    explicit provider without repeating it for every child.",
             "inputProperties": {
                 "allowBingSearch": {
                     "plain": true,
@@ -512,7 +544,7 @@
             "type": "object"
         },
         "powerplatform:components:ResTenantSettings": {
-            "description": "AVM-aligned Pulumi component for Power Platform Tenant Settings.\n\n    Composes a single ``powerplatform:components:TenantSettings`` child resource\n    with an opinionated, AVM-compatible interface.\n\n    .. important::\n        ``TenantSettings`` is a singleton resource — only one exists per AAD\n        tenant.  Assign ownership of this component to a single, dedicated\n        infrastructure stack to avoid conflicts.\n\n    Example (Python)::\n\n        import rpothin_powerplatform as pp\n\n        tenant_cfg = pp.components.ResTenantSettings(\n            \"tenant-settings\",\n            pp.components.ResTenantSettingsArgs(\n                disable_environment_creation_by_non_admin_users=True,\n                disable_trial_environment_creation_by_non_admin_users=True,\n            ),\n        )",
+            "description": "AVM-aligned Pulumi component for Power Platform Tenant Settings.\n\n    Composes a single ``powerplatform:components:TenantSettings`` child resource\n    with an opinionated, AVM-compatible interface.\n\n    .. important::\n        ``TenantSettings`` is a singleton resource \u2014 only one exists per AAD\n        tenant.  Assign ownership of this component to a single, dedicated\n        infrastructure stack to avoid conflicts.\n\n    Example (Python)::\n\n        import rpothin_powerplatform as pp\n\n        tenant_cfg = pp.components.ResTenantSettings(\n            \"tenant-settings\",\n            pp.components.ResTenantSettingsArgs(\n                disable_environment_creation_by_non_admin_users=True,\n                disable_trial_environment_creation_by_non_admin_users=True,\n            ),\n        )",
             "inputProperties": {
                 "disableCapacityAllocationByEnvironmentAdmins": {
                     "plain": true,
@@ -580,7 +612,7 @@
             "type": "object"
         },
         "powerplatform:index:AdminManagementApplication": {
-            "description": "Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable — any change to applicationId triggers a replacement.",
+            "description": "Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable \u2014 any change to applicationId triggers a replacement.",
             "inputProperties": {
                 "applicationId": {
                     "description": "The GUID of the service principal to register as a Power Platform admin management application. Immutable after creation.",
@@ -657,7 +689,7 @@
             ]
         },
         "powerplatform:index:DataRecord": {
-            "description": "Manages a generic Dataverse table record via the OData Web API. Supports scalar columns, single-valued lookups (via @odata.bind), and many-to-many relationships (via $ref). Both environmentId and tableLogicalName are immutable — any change triggers resource replacement. Column values may be scalars (string/number/bool), lookup objects (DataRecordLookup), or lists of lookup objects for M2M relationships.",
+            "description": "Manages a generic Dataverse table record via the OData Web API. Supports scalar columns, single-valued lookups (via @odata.bind), and many-to-many relationships (via $ref). Both environmentId and tableLogicalName are immutable \u2014 any change triggers resource replacement. Column values may be scalars (string/number/bool), lookup objects (DataRecordLookup), or lists of lookup objects for M2M relationships.",
             "inputProperties": {
                 "columns": {
                     "additionalProperties": {
@@ -764,7 +796,7 @@
             ]
         },
         "powerplatform:index:EnterprisePolicyLink": {
-            "description": "Links an Azure enterprise policy to a Power Platform environment using an async POST/poll lifecycle. All properties are immutable — any change triggers a full replacement (delete-then-create). Supported policy types: NetworkInjection, Encryption, Identity.",
+            "description": "Links an Azure enterprise policy to a Power Platform environment using an async POST/poll lifecycle. All properties are immutable \u2014 any change triggers a full replacement (delete-then-create). Supported policy types: NetworkInjection, Encryption, Identity.",
             "inputProperties": {
                 "environmentId": {
                     "description": "The GUID of the Power Platform environment to link the enterprise policy to. Immutable after creation.",
@@ -967,7 +999,7 @@
             ]
         },
         "powerplatform:index:EnvironmentApplicationAdmin": {
-            "description": "Adds a service principal as System Administrator in a Dataverse-enabled Power Platform environment. Creates a systemuser record via the Dataverse Web API. Both environmentId and applicationId are immutable — any change triggers resource replacement.",
+            "description": "Adds a service principal as System Administrator in a Dataverse-enabled Power Platform environment. Creates a systemuser record via the Dataverse Web API. Both environmentId and applicationId are immutable \u2014 any change triggers resource replacement.",
             "inputProperties": {
                 "applicationId": {
                     "description": "The GUID of the service principal (application) to add as System Administrator. Immutable after creation.",
@@ -1005,7 +1037,7 @@
             ]
         },
         "powerplatform:index:EnvironmentBackup": {
-            "description": "Creates a manual backup of a Power Platform environment. Backups are immutable — any change to inputs triggers replacement.",
+            "description": "Creates a manual backup of a Power Platform environment. Backups are immutable \u2014 any change to inputs triggers replacement.",
             "inputProperties": {
                 "environmentId": {
                     "description": "The ID of the environment to back up.",
@@ -1279,7 +1311,7 @@
             ]
         },
         "powerplatform:index:RoleAssignment": {
-            "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable — any change to inputs triggers replacement.",
+            "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable \u2014 any change to inputs triggers replacement.",
             "inputProperties": {
                 "principalObjectId": {
                     "description": "The object ID of the principal (user, group, or service principal) to assign the role to.",
@@ -1422,6 +1454,184 @@
                 }
             },
             "requiredInputs": []
+        },
+        "powerplatform:index:PipelineSharing": {
+            "description": "Grants read access to a Dataverse deployment pipeline for a team.\n\nAll input properties are immutable; any change triggers replacement.",
+            "inputProperties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "Host environment ID."
+                },
+                "pipelineId": {
+                    "type": "string",
+                    "description": "Deployment pipeline record ID."
+                },
+                "teamId": {
+                    "type": "string",
+                    "description": "Team record ID to grant access to."
+                },
+                "accessMask": {
+                    "type": "string",
+                    "description": "Access mask. Default: ReadAccess."
+                }
+            },
+            "requiredInputs": [
+                "environmentId",
+                "pipelineId",
+                "teamId"
+            ],
+            "properties": {
+                "environmentId": {
+                    "type": "string",
+                    "description": "Host environment ID."
+                },
+                "pipelineId": {
+                    "type": "string",
+                    "description": "Deployment pipeline record ID."
+                },
+                "teamId": {
+                    "type": "string",
+                    "description": "Team record ID."
+                },
+                "accessMask": {
+                    "type": "string",
+                    "description": "Requested access mask."
+                },
+                "grantedAccessMask": {
+                    "type": "string",
+                    "description": "Actual access mask granted."
+                }
+            },
+            "required": [
+                "environmentId",
+                "pipelineId",
+                "teamId",
+                "grantedAccessMask"
+            ]
+        },
+        "powerplatform:components:ResDeploymentPipeline": {
+            "isComponent": true,
+            "description": "AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.",
+            "inputProperties": {
+                "hostEnvironmentId": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Pipelines Host environment ID. Required."
+                },
+                "pipelineName": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Pipeline display name (1\u2013100 characters). Required."
+                },
+                "environments": {
+                    "plain": true,
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/types/powerplatform:components:PipelineEnvironmentEntry"
+                    },
+                    "description": "Map of environment entries. Minimum 2 entries. Keys must be known at plan time."
+                },
+                "devEnvironmentKey": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Key in environments identifying the development (source) environment."
+                },
+                "pipelineStages": {
+                    "plain": true,
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/types/powerplatform:components:PipelineStageConfig"
+                    },
+                    "description": "Deployment stages (1\u20136). Each stage maps to a target environment."
+                },
+                "securityGroupId": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Entra ID security group GUID. When set, creates a team and shares the pipeline."
+                },
+                "rootBusinessUnitId": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Root business unit ID in the host environment. Required when securityGroupId is set."
+                },
+                "deploymentPipelineUserRoleId": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Deployment Pipeline User security role ID. Required when securityGroupId is set."
+                },
+                "lifecycleState": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "active or inactive. Default: active."
+                },
+                "pipelineDescription": {
+                    "plain": true,
+                    "type": "string",
+                    "description": "Pipeline description (max 500 characters)."
+                },
+                "enableAiDeploymentNotes": {
+                    "plain": true,
+                    "type": "boolean",
+                    "description": "Enable AI deployment notes. Default: true."
+                },
+                "enableRedeployment": {
+                    "plain": true,
+                    "type": "boolean",
+                    "description": "Enable redeployment. Default: true."
+                },
+                "enableTelemetry": {
+                    "plain": true,
+                    "type": "boolean",
+                    "description": "Enable telemetry. Default: true."
+                }
+            },
+            "requiredInputs": [
+                "hostEnvironmentId",
+                "pipelineName",
+                "environments",
+                "devEnvironmentKey",
+                "pipelineStages"
+            ],
+            "properties": {
+                "resourceId": {
+                    "type": "string",
+                    "description": "AVM-standard primary output: deployment pipeline record ID."
+                },
+                "pipelineId": {
+                    "type": "string",
+                    "description": "Deployment pipeline record ID."
+                },
+                "pipelineName": {
+                    "type": "string",
+                    "description": "Pipeline display name."
+                },
+                "deploymentEnvironmentIds": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Map of environment keys to deployment environment record IDs."
+                },
+                "deploymentStageIds": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "description": "Map of environment keys to deployment stage record IDs."
+                },
+                "pipelineTeamId": {
+                    "type": "string",
+                    "description": "Team record ID (empty string when no securityGroupId was provided)."
+                }
+            },
+            "required": [
+                "resourceId",
+                "pipelineId",
+                "pipelineName",
+                "deploymentEnvironmentIds",
+                "deploymentStageIds",
+                "pipelineTeamId"
+            ]
         }
     },
     "types": {
@@ -2057,6 +2267,79 @@
                 }
             },
             "type": "object"
+        },
+        "powerplatform:index:SecurityRole": {
+            "type": "object",
+            "description": "A Dataverse security role.",
+            "properties": {
+                "roleId": {
+                    "type": "string",
+                    "description": "Security role GUID."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Security role display name."
+                },
+                "businessUnitId": {
+                    "type": "string",
+                    "description": "Business unit GUID this role belongs to."
+                }
+            }
+        },
+        "powerplatform:components:PipelineEnvironmentEntry": {
+            "type": "object",
+            "description": "One environment entry in the ResDeploymentPipeline environments map.",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Power Platform environment ID (GUID)."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Display name for the deployment environment record."
+                }
+            },
+            "required": [
+                "id",
+                "name"
+            ]
+        },
+        "powerplatform:components:PipelineStageConfig": {
+            "type": "object",
+            "description": "Configuration for one deployment stage.",
+            "properties": {
+                "environmentKey": {
+                    "type": "string",
+                    "description": "Key in the environments map identifying the target environment."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Optional stage description."
+                },
+                "deploymentSpnClientId": {
+                    "type": "string",
+                    "description": "Service principal client ID for delegated deployment."
+                },
+                "isSharingEnabled": {
+                    "type": "boolean",
+                    "description": "Whether sharing is enabled for this stage. Default: true."
+                },
+                "requirePredeploymentApproval": {
+                    "type": "boolean",
+                    "description": "Require pre-deployment approval. Default: false."
+                },
+                "requirePreexportApproval": {
+                    "type": "boolean",
+                    "description": "Require pre-export approval (stage 0 only). Default: false."
+                },
+                "useDelegatedDeployment": {
+                    "type": "boolean",
+                    "description": "Use delegated deployment. Default: false."
+                }
+            },
+            "required": [
+                "environmentKey"
+            ]
         }
     },
     "version": "0.0.0"

@@ -23,6 +23,8 @@ import io.github.rpothin.powerplatform.inputs.GetEnvironmentsArgs;
 import io.github.rpothin.powerplatform.inputs.GetEnvironmentsPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetFlowsArgs;
 import io.github.rpothin.powerplatform.inputs.GetFlowsPlainArgs;
+import io.github.rpothin.powerplatform.inputs.GetSecurityRolesArgs;
+import io.github.rpothin.powerplatform.inputs.GetSecurityRolesPlainArgs;
 import io.github.rpothin.powerplatform.outputs.GetAppsResult;
 import io.github.rpothin.powerplatform.outputs.GetConnectorsResult;
 import io.github.rpothin.powerplatform.outputs.GetDataRecordsResult;
@@ -30,6 +32,7 @@ import io.github.rpothin.powerplatform.outputs.GetDlpPoliciesResult;
 import io.github.rpothin.powerplatform.outputs.GetDlpPolicyMigrationConfigResult;
 import io.github.rpothin.powerplatform.outputs.GetEnvironmentsResult;
 import io.github.rpothin.powerplatform.outputs.GetFlowsResult;
+import io.github.rpothin.powerplatform.outputs.GetSecurityRolesResult;
 import java.util.concurrent.CompletableFuture;
 
 public final class PowerplatformFunctions {
@@ -305,5 +308,40 @@ public final class PowerplatformFunctions {
      */
     public static CompletableFuture<GetFlowsResult> getFlowsPlain(GetFlowsPlainArgs args, InvokeOptions options) {
         return Deployment.getInstance().invokeAsync("powerplatform:index:getFlows", TypeShape.of(GetFlowsResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Fetches Dataverse security roles from a Power Platform environment.
+     * 
+     */
+    public static Output<GetSecurityRolesResult> getSecurityRoles(GetSecurityRolesArgs args) {
+        return getSecurityRoles(args, InvokeOptions.Empty);
+    }
+    /**
+     * Fetches Dataverse security roles from a Power Platform environment.
+     * 
+     */
+    public static CompletableFuture<GetSecurityRolesResult> getSecurityRolesPlain(GetSecurityRolesPlainArgs args) {
+        return getSecurityRolesPlain(args, InvokeOptions.Empty);
+    }
+    /**
+     * Fetches Dataverse security roles from a Power Platform environment.
+     * 
+     */
+    public static Output<GetSecurityRolesResult> getSecurityRoles(GetSecurityRolesArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getSecurityRoles", TypeShape.of(GetSecurityRolesResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Fetches Dataverse security roles from a Power Platform environment.
+     * 
+     */
+    public static Output<GetSecurityRolesResult> getSecurityRoles(GetSecurityRolesArgs args, InvokeOutputOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getSecurityRoles", TypeShape.of(GetSecurityRolesResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Fetches Dataverse security roles from a Power Platform environment.
+     * 
+     */
+    public static CompletableFuture<GetSecurityRolesResult> getSecurityRolesPlain(GetSecurityRolesPlainArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invokeAsync("powerplatform:index:getSecurityRoles", TypeShape.of(GetSecurityRolesResult.class), args, Utilities.withVersion(options));
     }
 }

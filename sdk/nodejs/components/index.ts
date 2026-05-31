@@ -10,6 +10,11 @@ export type PocComponent = import("./pocComponent").PocComponent;
 export const PocComponent: typeof import("./pocComponent").PocComponent = null as any;
 utilities.lazyLoad(exports, ["PocComponent"], () => require("./pocComponent"));
 
+export { ResDeploymentPipelineArgs } from "./resDeploymentPipeline";
+export type ResDeploymentPipeline = import("./resDeploymentPipeline").ResDeploymentPipeline;
+export const ResDeploymentPipeline: typeof import("./resDeploymentPipeline").ResDeploymentPipeline = null as any;
+utilities.lazyLoad(exports, ["ResDeploymentPipeline"], () => require("./resDeploymentPipeline"));
+
 export { ResDlpPolicyArgs } from "./resDlpPolicy";
 export type ResDlpPolicy = import("./resDlpPolicy").ResDlpPolicy;
 export const ResDlpPolicy: typeof import("./resDlpPolicy").ResDlpPolicy = null as any;
@@ -32,6 +37,8 @@ const _module = {
         switch (type) {
             case "powerplatform:components:PocComponent":
                 return new PocComponent(name, <any>undefined, { urn })
+            case "powerplatform:components:ResDeploymentPipeline":
+                return new ResDeploymentPipeline(name, <any>undefined, { urn })
             case "powerplatform:components:ResDlpPolicy":
                 return new ResDlpPolicy(name, <any>undefined, { urn })
             case "powerplatform:components:ResEnvironment":

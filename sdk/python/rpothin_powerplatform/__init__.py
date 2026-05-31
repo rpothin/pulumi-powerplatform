@@ -23,8 +23,10 @@ from .get_dlp_policies import *
 from .get_dlp_policy_migration_config import *
 from .get_environments import *
 from .get_flows import *
+from .get_security_roles import *
 from .isv_contract import *
 from .managed_environment import *
+from .pipeline_sharing import *
 from .provider import *
 from .role_assignment import *
 from .tenant_settings import *
@@ -50,6 +52,7 @@ _utilities.register(
   "fqn": "rpothin_powerplatform.components",
   "classes": {
    "powerplatform:components:PocComponent": "PocComponent",
+   "powerplatform:components:ResDeploymentPipeline": "ResDeploymentPipeline",
    "powerplatform:components:ResDlpPolicy": "ResDlpPolicy",
    "powerplatform:components:ResEnvironment": "ResEnvironment",
    "powerplatform:components:ResTenantSettings": "ResTenantSettings"
@@ -72,6 +75,7 @@ _utilities.register(
    "powerplatform:index:EnvironmentSettings": "EnvironmentSettings",
    "powerplatform:index:IsvContract": "IsvContract",
    "powerplatform:index:ManagedEnvironment": "ManagedEnvironment",
+   "powerplatform:index:PipelineSharing": "PipelineSharing",
    "powerplatform:index:RoleAssignment": "RoleAssignment",
    "powerplatform:index:TenantSettings": "TenantSettings"
   }

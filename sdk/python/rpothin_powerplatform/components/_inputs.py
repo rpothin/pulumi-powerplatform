@@ -17,6 +17,10 @@ from .. import _utilities
 __all__ = [
     'DataverseConfigArgs',
     'DataverseConfigArgsDict',
+    'PipelineEnvironmentEntryArgs',
+    'PipelineEnvironmentEntryArgsDict',
+    'PipelineStageConfigArgs',
+    'PipelineStageConfigArgsDict',
 ]
 
 class DataverseConfigArgsDict(TypedDict):
@@ -150,5 +154,210 @@ class DataverseConfigArgs:
     @templates.setter
     def templates(self, value: Optional[Sequence[_builtins.str]]):
         pulumi.set(self, "templates", value)
+
+
+class PipelineEnvironmentEntryArgsDict(TypedDict):
+    """
+    One environment entry in the ResDeploymentPipeline environments map.
+    """
+    id: pulumi.Input[_builtins.str]
+    """
+    Power Platform environment ID (GUID).
+    """
+    name: pulumi.Input[_builtins.str]
+    """
+    Display name for the deployment environment record.
+    """
+
+@pulumi.input_type
+class PipelineEnvironmentEntryArgs:
+    def __init__(__self__, *,
+                 id: pulumi.Input[_builtins.str],
+                 name: pulumi.Input[_builtins.str]):
+        """
+        One environment entry in the ResDeploymentPipeline environments map.
+
+        :param pulumi.Input[_builtins.str] id: Power Platform environment ID (GUID).
+        :param pulumi.Input[_builtins.str] name: Display name for the deployment environment record.
+        """
+        pulumi.set(__self__, "id", id)
+        pulumi.set(__self__, "name", name)
+
+    @_builtins.property
+    @pulumi.getter
+    def id(self) -> pulumi.Input[_builtins.str]:
+        """
+        Power Platform environment ID (GUID).
+        """
+        return pulumi.get(self, "id")
+
+    @id.setter
+    def id(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "id", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def name(self) -> pulumi.Input[_builtins.str]:
+        """
+        Display name for the deployment environment record.
+        """
+        return pulumi.get(self, "name")
+
+    @name.setter
+    def name(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "name", value)
+
+
+class PipelineStageConfigArgsDict(TypedDict):
+    """
+    Configuration for one deployment stage.
+    """
+    environment_key: pulumi.Input[_builtins.str]
+    """
+    Key in the environments map identifying the target environment.
+    """
+    deployment_spn_client_id: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Service principal client ID for delegated deployment.
+    """
+    description: NotRequired[pulumi.Input[_builtins.str]]
+    """
+    Optional stage description.
+    """
+    is_sharing_enabled: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Whether sharing is enabled for this stage. Default: true.
+    """
+    require_predeployment_approval: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Require pre-deployment approval. Default: false.
+    """
+    require_preexport_approval: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Require pre-export approval (stage 0 only). Default: false.
+    """
+    use_delegated_deployment: NotRequired[pulumi.Input[_builtins.bool]]
+    """
+    Use delegated deployment. Default: false.
+    """
+
+@pulumi.input_type
+class PipelineStageConfigArgs:
+    def __init__(__self__, *,
+                 environment_key: pulumi.Input[_builtins.str],
+                 deployment_spn_client_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 is_sharing_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
+                 require_predeployment_approval: Optional[pulumi.Input[_builtins.bool]] = None,
+                 require_preexport_approval: Optional[pulumi.Input[_builtins.bool]] = None,
+                 use_delegated_deployment: Optional[pulumi.Input[_builtins.bool]] = None):
+        """
+        Configuration for one deployment stage.
+
+        :param pulumi.Input[_builtins.str] environment_key: Key in the environments map identifying the target environment.
+        :param pulumi.Input[_builtins.str] deployment_spn_client_id: Service principal client ID for delegated deployment.
+        :param pulumi.Input[_builtins.str] description: Optional stage description.
+        :param pulumi.Input[_builtins.bool] is_sharing_enabled: Whether sharing is enabled for this stage. Default: true.
+        :param pulumi.Input[_builtins.bool] require_predeployment_approval: Require pre-deployment approval. Default: false.
+        :param pulumi.Input[_builtins.bool] require_preexport_approval: Require pre-export approval (stage 0 only). Default: false.
+        :param pulumi.Input[_builtins.bool] use_delegated_deployment: Use delegated deployment. Default: false.
+        """
+        pulumi.set(__self__, "environment_key", environment_key)
+        if deployment_spn_client_id is not None:
+            pulumi.set(__self__, "deployment_spn_client_id", deployment_spn_client_id)
+        if description is not None:
+            pulumi.set(__self__, "description", description)
+        if is_sharing_enabled is not None:
+            pulumi.set(__self__, "is_sharing_enabled", is_sharing_enabled)
+        if require_predeployment_approval is not None:
+            pulumi.set(__self__, "require_predeployment_approval", require_predeployment_approval)
+        if require_preexport_approval is not None:
+            pulumi.set(__self__, "require_preexport_approval", require_preexport_approval)
+        if use_delegated_deployment is not None:
+            pulumi.set(__self__, "use_delegated_deployment", use_delegated_deployment)
+
+    @_builtins.property
+    @pulumi.getter(name="environmentKey")
+    def environment_key(self) -> pulumi.Input[_builtins.str]:
+        """
+        Key in the environments map identifying the target environment.
+        """
+        return pulumi.get(self, "environment_key")
+
+    @environment_key.setter
+    def environment_key(self, value: pulumi.Input[_builtins.str]):
+        pulumi.set(self, "environment_key", value)
+
+    @_builtins.property
+    @pulumi.getter(name="deploymentSpnClientId")
+    def deployment_spn_client_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Service principal client ID for delegated deployment.
+        """
+        return pulumi.get(self, "deployment_spn_client_id")
+
+    @deployment_spn_client_id.setter
+    def deployment_spn_client_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "deployment_spn_client_id", value)
+
+    @_builtins.property
+    @pulumi.getter
+    def description(self) -> Optional[pulumi.Input[_builtins.str]]:
+        """
+        Optional stage description.
+        """
+        return pulumi.get(self, "description")
+
+    @description.setter
+    def description(self, value: Optional[pulumi.Input[_builtins.str]]):
+        pulumi.set(self, "description", value)
+
+    @_builtins.property
+    @pulumi.getter(name="isSharingEnabled")
+    def is_sharing_enabled(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Whether sharing is enabled for this stage. Default: true.
+        """
+        return pulumi.get(self, "is_sharing_enabled")
+
+    @is_sharing_enabled.setter
+    def is_sharing_enabled(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "is_sharing_enabled", value)
+
+    @_builtins.property
+    @pulumi.getter(name="requirePredeploymentApproval")
+    def require_predeployment_approval(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Require pre-deployment approval. Default: false.
+        """
+        return pulumi.get(self, "require_predeployment_approval")
+
+    @require_predeployment_approval.setter
+    def require_predeployment_approval(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "require_predeployment_approval", value)
+
+    @_builtins.property
+    @pulumi.getter(name="requirePreexportApproval")
+    def require_preexport_approval(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Require pre-export approval (stage 0 only). Default: false.
+        """
+        return pulumi.get(self, "require_preexport_approval")
+
+    @require_preexport_approval.setter
+    def require_preexport_approval(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "require_preexport_approval", value)
+
+    @_builtins.property
+    @pulumi.getter(name="useDelegatedDeployment")
+    def use_delegated_deployment(self) -> Optional[pulumi.Input[_builtins.bool]]:
+        """
+        Use delegated deployment. Default: false.
+        """
+        return pulumi.get(self, "use_delegated_deployment")
+
+    @use_delegated_deployment.setter
+    def use_delegated_deployment(self, value: Optional[pulumi.Input[_builtins.bool]]):
+        pulumi.set(self, "use_delegated_deployment", value)
 
 

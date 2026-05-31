@@ -23,6 +23,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 	switch typ {
 	case "powerplatform:components:PocComponent":
 		r = &PocComponent{}
+	case "powerplatform:components:ResDeploymentPipeline":
+		r = &ResDeploymentPipeline{}
 	case "powerplatform:components:ResDlpPolicy":
 		r = &ResDlpPolicy{}
 	case "powerplatform:components:ResEnvironment":

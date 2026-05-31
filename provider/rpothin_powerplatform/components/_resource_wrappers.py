@@ -216,3 +216,57 @@ class _EnvironmentSettingsWrap(pulumi.CustomResource):
             },
             opts,
         )
+
+
+class _DataRecordWrap(pulumi.CustomResource):
+    """Thin wrapper for ``powerplatform:index:DataRecord``."""
+
+    def __init__(
+        self,
+        resource_name: str,
+        *,
+        environment_id: Any,
+        table_logical_name: Any,
+        columns: Any,
+        disable_on_destroy: bool = True,
+        opts: Optional[pulumi.ResourceOptions] = None,
+    ) -> None:
+        super().__init__(
+            "powerplatform:index:DataRecord",
+            resource_name,
+            {
+                "environmentId": environment_id,
+                "tableLogicalName": table_logical_name,
+                "columns": columns,
+                "disableOnDestroy": disable_on_destroy,
+                "dataRecordId": None,  # output-only
+            },
+            opts,
+        )
+
+
+class _PipelineSharingWrap(pulumi.CustomResource):
+    """Thin wrapper for ``powerplatform:index:PipelineSharing``."""
+
+    def __init__(
+        self,
+        resource_name: str,
+        *,
+        environment_id: Any,
+        pipeline_id: Any,
+        team_id: Any,
+        access_mask: Any = None,
+        opts: Optional[pulumi.ResourceOptions] = None,
+    ) -> None:
+        super().__init__(
+            "powerplatform:index:PipelineSharing",
+            resource_name,
+            {
+                "environmentId": environment_id,
+                "pipelineId": pipeline_id,
+                "teamId": team_id,
+                "accessMask": access_mask,
+                "grantedAccessMask": None,  # output-only
+            },
+            opts,
+        )

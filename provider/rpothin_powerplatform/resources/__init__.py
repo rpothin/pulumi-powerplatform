@@ -8,6 +8,7 @@ from rpothin_powerplatform.resources.environment_group import EnvironmentGroupRe
 from rpothin_powerplatform.resources.environment_settings import EnvironmentSettingsResource
 from rpothin_powerplatform.resources.isv_contract import IsvContractResource
 from rpothin_powerplatform.resources.managed_environment import ManagedEnvironmentResource
+from rpothin_powerplatform.resources.pipeline_sharing import PipelineSharingResource
 from rpothin_powerplatform.resources.role_assignment import RoleAssignmentResource
 
 __all__ = [
@@ -19,5 +20,6 @@ __all__ = [
     "EnvironmentSettingsResource",
     "IsvContractResource",
     "ManagedEnvironmentResource",
+    "PipelineSharingResource",
     "RoleAssignmentResource",
 ]

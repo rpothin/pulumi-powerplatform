@@ -7,7 +7,7 @@ import re
 from typing import Any, Optional
 from urllib.parse import urlparse
 
-from pulumi.provider.experimental.property_value import PropertyValue
+from pulumi.provider.experimental.property_value import Computed, PropertyValue
 from pulumi.provider.experimental.provider import (
     CheckFailure,
     CheckRequest,
@@ -324,13 +324,24 @@ class DataRecordResource:
             ))
         elif table_name == "deploymentstage":
             cols_raw = pv_to_python(inputs.get(_COLUMNS_PROP)) or {}
-            pipeline_id = cols_raw.get("pipelineid")
-            has_pipeline_id = (
-                isinstance(pipeline_id, str) and bool(pipeline_id.strip())
-            ) or (
-                isinstance(pipeline_id, dict)
-                and isinstance(pipeline_id.get("dataRecordId"), str)
-                and bool(pipeline_id["dataRecordId"].strip())
+
+            def _has_pipeline_ref(cols: dict[str, Any], col_name: str) -> bool:
+                ref = cols.get(col_name)
+                if ref is None:
+                    return False
+                if isinstance(ref, str) and ref.strip():
+                    return True
+                if isinstance(ref, dict):
+                    dri = ref.get("dataRecordId")
+                    if isinstance(dri, str) and dri.strip():
+                        return True
+                    # Computed means value is unknown at check time (preview); treat as present.
+                    if isinstance(dri, Computed):
+                        return True
+                return False
+
+            has_pipeline_id = _has_pipeline_ref(cols_raw, "pipelineid") or _has_pipeline_ref(
+                cols_raw, "deploymentpipelineid"
             )
             if cols_raw.get("preexportsteprequired") is True and not has_pipeline_id:
                 failures.append(CheckFailure(

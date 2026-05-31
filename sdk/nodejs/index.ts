@@ -90,6 +90,11 @@ export const getFlows: typeof import("./getFlows").getFlows = null as any;
 export const getFlowsOutput: typeof import("./getFlows").getFlowsOutput = null as any;
 utilities.lazyLoad(exports, ["getFlows","getFlowsOutput"], () => require("./getFlows"));
 
+export { GetSecurityRolesArgs, GetSecurityRolesResult, GetSecurityRolesOutputArgs } from "./getSecurityRoles";
+export const getSecurityRoles: typeof import("./getSecurityRoles").getSecurityRoles = null as any;
+export const getSecurityRolesOutput: typeof import("./getSecurityRoles").getSecurityRolesOutput = null as any;
+utilities.lazyLoad(exports, ["getSecurityRoles","getSecurityRolesOutput"], () => require("./getSecurityRoles"));
+
 export { IsvContractArgs } from "./isvContract";
 export type IsvContract = import("./isvContract").IsvContract;
 export const IsvContract: typeof import("./isvContract").IsvContract = null as any;
@@ -99,6 +104,11 @@ export { ManagedEnvironmentArgs } from "./managedEnvironment";
 export type ManagedEnvironment = import("./managedEnvironment").ManagedEnvironment;
 export const ManagedEnvironment: typeof import("./managedEnvironment").ManagedEnvironment = null as any;
 utilities.lazyLoad(exports, ["ManagedEnvironment"], () => require("./managedEnvironment"));
+
+export { PipelineSharingArgs } from "./pipelineSharing";
+export type PipelineSharing = import("./pipelineSharing").PipelineSharing;
+export const PipelineSharing: typeof import("./pipelineSharing").PipelineSharing = null as any;
+utilities.lazyLoad(exports, ["PipelineSharing"], () => require("./pipelineSharing"));
 
 export { ProviderArgs } from "./provider";
 export type Provider = import("./provider").Provider;
@@ -155,6 +165,8 @@ const _module = {
                 return new IsvContract(name, <any>undefined, { urn })
             case "powerplatform:index:ManagedEnvironment":
                 return new ManagedEnvironment(name, <any>undefined, { urn })
+            case "powerplatform:index:PipelineSharing":
+                return new PipelineSharing(name, <any>undefined, { urn })
             case "powerplatform:index:RoleAssignment":
                 return new RoleAssignment(name, <any>undefined, { urn })
             case "powerplatform:index:TenantSettings":
