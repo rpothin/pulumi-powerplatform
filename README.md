@@ -16,13 +16,32 @@ This provider enables managing Microsoft Power Platform resources using [Pulumi]
 
 | Resource | Type Token | Status | Notes |
 |----------|-----------|--------|-------|
+| Environment | `powerplatform:index:Environment` | ✅ Full CRUD | |
 | Environment Group | `powerplatform:index:EnvironmentGroup` | ✅ Full CRUD | |
+| Environment Settings | `powerplatform:index:EnvironmentSettings` | ✅ Full CRUD | |
+| Managed Environment | `powerplatform:index:ManagedEnvironment` | ✅ Enable/Disable | |
+| Tenant Settings | `powerplatform:index:TenantSettings` | ✅ Available | Tenant-wide singleton settings |
 | DLP Policy | `powerplatform:index:DlpPolicy` | ✅ Full CRUD | Delete removes rule sets individually (see [Known Limitations](#known-limitations)) |
 | Billing Policy | `powerplatform:index:BillingPolicy` | ✅ Full CRUD | |
-| Managed Environment | `powerplatform:index:ManagedEnvironment` | ✅ Enable/Disable | |
+| Data Record | `powerplatform:index:DataRecord` | ✅ Full CRUD | Dataverse table row primitive |
+| Pipeline Sharing | `powerplatform:index:PipelineSharing` | ✅ Create/Delete | Shares deployment pipelines with teams |
+| Enterprise Policy Link | `powerplatform:index:EnterprisePolicyLink` | ✅ Full CRUD | |
+| Admin Management Application | `powerplatform:index:AdminManagementApplication` | ✅ Full CRUD | |
+| Environment Application Admin | `powerplatform:index:EnvironmentApplicationAdmin` | ✅ Create/Read/Delete | |
 | Environment Backup | `powerplatform:index:EnvironmentBackup` | ✅ Create/Read/Delete | |
 | Role Assignment | `powerplatform:index:RoleAssignment` | ✅ Create/Read/Delete | |
 | ISV Contract | `powerplatform:index:IsvContract` | ✅ Full CRUD | `geo` is immutable after creation |
+
+## Component Resources
+
+AVM-aligned component resources compose multiple primitives into reusable modules. They are available in the `components` sub-namespace.
+
+| Component | Token | Description |
+| --- | --- | --- |
+| `ResEnvironment` | `powerplatform:components:ResEnvironment` | Provisions a Power Platform environment (with optional Dataverse, Managed Environment, and settings) |
+| `ResDlpPolicy` | `powerplatform:components:ResDlpPolicy` | Manages a Data Loss Prevention policy |
+| `ResTenantSettings` | `powerplatform:components:ResTenantSettings` | Manages tenant-wide Power Platform settings |
+| `ResDeploymentPipeline` | `powerplatform:components:ResDeploymentPipeline` | Provisions a deployment pipeline with stages, team membership, and environment linking |
 
 ## Data Sources (Functions)
 
@@ -32,6 +51,10 @@ This provider enables managing Microsoft Power Platform resources using [Pulumi]
 | Get Connectors | `powerplatform:index:getConnectors` | ✅ Available |
 | Get Apps | `powerplatform:index:getApps` | ✅ Available |
 | Get Flows | `powerplatform:index:getFlows` | ✅ Available |
+| Get DLP Policies | `powerplatform:index:getDlpPolicies` | ✅ Available |
+| Get DLP Policy Migration Config | `powerplatform:index:getDlpPolicyMigrationConfig` | ✅ Available |
+| Get Security Roles | `powerplatform:index:getSecurityRoles` | ✅ Available |
+| Get Data Records | `powerplatform:index:getDataRecords` | ✅ Available |
 
 ## Prerequisites
 
@@ -226,6 +249,7 @@ pulumi-powerplatform/
 │       ├── config.py                # Configuration resolution
 │       ├── client.py                # SDK client factory (auth)
 │       ├── utils.py                 # Shared helpers (pv_str)
+│       ├── components/              # AVM-aligned component resources
 │       ├── resources/
 │       │   ├── environment_group.py # Environment Group CRUD
 │       │   ├── dlp_policy.py        # DLP Policy CRUD
@@ -295,10 +319,9 @@ pulumi-powerplatform/
 
 ## Known Limitations
 
-- **DLP Policy delete**: The `powerplatform-management` SDK does not expose a direct DELETE endpoint for rule-based policies. The provider works around this by deleting each rule set individually. A future version may use the `raw_api/` module for direct deletion.
+- **DLP Policy delete**: The `powerplatform-management` SDK does not expose a direct DELETE endpoint for rule-based policies. The provider works around this by deleting each rule set individually.
 - **ISV Contract `geo`**: Immutable after creation — changing `geo` triggers a resource replacement.
 - **No retry logic**: API rate limiting (HTTP 429) and transient failures are not yet handled. This is planned as future work.
-- **No raw REST API**: The `raw_api/` module is currently a scaffold. It will be implemented when the first resource requires direct REST access (e.g., Environment creation).
 
 ## Contributing
 

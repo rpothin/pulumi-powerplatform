@@ -15,47 +15,26 @@ namespace Pulumi.Powerplatform.Components.Inputs
     /// </summary>
     public sealed class PipelineStageConfigArgs : global::Pulumi.ResourceArgs
     {
-        /// <summary>
-        /// Service principal client ID for delegated deployment.
-        /// </summary>
         [Input("deploymentSpnClientId")]
-        public Input<string>? DeploymentSpnClientId { get; set; }
+        public string? DeploymentSpnClientId { get; set; }
 
-        /// <summary>
-        /// Optional stage description.
-        /// </summary>
         [Input("description")]
-        public Input<string>? Description { get; set; }
+        public string? Description { get; set; }
 
-        /// <summary>
-        /// Key in the environments map identifying the target environment.
-        /// </summary>
         [Input("environmentKey", required: true)]
-        public Input<string> EnvironmentKey { get; set; } = null!;
+        public string EnvironmentKey { get; set; } = null!;
 
-        /// <summary>
-        /// Whether sharing is enabled for this stage. Default: true.
-        /// </summary>
         [Input("isSharingEnabled")]
-        public Input<bool>? IsSharingEnabled { get; set; }
+        public bool? IsSharingEnabled { get; set; }
 
-        /// <summary>
-        /// Require pre-deployment approval. Default: false.
-        /// </summary>
         [Input("requirePredeploymentApproval")]
-        public Input<bool>? RequirePredeploymentApproval { get; set; }
+        public bool? RequirePredeploymentApproval { get; set; }
 
-        /// <summary>
-        /// Require pre-export approval (stage 0 only). Default: false.
-        /// </summary>
         [Input("requirePreexportApproval")]
-        public Input<bool>? RequirePreexportApproval { get; set; }
+        public bool? RequirePreexportApproval { get; set; }
 
-        /// <summary>
-        /// Use delegated deployment. Default: false.
-        /// </summary>
         [Input("useDelegatedDeployment")]
-        public Input<bool>? UseDelegatedDeployment { get; set; }
+        public bool? UseDelegatedDeployment { get; set; }
 
         public PipelineStageConfigArgs()
         {

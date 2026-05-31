@@ -7,7 +7,7 @@ import * as outputs from "../types/output";
 import * as utilities from "../utilities";
 
 /**
- * AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.
+ * AVM-aligned component that manages a Power Platform deployment pipeline lifecycle.
  */
 export class ResDeploymentPipeline extends pulumi.ComponentResource {
     /** @internal */
@@ -24,29 +24,11 @@ export class ResDeploymentPipeline extends pulumi.ComponentResource {
         return obj['__pulumiType'] === ResDeploymentPipeline.__pulumiType;
     }
 
-    /**
-     * Map of environment keys to deployment environment record IDs.
-     */
     declare public /*out*/ readonly deploymentEnvironmentIds: pulumi.Output<{[key: string]: string}>;
-    /**
-     * Map of environment keys to deployment stage record IDs.
-     */
     declare public /*out*/ readonly deploymentStageIds: pulumi.Output<{[key: string]: string}>;
-    /**
-     * Deployment pipeline record ID.
-     */
     declare public /*out*/ readonly pipelineId: pulumi.Output<string>;
-    /**
-     * Pipeline display name.
-     */
     declare public readonly pipelineName: pulumi.Output<string>;
-    /**
-     * Team record ID (empty string when no securityGroupId was provided).
-     */
     declare public /*out*/ readonly pipelineTeamId: pulumi.Output<string>;
-    /**
-     * AVM-standard primary output: deployment pipeline record ID.
-     */
     declare public /*out*/ readonly resourceId: pulumi.Output<string>;
 
     /**
@@ -110,56 +92,17 @@ export class ResDeploymentPipeline extends pulumi.ComponentResource {
  * The set of arguments for constructing a ResDeploymentPipeline resource.
  */
 export interface ResDeploymentPipelineArgs {
-    /**
-     * Deployment Pipeline User security role ID. Required when securityGroupId is set.
-     */
     deploymentPipelineUserRoleId?: string;
-    /**
-     * Key in environments identifying the development (source) environment.
-     */
     devEnvironmentKey: string;
-    /**
-     * Enable AI deployment notes. Default: true.
-     */
     enableAiDeploymentNotes?: boolean;
-    /**
-     * Enable redeployment. Default: true.
-     */
     enableRedeployment?: boolean;
-    /**
-     * Enable telemetry. Default: true.
-     */
     enableTelemetry?: boolean;
-    /**
-     * Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-     */
-    environments: {[key: string]: pulumi.Input<inputs.components.PipelineEnvironmentEntryArgs>};
-    /**
-     * Pipelines Host environment ID. Required.
-     */
+    environments: {[key: string]: inputs.components.PipelineEnvironmentEntryArgs};
     hostEnvironmentId: string;
-    /**
-     * active or inactive. Default: active.
-     */
     lifecycleState?: string;
-    /**
-     * Pipeline description (max 500 characters).
-     */
     pipelineDescription?: string;
-    /**
-     * Pipeline display name (1–100 characters). Required.
-     */
     pipelineName: string;
-    /**
-     * Deployment stages (1–6). Each stage maps to a target environment.
-     */
-    pipelineStages: pulumi.Input<inputs.components.PipelineStageConfigArgs>[];
-    /**
-     * Root business unit ID in the host environment. Required when securityGroupId is set.
-     */
+    pipelineStages: inputs.components.PipelineStageConfigArgs[];
     rootBusinessUnitId?: string;
-    /**
-     * Entra ID security group GUID. When set, creates a team and shares the pipeline.
-     */
     securityGroupId?: string;
 }

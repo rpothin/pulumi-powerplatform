@@ -1,0 +1,3 @@
+name: res-deployment-pipeline-example
+runtime: python
+description: Example using the ResDeploymentPipeline component to provision a Power Platform deployment pipeline.

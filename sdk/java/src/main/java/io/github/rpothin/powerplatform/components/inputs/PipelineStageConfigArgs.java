@@ -3,7 +3,6 @@
 
 package io.github.rpothin.powerplatform.components.inputs;
 
-import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
 import java.lang.Boolean;
@@ -21,108 +20,52 @@ public final class PipelineStageConfigArgs extends com.pulumi.resources.Resource
 
     public static final PipelineStageConfigArgs Empty = new PipelineStageConfigArgs();
 
-    /**
-     * Service principal client ID for delegated deployment.
-     * 
-     */
     @Import(name="deploymentSpnClientId")
-    private @Nullable Output<String> deploymentSpnClientId;
+    private @Nullable String deploymentSpnClientId;
 
-    /**
-     * @return Service principal client ID for delegated deployment.
-     * 
-     */
-    public Optional<Output<String>> deploymentSpnClientId() {
+    public Optional<String> deploymentSpnClientId() {
         return Optional.ofNullable(this.deploymentSpnClientId);
     }
 
-    /**
-     * Optional stage description.
-     * 
-     */
     @Import(name="description")
-    private @Nullable Output<String> description;
+    private @Nullable String description;
 
-    /**
-     * @return Optional stage description.
-     * 
-     */
-    public Optional<Output<String>> description() {
+    public Optional<String> description() {
         return Optional.ofNullable(this.description);
     }
 
-    /**
-     * Key in the environments map identifying the target environment.
-     * 
-     */
     @Import(name="environmentKey", required=true)
-    private Output<String> environmentKey;
+    private String environmentKey;
 
-    /**
-     * @return Key in the environments map identifying the target environment.
-     * 
-     */
-    public Output<String> environmentKey() {
+    public String environmentKey() {
         return this.environmentKey;
     }
 
-    /**
-     * Whether sharing is enabled for this stage. Default: true.
-     * 
-     */
     @Import(name="isSharingEnabled")
-    private @Nullable Output<Boolean> isSharingEnabled;
+    private @Nullable Boolean isSharingEnabled;
 
-    /**
-     * @return Whether sharing is enabled for this stage. Default: true.
-     * 
-     */
-    public Optional<Output<Boolean>> isSharingEnabled() {
+    public Optional<Boolean> isSharingEnabled() {
         return Optional.ofNullable(this.isSharingEnabled);
     }
 
-    /**
-     * Require pre-deployment approval. Default: false.
-     * 
-     */
     @Import(name="requirePredeploymentApproval")
-    private @Nullable Output<Boolean> requirePredeploymentApproval;
+    private @Nullable Boolean requirePredeploymentApproval;
 
-    /**
-     * @return Require pre-deployment approval. Default: false.
-     * 
-     */
-    public Optional<Output<Boolean>> requirePredeploymentApproval() {
+    public Optional<Boolean> requirePredeploymentApproval() {
         return Optional.ofNullable(this.requirePredeploymentApproval);
     }
 
-    /**
-     * Require pre-export approval (stage 0 only). Default: false.
-     * 
-     */
     @Import(name="requirePreexportApproval")
-    private @Nullable Output<Boolean> requirePreexportApproval;
+    private @Nullable Boolean requirePreexportApproval;
 
-    /**
-     * @return Require pre-export approval (stage 0 only). Default: false.
-     * 
-     */
-    public Optional<Output<Boolean>> requirePreexportApproval() {
+    public Optional<Boolean> requirePreexportApproval() {
         return Optional.ofNullable(this.requirePreexportApproval);
     }
 
-    /**
-     * Use delegated deployment. Default: false.
-     * 
-     */
     @Import(name="useDelegatedDeployment")
-    private @Nullable Output<Boolean> useDelegatedDeployment;
+    private @Nullable Boolean useDelegatedDeployment;
 
-    /**
-     * @return Use delegated deployment. Default: false.
-     * 
-     */
-    public Optional<Output<Boolean>> useDelegatedDeployment() {
+    public Optional<Boolean> useDelegatedDeployment() {
         return Optional.ofNullable(this.useDelegatedDeployment);
     }
 
@@ -156,151 +99,39 @@ public final class PipelineStageConfigArgs extends com.pulumi.resources.Resource
             $ = new PipelineStageConfigArgs(Objects.requireNonNull(defaults));
         }
 
-        /**
-         * @param deploymentSpnClientId Service principal client ID for delegated deployment.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder deploymentSpnClientId(@Nullable Output<String> deploymentSpnClientId) {
+        public Builder deploymentSpnClientId(@Nullable String deploymentSpnClientId) {
             $.deploymentSpnClientId = deploymentSpnClientId;
             return this;
         }
 
-        /**
-         * @param deploymentSpnClientId Service principal client ID for delegated deployment.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder deploymentSpnClientId(String deploymentSpnClientId) {
-            return deploymentSpnClientId(Output.of(deploymentSpnClientId));
-        }
-
-        /**
-         * @param description Optional stage description.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder description(@Nullable Output<String> description) {
+        public Builder description(@Nullable String description) {
             $.description = description;
             return this;
         }
 
-        /**
-         * @param description Optional stage description.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder description(String description) {
-            return description(Output.of(description));
-        }
-
-        /**
-         * @param environmentKey Key in the environments map identifying the target environment.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder environmentKey(Output<String> environmentKey) {
+        public Builder environmentKey(String environmentKey) {
             $.environmentKey = environmentKey;
             return this;
         }
 
-        /**
-         * @param environmentKey Key in the environments map identifying the target environment.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder environmentKey(String environmentKey) {
-            return environmentKey(Output.of(environmentKey));
-        }
-
-        /**
-         * @param isSharingEnabled Whether sharing is enabled for this stage. Default: true.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder isSharingEnabled(@Nullable Output<Boolean> isSharingEnabled) {
+        public Builder isSharingEnabled(@Nullable Boolean isSharingEnabled) {
             $.isSharingEnabled = isSharingEnabled;
             return this;
         }
 
-        /**
-         * @param isSharingEnabled Whether sharing is enabled for this stage. Default: true.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder isSharingEnabled(Boolean isSharingEnabled) {
-            return isSharingEnabled(Output.of(isSharingEnabled));
-        }
-
-        /**
-         * @param requirePredeploymentApproval Require pre-deployment approval. Default: false.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder requirePredeploymentApproval(@Nullable Output<Boolean> requirePredeploymentApproval) {
+        public Builder requirePredeploymentApproval(@Nullable Boolean requirePredeploymentApproval) {
             $.requirePredeploymentApproval = requirePredeploymentApproval;
             return this;
         }
 
-        /**
-         * @param requirePredeploymentApproval Require pre-deployment approval. Default: false.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder requirePredeploymentApproval(Boolean requirePredeploymentApproval) {
-            return requirePredeploymentApproval(Output.of(requirePredeploymentApproval));
-        }
-
-        /**
-         * @param requirePreexportApproval Require pre-export approval (stage 0 only). Default: false.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder requirePreexportApproval(@Nullable Output<Boolean> requirePreexportApproval) {
+        public Builder requirePreexportApproval(@Nullable Boolean requirePreexportApproval) {
             $.requirePreexportApproval = requirePreexportApproval;
             return this;
         }
 
-        /**
-         * @param requirePreexportApproval Require pre-export approval (stage 0 only). Default: false.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder requirePreexportApproval(Boolean requirePreexportApproval) {
-            return requirePreexportApproval(Output.of(requirePreexportApproval));
-        }
-
-        /**
-         * @param useDelegatedDeployment Use delegated deployment. Default: false.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder useDelegatedDeployment(@Nullable Output<Boolean> useDelegatedDeployment) {
+        public Builder useDelegatedDeployment(@Nullable Boolean useDelegatedDeployment) {
             $.useDelegatedDeployment = useDelegatedDeployment;
             return this;
-        }
-
-        /**
-         * @param useDelegatedDeployment Use delegated deployment. Default: false.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder useDelegatedDeployment(Boolean useDelegatedDeployment) {
-            return useDelegatedDeployment(Output.of(useDelegatedDeployment));
         }
 
         public PipelineStageConfigArgs build() {

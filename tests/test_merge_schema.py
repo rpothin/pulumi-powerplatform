@@ -297,10 +297,10 @@ class TestIsolatedLoader:
                 )
 
     def test_components_found_without_provider(self):
-        """load_components_isolated() finds PocComponent without provider deps installed."""
+        """load_components_isolated() finds ResEnvironment without provider deps installed."""
         classes = ms.load_components_isolated()
         names = [c.__name__ for c in classes]
-        assert "PocComponent" in names
+        assert "ResEnvironment" in names
 
 
 # ---------------------------------------------------------------------------

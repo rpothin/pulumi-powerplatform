@@ -4,6 +4,20 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+- **Component Resources** (AVM-aligned multi-language Pulumi component resources):
+  - `ResEnvironment` (`powerplatform:components:ResEnvironment`): composes `Environment`, `ManagedEnvironment`, `EnvironmentSettings`
+  - `ResDlpPolicy` (`powerplatform:components:ResDlpPolicy`): composes `DlpPolicy`
+  - `ResTenantSettings` (`powerplatform:components:ResTenantSettings`): composes `TenantSettings`
+  - `ResDeploymentPipeline` (`powerplatform:components:ResDeploymentPipeline`): composes `DataRecord` instances for pipeline, stages, and team membership; links dev environment via `PipelineSharing`
+- **New resources**: `DataRecord`, `TenantSettings`, `ManagedEnvironment`, `EnvironmentSettings`, `PipelineSharing`, `EnterprisePolicyLink`, `AdminManagementApplication`, `EnvironmentApplicationAdmin`
+- **New functions**: `getDlpPolicies`, `getDlpPolicyMigrationConfig`, `getSecurityRoles`, `getDataRecords`
+- Component resource examples in `examples/components/`
+- Schema merge tooling (`scripts/merge_schema.py`) for embedding component schemas into the provider schema
+
+### Removed
+- `PocComponent` proof-of-concept scaffold (replaced by real component implementations)
+
 ### Breaking Changes
 
 #### Python SDK now schema-generated (Phase 1 — Option G)

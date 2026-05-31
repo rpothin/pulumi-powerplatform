@@ -21,8 +21,6 @@ func (m *module) Version() semver.Version {
 
 func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi.Resource, err error) {
 	switch typ {
-	case "powerplatform:components:PocComponent":
-		r = &PocComponent{}
 	case "powerplatform:components:ResDeploymentPipeline":
 		r = &ResDeploymentPipeline{}
 	case "powerplatform:components:ResDlpPolicy":

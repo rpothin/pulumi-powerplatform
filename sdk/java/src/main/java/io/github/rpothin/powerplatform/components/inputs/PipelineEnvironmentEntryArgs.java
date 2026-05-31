@@ -3,7 +3,6 @@
 
 package io.github.rpothin.powerplatform.components.inputs;
 
-import com.pulumi.core.Output;
 import com.pulumi.core.annotations.Import;
 import com.pulumi.exceptions.MissingRequiredPropertyException;
 import java.lang.String;
@@ -11,40 +10,24 @@ import java.util.Objects;
 
 
 /**
- * One environment entry in the ResDeploymentPipeline environments map.
+ * One entry in the ``environments`` map.
  * 
  */
 public final class PipelineEnvironmentEntryArgs extends com.pulumi.resources.ResourceArgs {
 
     public static final PipelineEnvironmentEntryArgs Empty = new PipelineEnvironmentEntryArgs();
 
-    /**
-     * Power Platform environment ID (GUID).
-     * 
-     */
     @Import(name="id", required=true)
-    private Output<String> id;
+    private String id;
 
-    /**
-     * @return Power Platform environment ID (GUID).
-     * 
-     */
-    public Output<String> id() {
+    public String id() {
         return this.id;
     }
 
-    /**
-     * Display name for the deployment environment record.
-     * 
-     */
     @Import(name="name", required=true)
-    private Output<String> name;
+    private String name;
 
-    /**
-     * @return Display name for the deployment environment record.
-     * 
-     */
-    public Output<String> name() {
+    public String name() {
         return this.name;
     }
 
@@ -73,46 +56,14 @@ public final class PipelineEnvironmentEntryArgs extends com.pulumi.resources.Res
             $ = new PipelineEnvironmentEntryArgs(Objects.requireNonNull(defaults));
         }
 
-        /**
-         * @param id Power Platform environment ID (GUID).
-         * 
-         * @return builder
-         * 
-         */
-        public Builder id(Output<String> id) {
+        public Builder id(String id) {
             $.id = id;
             return this;
         }
 
-        /**
-         * @param id Power Platform environment ID (GUID).
-         * 
-         * @return builder
-         * 
-         */
-        public Builder id(String id) {
-            return id(Output.of(id));
-        }
-
-        /**
-         * @param name Display name for the deployment environment record.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder name(Output<String> name) {
+        public Builder name(String name) {
             $.name = name;
             return this;
-        }
-
-        /**
-         * @param name Display name for the deployment environment record.
-         * 
-         * @return builder
-         * 
-         */
-        public Builder name(String name) {
-            return name(Output.of(name));
         }
 
         public PipelineEnvironmentEntryArgs build() {

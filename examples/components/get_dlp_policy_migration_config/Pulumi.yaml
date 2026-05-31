@@ -1,0 +1,3 @@
+name: get-dlp-policy-migration-config-example
+runtime: python
+description: Example using getDlpPolicyMigrationConfig to generate DLP policy migration configuration.

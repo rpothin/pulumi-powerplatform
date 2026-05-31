@@ -12,22 +12,16 @@ import (
 	"github.com/rpothin/pulumi-powerplatform/sdk/go/powerplatform/internal"
 )
 
-// AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.
+// AVM-aligned component that manages a Power Platform deployment pipeline lifecycle.
 type ResDeploymentPipeline struct {
 	pulumi.ResourceState
 
-	// Map of environment keys to deployment environment record IDs.
 	DeploymentEnvironmentIds pulumi.StringMapOutput `pulumi:"deploymentEnvironmentIds"`
-	// Map of environment keys to deployment stage record IDs.
-	DeploymentStageIds pulumi.StringMapOutput `pulumi:"deploymentStageIds"`
-	// Deployment pipeline record ID.
-	PipelineId pulumi.StringOutput `pulumi:"pipelineId"`
-	// Pipeline display name.
-	PipelineName pulumi.StringOutput `pulumi:"pipelineName"`
-	// Team record ID (empty string when no securityGroupId was provided).
-	PipelineTeamId pulumi.StringOutput `pulumi:"pipelineTeamId"`
-	// AVM-standard primary output: deployment pipeline record ID.
-	ResourceId pulumi.StringOutput `pulumi:"resourceId"`
+	DeploymentStageIds       pulumi.StringMapOutput `pulumi:"deploymentStageIds"`
+	PipelineId               pulumi.StringOutput    `pulumi:"pipelineId"`
+	PipelineName             pulumi.StringOutput    `pulumi:"pipelineName"`
+	PipelineTeamId           pulumi.StringOutput    `pulumi:"pipelineTeamId"`
+	ResourceId               pulumi.StringOutput    `pulumi:"resourceId"`
 }
 
 // NewResDeploymentPipeline registers a new resource with the given unique name, arguments, and options.
@@ -53,62 +47,36 @@ func NewResDeploymentPipeline(ctx *pulumi.Context,
 }
 
 type resDeploymentPipelineArgs struct {
-	// Deployment Pipeline User security role ID. Required when securityGroupId is set.
-	DeploymentPipelineUserRoleId *string `pulumi:"deploymentPipelineUserRoleId"`
-	// Key in environments identifying the development (source) environment.
-	DevEnvironmentKey string `pulumi:"devEnvironmentKey"`
-	// Enable AI deployment notes. Default: true.
-	EnableAiDeploymentNotes *bool `pulumi:"enableAiDeploymentNotes"`
-	// Enable redeployment. Default: true.
-	EnableRedeployment *bool `pulumi:"enableRedeployment"`
-	// Enable telemetry. Default: true.
-	EnableTelemetry *bool `pulumi:"enableTelemetry"`
-	// Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-	Environments map[string]PipelineEnvironmentEntry `pulumi:"environments"`
-	// Pipelines Host environment ID. Required.
-	HostEnvironmentId string `pulumi:"hostEnvironmentId"`
-	// active or inactive. Default: active.
-	LifecycleState *string `pulumi:"lifecycleState"`
-	// Pipeline description (max 500 characters).
-	PipelineDescription *string `pulumi:"pipelineDescription"`
-	// Pipeline display name (1–100 characters). Required.
-	PipelineName string `pulumi:"pipelineName"`
-	// Deployment stages (1–6). Each stage maps to a target environment.
-	PipelineStages []PipelineStageConfig `pulumi:"pipelineStages"`
-	// Root business unit ID in the host environment. Required when securityGroupId is set.
-	RootBusinessUnitId *string `pulumi:"rootBusinessUnitId"`
-	// Entra ID security group GUID. When set, creates a team and shares the pipeline.
-	SecurityGroupId *string `pulumi:"securityGroupId"`
+	DeploymentPipelineUserRoleId *string                             `pulumi:"deploymentPipelineUserRoleId"`
+	DevEnvironmentKey            string                              `pulumi:"devEnvironmentKey"`
+	EnableAiDeploymentNotes      *bool                               `pulumi:"enableAiDeploymentNotes"`
+	EnableRedeployment           *bool                               `pulumi:"enableRedeployment"`
+	EnableTelemetry              *bool                               `pulumi:"enableTelemetry"`
+	Environments                 map[string]PipelineEnvironmentEntry `pulumi:"environments"`
+	HostEnvironmentId            string                              `pulumi:"hostEnvironmentId"`
+	LifecycleState               *string                             `pulumi:"lifecycleState"`
+	PipelineDescription          *string                             `pulumi:"pipelineDescription"`
+	PipelineName                 string                              `pulumi:"pipelineName"`
+	PipelineStages               []PipelineStageConfig               `pulumi:"pipelineStages"`
+	RootBusinessUnitId           *string                             `pulumi:"rootBusinessUnitId"`
+	SecurityGroupId              *string                             `pulumi:"securityGroupId"`
 }
 
 // The set of arguments for constructing a ResDeploymentPipeline resource.
 type ResDeploymentPipelineArgs struct {
-	// Deployment Pipeline User security role ID. Required when securityGroupId is set.
 	DeploymentPipelineUserRoleId *string
-	// Key in environments identifying the development (source) environment.
-	DevEnvironmentKey string
-	// Enable AI deployment notes. Default: true.
-	EnableAiDeploymentNotes *bool
-	// Enable redeployment. Default: true.
-	EnableRedeployment *bool
-	// Enable telemetry. Default: true.
-	EnableTelemetry *bool
-	// Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-	Environments map[string]PipelineEnvironmentEntryInput
-	// Pipelines Host environment ID. Required.
-	HostEnvironmentId string
-	// active or inactive. Default: active.
-	LifecycleState *string
-	// Pipeline description (max 500 characters).
-	PipelineDescription *string
-	// Pipeline display name (1–100 characters). Required.
-	PipelineName string
-	// Deployment stages (1–6). Each stage maps to a target environment.
-	PipelineStages []PipelineStageConfigInput
-	// Root business unit ID in the host environment. Required when securityGroupId is set.
-	RootBusinessUnitId *string
-	// Entra ID security group GUID. When set, creates a team and shares the pipeline.
-	SecurityGroupId *string
+	DevEnvironmentKey            string
+	EnableAiDeploymentNotes      *bool
+	EnableRedeployment           *bool
+	EnableTelemetry              *bool
+	Environments                 map[string]PipelineEnvironmentEntryArgs
+	HostEnvironmentId            string
+	LifecycleState               *string
+	PipelineDescription          *string
+	PipelineName                 string
+	PipelineStages               []PipelineStageConfigArgs
+	RootBusinessUnitId           *string
+	SecurityGroupId              *string
 }
 
 func (ResDeploymentPipelineArgs) ElementType() reflect.Type {
@@ -148,32 +116,26 @@ func (o ResDeploymentPipelineOutput) ToResDeploymentPipelineOutputWithContext(ct
 	return o
 }
 
-// Map of environment keys to deployment environment record IDs.
 func (o ResDeploymentPipelineOutput) DeploymentEnvironmentIds() pulumi.StringMapOutput {
 	return o.ApplyT(func(v *ResDeploymentPipeline) pulumi.StringMapOutput { return v.DeploymentEnvironmentIds }).(pulumi.StringMapOutput)
 }
 
-// Map of environment keys to deployment stage record IDs.
 func (o ResDeploymentPipelineOutput) DeploymentStageIds() pulumi.StringMapOutput {
 	return o.ApplyT(func(v *ResDeploymentPipeline) pulumi.StringMapOutput { return v.DeploymentStageIds }).(pulumi.StringMapOutput)
 }
 
-// Deployment pipeline record ID.
 func (o ResDeploymentPipelineOutput) PipelineId() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResDeploymentPipeline) pulumi.StringOutput { return v.PipelineId }).(pulumi.StringOutput)
 }
 
-// Pipeline display name.
 func (o ResDeploymentPipelineOutput) PipelineName() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResDeploymentPipeline) pulumi.StringOutput { return v.PipelineName }).(pulumi.StringOutput)
 }
 
-// Team record ID (empty string when no securityGroupId was provided).
 func (o ResDeploymentPipelineOutput) PipelineTeamId() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResDeploymentPipeline) pulumi.StringOutput { return v.PipelineTeamId }).(pulumi.StringOutput)
 }
 
-// AVM-standard primary output: deployment pipeline record ID.
 func (o ResDeploymentPipelineOutput) ResourceId() pulumi.StringOutput {
 	return o.ApplyT(func(v *ResDeploymentPipeline) pulumi.StringOutput { return v.ResourceId }).(pulumi.StringOutput)
 }

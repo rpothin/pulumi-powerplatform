@@ -6,7 +6,6 @@ import builtins as _builtins
 from .. import _utilities
 import typing
 # Export this package's modules as members:
-from .poc_component import *
 from .res_deployment_pipeline import *
 from .res_dlp_policy import *
 from .res_environment import *

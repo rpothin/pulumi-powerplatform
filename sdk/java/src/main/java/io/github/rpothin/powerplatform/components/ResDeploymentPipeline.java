@@ -14,92 +14,44 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 /**
- * AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.
+ * AVM-aligned component that manages a Power Platform deployment pipeline lifecycle.
  * 
  */
 @ResourceType(type="powerplatform:components:ResDeploymentPipeline")
 public class ResDeploymentPipeline extends com.pulumi.resources.ComponentResource {
-    /**
-     * Map of environment keys to deployment environment record IDs.
-     * 
-     */
     @Export(name="deploymentEnvironmentIds", refs={Map.class,String.class}, tree="[0,1,1]")
     private Output<Map<String,String>> deploymentEnvironmentIds;
 
-    /**
-     * @return Map of environment keys to deployment environment record IDs.
-     * 
-     */
     public Output<Map<String,String>> deploymentEnvironmentIds() {
         return this.deploymentEnvironmentIds;
     }
-    /**
-     * Map of environment keys to deployment stage record IDs.
-     * 
-     */
     @Export(name="deploymentStageIds", refs={Map.class,String.class}, tree="[0,1,1]")
     private Output<Map<String,String>> deploymentStageIds;
 
-    /**
-     * @return Map of environment keys to deployment stage record IDs.
-     * 
-     */
     public Output<Map<String,String>> deploymentStageIds() {
         return this.deploymentStageIds;
     }
-    /**
-     * Deployment pipeline record ID.
-     * 
-     */
     @Export(name="pipelineId", refs={String.class}, tree="[0]")
     private Output<String> pipelineId;
 
-    /**
-     * @return Deployment pipeline record ID.
-     * 
-     */
     public Output<String> pipelineId() {
         return this.pipelineId;
     }
-    /**
-     * Pipeline display name.
-     * 
-     */
     @Export(name="pipelineName", refs={String.class}, tree="[0]")
     private Output<String> pipelineName;
 
-    /**
-     * @return Pipeline display name.
-     * 
-     */
     public Output<String> pipelineName() {
         return this.pipelineName;
     }
-    /**
-     * Team record ID (empty string when no securityGroupId was provided).
-     * 
-     */
     @Export(name="pipelineTeamId", refs={String.class}, tree="[0]")
     private Output<String> pipelineTeamId;
 
-    /**
-     * @return Team record ID (empty string when no securityGroupId was provided).
-     * 
-     */
     public Output<String> pipelineTeamId() {
         return this.pipelineTeamId;
     }
-    /**
-     * AVM-standard primary output: deployment pipeline record ID.
-     * 
-     */
     @Export(name="resourceId", refs={String.class}, tree="[0]")
     private Output<String> resourceId;
 
-    /**
-     * @return AVM-standard primary output: deployment pipeline record ID.
-     * 
-     */
     public Output<String> resourceId() {
         return this.resourceId;
     }

@@ -21,10 +21,10 @@ __all__ = ['ResDeploymentPipelineArgs', 'ResDeploymentPipeline']
 class ResDeploymentPipelineArgs:
     def __init__(__self__, *,
                  dev_environment_key: _builtins.str,
-                 environments: Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']],
+                 environments: Mapping[str, 'PipelineEnvironmentEntryArgs'],
                  host_environment_id: _builtins.str,
                  pipeline_name: _builtins.str,
-                 pipeline_stages: Sequence[pulumi.Input['PipelineStageConfigArgs']],
+                 pipeline_stages: Sequence['PipelineStageConfigArgs'],
                  deployment_pipeline_user_role_id: Optional[_builtins.str] = None,
                  enable_ai_deployment_notes: Optional[_builtins.bool] = None,
                  enable_redeployment: Optional[_builtins.bool] = None,
@@ -35,20 +35,6 @@ class ResDeploymentPipelineArgs:
                  security_group_id: Optional[_builtins.str] = None):
         """
         The set of arguments for constructing a ResDeploymentPipeline resource.
-
-        :param _builtins.str dev_environment_key: Key in environments identifying the development (source) environment.
-        :param Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']] environments: Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-        :param _builtins.str host_environment_id: Pipelines Host environment ID. Required.
-        :param _builtins.str pipeline_name: Pipeline display name (1–100 characters). Required.
-        :param Sequence[pulumi.Input['PipelineStageConfigArgs']] pipeline_stages: Deployment stages (1–6). Each stage maps to a target environment.
-        :param _builtins.str deployment_pipeline_user_role_id: Deployment Pipeline User security role ID. Required when securityGroupId is set.
-        :param _builtins.bool enable_ai_deployment_notes: Enable AI deployment notes. Default: true.
-        :param _builtins.bool enable_redeployment: Enable redeployment. Default: true.
-        :param _builtins.bool enable_telemetry: Enable telemetry. Default: true.
-        :param _builtins.str lifecycle_state: active or inactive. Default: active.
-        :param _builtins.str pipeline_description: Pipeline description (max 500 characters).
-        :param _builtins.str root_business_unit_id: Root business unit ID in the host environment. Required when securityGroupId is set.
-        :param _builtins.str security_group_id: Entra ID security group GUID. When set, creates a team and shares the pipeline.
         """
         pulumi.set(__self__, "dev_environment_key", dev_environment_key)
         pulumi.set(__self__, "environments", environments)
@@ -75,9 +61,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="devEnvironmentKey")
     def dev_environment_key(self) -> _builtins.str:
-        """
-        Key in environments identifying the development (source) environment.
-        """
         return pulumi.get(self, "dev_environment_key")
 
     @dev_environment_key.setter
@@ -86,22 +69,16 @@ class ResDeploymentPipelineArgs:
 
     @_builtins.property
     @pulumi.getter
-    def environments(self) -> Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']]:
-        """
-        Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-        """
+    def environments(self) -> Mapping[str, 'PipelineEnvironmentEntryArgs']:
         return pulumi.get(self, "environments")
 
     @environments.setter
-    def environments(self, value: Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']]):
+    def environments(self, value: Mapping[str, 'PipelineEnvironmentEntryArgs']):
         pulumi.set(self, "environments", value)
 
     @_builtins.property
     @pulumi.getter(name="hostEnvironmentId")
     def host_environment_id(self) -> _builtins.str:
-        """
-        Pipelines Host environment ID. Required.
-        """
         return pulumi.get(self, "host_environment_id")
 
     @host_environment_id.setter
@@ -111,9 +88,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="pipelineName")
     def pipeline_name(self) -> _builtins.str:
-        """
-        Pipeline display name (1–100 characters). Required.
-        """
         return pulumi.get(self, "pipeline_name")
 
     @pipeline_name.setter
@@ -122,22 +96,16 @@ class ResDeploymentPipelineArgs:
 
     @_builtins.property
     @pulumi.getter(name="pipelineStages")
-    def pipeline_stages(self) -> Sequence[pulumi.Input['PipelineStageConfigArgs']]:
-        """
-        Deployment stages (1–6). Each stage maps to a target environment.
-        """
+    def pipeline_stages(self) -> Sequence['PipelineStageConfigArgs']:
         return pulumi.get(self, "pipeline_stages")
 
     @pipeline_stages.setter
-    def pipeline_stages(self, value: Sequence[pulumi.Input['PipelineStageConfigArgs']]):
+    def pipeline_stages(self, value: Sequence['PipelineStageConfigArgs']):
         pulumi.set(self, "pipeline_stages", value)
 
     @_builtins.property
     @pulumi.getter(name="deploymentPipelineUserRoleId")
     def deployment_pipeline_user_role_id(self) -> Optional[_builtins.str]:
-        """
-        Deployment Pipeline User security role ID. Required when securityGroupId is set.
-        """
         return pulumi.get(self, "deployment_pipeline_user_role_id")
 
     @deployment_pipeline_user_role_id.setter
@@ -147,9 +115,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="enableAiDeploymentNotes")
     def enable_ai_deployment_notes(self) -> Optional[_builtins.bool]:
-        """
-        Enable AI deployment notes. Default: true.
-        """
         return pulumi.get(self, "enable_ai_deployment_notes")
 
     @enable_ai_deployment_notes.setter
@@ -159,9 +124,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="enableRedeployment")
     def enable_redeployment(self) -> Optional[_builtins.bool]:
-        """
-        Enable redeployment. Default: true.
-        """
         return pulumi.get(self, "enable_redeployment")
 
     @enable_redeployment.setter
@@ -171,9 +133,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="enableTelemetry")
     def enable_telemetry(self) -> Optional[_builtins.bool]:
-        """
-        Enable telemetry. Default: true.
-        """
         return pulumi.get(self, "enable_telemetry")
 
     @enable_telemetry.setter
@@ -183,9 +142,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="lifecycleState")
     def lifecycle_state(self) -> Optional[_builtins.str]:
-        """
-        active or inactive. Default: active.
-        """
         return pulumi.get(self, "lifecycle_state")
 
     @lifecycle_state.setter
@@ -195,9 +151,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="pipelineDescription")
     def pipeline_description(self) -> Optional[_builtins.str]:
-        """
-        Pipeline description (max 500 characters).
-        """
         return pulumi.get(self, "pipeline_description")
 
     @pipeline_description.setter
@@ -207,9 +160,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="rootBusinessUnitId")
     def root_business_unit_id(self) -> Optional[_builtins.str]:
-        """
-        Root business unit ID in the host environment. Required when securityGroupId is set.
-        """
         return pulumi.get(self, "root_business_unit_id")
 
     @root_business_unit_id.setter
@@ -219,9 +169,6 @@ class ResDeploymentPipelineArgs:
     @_builtins.property
     @pulumi.getter(name="securityGroupId")
     def security_group_id(self) -> Optional[_builtins.str]:
-        """
-        Entra ID security group GUID. When set, creates a team and shares the pipeline.
-        """
         return pulumi.get(self, "security_group_id")
 
     @security_group_id.setter
@@ -240,34 +187,21 @@ class ResDeploymentPipeline(pulumi.ComponentResource):
                  enable_ai_deployment_notes: Optional[_builtins.bool] = None,
                  enable_redeployment: Optional[_builtins.bool] = None,
                  enable_telemetry: Optional[_builtins.bool] = None,
-                 environments: Optional[Mapping[str, pulumi.Input[Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]]] = None,
+                 environments: Optional[Mapping[str, Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]] = None,
                  host_environment_id: Optional[_builtins.str] = None,
                  lifecycle_state: Optional[_builtins.str] = None,
                  pipeline_description: Optional[_builtins.str] = None,
                  pipeline_name: Optional[_builtins.str] = None,
-                 pipeline_stages: Optional[Sequence[pulumi.Input[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]]] = None,
+                 pipeline_stages: Optional[Sequence[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]] = None,
                  root_business_unit_id: Optional[_builtins.str] = None,
                  security_group_id: Optional[_builtins.str] = None,
                  __props__=None):
         """
-        AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.
+        AVM-aligned component that manages a Power Platform deployment pipeline lifecycle.
 
 
         :param str resource_name: The name of the resource.
         :param pulumi.ResourceOptions opts: Options for the resource.
-        :param _builtins.str deployment_pipeline_user_role_id: Deployment Pipeline User security role ID. Required when securityGroupId is set.
-        :param _builtins.str dev_environment_key: Key in environments identifying the development (source) environment.
-        :param _builtins.bool enable_ai_deployment_notes: Enable AI deployment notes. Default: true.
-        :param _builtins.bool enable_redeployment: Enable redeployment. Default: true.
-        :param _builtins.bool enable_telemetry: Enable telemetry. Default: true.
-        :param Mapping[str, pulumi.Input[Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]] environments: Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-        :param _builtins.str host_environment_id: Pipelines Host environment ID. Required.
-        :param _builtins.str lifecycle_state: active or inactive. Default: active.
-        :param _builtins.str pipeline_description: Pipeline description (max 500 characters).
-        :param _builtins.str pipeline_name: Pipeline display name (1–100 characters). Required.
-        :param Sequence[pulumi.Input[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]] pipeline_stages: Deployment stages (1–6). Each stage maps to a target environment.
-        :param _builtins.str root_business_unit_id: Root business unit ID in the host environment. Required when securityGroupId is set.
-        :param _builtins.str security_group_id: Entra ID security group GUID. When set, creates a team and shares the pipeline.
         """
         ...
     @overload
@@ -276,7 +210,7 @@ class ResDeploymentPipeline(pulumi.ComponentResource):
                  args: ResDeploymentPipelineArgs,
                  opts: Optional[pulumi.ResourceOptions] = None):
         """
-        AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.
+        AVM-aligned component that manages a Power Platform deployment pipeline lifecycle.
 
 
         :param str resource_name: The name of the resource.
@@ -299,12 +233,12 @@ class ResDeploymentPipeline(pulumi.ComponentResource):
                  enable_ai_deployment_notes: Optional[_builtins.bool] = None,
                  enable_redeployment: Optional[_builtins.bool] = None,
                  enable_telemetry: Optional[_builtins.bool] = None,
-                 environments: Optional[Mapping[str, pulumi.Input[Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]]] = None,
+                 environments: Optional[Mapping[str, Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]] = None,
                  host_environment_id: Optional[_builtins.str] = None,
                  lifecycle_state: Optional[_builtins.str] = None,
                  pipeline_description: Optional[_builtins.str] = None,
                  pipeline_name: Optional[_builtins.str] = None,
-                 pipeline_stages: Optional[Sequence[pulumi.Input[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]]] = None,
+                 pipeline_stages: Optional[Sequence[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]] = None,
                  root_business_unit_id: Optional[_builtins.str] = None,
                  security_group_id: Optional[_builtins.str] = None,
                  __props__=None):
@@ -356,48 +290,30 @@ class ResDeploymentPipeline(pulumi.ComponentResource):
     @_builtins.property
     @pulumi.getter(name="deploymentEnvironmentIds")
     def deployment_environment_ids(self) -> pulumi.Output[Mapping[str, _builtins.str]]:
-        """
-        Map of environment keys to deployment environment record IDs.
-        """
         return pulumi.get(self, "deployment_environment_ids")
 
     @_builtins.property
     @pulumi.getter(name="deploymentStageIds")
     def deployment_stage_ids(self) -> pulumi.Output[Mapping[str, _builtins.str]]:
-        """
-        Map of environment keys to deployment stage record IDs.
-        """
         return pulumi.get(self, "deployment_stage_ids")
 
     @_builtins.property
     @pulumi.getter(name="pipelineId")
     def pipeline_id(self) -> pulumi.Output[_builtins.str]:
-        """
-        Deployment pipeline record ID.
-        """
         return pulumi.get(self, "pipeline_id")
 
     @_builtins.property
     @pulumi.getter(name="pipelineName")
     def pipeline_name(self) -> pulumi.Output[_builtins.str]:
-        """
-        Pipeline display name.
-        """
         return pulumi.get(self, "pipeline_name")
 
     @_builtins.property
     @pulumi.getter(name="pipelineTeamId")
     def pipeline_team_id(self) -> pulumi.Output[_builtins.str]:
-        """
-        Team record ID (empty string when no securityGroupId was provided).
-        """
         return pulumi.get(self, "pipeline_team_id")
 
     @_builtins.property
     @pulumi.getter(name="resourceId")
     def resource_id(self) -> pulumi.Output[_builtins.str]:
-        """
-        AVM-standard primary output: deployment pipeline record ID.
-        """
         return pulumi.get(self, "resource_id")
 

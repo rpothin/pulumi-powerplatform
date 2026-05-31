@@ -20,197 +20,93 @@ public final class ResDeploymentPipelineArgs extends com.pulumi.resources.Resour
 
     public static final ResDeploymentPipelineArgs Empty = new ResDeploymentPipelineArgs();
 
-    /**
-     * Deployment Pipeline User security role ID. Required when securityGroupId is set.
-     * 
-     */
     @Import(name="deploymentPipelineUserRoleId")
     private @Nullable String deploymentPipelineUserRoleId;
 
-    /**
-     * @return Deployment Pipeline User security role ID. Required when securityGroupId is set.
-     * 
-     */
     public Optional<String> deploymentPipelineUserRoleId() {
         return Optional.ofNullable(this.deploymentPipelineUserRoleId);
     }
 
-    /**
-     * Key in environments identifying the development (source) environment.
-     * 
-     */
     @Import(name="devEnvironmentKey", required=true)
     private String devEnvironmentKey;
 
-    /**
-     * @return Key in environments identifying the development (source) environment.
-     * 
-     */
     public String devEnvironmentKey() {
         return this.devEnvironmentKey;
     }
 
-    /**
-     * Enable AI deployment notes. Default: true.
-     * 
-     */
     @Import(name="enableAiDeploymentNotes")
     private @Nullable Boolean enableAiDeploymentNotes;
 
-    /**
-     * @return Enable AI deployment notes. Default: true.
-     * 
-     */
     public Optional<Boolean> enableAiDeploymentNotes() {
         return Optional.ofNullable(this.enableAiDeploymentNotes);
     }
 
-    /**
-     * Enable redeployment. Default: true.
-     * 
-     */
     @Import(name="enableRedeployment")
     private @Nullable Boolean enableRedeployment;
 
-    /**
-     * @return Enable redeployment. Default: true.
-     * 
-     */
     public Optional<Boolean> enableRedeployment() {
         return Optional.ofNullable(this.enableRedeployment);
     }
 
-    /**
-     * Enable telemetry. Default: true.
-     * 
-     */
     @Import(name="enableTelemetry")
     private @Nullable Boolean enableTelemetry;
 
-    /**
-     * @return Enable telemetry. Default: true.
-     * 
-     */
     public Optional<Boolean> enableTelemetry() {
         return Optional.ofNullable(this.enableTelemetry);
     }
 
-    /**
-     * Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-     * 
-     */
     @Import(name="environments", required=true)
     private Map<String,PipelineEnvironmentEntryArgs> environments;
 
-    /**
-     * @return Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-     * 
-     */
     public Map<String,PipelineEnvironmentEntryArgs> environments() {
         return this.environments;
     }
 
-    /**
-     * Pipelines Host environment ID. Required.
-     * 
-     */
     @Import(name="hostEnvironmentId", required=true)
     private String hostEnvironmentId;
 
-    /**
-     * @return Pipelines Host environment ID. Required.
-     * 
-     */
     public String hostEnvironmentId() {
         return this.hostEnvironmentId;
     }
 
-    /**
-     * active or inactive. Default: active.
-     * 
-     */
     @Import(name="lifecycleState")
     private @Nullable String lifecycleState;
 
-    /**
-     * @return active or inactive. Default: active.
-     * 
-     */
     public Optional<String> lifecycleState() {
         return Optional.ofNullable(this.lifecycleState);
     }
 
-    /**
-     * Pipeline description (max 500 characters).
-     * 
-     */
     @Import(name="pipelineDescription")
     private @Nullable String pipelineDescription;
 
-    /**
-     * @return Pipeline description (max 500 characters).
-     * 
-     */
     public Optional<String> pipelineDescription() {
         return Optional.ofNullable(this.pipelineDescription);
     }
 
-    /**
-     * Pipeline display name (1–100 characters). Required.
-     * 
-     */
     @Import(name="pipelineName", required=true)
     private String pipelineName;
 
-    /**
-     * @return Pipeline display name (1–100 characters). Required.
-     * 
-     */
     public String pipelineName() {
         return this.pipelineName;
     }
 
-    /**
-     * Deployment stages (1–6). Each stage maps to a target environment.
-     * 
-     */
     @Import(name="pipelineStages", required=true)
     private List<PipelineStageConfigArgs> pipelineStages;
 
-    /**
-     * @return Deployment stages (1–6). Each stage maps to a target environment.
-     * 
-     */
     public List<PipelineStageConfigArgs> pipelineStages() {
         return this.pipelineStages;
     }
 
-    /**
-     * Root business unit ID in the host environment. Required when securityGroupId is set.
-     * 
-     */
     @Import(name="rootBusinessUnitId")
     private @Nullable String rootBusinessUnitId;
 
-    /**
-     * @return Root business unit ID in the host environment. Required when securityGroupId is set.
-     * 
-     */
     public Optional<String> rootBusinessUnitId() {
         return Optional.ofNullable(this.rootBusinessUnitId);
     }
 
-    /**
-     * Entra ID security group GUID. When set, creates a team and shares the pipeline.
-     * 
-     */
     @Import(name="securityGroupId")
     private @Nullable String securityGroupId;
 
-    /**
-     * @return Entra ID security group GUID. When set, creates a team and shares the pipeline.
-     * 
-     */
     public Optional<String> securityGroupId() {
         return Optional.ofNullable(this.securityGroupId);
     }
@@ -251,154 +147,70 @@ public final class ResDeploymentPipelineArgs extends com.pulumi.resources.Resour
             $ = new ResDeploymentPipelineArgs(Objects.requireNonNull(defaults));
         }
 
-        /**
-         * @param deploymentPipelineUserRoleId Deployment Pipeline User security role ID. Required when securityGroupId is set.
-         * 
-         * @return builder
-         * 
-         */
         public Builder deploymentPipelineUserRoleId(@Nullable String deploymentPipelineUserRoleId) {
             $.deploymentPipelineUserRoleId = deploymentPipelineUserRoleId;
             return this;
         }
 
-        /**
-         * @param devEnvironmentKey Key in environments identifying the development (source) environment.
-         * 
-         * @return builder
-         * 
-         */
         public Builder devEnvironmentKey(String devEnvironmentKey) {
             $.devEnvironmentKey = devEnvironmentKey;
             return this;
         }
 
-        /**
-         * @param enableAiDeploymentNotes Enable AI deployment notes. Default: true.
-         * 
-         * @return builder
-         * 
-         */
         public Builder enableAiDeploymentNotes(@Nullable Boolean enableAiDeploymentNotes) {
             $.enableAiDeploymentNotes = enableAiDeploymentNotes;
             return this;
         }
 
-        /**
-         * @param enableRedeployment Enable redeployment. Default: true.
-         * 
-         * @return builder
-         * 
-         */
         public Builder enableRedeployment(@Nullable Boolean enableRedeployment) {
             $.enableRedeployment = enableRedeployment;
             return this;
         }
 
-        /**
-         * @param enableTelemetry Enable telemetry. Default: true.
-         * 
-         * @return builder
-         * 
-         */
         public Builder enableTelemetry(@Nullable Boolean enableTelemetry) {
             $.enableTelemetry = enableTelemetry;
             return this;
         }
 
-        /**
-         * @param environments Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-         * 
-         * @return builder
-         * 
-         */
         public Builder environments(Map<String,PipelineEnvironmentEntryArgs> environments) {
             $.environments = environments;
             return this;
         }
 
-        /**
-         * @param hostEnvironmentId Pipelines Host environment ID. Required.
-         * 
-         * @return builder
-         * 
-         */
         public Builder hostEnvironmentId(String hostEnvironmentId) {
             $.hostEnvironmentId = hostEnvironmentId;
             return this;
         }
 
-        /**
-         * @param lifecycleState active or inactive. Default: active.
-         * 
-         * @return builder
-         * 
-         */
         public Builder lifecycleState(@Nullable String lifecycleState) {
             $.lifecycleState = lifecycleState;
             return this;
         }
 
-        /**
-         * @param pipelineDescription Pipeline description (max 500 characters).
-         * 
-         * @return builder
-         * 
-         */
         public Builder pipelineDescription(@Nullable String pipelineDescription) {
             $.pipelineDescription = pipelineDescription;
             return this;
         }
 
-        /**
-         * @param pipelineName Pipeline display name (1–100 characters). Required.
-         * 
-         * @return builder
-         * 
-         */
         public Builder pipelineName(String pipelineName) {
             $.pipelineName = pipelineName;
             return this;
         }
 
-        /**
-         * @param pipelineStages Deployment stages (1–6). Each stage maps to a target environment.
-         * 
-         * @return builder
-         * 
-         */
         public Builder pipelineStages(List<PipelineStageConfigArgs> pipelineStages) {
             $.pipelineStages = pipelineStages;
             return this;
         }
 
-        /**
-         * @param pipelineStages Deployment stages (1–6). Each stage maps to a target environment.
-         * 
-         * @return builder
-         * 
-         */
         public Builder pipelineStages(PipelineStageConfigArgs... pipelineStages) {
             return pipelineStages(List.of(pipelineStages));
         }
 
-        /**
-         * @param rootBusinessUnitId Root business unit ID in the host environment. Required when securityGroupId is set.
-         * 
-         * @return builder
-         * 
-         */
         public Builder rootBusinessUnitId(@Nullable String rootBusinessUnitId) {
             $.rootBusinessUnitId = rootBusinessUnitId;
             return this;
         }
 
-        /**
-         * @param securityGroupId Entra ID security group GUID. When set, creates a team and shares the pipeline.
-         * 
-         * @return builder
-         * 
-         */
         public Builder securityGroupId(@Nullable String securityGroupId) {
             $.securityGroupId = securityGroupId;
             return this;

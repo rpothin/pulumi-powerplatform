@@ -51,7 +51,6 @@ _utilities.register(
   "mod": "components",
   "fqn": "rpothin_powerplatform.components",
   "classes": {
-   "powerplatform:components:PocComponent": "PocComponent",
    "powerplatform:components:ResDeploymentPipeline": "ResDeploymentPipeline",
    "powerplatform:components:ResDlpPolicy": "ResDlpPolicy",
    "powerplatform:components:ResEnvironment": "ResEnvironment",

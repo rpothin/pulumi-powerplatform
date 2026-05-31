@@ -22,7 +22,6 @@
         "adminManagementApplication.ts",
         "billingPolicy.ts",
         "components/index.ts",
-        "components/pocComponent.ts",
         "components/resDeploymentPipeline.ts",
         "components/resDlpPolicy.ts",
         "components/resEnvironment.ts",

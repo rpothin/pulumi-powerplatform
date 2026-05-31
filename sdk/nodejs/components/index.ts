@@ -5,11 +5,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as utilities from "../utilities";
 
 // Export members:
-export { PocComponentArgs } from "./pocComponent";
-export type PocComponent = import("./pocComponent").PocComponent;
-export const PocComponent: typeof import("./pocComponent").PocComponent = null as any;
-utilities.lazyLoad(exports, ["PocComponent"], () => require("./pocComponent"));
-
 export { ResDeploymentPipelineArgs } from "./resDeploymentPipeline";
 export type ResDeploymentPipeline = import("./resDeploymentPipeline").ResDeploymentPipeline;
 export const ResDeploymentPipeline: typeof import("./resDeploymentPipeline").ResDeploymentPipeline = null as any;
@@ -35,8 +30,6 @@ const _module = {
     version: utilities.getVersion(),
     construct: (name: string, type: string, urn: string): pulumi.Resource => {
         switch (type) {
-            case "powerplatform:components:PocComponent":
-                return new PocComponent(name, <any>undefined, { urn })
             case "powerplatform:components:ResDeploymentPipeline":
                 return new ResDeploymentPipeline(name, <any>undefined, { urn })
             case "powerplatform:components:ResDlpPolicy":

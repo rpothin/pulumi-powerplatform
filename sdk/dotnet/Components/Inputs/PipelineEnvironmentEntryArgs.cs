@@ -11,21 +11,15 @@ namespace Pulumi.Powerplatform.Components.Inputs
 {
 
     /// <summary>
-    /// One environment entry in the ResDeploymentPipeline environments map.
+    /// One entry in the ``environments`` map.
     /// </summary>
     public sealed class PipelineEnvironmentEntryArgs : global::Pulumi.ResourceArgs
     {
-        /// <summary>
-        /// Power Platform environment ID (GUID).
-        /// </summary>
         [Input("id", required: true)]
-        public Input<string> Id { get; set; } = null!;
+        public string Id { get; set; } = null!;
 
-        /// <summary>
-        /// Display name for the deployment environment record.
-        /// </summary>
         [Input("name", required: true)]
-        public Input<string> Name { get; set; } = null!;
+        public string Name { get; set; } = null!;
 
         public PipelineEnvironmentEntryArgs()
         {

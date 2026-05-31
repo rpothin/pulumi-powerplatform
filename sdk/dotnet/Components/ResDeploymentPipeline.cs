@@ -10,44 +10,26 @@ using Pulumi.Serialization;
 namespace Pulumi.Powerplatform.Components
 {
     /// <summary>
-    /// AVM-aligned component that manages a Power Platform deployment pipeline lifecycle through deployment environments, stages, and optional team sharing.
+    /// AVM-aligned component that manages a Power Platform deployment pipeline lifecycle.
     /// </summary>
     [PowerplatformResourceType("powerplatform:components:ResDeploymentPipeline")]
     public partial class ResDeploymentPipeline : global::Pulumi.ComponentResource
     {
-        /// <summary>
-        /// Map of environment keys to deployment environment record IDs.
-        /// </summary>
         [Output("deploymentEnvironmentIds")]
         public Output<ImmutableDictionary<string, string>> DeploymentEnvironmentIds { get; private set; } = null!;
 
-        /// <summary>
-        /// Map of environment keys to deployment stage record IDs.
-        /// </summary>
         [Output("deploymentStageIds")]
         public Output<ImmutableDictionary<string, string>> DeploymentStageIds { get; private set; } = null!;
 
-        /// <summary>
-        /// Deployment pipeline record ID.
-        /// </summary>
         [Output("pipelineId")]
         public Output<string> PipelineId { get; private set; } = null!;
 
-        /// <summary>
-        /// Pipeline display name.
-        /// </summary>
         [Output("pipelineName")]
         public Output<string> PipelineName { get; private set; } = null!;
 
-        /// <summary>
-        /// Team record ID (empty string when no securityGroupId was provided).
-        /// </summary>
         [Output("pipelineTeamId")]
         public Output<string> PipelineTeamId { get; private set; } = null!;
 
-        /// <summary>
-        /// AVM-standard primary output: deployment pipeline record ID.
-        /// </summary>
         [Output("resourceId")]
         public Output<string> ResourceId { get; private set; } = null!;
 
@@ -80,93 +62,52 @@ namespace Pulumi.Powerplatform.Components
 
     public sealed class ResDeploymentPipelineArgs : global::Pulumi.ResourceArgs
     {
-        /// <summary>
-        /// Deployment Pipeline User security role ID. Required when securityGroupId is set.
-        /// </summary>
         [Input("deploymentPipelineUserRoleId")]
         public string? DeploymentPipelineUserRoleId { get; set; }
 
-        /// <summary>
-        /// Key in environments identifying the development (source) environment.
-        /// </summary>
         [Input("devEnvironmentKey", required: true)]
         public string DevEnvironmentKey { get; set; } = null!;
 
-        /// <summary>
-        /// Enable AI deployment notes. Default: true.
-        /// </summary>
         [Input("enableAiDeploymentNotes")]
         public bool? EnableAiDeploymentNotes { get; set; }
 
-        /// <summary>
-        /// Enable redeployment. Default: true.
-        /// </summary>
         [Input("enableRedeployment")]
         public bool? EnableRedeployment { get; set; }
 
-        /// <summary>
-        /// Enable telemetry. Default: true.
-        /// </summary>
         [Input("enableTelemetry")]
         public bool? EnableTelemetry { get; set; }
 
         [Input("environments", required: true)]
-        private Dictionary<string, Input<Inputs.PipelineEnvironmentEntryArgs>>? _environments;
-
-        /// <summary>
-        /// Map of environment entries. Minimum 2 entries. Keys must be known at plan time.
-        /// </summary>
-        public Dictionary<string, Input<Inputs.PipelineEnvironmentEntryArgs>> Environments
+        private Dictionary<string, Inputs.PipelineEnvironmentEntryArgs>? _environments;
+        public Dictionary<string, Inputs.PipelineEnvironmentEntryArgs> Environments
         {
-            get => _environments ?? (_environments = new Dictionary<string, Input<Inputs.PipelineEnvironmentEntryArgs>>());
+            get => _environments ?? (_environments = new Dictionary<string, Inputs.PipelineEnvironmentEntryArgs>());
             set => _environments = value;
         }
 
-        /// <summary>
-        /// Pipelines Host environment ID. Required.
-        /// </summary>
         [Input("hostEnvironmentId", required: true)]
         public string HostEnvironmentId { get; set; } = null!;
 
-        /// <summary>
-        /// active or inactive. Default: active.
-        /// </summary>
         [Input("lifecycleState")]
         public string? LifecycleState { get; set; }
 
-        /// <summary>
-        /// Pipeline description (max 500 characters).
-        /// </summary>
         [Input("pipelineDescription")]
         public string? PipelineDescription { get; set; }
 
-        /// <summary>
-        /// Pipeline display name (1–100 characters). Required.
-        /// </summary>
         [Input("pipelineName", required: true)]
         public string PipelineName { get; set; } = null!;
 
         [Input("pipelineStages", required: true)]
-        private List<Input<Inputs.PipelineStageConfigArgs>>? _pipelineStages;
-
-        /// <summary>
-        /// Deployment stages (1–6). Each stage maps to a target environment.
-        /// </summary>
-        public List<Input<Inputs.PipelineStageConfigArgs>> PipelineStages
+        private List<Inputs.PipelineStageConfigArgs>? _pipelineStages;
+        public List<Inputs.PipelineStageConfigArgs> PipelineStages
         {
-            get => _pipelineStages ?? (_pipelineStages = new List<Input<Inputs.PipelineStageConfigArgs>>());
+            get => _pipelineStages ?? (_pipelineStages = new List<Inputs.PipelineStageConfigArgs>());
             set => _pipelineStages = value;
         }
 
-        /// <summary>
-        /// Root business unit ID in the host environment. Required when securityGroupId is set.
-        /// </summary>
         [Input("rootBusinessUnitId")]
         public string? RootBusinessUnitId { get; set; }
 
-        /// <summary>
-        /// Entra ID security group GUID. When set, creates a team and shares the pipeline.
-        /// </summary>
         [Input("securityGroupId")]
         public string? SecurityGroupId { get; set; }
 
