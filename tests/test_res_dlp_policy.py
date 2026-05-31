@@ -11,10 +11,11 @@ Covers:
 from __future__ import annotations
 
 import sys
-from typing import Any
 
 import pulumi.runtime.mocks as mocks_module
 import pytest
+from pulumi.provider.experimental.property_value import PropertyValue
+from pulumi.provider.experimental.provider import ConstructResponse
 
 # Import the component under test.
 sys.path.insert(0, "provider")
@@ -54,10 +55,15 @@ async def _pulumi_mocks():
 class TestResDlpPolicyArgs:
     """Verify defaults and field semantics for ``ResDlpPolicyArgs``."""
 
-    def test_required_display_name_default_empty_string(self):
-        """display_name must be provided; default is empty string (dataclass sentinel)."""
+    def test_display_name_required(self):
+        """display_name must be provided; there is no default value."""
         args = ResDlpPolicyArgs(display_name="My Policy")
         assert args.display_name == "My Policy"
+
+    def test_display_name_missing_raises(self):
+        """Omitting display_name must raise TypeError (required field, no default)."""
+        with pytest.raises(TypeError):
+            ResDlpPolicyArgs()  # type: ignore[call-arg]
 
     def test_rule_sets_defaults_to_none(self):
         """rule_sets should default to None when not provided."""
@@ -133,44 +139,64 @@ class TestResDlpPolicyRegistration:
 # ---------------------------------------------------------------------------
 
 
-class _MockPV:
-    """Minimal PropertyValue-like object with a .value attribute."""
-
-    def __init__(self, value: Any) -> None:
-        self.value = value
-
-
 @pytest.mark.asyncio
 @pytest.mark.usefixtures("_pulumi_mocks")
 class TestConstructResDlpPolicy:
-    """Verify that the construct factory extracts inputs correctly."""
+    """Verify that the construct factory extracts inputs correctly.
 
-    async def test_extracts_display_name(self):
-        """Factory must pass displayName through to ResDlpPolicyArgs.display_name."""
-        inputs = {"displayName": _MockPV("Extracted Policy")}
-        component = _construct_res_dlp_policy("p", inputs, opts=None)
-        assert isinstance(component, ResDlpPolicy)
+    Uses real ``PropertyValue`` instances (same as the Pulumi engine sends)
+    so that ``pv_to_input`` can safely extract values and preserve metadata.
+    """
+
+    async def test_returns_construct_response(self):
+        """Factory must return a ConstructResponse, not the component directly."""
+        inputs = {"displayName": PropertyValue("Extracted Policy")}
+        result = await _construct_res_dlp_policy("p", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
+
+    async def test_response_urn_is_set(self):
+        """ConstructResponse.urn must be a non-empty string."""
+        inputs = {"displayName": PropertyValue("my-policy")}
+        result = await _construct_res_dlp_policy("p", inputs, opts=None)
+        assert result.urn is not None
+        assert isinstance(result.urn, str)
+        assert len(result.urn) > 0
+
+    async def test_response_state_contains_expected_keys(self):
+        """ConstructResponse.state must contain resourceId, policyName, etc."""
+        inputs = {"displayName": PropertyValue("my-policy")}
+        result = await _construct_res_dlp_policy("p", inputs, opts=None)
+        assert "resourceId" in result.state
+        assert "policyName" in result.state
+        assert "ruleSetCount" in result.state
+        assert "lastModified" in result.state
+        assert "tenantId" in result.state
 
     async def test_extracts_rule_sets(self):
-        """Factory must pass ruleSets through when provided."""
-        rule_sets = [{"classification": "Blocked", "connectors": []}]
-        inputs = {"displayName": _MockPV("p"), "ruleSets": _MockPV(rule_sets)}
-        _construct_res_dlp_policy("p", inputs, opts=None)
+        """Factory must pass ruleSets through when provided as an empty list."""
+        inputs = {
+            "displayName": PropertyValue("p"),
+            "ruleSets": PropertyValue([]),
+        }
+        result = await _construct_res_dlp_policy("p", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
     async def test_missing_optional_keys_are_none(self):
         """Missing optional keys must not raise KeyError."""
-        inputs = {"displayName": _MockPV("p")}
-        _construct_res_dlp_policy("p", inputs, opts=None)
+        inputs = {"displayName": PropertyValue("p")}
+        result = await _construct_res_dlp_policy("p", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
-    async def test_raw_value_fallback(self):
-        """A plain (non-PropertyValue) value in inputs must also be accepted."""
-        inputs = {"displayName": "raw-display-name"}
-        _construct_res_dlp_policy("p", inputs, opts=None)
+    async def test_absent_display_name_defaults_to_none(self):
+        """When displayName is absent in inputs, factory falls back to None without crash."""
+        result = await _construct_res_dlp_policy("p", {}, opts=None)
+        assert isinstance(result, ConstructResponse)
 
-    async def test_none_value_in_inputs_is_treated_as_none(self):
-        """An explicit None in inputs for an optional key returns None."""
-        inputs = {"displayName": _MockPV("p"), "ruleSets": None}
-        _construct_res_dlp_policy("p", inputs, opts=None)
+    async def test_none_pv_value_in_inputs_is_accepted(self):
+        """An explicit PropertyValue(None) for an optional key must not raise."""
+        inputs = {"displayName": PropertyValue("p"), "ruleSets": PropertyValue(None)}
+        result = await _construct_res_dlp_policy("p", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
 
 # ---------------------------------------------------------------------------

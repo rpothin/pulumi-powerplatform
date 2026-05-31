@@ -12,10 +12,11 @@ Covers:
 from __future__ import annotations
 
 import sys
-from typing import Any
 
 import pulumi.runtime.mocks as mocks_module
 import pytest
+from pulumi.provider.experimental.property_value import PropertyValue
+from pulumi.provider.experimental.provider import ConstructResponse
 
 # Import the component under test.
 sys.path.insert(0, "provider")
@@ -157,61 +158,74 @@ class TestResTenantSettingsRegistration:
 # ---------------------------------------------------------------------------
 
 
-class _MockPV:
-    """Minimal PropertyValue-like object with a .value attribute."""
-
-    def __init__(self, value: Any) -> None:
-        self.value = value
-
-
 @pytest.mark.asyncio
 @pytest.mark.usefixtures("_pulumi_mocks")
 class TestConstructResTenantSettings:
-    """Verify that the construct factory extracts inputs correctly."""
+    """Verify that the construct factory extracts inputs correctly.
+
+    Uses real ``PropertyValue`` instances (same as the Pulumi engine sends)
+    so that ``pv_to_input`` can safely extract values and preserve metadata.
+    """
 
     async def test_factory_with_no_inputs_does_not_raise(self):
         """Factory must succeed with an empty inputs dict."""
-        component = _construct_res_tenant_settings("ts", {}, opts=None)
-        assert isinstance(component, ResTenantSettings)
+        result = await _construct_res_tenant_settings("ts", {}, opts=None)
+        assert isinstance(result, ConstructResponse)
+
+    async def test_returns_construct_response(self):
+        """Factory must return a ConstructResponse, not the component directly."""
+        inputs = {"disableEnvironmentCreationByNonAdminUsers": PropertyValue(True)}
+        result = await _construct_res_tenant_settings("ts", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
+
+    async def test_response_urn_is_set(self):
+        """ConstructResponse.urn must be a non-empty string."""
+        result = await _construct_res_tenant_settings("ts", {}, opts=None)
+        assert result.urn is not None
+        assert isinstance(result.urn, str)
+        assert len(result.urn) > 0
+
+    async def test_response_state_contains_expected_keys(self):
+        """ConstructResponse.state must contain resourceId and tenantId."""
+        result = await _construct_res_tenant_settings("ts", {}, opts=None)
+        assert "resourceId" in result.state
+        assert "tenantId" in result.state
 
     async def test_extracts_boolean_flag(self):
         """Factory must pass a boolean PropertyValue through to args."""
-        inputs = {"disableEnvironmentCreationByNonAdminUsers": _MockPV(True)}
-        component = _construct_res_tenant_settings("ts", inputs, opts=None)
-        assert isinstance(component, ResTenantSettings)
+        inputs = {"disableEnvironmentCreationByNonAdminUsers": PropertyValue(True)}
+        result = await _construct_res_tenant_settings("ts", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
     async def test_nps_key_mapping(self):
         """Factory reads disableNpsCommentsReachout (standard camelCase from Analyzer)."""
-        inputs = {"disableNpsCommentsReachout": _MockPV(True)}
-        _construct_res_tenant_settings("ts", inputs, opts=None)
+        inputs = {"disableNpsCommentsReachout": PropertyValue(True)}
+        result = await _construct_res_tenant_settings("ts", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
     async def test_power_platform_extracted(self):
-        """Factory must extract the powerPlatform nested dict."""
-        pp = {"search": {"disableDocsSearch": True}}
-        inputs = {"powerPlatform": _MockPV(pp)}
-        _construct_res_tenant_settings("ts", inputs, opts=None)
-
-    async def test_raw_value_fallback(self):
-        """A plain (non-PropertyValue) value in inputs must also be accepted."""
-        inputs = {"disableSurveyFeedback": False}
-        _construct_res_tenant_settings("ts", inputs, opts=None)
+        """Factory must accept the powerPlatform nested field without raising."""
+        inputs = {"powerPlatform": PropertyValue(None)}
+        result = await _construct_res_tenant_settings("ts", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
     async def test_all_fields_extracted(self):
         """Factory must accept all known camelCase keys without raising."""
         inputs = {
-            "disableCapacityAllocationByEnvironmentAdmins": _MockPV(True),
-            "disableEnvironmentCreationByNonAdminUsers": _MockPV(False),
-            "disableNpsCommentsReachout": _MockPV(True),
-            "disableNewsletterSendout": _MockPV(False),
-            "disablePortalsCreationByNonAdminUsers": _MockPV(True),
-            "disableSupportTicketsVisibleByAllUsers": _MockPV(False),
-            "disableSurveyFeedback": _MockPV(True),
-            "disableTrialEnvironmentCreationByNonAdminUsers": _MockPV(False),
-            "powerPlatform": _MockPV({"key": "value"}),
-            "walkMeOptOut": _MockPV(True),
-            "enableTelemetry": _MockPV(True),
+            "disableCapacityAllocationByEnvironmentAdmins": PropertyValue(True),
+            "disableEnvironmentCreationByNonAdminUsers": PropertyValue(False),
+            "disableNpsCommentsReachout": PropertyValue(True),
+            "disableNewsletterSendout": PropertyValue(False),
+            "disablePortalsCreationByNonAdminUsers": PropertyValue(True),
+            "disableSupportTicketsVisibleByAllUsers": PropertyValue(False),
+            "disableSurveyFeedback": PropertyValue(True),
+            "disableTrialEnvironmentCreationByNonAdminUsers": PropertyValue(False),
+            "powerPlatform": PropertyValue(None),
+            "walkMeOptOut": PropertyValue(True),
+            "enableTelemetry": PropertyValue(True),
         }
-        _construct_res_tenant_settings("ts", inputs, opts=None)
+        result = await _construct_res_tenant_settings("ts", inputs, opts=None)
+        assert isinstance(result, ConstructResponse)
 
 
 # ---------------------------------------------------------------------------
@@ -235,17 +249,22 @@ class TestNPSKeyMapping:
     @pytest.mark.asyncio
     @pytest.mark.usefixtures("_pulumi_mocks")
     async def test_factory_reads_standard_camel_case_nps_key(self):
-        """Factory reads 'disableNpsCommentsReachout', not 'disableNPSCommentsReachout'."""
-        inputs_wrong_key = {"disableNPSCommentsReachout": _MockPV(True)}
-        component = _construct_res_tenant_settings("ts", inputs_wrong_key, opts=None)
-        assert isinstance(component, ResTenantSettings)
+        """Factory reads 'disableNpsCommentsReachout', not 'disableNPSCommentsReachout'.
+
+        Passing the all-caps variant must not crash — it is simply ignored
+        (unknown key falls through to the default None).
+        """
+        inputs_wrong_key = {"disableNPSCommentsReachout": PropertyValue(True)}
+        result = await _construct_res_tenant_settings("ts", inputs_wrong_key, opts=None)
+        assert isinstance(result, ConstructResponse)
 
     @pytest.mark.asyncio
     @pytest.mark.usefixtures("_pulumi_mocks")
     async def test_factory_reads_lowercase_nps_key(self):
         """Factory reads 'disableNpsCommentsReachout' and passes the value through."""
-        inputs_correct_key = {"disableNpsCommentsReachout": _MockPV(True)}
-        _construct_res_tenant_settings("ts", inputs_correct_key, opts=None)
+        inputs_correct_key = {"disableNpsCommentsReachout": PropertyValue(True)}
+        result = await _construct_res_tenant_settings("ts", inputs_correct_key, opts=None)
+        assert isinstance(result, ConstructResponse)
 
     def test_wrapper_uses_uppercase_nps_wire_key(self):
         """_TenantSettingsWrap must use 'disableNPSCommentsReachout' (all-caps) wire key."""

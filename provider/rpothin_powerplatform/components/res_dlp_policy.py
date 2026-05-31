@@ -14,7 +14,7 @@ No ``from __future__ import annotations`` — the Pulumi Analyzer needs runtime
 type objects, not lazy string annotations.
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any, Optional
 
 import pulumi
@@ -38,7 +38,7 @@ class ResDlpPolicyArgs(ComponentArgs):
     AVM module.
     """
 
-    display_name: str = field(default="")
+    display_name: str
     """Display name for the DLP policy.  Required."""
 
     rule_sets: Optional[list[Any]] = None
@@ -149,26 +149,39 @@ class ResDlpPolicy(pulumi.ComponentResource):
 
 
 @register_construct(COMPONENT_TYPE)
-def _construct_res_dlp_policy(
+async def _construct_res_dlp_policy(
     name: str,
     inputs: dict[str, Any],
     opts: Optional[pulumi.ResourceOptions],
-) -> ResDlpPolicy:
-    """Bridge factory: called by the Pulumi engine during ``construct``."""
+) -> object:
+    """Async bridge factory: called by the Pulumi engine during ``construct``.
 
-    def _pv(key: str) -> Any:
-        """Extract a value from the PropertyValue inputs dict by camelCase key."""
-        v = inputs.get(key)
-        if v is None:
-            return None
-        # PropertyValue wraps the real value; expose it to the SDK layer.
-        if hasattr(v, "value"):
-            return v.value
-        return v
+    All inputs are converted via :func:`~construct_bridge.pv_to_input` so that
+    secret, unknown, and dependency metadata is preserved for the Pulumi engine.
+    """
+    from pulumi.provider.experimental.property_value import PropertyValue  # noqa: PLC0415
+    from pulumi.provider.experimental.provider import ConstructResponse  # noqa: PLC0415
+
+    from ..construct_bridge import pv_to_input, resolve_outputs  # noqa: PLC0415
+
+    def _pv(key: str, default: Any = None) -> Any:
+        """Convert a named input to a Python value / Output, preserving metadata."""
+        return pv_to_input(inputs.get(key, PropertyValue(default)))
 
     args = ResDlpPolicyArgs(
-        display_name=_pv("displayName") or "",
+        display_name=_pv("displayName"),
         rule_sets=_pv("ruleSets"),
         enable_telemetry=_pv("enableTelemetry"),
     )
-    return ResDlpPolicy(name, args, opts)
+    comp = ResDlpPolicy(name, args, opts)
+    urn = await comp.urn.future()
+    state = await resolve_outputs(
+        {
+            "resourceId": comp.resource_id,
+            "policyName": comp.policy_name,
+            "ruleSetCount": comp.rule_set_count,
+            "lastModified": comp.last_modified,
+            "tenantId": comp.tenant_id,
+        }
+    )
+    return ConstructResponse(urn=urn, state=state, state_dependencies={})
