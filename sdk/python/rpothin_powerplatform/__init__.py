@@ -31,14 +31,25 @@ from . import outputs
 
 # Make subpackages available:
 if typing.TYPE_CHECKING:
+    import rpothin_powerplatform.components as __components
+    components = __components
     import rpothin_powerplatform.config as __config
     config = __config
 else:
+    components = _utilities.lazy_import('rpothin_powerplatform.components')
     config = _utilities.lazy_import('rpothin_powerplatform.config')
 
 _utilities.register(
     resource_modules="""
 [
+ {
+  "pkg": "powerplatform",
+  "mod": "components",
+  "fqn": "rpothin_powerplatform.components",
+  "classes": {
+   "powerplatform:components:PocComponent": "PocComponent"
+  }
+ },
  {
   "pkg": "powerplatform",
   "mod": "index",

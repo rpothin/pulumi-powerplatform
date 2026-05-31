@@ -107,10 +107,12 @@ utilities.lazyLoad(exports, ["TenantSettings"], () => require("./tenantSettings"
 
 
 // Export sub-modules:
+import * as components from "./components";
 import * as config from "./config";
 import * as types from "./types";
 
 export {
+    components,
     config,
     types,
 };

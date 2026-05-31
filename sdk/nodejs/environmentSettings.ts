@@ -141,15 +141,15 @@ export interface EnvironmentSettingsArgs {
     /**
      * Whether service principal (application user) access is allowed.
      */
-    allowApplicationUserAccess?: pulumi.Input<boolean | undefined>;
+    allowApplicationUserAccess?: pulumi.Input<boolean>;
     /**
      * Whether Microsoft trusted Azure service tags are allowed for connectivity.
      */
-    allowMicrosoftTrustedServiceTags?: pulumi.Input<boolean | undefined>;
+    allowMicrosoftTrustedServiceTags?: pulumi.Input<boolean>;
     /**
      * Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
      */
-    auditRetentionPeriodInDays?: pulumi.Input<number | undefined>;
+    auditRetentionPeriodInDays?: pulumi.Input<number>;
     /**
      * The ID of the environment to manage settings for. Immutable after creation.
      */
@@ -157,37 +157,37 @@ export interface EnvironmentSettingsArgs {
     /**
      * Whether activity logging is enabled (true or false).
      */
-    isActivityLoggingEnabled?: pulumi.Input<string | undefined>;
+    isActivityLoggingEnabled?: pulumi.Input<string>;
     /**
      * Whether auditing is enabled (true or false).
      */
-    isAuditEnabled?: pulumi.Input<string | undefined>;
+    isAuditEnabled?: pulumi.Input<string>;
     /**
      * Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
      */
-    isReadAuditEnabled?: pulumi.Input<boolean | undefined>;
+    isReadAuditEnabled?: pulumi.Input<boolean>;
     /**
      * Whether user access auditing is enabled (true or false).
      */
-    isUserAccessAuditEnabled?: pulumi.Input<string | undefined>;
+    isUserAccessAuditEnabled?: pulumi.Input<string>;
     /**
      * Maximum file upload size in bytes.
      */
-    maxUploadFileSize?: pulumi.Input<string | undefined>;
+    maxUploadFileSize?: pulumi.Input<string>;
     /**
      * Plugin trace log setting (Off, Exception, All).
      */
-    pluginTraceLogSetting?: pulumi.Input<string | undefined>;
+    pluginTraceLogSetting?: pulumi.Input<string>;
     /**
      * Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
      */
-    powerAppsComponentFrameworkForCanvasApps?: pulumi.Input<boolean | undefined>;
+    powerAppsComponentFrameworkForCanvasApps?: pulumi.Input<boolean>;
     /**
      * Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
      */
-    reverseProxyIpAddresses?: pulumi.Input<string | undefined>;
+    reverseProxyIpAddresses?: pulumi.Input<string>;
     /**
      * Whether dashboard cards are shown in expanded state by default.
      */
-    showDashboardCardsInExpandedState?: pulumi.Input<boolean | undefined>;
+    showDashboardCardsInExpandedState?: pulumi.Input<boolean>;
 }
