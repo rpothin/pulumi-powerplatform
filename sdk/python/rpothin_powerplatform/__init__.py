@@ -19,6 +19,8 @@ from .environment_settings import *
 from .get_apps import *
 from .get_connectors import *
 from .get_data_records import *
+from .get_dlp_policies import *
+from .get_dlp_policy_migration_config import *
 from .get_environments import *
 from .get_flows import *
 from .isv_contract import *

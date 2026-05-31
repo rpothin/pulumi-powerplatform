@@ -793,6 +793,87 @@ func (o DataversePtrOutput) Version() pulumi.StringPtrOutput {
 	}).(pulumi.StringPtrOutput)
 }
 
+// Summary information about a DLP (Data Loss Prevention) rule-based policy.
+type DlpPolicySummary struct {
+	// The unique identifier of the DLP policy.
+	Id *string `pulumi:"id"`
+	// The ISO 8601 timestamp when the policy was last modified.
+	LastModified *string `pulumi:"lastModified"`
+	// The display name of the DLP policy.
+	Name *string `pulumi:"name"`
+	// The total number of rule sets in the policy.
+	RuleSetCount *int `pulumi:"ruleSetCount"`
+	// The rule sets that define the DLP policy rules.
+	RuleSets []RuleSet `pulumi:"ruleSets"`
+	// The ID of the tenant owning the DLP policy.
+	TenantId *string `pulumi:"tenantId"`
+}
+
+// Summary information about a DLP (Data Loss Prevention) rule-based policy.
+type DlpPolicySummaryOutput struct{ *pulumi.OutputState }
+
+func (DlpPolicySummaryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*DlpPolicySummary)(nil)).Elem()
+}
+
+func (o DlpPolicySummaryOutput) ToDlpPolicySummaryOutput() DlpPolicySummaryOutput {
+	return o
+}
+
+func (o DlpPolicySummaryOutput) ToDlpPolicySummaryOutputWithContext(ctx context.Context) DlpPolicySummaryOutput {
+	return o
+}
+
+// The unique identifier of the DLP policy.
+func (o DlpPolicySummaryOutput) Id() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DlpPolicySummary) *string { return v.Id }).(pulumi.StringPtrOutput)
+}
+
+// The ISO 8601 timestamp when the policy was last modified.
+func (o DlpPolicySummaryOutput) LastModified() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DlpPolicySummary) *string { return v.LastModified }).(pulumi.StringPtrOutput)
+}
+
+// The display name of the DLP policy.
+func (o DlpPolicySummaryOutput) Name() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DlpPolicySummary) *string { return v.Name }).(pulumi.StringPtrOutput)
+}
+
+// The total number of rule sets in the policy.
+func (o DlpPolicySummaryOutput) RuleSetCount() pulumi.IntPtrOutput {
+	return o.ApplyT(func(v DlpPolicySummary) *int { return v.RuleSetCount }).(pulumi.IntPtrOutput)
+}
+
+// The rule sets that define the DLP policy rules.
+func (o DlpPolicySummaryOutput) RuleSets() RuleSetArrayOutput {
+	return o.ApplyT(func(v DlpPolicySummary) []RuleSet { return v.RuleSets }).(RuleSetArrayOutput)
+}
+
+// The ID of the tenant owning the DLP policy.
+func (o DlpPolicySummaryOutput) TenantId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v DlpPolicySummary) *string { return v.TenantId }).(pulumi.StringPtrOutput)
+}
+
+type DlpPolicySummaryArrayOutput struct{ *pulumi.OutputState }
+
+func (DlpPolicySummaryArrayOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*[]DlpPolicySummary)(nil)).Elem()
+}
+
+func (o DlpPolicySummaryArrayOutput) ToDlpPolicySummaryArrayOutput() DlpPolicySummaryArrayOutput {
+	return o
+}
+
+func (o DlpPolicySummaryArrayOutput) ToDlpPolicySummaryArrayOutputWithContext(ctx context.Context) DlpPolicySummaryArrayOutput {
+	return o
+}
+
+func (o DlpPolicySummaryArrayOutput) Index(i pulumi.IntInput) DlpPolicySummaryOutput {
+	return pulumi.All(o, i).ApplyT(func(vs []interface{}) DlpPolicySummary {
+		return vs[0].([]DlpPolicySummary)[vs[1].(int)]
+	}).(DlpPolicySummaryOutput)
+}
+
 // An enterprise policy associated with a Power Platform environment.
 type EnterprisePolicy struct {
 	// The resource ID of the policy.
@@ -4003,6 +4084,8 @@ func init() {
 	pulumi.RegisterOutputType(DataRecordsExpandParamArrayOutput{})
 	pulumi.RegisterOutputType(DataverseOutput{})
 	pulumi.RegisterOutputType(DataversePtrOutput{})
+	pulumi.RegisterOutputType(DlpPolicySummaryOutput{})
+	pulumi.RegisterOutputType(DlpPolicySummaryArrayOutput{})
 	pulumi.RegisterOutputType(EnterprisePolicyOutput{})
 	pulumi.RegisterOutputType(EnterprisePolicyArrayOutput{})
 	pulumi.RegisterOutputType(EnvironmentSummaryOutput{})

@@ -36,6 +36,8 @@ from rpothin_powerplatform.config import resolve_client
 from rpothin_powerplatform.functions.get_apps import GetAppsFunction
 from rpothin_powerplatform.functions.get_connectors import GetConnectorsFunction
 from rpothin_powerplatform.functions.get_data_records import GetDataRecordsFunction
+from rpothin_powerplatform.functions.get_dlp_policies import GetDlpPoliciesFunction
+from rpothin_powerplatform.functions.get_dlp_policy_migration_config import GetDlpPolicyMigrationConfigFunction
 from rpothin_powerplatform.functions.get_environments import GetEnvironmentsFunction
 from rpothin_powerplatform.functions.get_flows import GetFlowsFunction
 from rpothin_powerplatform.resources.admin_management_application import AdminManagementApplicationResource
@@ -75,6 +77,8 @@ _GET_ENVIRONMENTS = "powerplatform:index:getEnvironments"
 _GET_CONNECTORS = "powerplatform:index:getConnectors"
 _GET_APPS = "powerplatform:index:getApps"
 _GET_FLOWS = "powerplatform:index:getFlows"
+_GET_DLP_POLICIES = "powerplatform:index:getDlpPolicies"
+_GET_DLP_POLICY_MIGRATION_CONFIG = "powerplatform:index:getDlpPolicyMigrationConfig"
 
 def _load_schema() -> str:
     """Read the Pulumi Package Schema JSON file once.
@@ -128,6 +132,8 @@ class PowerPlatformProvider(Provider):
         self._get_apps: Optional[GetAppsFunction] = None
         self._get_data_records: Optional[GetDataRecordsFunction] = None
         self._get_flows: Optional[GetFlowsFunction] = None
+        self._get_dlp_policies: Optional[GetDlpPoliciesFunction] = None
+        self._get_dlp_policy_migration_config: Optional[GetDlpPolicyMigrationConfigFunction] = None
 
     # ---- Schema ----
 
@@ -159,6 +165,8 @@ class PowerPlatformProvider(Provider):
         self._get_apps = GetAppsFunction(self._client)
         self._get_data_records = GetDataRecordsFunction(self._client)
         self._get_flows = GetFlowsFunction(self._client)
+        self._get_dlp_policies = GetDlpPoliciesFunction(self._client)
+        self._get_dlp_policy_migration_config = GetDlpPolicyMigrationConfigFunction(self._client)
 
         return ConfigureResponse(
             accept_secrets=True,
@@ -232,6 +240,10 @@ class PowerPlatformProvider(Provider):
             return await self._get_apps.invoke(request)
         if request.tok == _GET_FLOWS and self._get_flows:
             return await self._get_flows.invoke(request)
+        if request.tok == _GET_DLP_POLICIES and self._get_dlp_policies:
+            return await self._get_dlp_policies.invoke(request)
+        if request.tok == _GET_DLP_POLICY_MIGRATION_CONFIG and self._get_dlp_policy_migration_config:
+            return await self._get_dlp_policy_migration_config.invoke(request)
         raise NotImplementedError(f"Unknown function: {request.tok}")
 
     # ---- Construct (component resources) ----

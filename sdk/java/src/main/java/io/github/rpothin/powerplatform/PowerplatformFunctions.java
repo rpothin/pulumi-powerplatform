@@ -15,6 +15,10 @@ import io.github.rpothin.powerplatform.inputs.GetConnectorsArgs;
 import io.github.rpothin.powerplatform.inputs.GetConnectorsPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetDataRecordsArgs;
 import io.github.rpothin.powerplatform.inputs.GetDataRecordsPlainArgs;
+import io.github.rpothin.powerplatform.inputs.GetDlpPoliciesArgs;
+import io.github.rpothin.powerplatform.inputs.GetDlpPoliciesPlainArgs;
+import io.github.rpothin.powerplatform.inputs.GetDlpPolicyMigrationConfigArgs;
+import io.github.rpothin.powerplatform.inputs.GetDlpPolicyMigrationConfigPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetEnvironmentsArgs;
 import io.github.rpothin.powerplatform.inputs.GetEnvironmentsPlainArgs;
 import io.github.rpothin.powerplatform.inputs.GetFlowsArgs;
@@ -22,6 +26,8 @@ import io.github.rpothin.powerplatform.inputs.GetFlowsPlainArgs;
 import io.github.rpothin.powerplatform.outputs.GetAppsResult;
 import io.github.rpothin.powerplatform.outputs.GetConnectorsResult;
 import io.github.rpothin.powerplatform.outputs.GetDataRecordsResult;
+import io.github.rpothin.powerplatform.outputs.GetDlpPoliciesResult;
+import io.github.rpothin.powerplatform.outputs.GetDlpPolicyMigrationConfigResult;
 import io.github.rpothin.powerplatform.outputs.GetEnvironmentsResult;
 import io.github.rpothin.powerplatform.outputs.GetFlowsResult;
 import java.util.concurrent.CompletableFuture;
@@ -131,6 +137,90 @@ public final class PowerplatformFunctions {
      */
     public static CompletableFuture<GetDataRecordsResult> getDataRecordsPlain(GetDataRecordsPlainArgs args, InvokeOptions options) {
         return Deployment.getInstance().invokeAsync("powerplatform:index:getDataRecords", TypeShape.of(GetDataRecordsResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static Output<GetDlpPoliciesResult> getDlpPolicies() {
+        return getDlpPolicies(GetDlpPoliciesArgs.Empty, InvokeOptions.Empty);
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static CompletableFuture<GetDlpPoliciesResult> getDlpPoliciesPlain() {
+        return getDlpPoliciesPlain(GetDlpPoliciesPlainArgs.Empty, InvokeOptions.Empty);
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static Output<GetDlpPoliciesResult> getDlpPolicies(GetDlpPoliciesArgs args) {
+        return getDlpPolicies(args, InvokeOptions.Empty);
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static CompletableFuture<GetDlpPoliciesResult> getDlpPoliciesPlain(GetDlpPoliciesPlainArgs args) {
+        return getDlpPoliciesPlain(args, InvokeOptions.Empty);
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static Output<GetDlpPoliciesResult> getDlpPolicies(GetDlpPoliciesArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getDlpPolicies", TypeShape.of(GetDlpPoliciesResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static Output<GetDlpPoliciesResult> getDlpPolicies(GetDlpPoliciesArgs args, InvokeOutputOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getDlpPolicies", TypeShape.of(GetDlpPoliciesResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.
+     * 
+     */
+    public static CompletableFuture<GetDlpPoliciesResult> getDlpPoliciesPlain(GetDlpPoliciesPlainArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invokeAsync("powerplatform:index:getDlpPolicies", TypeShape.of(GetDlpPoliciesResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.
+     * 
+     */
+    public static Output<GetDlpPolicyMigrationConfigResult> getDlpPolicyMigrationConfig(GetDlpPolicyMigrationConfigArgs args) {
+        return getDlpPolicyMigrationConfig(args, InvokeOptions.Empty);
+    }
+    /**
+     * Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.
+     * 
+     */
+    public static CompletableFuture<GetDlpPolicyMigrationConfigResult> getDlpPolicyMigrationConfigPlain(GetDlpPolicyMigrationConfigPlainArgs args) {
+        return getDlpPolicyMigrationConfigPlain(args, InvokeOptions.Empty);
+    }
+    /**
+     * Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.
+     * 
+     */
+    public static Output<GetDlpPolicyMigrationConfigResult> getDlpPolicyMigrationConfig(GetDlpPolicyMigrationConfigArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getDlpPolicyMigrationConfig", TypeShape.of(GetDlpPolicyMigrationConfigResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.
+     * 
+     */
+    public static Output<GetDlpPolicyMigrationConfigResult> getDlpPolicyMigrationConfig(GetDlpPolicyMigrationConfigArgs args, InvokeOutputOptions options) {
+        return Deployment.getInstance().invoke("powerplatform:index:getDlpPolicyMigrationConfig", TypeShape.of(GetDlpPolicyMigrationConfigResult.class), args, Utilities.withVersion(options));
+    }
+    /**
+     * Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.
+     * 
+     */
+    public static CompletableFuture<GetDlpPolicyMigrationConfigResult> getDlpPolicyMigrationConfigPlain(GetDlpPolicyMigrationConfigPlainArgs args, InvokeOptions options) {
+        return Deployment.getInstance().invokeAsync("powerplatform:index:getDlpPolicyMigrationConfig", TypeShape.of(GetDlpPolicyMigrationConfigResult.class), args, Utilities.withVersion(options));
     }
     /**
      * Retrieves a list of Power Platform environments available for the authenticated user.

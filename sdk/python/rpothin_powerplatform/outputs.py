@@ -20,6 +20,7 @@ __all__ = [
     'BillingInstrument',
     'ConnectorSummary',
     'Dataverse',
+    'DlpPolicySummary',
     'EnterprisePolicy',
     'EnvironmentSummary',
     'FlowSummary',
@@ -403,6 +404,90 @@ class Dataverse(dict):
         Dataverse version string. Computed.
         """
         return pulumi.get(self, "version")
+
+
+@pulumi.output_type
+class DlpPolicySummary(dict):
+    """
+    Summary information about a DLP (Data Loss Prevention) rule-based policy.
+    """
+    def __init__(__self__, *,
+                 id: Optional[_builtins.str] = None,
+                 last_modified: Optional[_builtins.str] = None,
+                 name: Optional[_builtins.str] = None,
+                 rule_set_count: Optional[_builtins.int] = None,
+                 rule_sets: Optional[Sequence['outputs.RuleSet']] = None,
+                 tenant_id: Optional[_builtins.str] = None):
+        """
+        Summary information about a DLP (Data Loss Prevention) rule-based policy.
+
+        :param _builtins.str id: The unique identifier of the DLP policy.
+        :param _builtins.str last_modified: The ISO 8601 timestamp when the policy was last modified.
+        :param _builtins.str name: The display name of the DLP policy.
+        :param _builtins.int rule_set_count: The total number of rule sets in the policy.
+        :param Sequence['RuleSet'] rule_sets: The rule sets that define the DLP policy rules.
+        :param _builtins.str tenant_id: The ID of the tenant owning the DLP policy.
+        """
+        if id is not None:
+            pulumi.set(__self__, "id", id)
+        if last_modified is not None:
+            pulumi.set(__self__, "last_modified", last_modified)
+        if name is not None:
+            pulumi.set(__self__, "name", name)
+        if rule_set_count is not None:
+            pulumi.set(__self__, "rule_set_count", rule_set_count)
+        if rule_sets is not None:
+            pulumi.set(__self__, "rule_sets", rule_sets)
+        if tenant_id is not None:
+            pulumi.set(__self__, "tenant_id", tenant_id)
+
+    @_builtins.property
+    @pulumi.getter
+    def id(self) -> Optional[_builtins.str]:
+        """
+        The unique identifier of the DLP policy.
+        """
+        return pulumi.get(self, "id")
+
+    @_builtins.property
+    @pulumi.getter(name="lastModified")
+    def last_modified(self) -> Optional[_builtins.str]:
+        """
+        The ISO 8601 timestamp when the policy was last modified.
+        """
+        return pulumi.get(self, "last_modified")
+
+    @_builtins.property
+    @pulumi.getter
+    def name(self) -> Optional[_builtins.str]:
+        """
+        The display name of the DLP policy.
+        """
+        return pulumi.get(self, "name")
+
+    @_builtins.property
+    @pulumi.getter(name="ruleSetCount")
+    def rule_set_count(self) -> Optional[_builtins.int]:
+        """
+        The total number of rule sets in the policy.
+        """
+        return pulumi.get(self, "rule_set_count")
+
+    @_builtins.property
+    @pulumi.getter(name="ruleSets")
+    def rule_sets(self) -> Optional[Sequence['outputs.RuleSet']]:
+        """
+        The rule sets that define the DLP policy rules.
+        """
+        return pulumi.get(self, "rule_sets")
+
+    @_builtins.property
+    @pulumi.getter(name="tenantId")
+    def tenant_id(self) -> Optional[_builtins.str]:
+        """
+        The ID of the tenant owning the DLP policy.
+        """
+        return pulumi.get(self, "tenant_id")
 
 
 @pulumi.output_type

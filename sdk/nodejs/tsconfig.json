@@ -39,6 +39,8 @@
         "getApps.ts",
         "getConnectors.ts",
         "getDataRecords.ts",
+        "getDlpPolicies.ts",
+        "getDlpPolicyMigrationConfig.ts",
         "getEnvironments.ts",
         "getFlows.ts",
         "index.ts",

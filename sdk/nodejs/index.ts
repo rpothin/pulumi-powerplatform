@@ -70,6 +70,16 @@ export const getDataRecords: typeof import("./getDataRecords").getDataRecords = 
 export const getDataRecordsOutput: typeof import("./getDataRecords").getDataRecordsOutput = null as any;
 utilities.lazyLoad(exports, ["getDataRecords","getDataRecordsOutput"], () => require("./getDataRecords"));
 
+export { GetDlpPoliciesArgs, GetDlpPoliciesResult } from "./getDlpPolicies";
+export const getDlpPolicies: typeof import("./getDlpPolicies").getDlpPolicies = null as any;
+export const getDlpPoliciesOutput: typeof import("./getDlpPolicies").getDlpPoliciesOutput = null as any;
+utilities.lazyLoad(exports, ["getDlpPolicies","getDlpPoliciesOutput"], () => require("./getDlpPolicies"));
+
+export { GetDlpPolicyMigrationConfigArgs, GetDlpPolicyMigrationConfigResult, GetDlpPolicyMigrationConfigOutputArgs } from "./getDlpPolicyMigrationConfig";
+export const getDlpPolicyMigrationConfig: typeof import("./getDlpPolicyMigrationConfig").getDlpPolicyMigrationConfig = null as any;
+export const getDlpPolicyMigrationConfigOutput: typeof import("./getDlpPolicyMigrationConfig").getDlpPolicyMigrationConfigOutput = null as any;
+utilities.lazyLoad(exports, ["getDlpPolicyMigrationConfig","getDlpPolicyMigrationConfigOutput"], () => require("./getDlpPolicyMigrationConfig"));
+
 export { GetEnvironmentsArgs, GetEnvironmentsResult, GetEnvironmentsOutputArgs } from "./getEnvironments";
 export const getEnvironments: typeof import("./getEnvironments").getEnvironments = null as any;
 export const getEnvironmentsOutput: typeof import("./getEnvironments").getEnvironmentsOutput = null as any;

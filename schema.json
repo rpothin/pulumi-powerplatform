@@ -177,6 +177,64 @@
                 ]
             }
         },
+        "powerplatform:index:getDlpPolicies": {
+            "description": "Lists all rule-based DLP (Data Loss Prevention) policies in the tenant.",
+            "inputs": {
+                "properties": {}
+            },
+            "outputs": {
+                "properties": {
+                    "policies": {
+                        "description": "The list of DLP policies.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:DlpPolicySummary"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "policies"
+                ]
+            }
+        },
+        "powerplatform:index:getDlpPolicyMigrationConfig": {
+            "description": "Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.",
+            "inputs": {
+                "properties": {
+                    "sourcePolicyId": {
+                        "description": "The ID of the source DLP policy to read migration configuration from.",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "sourcePolicyId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "displayName": {
+                        "description": "Display name of the source DLP policy. Use as the displayName input for ResDlpPolicy.",
+                        "type": "string"
+                    },
+                    "name": {
+                        "description": "Display name of the source DLP policy. Use as the name input for powerplatform:index:DlpPolicy.",
+                        "type": "string"
+                    },
+                    "ruleSets": {
+                        "description": "Rule set configurations from the source policy, ready for input to ResDlpPolicy or DlpPolicy.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:RuleSet"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "displayName",
+                    "name",
+                    "ruleSets"
+                ]
+            }
+        },
         "powerplatform:index:getFlows": {
             "description": "Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).",
             "inputs": {
@@ -1558,6 +1616,39 @@
                 },
                 "version": {
                     "description": "Dataverse version string. Computed.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:DlpPolicySummary": {
+            "description": "Summary information about a DLP (Data Loss Prevention) rule-based policy.",
+            "properties": {
+                "id": {
+                    "description": "The unique identifier of the DLP policy.",
+                    "type": "string"
+                },
+                "lastModified": {
+                    "description": "The ISO 8601 timestamp when the policy was last modified.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The display name of the DLP policy.",
+                    "type": "string"
+                },
+                "ruleSetCount": {
+                    "description": "The total number of rule sets in the policy.",
+                    "type": "integer"
+                },
+                "ruleSets": {
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    },
+                    "type": "array"
+                },
+                "tenantId": {
+                    "description": "The ID of the tenant owning the DLP policy.",
                     "type": "string"
                 }
             },

@@ -118,6 +118,36 @@ export interface Dataverse {
 }
 
 /**
+ * Summary information about a DLP (Data Loss Prevention) rule-based policy.
+ */
+export interface DlpPolicySummary {
+    /**
+     * The unique identifier of the DLP policy.
+     */
+    id?: string;
+    /**
+     * The ISO 8601 timestamp when the policy was last modified.
+     */
+    lastModified?: string;
+    /**
+     * The display name of the DLP policy.
+     */
+    name?: string;
+    /**
+     * The total number of rule sets in the policy.
+     */
+    ruleSetCount?: number;
+    /**
+     * The rule sets that define the DLP policy rules.
+     */
+    ruleSets?: outputs.RuleSet[];
+    /**
+     * The ID of the tenant owning the DLP policy.
+     */
+    tenantId?: string;
+}
+
+/**
  * An enterprise policy associated with a Power Platform environment.
  */
 export interface EnterprisePolicy {
