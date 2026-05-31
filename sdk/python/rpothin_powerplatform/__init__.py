@@ -48,7 +48,9 @@ _utilities.register(
   "fqn": "rpothin_powerplatform.components",
   "classes": {
    "powerplatform:components:PocComponent": "PocComponent",
-   "powerplatform:components:ResEnvironment": "ResEnvironment"
+   "powerplatform:components:ResDlpPolicy": "ResDlpPolicy",
+   "powerplatform:components:ResEnvironment": "ResEnvironment",
+   "powerplatform:components:ResTenantSettings": "ResTenantSettings"
   }
  },
  {

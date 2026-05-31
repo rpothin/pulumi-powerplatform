@@ -12,42 +12,10 @@ Covers:
 from __future__ import annotations
 
 import sys
-import types
 from typing import Any
 
+import pulumi.runtime.mocks as mocks_module
 import pytest
-
-# ---------------------------------------------------------------------------
-# Minimal stubs so the component module loads without pulumi installed.
-# ---------------------------------------------------------------------------
-
-if "pulumi" not in sys.modules:
-    pulumi_stub = types.ModuleType("pulumi")
-
-    class _FakeOutput:
-        pass
-
-    class _FakeComponentResource:
-        def __init__(self, *args: Any, **kwargs: Any) -> None:
-            pass
-
-        def register_outputs(self, outputs: dict[str, Any]) -> None:
-            pass
-
-    class _FakeResourceOptions:
-        def __init__(self, **kwargs: Any) -> None:
-            for k, v in kwargs.items():
-                setattr(self, k, v)
-
-    def _fake_get(resource: Any, key: str) -> _FakeOutput:
-        return _FakeOutput()
-
-    pulumi_stub.ComponentResource = _FakeComponentResource
-    pulumi_stub.CustomResource = _FakeComponentResource
-    pulumi_stub.ResourceOptions = _FakeResourceOptions
-    pulumi_stub.Output = _FakeOutput
-    pulumi_stub.get = _fake_get
-    sys.modules["pulumi"] = pulumi_stub
 
 # Import the component under test.
 sys.path.insert(0, "provider")
@@ -63,6 +31,20 @@ from rpothin_powerplatform.components.res_tenant_settings import (  # noqa: E402
 )
 
 PULUMI_PKG_NAME = "powerplatform"
+
+
+class _SimpleMocks(mocks_module.Mocks):
+    def new_resource(self, args):
+        return args.name + "_id", args.inputs
+
+    def call(self, args):
+        return {}, []
+
+
+@pytest.fixture
+async def _pulumi_mocks():
+    """Install Pulumi runtime mocks inside the test's event loop."""
+    mocks_module.set_mocks(_SimpleMocks(), preview=False)
 
 
 # ---------------------------------------------------------------------------
@@ -182,40 +164,39 @@ class _MockPV:
         self.value = value
 
 
+@pytest.mark.asyncio
+@pytest.mark.usefixtures("_pulumi_mocks")
 class TestConstructResTenantSettings:
     """Verify that the construct factory extracts inputs correctly."""
 
-    def test_factory_with_no_inputs_does_not_raise(self):
+    async def test_factory_with_no_inputs_does_not_raise(self):
         """Factory must succeed with an empty inputs dict."""
         component = _construct_res_tenant_settings("ts", {}, opts=None)
         assert isinstance(component, ResTenantSettings)
 
-    def test_extracts_boolean_flag(self):
+    async def test_extracts_boolean_flag(self):
         """Factory must pass a boolean PropertyValue through to args."""
         inputs = {"disableEnvironmentCreationByNonAdminUsers": _MockPV(True)}
         component = _construct_res_tenant_settings("ts", inputs, opts=None)
         assert isinstance(component, ResTenantSettings)
 
-    def test_nps_key_mapping(self):
+    async def test_nps_key_mapping(self):
         """Factory reads disableNpsCommentsReachout (standard camelCase from Analyzer)."""
-        # The factory key for NPS is the Analyzer-generated standard camelCase key.
-        # The wrapper internally maps it to the provider's disableNPSCommentsReachout.
         inputs = {"disableNpsCommentsReachout": _MockPV(True)}
-        # Should not raise and must not look for disableNPSCommentsReachout in inputs.
         _construct_res_tenant_settings("ts", inputs, opts=None)
 
-    def test_power_platform_extracted(self):
+    async def test_power_platform_extracted(self):
         """Factory must extract the powerPlatform nested dict."""
         pp = {"search": {"disableDocsSearch": True}}
         inputs = {"powerPlatform": _MockPV(pp)}
         _construct_res_tenant_settings("ts", inputs, opts=None)
 
-    def test_raw_value_fallback(self):
+    async def test_raw_value_fallback(self):
         """A plain (non-PropertyValue) value in inputs must also be accepted."""
         inputs = {"disableSurveyFeedback": False}
         _construct_res_tenant_settings("ts", inputs, opts=None)
 
-    def test_all_fields_extracted(self):
+    async def test_all_fields_extracted(self):
         """Factory must accept all known camelCase keys without raising."""
         inputs = {
             "disableCapacityAllocationByEnvironmentAdmins": _MockPV(True),
@@ -251,16 +232,17 @@ class TestNPSKeyMapping:
     the wrapper must pass the provider's wire key to the child resource.
     """
 
-    def test_factory_reads_standard_camel_case_nps_key(self):
+    @pytest.mark.asyncio
+    @pytest.mark.usefixtures("_pulumi_mocks")
+    async def test_factory_reads_standard_camel_case_nps_key(self):
         """Factory reads 'disableNpsCommentsReachout', not 'disableNPSCommentsReachout'."""
-        # Provide the all-caps key — it must be ignored (factory reads standard key).
         inputs_wrong_key = {"disableNPSCommentsReachout": _MockPV(True)}
-        # Factory reads from disableNpsCommentsReachout; the above key is unknown, so
-        # disable_nps_comments_reachout in the resulting args should be None.
         component = _construct_res_tenant_settings("ts", inputs_wrong_key, opts=None)
         assert isinstance(component, ResTenantSettings)
 
-    def test_factory_reads_lowercase_nps_key(self):
+    @pytest.mark.asyncio
+    @pytest.mark.usefixtures("_pulumi_mocks")
+    async def test_factory_reads_lowercase_nps_key(self):
         """Factory reads 'disableNpsCommentsReachout' and passes the value through."""
         inputs_correct_key = {"disableNpsCommentsReachout": _MockPV(True)}
         _construct_res_tenant_settings("ts", inputs_correct_key, opts=None)

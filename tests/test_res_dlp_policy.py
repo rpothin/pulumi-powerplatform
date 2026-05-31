@@ -11,42 +11,10 @@ Covers:
 from __future__ import annotations
 
 import sys
-import types
 from typing import Any
 
+import pulumi.runtime.mocks as mocks_module
 import pytest
-
-# ---------------------------------------------------------------------------
-# Minimal stubs so the component module loads without pulumi installed.
-# ---------------------------------------------------------------------------
-
-if "pulumi" not in sys.modules:
-    pulumi_stub = types.ModuleType("pulumi")
-
-    class _FakeOutput:
-        pass
-
-    class _FakeComponentResource:
-        def __init__(self, *args: Any, **kwargs: Any) -> None:
-            pass
-
-        def register_outputs(self, outputs: dict[str, Any]) -> None:
-            pass
-
-    class _FakeResourceOptions:
-        def __init__(self, **kwargs: Any) -> None:
-            for k, v in kwargs.items():
-                setattr(self, k, v)
-
-    def _fake_get(resource: Any, key: str) -> _FakeOutput:
-        return _FakeOutput()
-
-    pulumi_stub.ComponentResource = _FakeComponentResource
-    pulumi_stub.CustomResource = _FakeComponentResource
-    pulumi_stub.ResourceOptions = _FakeResourceOptions
-    pulumi_stub.Output = _FakeOutput
-    pulumi_stub.get = _fake_get
-    sys.modules["pulumi"] = pulumi_stub
 
 # Import the component under test.
 sys.path.insert(0, "provider")
@@ -62,6 +30,20 @@ from rpothin_powerplatform.components.res_dlp_policy import (  # noqa: E402
 )
 
 PULUMI_PKG_NAME = "powerplatform"
+
+
+class _SimpleMocks(mocks_module.Mocks):
+    def new_resource(self, args):
+        return args.name + "_id", args.inputs
+
+    def call(self, args):
+        return {}, []
+
+
+@pytest.fixture
+async def _pulumi_mocks():
+    """Install Pulumi runtime mocks inside the test's event loop."""
+    mocks_module.set_mocks(_SimpleMocks(), preview=False)
 
 
 # ---------------------------------------------------------------------------
@@ -158,35 +140,34 @@ class _MockPV:
         self.value = value
 
 
+@pytest.mark.asyncio
+@pytest.mark.usefixtures("_pulumi_mocks")
 class TestConstructResDlpPolicy:
     """Verify that the construct factory extracts inputs correctly."""
 
-    def test_extracts_display_name(self):
+    async def test_extracts_display_name(self):
         """Factory must pass displayName through to ResDlpPolicyArgs.display_name."""
         inputs = {"displayName": _MockPV("Extracted Policy")}
         component = _construct_res_dlp_policy("p", inputs, opts=None)
-        # We can't call the real constructor in unit tests, but we can verify
-        # the factory doesn't raise and returns a ResDlpPolicy instance.
         assert isinstance(component, ResDlpPolicy)
 
-    def test_extracts_rule_sets(self):
+    async def test_extracts_rule_sets(self):
         """Factory must pass ruleSets through when provided."""
         rule_sets = [{"classification": "Blocked", "connectors": []}]
         inputs = {"displayName": _MockPV("p"), "ruleSets": _MockPV(rule_sets)}
-        # Should not raise.
         _construct_res_dlp_policy("p", inputs, opts=None)
 
-    def test_missing_optional_keys_are_none(self):
+    async def test_missing_optional_keys_are_none(self):
         """Missing optional keys must not raise KeyError."""
         inputs = {"displayName": _MockPV("p")}
         _construct_res_dlp_policy("p", inputs, opts=None)
 
-    def test_raw_value_fallback(self):
+    async def test_raw_value_fallback(self):
         """A plain (non-PropertyValue) value in inputs must also be accepted."""
         inputs = {"displayName": "raw-display-name"}
         _construct_res_dlp_policy("p", inputs, opts=None)
 
-    def test_none_value_in_inputs_is_treated_as_none(self):
+    async def test_none_value_in_inputs_is_treated_as_none(self):
         """An explicit None in inputs for an optional key returns None."""
         inputs = {"displayName": _MockPV("p"), "ruleSets": None}
         _construct_res_dlp_policy("p", inputs, opts=None)

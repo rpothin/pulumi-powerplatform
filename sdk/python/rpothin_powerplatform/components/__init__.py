@@ -7,5 +7,7 @@ from .. import _utilities
 import typing
 # Export this package's modules as members:
 from .poc_component import *
+from .res_dlp_policy import *
 from .res_environment import *
+from .res_tenant_settings import *
 from ._inputs import *
