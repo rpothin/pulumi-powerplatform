@@ -29,7 +29,9 @@ from pulumi.provider.experimental.provider import (
     UpdateResponse,
 )
 
+import rpothin_powerplatform.components  # noqa: F401 — runs __init__.py, registers all components
 from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.components._base import _CONSTRUCT_REGISTRY, COMPONENT_TOKEN_PREFIX
 from rpothin_powerplatform.config import resolve_client
 from rpothin_powerplatform.functions.get_apps import GetAppsFunction
 from rpothin_powerplatform.functions.get_connectors import GetConnectorsFunction
@@ -235,26 +237,24 @@ class PowerPlatformProvider(Provider):
     # ---- Construct (component resources) ----
 
     async def construct(self, request: ConstructRequest) -> ConstructResponse:
-        """Dispatch a Construct call to the appropriate component factory.
+        """Dispatch a Construct call to the registered component factory.
 
-        The experimental server has already unmarshalled ``request.inputs`` into
-        ``dict[str, PropertyValue]`` and resolved ``request.options`` from the
-        gRPC payload before this method is called.
+        All ``powerplatform:components:*`` tokens are routed through
+        :data:`~rpothin_powerplatform.components._base._CONSTRUCT_REGISTRY`.
+        CRUD/invoke handlers are not involved.
         """
-        from pulumi.provider.experimental.property_value import PropertyValue
+        if not request.resource_type.startswith(COMPONENT_TOKEN_PREFIX):
+            raise NotImplementedError(
+                f"No component handler for type: {request.resource_type}"
+            )
 
-        from .components.poc_component import COMPONENT_TYPE as _POC_TYPE
-        from .components.poc_component import PocComponent
-        from .construct_bridge import pv_to_input, resolve_outputs
+        factory = _CONSTRUCT_REGISTRY.get(request.resource_type)
+        if factory is None:
+            raise NotImplementedError(
+                f"No component handler for type: {request.resource_type}"
+            )
 
-        if request.resource_type == _POC_TYPE:
-            label = pv_to_input(request.inputs.get("label", PropertyValue(None)))
-            comp = PocComponent(request.name, label=label, opts=request.options)
-            urn = await comp.urn.future()
-            state = await resolve_outputs({"labelOut": comp.label_out})
-            return ConstructResponse(urn=urn, state=state, state_dependencies={})
-
-        raise NotImplementedError(f"No component handler for type: {request.resource_type}")
+        return await factory(request.name, request.inputs, request.options)
 
     # ---- Internal helpers ----
 

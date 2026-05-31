@@ -1,1669 +1,1697 @@
 {
-  "name": "powerplatform",
-  "displayName": "Power Platform",
-  "description": "A Pulumi provider for managing Microsoft Power Platform resources.",
-  "version": "0.0.0",
-  "publisher": "rpothin",
-  "homepage": "https://github.com/rpothin/pulumi-powerplatform",
-  "repository": "https://github.com/rpothin/pulumi-powerplatform",
-  "license": "MIT",
-  "keywords": [
-    "category/cloud",
-    "kind/native"
-  ],
-  "logoUrl": "https://raw.githubusercontent.com/rpothin/pulumi-powerplatform/main/docs/logo.svg",
-  "pluginDownloadURL": "github://api.github.com/rpothin",
-  "config": {
-    "variables": {
-      "tenantId": {
-        "type": "string",
-        "description": "The Azure AD Tenant ID for authenticating with Power Platform. Can also be set with the AZURE_TENANT_ID environment variable."
-      },
-      "clientId": {
-        "type": "string",
-        "description": "The Azure AD Application (Client) ID. Can also be set with the AZURE_CLIENT_ID environment variable."
-      },
-      "clientSecret": {
-        "type": "string",
-        "description": "The Azure AD Client Secret. Can also be set with the AZURE_CLIENT_SECRET environment variable.",
-        "secret": true
-      }
-    }
-  },
-  "types": {
-    "powerplatform:index:EnterprisePolicy": {
-      "type": "object",
-      "description": "An enterprise policy associated with a Power Platform environment.",
-      "properties": {
-        "type": {
-          "type": "string",
-          "description": "Policy type (e.g. NetworkInjection, Encryption, Identity)."
-        },
-        "id": {
-          "type": "string",
-          "description": "The resource ID of the policy."
-        },
-        "location": {
-          "type": "string",
-          "description": "Azure region of the policy."
-        },
-        "systemId": {
-          "type": "string",
-          "description": "System-assigned ID of the policy."
-        },
-        "status": {
-          "type": "string",
-          "description": "Policy link status (e.g. Linked, Disabled)."
-        }
-      }
-    },
-    "powerplatform:index:RuleSet": {
-      "type": "object",
-      "description": "A rule set for a DLP policy, defining data loss prevention rules.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The unique identifier of the rule set."
-        },
-        "version": {
-          "type": "string",
-          "description": "The version of the rule set."
-        },
-        "inputs": {
-          "type": "object",
-          "description": "The inputs for the rule set, which may vary based on the rule.",
-          "additionalProperties": {
-            "$ref": "pulumi.json#/Any"
-          }
-        }
-      }
-    },
-    "powerplatform:index:BillingInstrument": {
-      "type": "object",
-      "description": "Azure billing instrument (subscription) details for a billing policy.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The billing instrument identifier."
-        },
-        "resourceGroup": {
-          "type": "string",
-          "description": "The Azure resource group within the subscription."
-        },
-        "subscriptionId": {
-          "type": "string",
-          "description": "The Azure subscription ID."
-        }
-      }
-    },
-    "powerplatform:index:ConnectorSummary": {
-      "type": "object",
-      "description": "Summary information about a Power Platform connector.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The unique identifier of the connector."
-        },
-        "name": {
-          "type": "string",
-          "description": "The internal name of the connector."
-        },
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the connector."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of the connector."
-        }
-      }
-    },
-    "powerplatform:index:AppSummary": {
-      "type": "object",
-      "description": "Summary information about a Power App.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The unique identifier of the app."
-        },
-        "name": {
-          "type": "string",
-          "description": "The internal name of the app."
-        },
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the app."
-        }
-      }
-    },
-    "powerplatform:index:FlowSummary": {
-      "type": "object",
-      "description": "Summary information about a Cloud Flow sourced from the Dataverse workflow table.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The unique identifier (workflowid GUID) of the flow."
-        },
-        "name": {
-          "type": "string",
-          "description": "The display name of the flow (maps to the Dataverse workflow name attribute)."
-        },
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the flow. Identical to name when sourced from Dataverse."
-        },
-        "stateCode": {
-          "type": "integer",
-          "description": "The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended."
-        }
-      }
-    },
-    "powerplatform:index:EnvironmentSummary": {
-      "type": "object",
-      "description": "Summary information about a Power Platform environment.",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "The unique identifier of the environment."
-        },
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the environment."
-        },
-        "domainName": {
-          "type": "string",
-          "description": "The domain name of the Dataverse database."
-        },
-        "state": {
-          "type": "string",
-          "description": "The current state of the environment."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type (SKU) of the environment."
-        },
-        "url": {
-          "type": "string",
-          "description": "The URL of the Dataverse database."
-        },
-        "geo": {
-          "type": "string",
-          "description": "The geographical region of the environment."
-        },
-        "azureRegion": {
-          "type": "string",
-          "description": "The Azure region of the environment."
-        },
-        "securityGroupId": {
-          "type": "string",
-          "description": "The security group that controls access."
-        },
-        "tenantId": {
-          "type": "string",
-          "description": "The tenant that the environment belongs to."
-        },
-        "environmentGroupId": {
-          "type": "string",
-          "description": "The environment group to which this environment belongs."
-        },
-        "dataverseId": {
-          "type": "string",
-          "description": "The Dataverse organization ID."
-        },
-        "version": {
-          "type": "string",
-          "description": "The version of the Dataverse database."
-        }
-      }
-    },
-    "powerplatform:index:Dataverse": {
-      "description": "Configuration for the Dataverse database associated with a Power Platform environment.",
-      "type": "object",
-      "properties": {
-        "currencyCode": {
-          "type": "string",
-          "description": "Currency code for the Dataverse database (e.g. USD). Immutable after creation."
-        },
-        "languageCode": {
-          "type": "number",
-          "description": "Base language LCID (e.g. 1033). Immutable after creation."
-        },
-        "domainName": {
-          "type": "string",
-          "description": "Domain prefix for the Dataverse instance URL."
-        },
-        "securityGroupId": {
-          "type": "string",
-          "description": "AAD security group GUID restricting environment access."
-        },
-        "administrationModeEnabled": {
-          "type": "boolean",
-          "description": "Whether the Dataverse instance is in administration mode."
-        },
-        "backgroundOperationEnabled": {
-          "type": "boolean",
-          "description": "Whether background operations are enabled during administration mode."
-        },
-        "templates": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "Provisioning templates (e.g. D365_Sales). Immutable after creation."
-        },
-        "templateMetadata": {
-          "type": "string",
-          "description": "JSON metadata for provisioning templates. Immutable after creation."
-        },
-        "organizationId": {
-          "type": "string",
-          "description": "Dataverse organization GUID. Computed."
-        },
-        "uniqueName": {
-          "type": "string",
-          "description": "Dataverse unique name. Computed."
-        },
-        "version": {
-          "type": "string",
-          "description": "Dataverse version string. Computed."
-        },
-        "url": {
-          "type": "string",
-          "description": "URL of the Dataverse instance. Computed."
-        }
-      }
-    },
-    "powerplatform:index:TenantPowerPlatformSettings": {
-      "type": "object",
-      "description": "Power Platform workload settings at tenant scope.",
-      "properties": {
-        "search": {
-          "$ref": "#/types/powerplatform:index:TenantSearchSettings",
-          "description": "Search settings."
-        },
-        "teamsIntegration": {
-          "$ref": "#/types/powerplatform:index:TenantTeamsIntegrationSettings",
-          "description": "Teams integration settings."
-        },
-        "powerApps": {
-          "$ref": "#/types/powerplatform:index:TenantPowerAppsSettings",
-          "description": "Power Apps settings."
-        },
-        "powerAutomate": {
-          "$ref": "#/types/powerplatform:index:TenantPowerAutomateSettings",
-          "description": "Power Automate settings."
-        },
-        "environments": {
-          "$ref": "#/types/powerplatform:index:TenantEnvironmentsSettings",
-          "description": "Environment settings."
-        },
-        "governance": {
-          "$ref": "#/types/powerplatform:index:TenantGovernanceSettings",
-          "description": "Governance settings."
-        },
-        "licensing": {
-          "$ref": "#/types/powerplatform:index:TenantLicensingSettings",
-          "description": "Licensing settings."
-        },
-        "powerPages": {
-          "$ref": "#/types/powerplatform:index:TenantPowerPagesSettings",
-          "description": "Power Pages settings."
-        },
-        "champions": {
-          "$ref": "#/types/powerplatform:index:TenantChampionsSettings",
-          "description": "Champions settings."
-        },
-        "intelligence": {
-          "$ref": "#/types/powerplatform:index:TenantIntelligenceSettings",
-          "description": "Intelligence settings."
-        },
-        "modelExperimentation": {
-          "$ref": "#/types/powerplatform:index:TenantModelExperimentationSettings",
-          "description": "Model experimentation settings."
-        },
-        "catalogSettings": {
-          "$ref": "#/types/powerplatform:index:TenantCatalogSettings",
-          "description": "Catalog settings."
-        },
-        "userManagementSettings": {
-          "$ref": "#/types/powerplatform:index:TenantUserManagementSettings",
-          "description": "User management settings."
-        }
-      }
-    },
-    "powerplatform:index:TenantSearchSettings": {
-      "type": "object",
-      "description": "Search settings.",
-      "properties": {
-        "disableDocsSearch": {
-          "type": "boolean",
-          "description": "Disable docs search."
-        },
-        "disableCommunitySearch": {
-          "type": "boolean",
-          "description": "Disable community search."
-        },
-        "disableBingVideoSearch": {
-          "type": "boolean",
-          "description": "Disable Bing video search."
-        }
-      }
-    },
-    "powerplatform:index:TenantTeamsIntegrationSettings": {
-      "type": "object",
-      "description": "Teams integration settings.",
-      "properties": {
-        "shareWithColleaguesUserLimit": {
-          "type": "integer",
-          "description": "Share with colleagues user limit."
-        }
-      }
-    },
-    "powerplatform:index:TenantPowerAppsSettings": {
-      "type": "object",
-      "description": "Power Apps settings.",
-      "properties": {
-        "disableShareWithEveryone": {
-          "type": "boolean",
-          "description": "Disable share with everyone."
-        },
-        "enableGuestsToMake": {
-          "type": "boolean",
-          "description": "Enable guests to make apps."
-        },
-        "disableMakerMatch": {
-          "type": "boolean",
-          "description": "Disable maker match."
-        },
-        "disableUnusedLicenseAssignment": {
-          "type": "boolean",
-          "description": "Disable unused license assignment."
-        },
-        "disableCreateFromImage": {
-          "type": "boolean",
-          "description": "Disable create from image."
-        },
-        "disableCreateFromFigma": {
-          "type": "boolean",
-          "description": "Disable create from Figma."
-        },
-        "disableConnectionSharingWithEveryone": {
-          "type": "boolean",
-          "description": "Disable connection sharing with everyone."
-        }
-      }
-    },
-    "powerplatform:index:TenantPowerAutomateSettings": {
-      "type": "object",
-      "description": "Power Automate settings.",
-      "properties": {
-        "disableCopilot": {
-          "type": "boolean",
-          "description": "Disable Copilot for Power Automate."
-        }
-      }
-    },
-    "powerplatform:index:TenantEnvironmentsSettings": {
-      "type": "object",
-      "description": "Environment settings.",
-      "properties": {
-        "disablePreferredDataLocationForTeamsEnvironment": {
-          "type": "boolean",
-          "description": "Disable preferred data location for Teams environment creation."
-        }
-      }
-    },
-    "powerplatform:index:TenantGovernanceSettings": {
-      "type": "object",
-      "description": "Governance settings.",
-      "properties": {
-        "disableAdminDigest": {
-          "type": "boolean",
-          "description": "Disable admin digest."
-        },
-        "disableDeveloperEnvironmentCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable developer environment creation by non-admin users."
-        },
-        "enableDefaultEnvironmentRouting": {
-          "type": "boolean",
-          "description": "Enable default environment routing."
-        },
-        "environmentRoutingAllMakers": {
-          "type": "boolean",
-          "description": "Route all makers to personal dev environments."
-        },
-        "environmentRoutingTargetEnvironmentGroupId": {
-          "type": "string",
-          "description": "Target environment group for default environment routing."
-        },
-        "environmentRoutingTargetSecurityGroupId": {
-          "type": "string",
-          "description": "Target security group for default environment routing."
-        },
-        "policy": {
-          "$ref": "#/types/powerplatform:index:TenantGovernancePolicySettings",
-          "description": "Governance policy settings."
-        }
-      }
-    },
-    "powerplatform:index:TenantGovernancePolicySettings": {
-      "type": "object",
-      "description": "Governance policy settings.",
-      "properties": {
-        "enableDesktopFlowDataPolicyManagement": {
-          "type": "boolean",
-          "description": "Enable desktop flow data policy management."
-        }
-      }
-    },
-    "powerplatform:index:TenantLicensingSettings": {
-      "type": "object",
-      "description": "Licensing settings.",
-      "properties": {
-        "disableBillingPolicyCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable billing policy creation by non-admin users."
-        },
-        "enableTenantCapacityReportForEnvironmentAdmins": {
-          "type": "boolean",
-          "description": "Enable tenant capacity report for environment admins."
-        },
-        "storageCapacityConsumptionWarningThreshold": {
-          "type": "integer",
-          "description": "Storage capacity consumption warning threshold."
-        },
-        "enableTenantLicensingReportForEnvironmentAdmins": {
-          "type": "boolean",
-          "description": "Enable tenant licensing report for environment admins."
-        },
-        "disableUseOfUnassignedAIBuilderCredits": {
-          "type": "boolean",
-          "description": "Disable use of unassigned AI Builder credits."
-        }
-      }
-    },
-    "powerplatform:index:TenantPowerPagesSettings": {
-      "type": "object",
-      "description": "Power Pages settings.",
-      "properties": {}
-    },
-    "powerplatform:index:TenantChampionsSettings": {
-      "type": "object",
-      "description": "Champions settings.",
-      "properties": {
-        "disableChampionsInvitationReachout": {
-          "type": "boolean",
-          "description": "Disable champions invitation reachout."
-        },
-        "disableSkillsMatchInvitationReachout": {
-          "type": "boolean",
-          "description": "Disable skills match invitation reachout."
-        }
-      }
-    },
-    "powerplatform:index:TenantIntelligenceSettings": {
-      "type": "object",
-      "description": "Intelligence settings.",
-      "properties": {
-        "disableCopilot": {
-          "type": "boolean",
-          "description": "Disable Copilot."
-        },
-        "enableOpenAiBotPublishing": {
-          "type": "boolean",
-          "description": "Enable OpenAI bot publishing."
-        }
-      }
-    },
-    "powerplatform:index:TenantModelExperimentationSettings": {
-      "type": "object",
-      "description": "Model experimentation settings.",
-      "properties": {
-        "enableModelDataSharing": {
-          "type": "boolean",
-          "description": "Enable model data sharing."
-        },
-        "disableDataLogging": {
-          "type": "boolean",
-          "description": "Disable data logging."
-        }
-      }
-    },
-    "powerplatform:index:TenantCatalogSettings": {
-      "type": "object",
-      "description": "Catalog settings.",
-      "properties": {
-        "powerCatalogAudienceSetting": {
-          "type": "string",
-          "description": "Power Catalog audience setting."
-        }
-      }
-    },
-    "powerplatform:index:TenantUserManagementSettings": {
-      "type": "object",
-      "description": "User management settings.",
-      "properties": {
-        "enableDeleteDisabledUserInAllEnvironments": {
-          "type": "boolean",
-          "description": "Enable delete disabled user in all environments."
-        }
-      }
-    },
-    "powerplatform:index:DataRecordLookup": {
-      "type": "object",
-      "description": "A reference to a related Dataverse record used as a lookup (single-valued) or many-to-many relationship value.",
-      "properties": {
-        "tableLogicalName": {
-          "type": "string",
-          "description": "The logical name of the related Dataverse table (e.g. systemuser, account, deploymentstage)."
-        },
-        "dataRecordId": {
-          "type": "string",
-          "description": "The GUID of the related record."
-        }
-      },
-      "required": [
-        "tableLogicalName",
-        "dataRecordId"
-      ]
-    },
-    "powerplatform:index:DataRecordsExpandParam": {
-      "type": "object",
-      "description": "OData $expand parameter for a navigation property in getDataRecords.",
-      "properties": {
-        "navigationProperty": {
-          "type": "string",
-          "description": "The navigation property name to expand."
-        },
-        "select": {
-          "type": "string",
-          "description": "Comma-separated list of columns to include for the expanded entity."
-        },
-        "filter": {
-          "type": "string",
-          "description": "OData filter expression for the expanded entity."
-        }
-      },
-      "required": [
-        "navigationProperty"
-      ]
-    }
-  },
-  "resources": {
-    "powerplatform:index:EnvironmentGroup": {
-      "description": "Manages a Power Platform environment group. Environment groups allow you to organize environments and apply policies at a group level.",
-      "inputProperties": {
-        "displayName": {
-          "type": "string",
-          "description": "The display name for the environment group."
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the environment group."
-        },
-        "parentGroupId": {
-          "type": "string",
-          "description": "The ID of the parent environment group, if this is a nested group."
-        }
-      },
-      "requiredInputs": [
-        "displayName"
-      ],
-      "properties": {
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the environment group."
-        },
-        "description": {
-          "type": "string",
-          "description": "The description of the environment group."
-        },
-        "parentGroupId": {
-          "type": "string",
-          "description": "The ID of the parent environment group."
-        },
-        "createdTime": {
-          "type": "string",
-          "description": "The timestamp when the group was created."
-        },
-        "lastModifiedTime": {
-          "type": "string",
-          "description": "The timestamp when the group was last modified."
-        }
-      },
-      "required": [
-        "displayName"
-      ]
-    },
-    "powerplatform:index:DlpPolicy": {
-      "description": "Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data. Note: Deletion removes all rule sets from the policy, as the SDK does not expose a direct policy delete endpoint.",
-      "inputProperties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the DLP policy."
-        },
-        "ruleSets": {
-          "type": "array",
-          "description": "The rule sets that define the DLP policy rules.",
-          "items": {
-            "$ref": "#/types/powerplatform:index:RuleSet"
-          }
-        }
-      },
-      "requiredInputs": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the DLP policy."
-        },
-        "ruleSets": {
-          "type": "array",
-          "description": "The rule sets that define the DLP policy rules.",
-          "items": {
-            "$ref": "#/types/powerplatform:index:RuleSet"
-          }
-        },
-        "tenantId": {
-          "type": "string",
-          "description": "The tenant ID that owns the policy."
-        },
-        "lastModified": {
-          "type": "string",
-          "description": "The timestamp when the policy was last modified."
-        },
-        "ruleSetCount": {
-          "type": "integer",
-          "description": "The number of rule sets in the policy."
-        }
-      },
-      "required": [
-        "name"
-      ]
-    },
-    "powerplatform:index:BillingPolicy": {
-      "description": "Manages a Power Platform billing policy. Billing policies control pay-as-you-go billing for Power Platform environments.",
-      "inputProperties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the billing policy."
-        },
-        "location": {
-          "type": "string",
-          "description": "The geographic location for the billing policy (e.g., unitedstates, europe)."
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of the billing policy: Enabled or Disabled."
-        },
-        "billingInstrument": {
-          "$ref": "#/types/powerplatform:index:BillingInstrument",
-          "description": "The billing instrument (Azure subscription) details."
-        }
-      },
-      "requiredInputs": [
-        "name",
-        "location"
-      ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the billing policy."
-        },
-        "location": {
-          "type": "string",
-          "description": "The geographic location of the billing policy."
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of the billing policy."
-        },
-        "billingInstrument": {
-          "$ref": "#/types/powerplatform:index:BillingInstrument",
-          "description": "The billing instrument details."
-        },
-        "createdOn": {
-          "type": "string",
-          "description": "The timestamp when the billing policy was created."
-        },
-        "lastModifiedOn": {
-          "type": "string",
-          "description": "The timestamp when the billing policy was last modified."
-        }
-      },
-      "required": [
-        "name",
-        "location"
-      ]
-    },
-    "powerplatform:index:ManagedEnvironment": {
-      "description": "Enables managed environment governance on a Power Platform environment. Managed environments provide enhanced admin controls. Deleting this resource disables the managed environment setting.",
-      "inputProperties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The ID of the Power Platform environment to manage."
-        }
-      },
-      "requiredInputs": [
-        "environmentId"
-      ],
-      "properties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The ID of the managed environment."
-        },
-        "enabled": {
-          "type": "boolean",
-          "description": "Whether the managed environment is enabled."
-        }
-      },
-      "required": [
-        "environmentId",
-        "enabled"
-      ]
-    },
-    "powerplatform:index:EnvironmentBackup": {
-      "description": "Creates a manual backup of a Power Platform environment. Backups are immutable \u2014 any change to inputs triggers replacement.",
-      "inputProperties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The ID of the environment to back up."
-        },
-        "label": {
-          "type": "string",
-          "description": "A descriptive label for the backup."
-        }
-      },
-      "requiredInputs": [
-        "environmentId",
-        "label"
-      ],
-      "properties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The ID of the backed-up environment."
-        },
-        "label": {
-          "type": "string",
-          "description": "The label for the backup."
-        },
-        "backupPointDateTime": {
-          "type": "string",
-          "description": "The date and time when the backup was created."
-        },
-        "backupExpiryDateTime": {
-          "type": "string",
-          "description": "The date and time when the backup expires."
-        }
-      },
-      "required": [
-        "environmentId",
-        "label"
-      ]
-    },
-    "powerplatform:index:RoleAssignment": {
-      "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable \u2014 any change to inputs triggers replacement.",
-      "inputProperties": {
-        "principalObjectId": {
-          "type": "string",
-          "description": "The object ID of the principal (user, group, or service principal) to assign the role to."
-        },
-        "principalType": {
-          "type": "string",
-          "description": "The type of the principal: User, Group, or ServicePrincipal."
-        },
-        "roleDefinitionId": {
-          "type": "string",
-          "description": "The ID of the role definition to assign."
-        },
-        "scope": {
-          "type": "string",
-          "description": "The scope of the role assignment (e.g., tenant, environment, or environment group)."
-        }
-      },
-      "requiredInputs": [
-        "principalObjectId",
-        "principalType",
-        "roleDefinitionId"
-      ],
-      "properties": {
-        "principalObjectId": {
-          "type": "string",
-          "description": "The object ID of the assigned principal."
-        },
-        "principalType": {
-          "type": "string",
-          "description": "The type of the assigned principal."
-        },
-        "roleDefinitionId": {
-          "type": "string",
-          "description": "The role definition ID."
-        },
-        "scope": {
-          "type": "string",
-          "description": "The scope of the role assignment."
-        },
-        "createdOn": {
-          "type": "string",
-          "description": "The timestamp when the role assignment was created."
-        }
-      },
-      "required": [
-        "principalObjectId",
-        "principalType",
-        "roleDefinitionId"
-      ]
-    },
-    "powerplatform:index:IsvContract": {
-      "description": "Manages an ISV (Independent Software Vendor) contract for Power Platform licensing.",
-      "inputProperties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the ISV contract."
-        },
-        "geo": {
-          "type": "string",
-          "description": "The geographic region for the ISV contract (e.g., unitedstates, europe). Immutable after creation."
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of the ISV contract: Enabled or Disabled."
-        }
-      },
-      "requiredInputs": [
-        "name",
-        "geo"
-      ],
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "The name of the ISV contract."
-        },
-        "geo": {
-          "type": "string",
-          "description": "The geographic region of the ISV contract."
-        },
-        "status": {
-          "type": "string",
-          "description": "The status of the ISV contract."
-        },
-        "createdOn": {
-          "type": "string",
-          "description": "The timestamp when the ISV contract was created."
-        },
-        "lastModifiedOn": {
-          "type": "string",
-          "description": "The timestamp when the ISV contract was last modified."
-        }
-      },
-      "required": [
-        "name",
-        "geo"
-      ]
-    },
-    "powerplatform:index:Environment": {
-      "description": "Manages a Power Platform environment. Environments are containers for apps, flows, data, and other resources. Uses the BAP admin REST API for lifecycle management.",
-      "inputProperties": {
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the environment."
-        },
-        "description": {
-          "type": "string",
-          "description": "A description of the environment."
-        },
-        "location": {
-          "type": "string",
-          "description": "The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation."
-        },
-        "environmentType": {
-          "type": "string",
-          "description": "The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation."
-        },
-        "azureRegion": {
-          "type": "string",
-          "description": "Specific Azure region within the location geo (e.g. westus2). Immutable after creation."
-        },
-        "ownerId": {
-          "type": "string",
-          "description": "AAD user or group GUID who owns the environment. Only valid for Developer environments."
-        },
-        "cadence": {
-          "type": "string",
-          "description": "Release wave cadence: Frequent or Moderate. Immutable after creation."
-        },
-        "billingPolicyId": {
-          "type": "string",
-          "description": "ID of the billing policy to link to this environment."
-        },
-        "environmentGroupId": {
-          "type": "string",
-          "description": "ID of the environment group this environment belongs to."
-        },
-        "allowBingSearch": {
-          "type": "boolean",
-          "description": "Allow Bing Search integration (AI generative features)."
-        },
-        "allowMovingDataAcrossRegions": {
-          "type": "boolean",
-          "description": "Allow data to move across geographic boundaries for Copilot features."
-        },
-        "linkedAppType": {
-          "type": "string",
-          "description": "Type of linked app: Canvas or ModelDriven."
-        },
-        "linkedAppId": {
-          "type": "string",
-          "description": "GUID of the linked app."
-        },
-        "enterprisePolicies": {
-          "type": "array",
-          "items": {
-            "$ref": "#/types/powerplatform:index:EnterprisePolicy"
-          },
-          "description": "Set of enterprise policies associated with the environment."
-        },
-        "dataverse": {
-          "description": "Dataverse database configuration. Presence triggers Dataverse provisioning.",
-          "$ref": "#/types/powerplatform:index:Dataverse"
-        }
-      },
-      "requiredInputs": [
-        "displayName",
-        "location",
-        "environmentType"
-      ],
-      "properties": {
-        "displayName": {
-          "type": "string",
-          "description": "The display name of the environment."
-        },
-        "description": {
-          "type": "string",
-          "description": "The description of the environment."
-        },
-        "location": {
-          "type": "string",
-          "description": "The geographic region of the environment."
-        },
-        "environmentType": {
-          "type": "string",
-          "description": "The type (SKU) of the environment."
-        },
-        "azureRegion": {
-          "type": "string",
-          "description": "Specific Azure region within the location geo."
-        },
-        "ownerId": {
-          "type": "string",
-          "description": "AAD user or group GUID who owns the environment."
-        },
-        "cadence": {
-          "type": "string",
-          "description": "Release wave cadence: Frequent or Moderate."
-        },
-        "billingPolicyId": {
-          "type": "string",
-          "description": "ID of the billing policy linked to this environment."
-        },
-        "environmentGroupId": {
-          "type": "string",
-          "description": "ID of the environment group."
-        },
-        "allowBingSearch": {
-          "type": "boolean",
-          "description": "Whether Bing Search integration is allowed."
-        },
-        "allowMovingDataAcrossRegions": {
-          "type": "boolean",
-          "description": "Whether data can move across geographic boundaries for Copilot features."
-        },
-        "linkedAppType": {
-          "type": "string",
-          "description": "Type of linked app: Canvas or ModelDriven."
-        },
-        "linkedAppId": {
-          "type": "string",
-          "description": "GUID of the linked app."
-        },
-        "enterprisePolicies": {
-          "type": "array",
-          "items": {
-            "$ref": "#/types/powerplatform:index:EnterprisePolicy"
-          },
-          "description": "Enterprise policies associated with the environment."
-        },
-        "linkedAppUrl": {
-          "type": "string",
-          "description": "URL of the linked app. Computed."
-        },
-        "state": {
-          "type": "string",
-          "description": "The current state of the environment (e.g., Ready, Preparing)."
-        },
-        "createdTime": {
-          "type": "string",
-          "description": "The timestamp when the environment was created."
-        },
-        "lastModifiedTime": {
-          "type": "string",
-          "description": "The timestamp when the environment was last modified."
-        },
-        "dataverse": {
-          "description": "Dataverse database configuration. Presence triggers Dataverse provisioning.",
-          "$ref": "#/types/powerplatform:index:Dataverse"
-        }
-      },
-      "required": [
-        "displayName",
-        "location",
-        "environmentType"
-      ]
-    },
-    "powerplatform:index:EnvironmentSettings": {
-      "description": "Manages settings on a Power Platform environment. Settings are applied via PATCH to the BAP admin API. Deletion removes the resource from Pulumi state only (settings cannot be unset).",
-      "inputProperties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The ID of the environment to manage settings for. Immutable after creation."
-        },
-        "maxUploadFileSize": {
-          "type": "string",
-          "description": "Maximum file upload size in bytes."
-        },
-        "pluginTraceLogSetting": {
-          "type": "string",
-          "description": "Plugin trace log setting (Off, Exception, All)."
-        },
-        "isAuditEnabled": {
-          "type": "string",
-          "description": "Whether auditing is enabled (true or false)."
-        },
-        "isUserAccessAuditEnabled": {
-          "type": "string",
-          "description": "Whether user access auditing is enabled (true or false)."
-        },
-        "isActivityLoggingEnabled": {
-          "type": "string",
-          "description": "Whether activity logging is enabled (true or false)."
-        },
-        "isReadAuditEnabled": {
-          "type": "boolean",
-          "description": "Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table."
-        },
-        "auditRetentionPeriodInDays": {
-          "type": "integer",
-          "description": "Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855."
-        },
-        "allowApplicationUserAccess": {
-          "type": "boolean",
-          "description": "Whether service principal (application user) access is allowed."
-        },
-        "allowMicrosoftTrustedServiceTags": {
-          "type": "boolean",
-          "description": "Whether Microsoft trusted Azure service tags are allowed for connectivity."
-        },
-        "reverseProxyIpAddresses": {
-          "type": "string",
-          "description": "Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges."
-        },
-        "powerAppsComponentFrameworkForCanvasApps": {
-          "type": "boolean",
-          "description": "Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps."
-        },
-        "showDashboardCardsInExpandedState": {
-          "type": "boolean",
-          "description": "Whether dashboard cards are shown in expanded state by default."
-        }
-      },
-      "requiredInputs": [
-        "environmentId"
-      ],
-      "properties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The ID of the environment."
-        },
-        "maxUploadFileSize": {
-          "type": "string",
-          "description": "Maximum file upload size in bytes."
-        },
-        "pluginTraceLogSetting": {
-          "type": "string",
-          "description": "Plugin trace log setting."
-        },
-        "isAuditEnabled": {
-          "type": "string",
-          "description": "Whether auditing is enabled."
-        },
-        "isUserAccessAuditEnabled": {
-          "type": "string",
-          "description": "Whether user access auditing is enabled."
-        },
-        "isActivityLoggingEnabled": {
-          "type": "string",
-          "description": "Whether activity logging is enabled."
-        },
-        "isReadAuditEnabled": {
-          "type": "boolean",
-          "description": "Whether read auditing is enabled."
-        },
-        "auditRetentionPeriodInDays": {
-          "type": "integer",
-          "description": "Audit log retention period in days."
-        },
-        "allowApplicationUserAccess": {
-          "type": "boolean",
-          "description": "Whether service principal (application user) access is allowed."
-        },
-        "allowMicrosoftTrustedServiceTags": {
-          "type": "boolean",
-          "description": "Whether Microsoft trusted Azure service tags are allowed."
-        },
-        "reverseProxyIpAddresses": {
-          "type": "string",
-          "description": "Allowed reverse proxy IP addresses or CIDR ranges."
-        },
-        "powerAppsComponentFrameworkForCanvasApps": {
-          "type": "boolean",
-          "description": "Whether PCF controls are enabled for canvas apps."
-        },
-        "showDashboardCardsInExpandedState": {
-          "type": "boolean",
-          "description": "Whether dashboard cards are shown in expanded state by default."
-        }
-      },
-      "required": [
-        "environmentId"
-      ]
-    },
-    "powerplatform:index:TenantSettings": {
-      "description": "Manages tenant-level Power Platform settings used for governance and platform-wide controls.",
-      "inputProperties": {
-        "walkMeOptOut": {
-          "type": "boolean",
-          "description": "Walk Me opt-out setting."
-        },
-        "disableNPSCommentsReachout": {
-          "type": "boolean",
-          "description": "Disable NPS comments reachout."
-        },
-        "disableNewsletterSendout": {
-          "type": "boolean",
-          "description": "Disable newsletter sendout."
-        },
-        "disableEnvironmentCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable environment creation by non-admin users."
-        },
-        "disablePortalsCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable Power Pages creation by non-admin users."
-        },
-        "disableSurveyFeedback": {
-          "type": "boolean",
-          "description": "Disable survey feedback."
-        },
-        "disableTrialEnvironmentCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable trial environment creation by non-admin users."
-        },
-        "disableCapacityAllocationByEnvironmentAdmins": {
-          "type": "boolean",
-          "description": "Disable capacity allocation by environment admins."
-        },
-        "disableSupportTicketsVisibleByAllUsers": {
-          "type": "boolean",
-          "description": "Disable support tickets visibility by all users."
-        },
-        "powerPlatform": {
-          "$ref": "#/types/powerplatform:index:TenantPowerPlatformSettings",
-          "description": "Nested workload-specific tenant settings."
-        }
-      },
-      "requiredInputs": [],
-      "properties": {
-        "tenantId": {
-          "type": "string",
-          "description": "The ID of the tenant."
-        },
-        "walkMeOptOut": {
-          "type": "boolean",
-          "description": "Walk Me opt-out setting."
-        },
-        "disableNPSCommentsReachout": {
-          "type": "boolean",
-          "description": "Disable NPS comments reachout."
-        },
-        "disableNewsletterSendout": {
-          "type": "boolean",
-          "description": "Disable newsletter sendout."
-        },
-        "disableEnvironmentCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable environment creation by non-admin users."
-        },
-        "disablePortalsCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable Power Pages creation by non-admin users."
-        },
-        "disableSurveyFeedback": {
-          "type": "boolean",
-          "description": "Disable survey feedback."
-        },
-        "disableTrialEnvironmentCreationByNonAdminUsers": {
-          "type": "boolean",
-          "description": "Disable trial environment creation by non-admin users."
-        },
-        "disableCapacityAllocationByEnvironmentAdmins": {
-          "type": "boolean",
-          "description": "Disable capacity allocation by environment admins."
-        },
-        "disableSupportTicketsVisibleByAllUsers": {
-          "type": "boolean",
-          "description": "Disable support tickets visibility by all users."
-        },
-        "powerPlatform": {
-          "$ref": "#/types/powerplatform:index:TenantPowerPlatformSettings",
-          "description": "Nested workload-specific tenant settings."
-        }
-      }
-    },
-    "powerplatform:index:AdminManagementApplication": {
-      "description": "Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable \u2014 any change to applicationId triggers a replacement.",
-      "inputProperties": {
-        "applicationId": {
-          "type": "string",
-          "description": "The GUID of the service principal to register as a Power Platform admin management application. Immutable after creation.",
-          "replaceOnChanges": true
-        }
-      },
-      "requiredInputs": [
-        "applicationId"
-      ],
-      "properties": {
-        "applicationId": {
-          "type": "string",
-          "description": "The GUID of the registered service principal."
-        }
-      },
-      "required": [
-        "applicationId"
-      ]
-    },
-    "powerplatform:index:EnvironmentApplicationAdmin": {
-      "description": "Adds a service principal as System Administrator in a Dataverse-enabled Power Platform environment. Creates a systemuser record via the Dataverse Web API. Both environmentId and applicationId are immutable \u2014 any change triggers resource replacement.",
-      "inputProperties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The GUID of the Power Platform environment. Must have a Dataverse instance. Immutable after creation.",
-          "replaceOnChanges": true
-        },
-        "applicationId": {
-          "type": "string",
-          "description": "The GUID of the service principal (application) to add as System Administrator. Immutable after creation.",
-          "replaceOnChanges": true
-        }
-      },
-      "requiredInputs": [
-        "environmentId",
-        "applicationId"
-      ],
-      "properties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The GUID of the Power Platform environment."
-        },
-        "applicationId": {
-          "type": "string",
-          "description": "The GUID of the registered service principal."
-        },
-        "systemUserId": {
-          "type": "string",
-          "description": "The Dataverse systemuser record GUID for the registered application user."
-        }
-      },
-      "required": [
-        "environmentId",
-        "applicationId",
-        "systemUserId"
-      ]
-    },
-    "powerplatform:index:DataRecord": {
-      "description": "Manages a generic Dataverse table record via the OData Web API. Supports scalar columns, single-valued lookups (via @odata.bind), and many-to-many relationships (via $ref). Both environmentId and tableLogicalName are immutable \u2014 any change triggers resource replacement. Column values may be scalars (string/number/bool), lookup objects (DataRecordLookup), or lists of lookup objects for M2M relationships.",
-      "inputProperties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The GUID of the Power Platform environment containing the Dataverse instance. Immutable after creation.",
-          "replaceOnChanges": true
-        },
-        "tableLogicalName": {
-          "type": "string",
-          "description": "The logical name of the Dataverse table (e.g. deploymentpipeline, account). Immutable after creation.",
-          "replaceOnChanges": true
-        },
-        "columns": {
-          "type": "object",
-          "description": "Map of column logical name to value. Scalars (string/number/bool), null, DataRecordLookup objects, or lists of DataRecordLookup objects for M2M relationships.",
-          "additionalProperties": {
-            "$ref": "pulumi.json#/Any"
-          }
-        },
-        "disableOnDestroy": {
-          "type": "boolean",
-          "description": "When true, deactivate the record (statecode=1) before deleting it. Required for Dataverse tables that cannot be directly deleted while active (e.g. workflow definitions). Defaults to false."
-        }
-      },
-      "requiredInputs": [
-        "environmentId",
-        "tableLogicalName"
-      ],
-      "properties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The GUID of the Power Platform environment."
-        },
-        "tableLogicalName": {
-          "type": "string",
-          "description": "The logical name of the Dataverse table."
-        },
-        "columns": {
-          "type": "object",
-          "description": "The column values stored on the record.",
-          "additionalProperties": {
-            "$ref": "pulumi.json#/Any"
-          }
-        },
-        "disableOnDestroy": {
-          "type": "boolean",
-          "description": "Whether to deactivate the record before deletion."
-        },
-        "dataRecordId": {
-          "type": "string",
-          "description": "The GUID of the Dataverse record. Use this to reference the record in lookup or M2M column values of other DataRecord resources."
-        }
-      },
-      "required": [
-        "environmentId",
-        "tableLogicalName",
-        "dataRecordId"
-      ]
-    },
-    "powerplatform:index:EnterprisePolicyLink": {
-      "description": "Links an Azure enterprise policy to a Power Platform environment using an async POST/poll lifecycle. All properties are immutable \u2014 any change triggers a full replacement (delete-then-create). Supported policy types: NetworkInjection, Encryption, Identity.",
-      "inputProperties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The GUID of the Power Platform environment to link the enterprise policy to. Immutable after creation.",
-          "replaceOnChanges": true
-        },
-        "policyType": {
-          "type": "string",
-          "description": "The type of enterprise policy to link. Must be one of: NetworkInjection, Encryption, Identity. Immutable after creation.",
-          "replaceOnChanges": true
-        },
-        "systemId": {
-          "type": "string",
-          "description": "The ARM resource ID of the enterprise policy. Expected format: /regions/{location}/providers/Microsoft.PowerPlatform/enterprisePolicies/{guid}. Immutable after creation.",
-          "replaceOnChanges": true
-        }
-      },
-      "requiredInputs": [
-        "environmentId",
-        "policyType",
-        "systemId"
-      ],
-      "properties": {
-        "environmentId": {
-          "type": "string",
-          "description": "The GUID of the Power Platform environment."
-        },
-        "policyType": {
-          "type": "string",
-          "description": "The type of enterprise policy. One of: NetworkInjection, Encryption, Identity."
-        },
-        "systemId": {
-          "type": "string",
-          "description": "The ARM resource ID of the linked enterprise policy."
-        }
-      },
-      "required": [
-        "environmentId",
-        "policyType",
-        "systemId"
-      ]
-    }
-  },
-  "functions": {
-    "powerplatform:index:getEnvironments": {
-      "description": "Retrieves a list of Power Platform environments available for the authenticated user.",
-      "inputs": {
-        "properties": {
-          "filter": {
-            "type": "string",
-            "description": "An OData filter expression. Supported properties: dataverseId, type, geo, state, environmentGroupId, domainName."
-          },
-          "top": {
-            "type": "integer",
-            "description": "Maximum number of environments to return."
-          }
-        }
-      },
-      "outputs": {
-        "properties": {
-          "environments": {
-            "type": "array",
-            "description": "The list of environments.",
-            "items": {
-              "$ref": "#/types/powerplatform:index:EnvironmentSummary"
+    "config": {
+        "variables": {
+            "clientId": {
+                "description": "The Azure AD Application (Client) ID. Can also be set with the AZURE_CLIENT_ID environment variable.",
+                "type": "string"
+            },
+            "clientSecret": {
+                "description": "The Azure AD Client Secret. Can also be set with the AZURE_CLIENT_SECRET environment variable.",
+                "secret": true,
+                "type": "string"
+            },
+            "tenantId": {
+                "description": "The Azure AD Tenant ID for authenticating with Power Platform. Can also be set with the AZURE_TENANT_ID environment variable.",
+                "type": "string"
             }
-          }
-        },
-        "required": [
-          "environments"
-        ]
-      }
+        }
     },
-    "powerplatform:index:getConnectors": {
-      "description": "Lists connectors available in a Power Platform environment.",
-      "inputs": {
-        "properties": {
-          "environmentId": {
-            "type": "string",
-            "description": "The ID of the environment to list connectors for."
-          }
-        },
-        "required": [
-          "environmentId"
-        ]
-      },
-      "outputs": {
-        "properties": {
-          "connectors": {
-            "type": "array",
-            "description": "The list of connectors.",
-            "items": {
-              "$ref": "#/types/powerplatform:index:ConnectorSummary"
+    "description": "A Pulumi provider for managing Microsoft Power Platform resources.",
+    "displayName": "Power Platform",
+    "functions": {
+        "powerplatform:index:getApps": {
+            "description": "Lists Power Apps in a Power Platform environment.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "description": "The ID of the environment to list apps for.",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "apps": {
+                        "description": "The list of Power Apps.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:AppSummary"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "apps"
+                ]
             }
-          }
         },
-        "required": [
-          "connectors"
-        ]
-      }
+        "powerplatform:index:getConnectors": {
+            "description": "Lists connectors available in a Power Platform environment.",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "description": "The ID of the environment to list connectors for.",
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "connectors": {
+                        "description": "The list of connectors.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:ConnectorSummary"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "connectors"
+                ]
+            }
+        },
+        "powerplatform:index:getDataRecords": {
+            "description": "Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.",
+            "inputs": {
+                "properties": {
+                    "apply": {
+                        "description": "OData $apply aggregation expression (e.g. \"aggregate(revenue with sum as revenue_sum)\").",
+                        "type": "string"
+                    },
+                    "entityCollection": {
+                        "description": "The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).",
+                        "type": "string"
+                    },
+                    "environmentId": {
+                        "description": "The GUID of the Power Platform environment containing the Dataverse instance.",
+                        "type": "string"
+                    },
+                    "expand": {
+                        "description": "List of navigation properties to expand in the response.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:DataRecordsExpandParam"
+                        },
+                        "type": "array"
+                    },
+                    "filter": {
+                        "description": "OData $filter expression (e.g. \"name eq 'My Pipeline'\").",
+                        "type": "string"
+                    },
+                    "orderby": {
+                        "description": "OData $orderby expression (e.g. \"createdon desc\").",
+                        "type": "string"
+                    },
+                    "select": {
+                        "description": "List of column logical names to include in the response.",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "top": {
+                        "description": "Maximum number of records to return ($top). Use to limit large result sets.",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "environmentId",
+                    "entityCollection"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "records": {
+                        "description": "The list of matching Dataverse records. Each record is a map of column name to value.",
+                        "items": {
+                            "$ref": "pulumi.json#/Any"
+                        },
+                        "type": "array"
+                    },
+                    "totalRowsCount": {
+                        "description": "Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode).",
+                        "type": "integer"
+                    },
+                    "totalRowsCountLimitExceeded": {
+                        "description": "True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "records",
+                    "totalRowsCount",
+                    "totalRowsCountLimitExceeded"
+                ]
+            }
+        },
+        "powerplatform:index:getEnvironments": {
+            "description": "Retrieves a list of Power Platform environments available for the authenticated user.",
+            "inputs": {
+                "properties": {
+                    "filter": {
+                        "description": "An OData filter expression. Supported properties: dataverseId, type, geo, state, environmentGroupId, domainName.",
+                        "type": "string"
+                    },
+                    "top": {
+                        "description": "Maximum number of environments to return.",
+                        "type": "integer"
+                    }
+                }
+            },
+            "outputs": {
+                "properties": {
+                    "environments": {
+                        "description": "The list of environments.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:EnvironmentSummary"
+                        },
+                        "type": "array"
+                    }
+                },
+                "required": [
+                    "environments"
+                ]
+            }
+        },
+        "powerplatform:index:getFlows": {
+            "description": "Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).",
+            "inputs": {
+                "properties": {
+                    "environmentId": {
+                        "description": "The ID of the environment to list flows for.",
+                        "type": "string"
+                    },
+                    "filter": {
+                        "description": "Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: \"statecode eq 1\" to return only active flows.",
+                        "type": "string"
+                    },
+                    "select": {
+                        "description": "Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).",
+                        "items": {
+                            "type": "string"
+                        },
+                        "type": "array"
+                    },
+                    "top": {
+                        "description": "Maximum number of flows to return ($top). Use to limit large result sets.",
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "environmentId"
+                ]
+            },
+            "outputs": {
+                "properties": {
+                    "flows": {
+                        "description": "The list of Cloud Flows.",
+                        "items": {
+                            "$ref": "#/types/powerplatform:index:FlowSummary"
+                        },
+                        "type": "array"
+                    },
+                    "totalRowsCount": {
+                        "description": "Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent.",
+                        "type": "integer"
+                    },
+                    "totalRowsCountLimitExceeded": {
+                        "description": "True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded).",
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "flows",
+                    "totalRowsCount",
+                    "totalRowsCountLimitExceeded"
+                ]
+            }
+        }
     },
-    "powerplatform:index:getApps": {
-      "description": "Lists Power Apps in a Power Platform environment.",
-      "inputs": {
-        "properties": {
-          "environmentId": {
-            "type": "string",
-            "description": "The ID of the environment to list apps for."
-          }
+    "homepage": "https://github.com/rpothin/pulumi-powerplatform",
+    "keywords": [
+        "category/cloud",
+        "kind/native"
+    ],
+    "language": {
+        "dotnet": {
+            "packageId": "Rpothin.Powerplatform"
         },
-        "required": [
-          "environmentId"
-        ]
-      },
-      "outputs": {
-        "properties": {
-          "apps": {
-            "type": "array",
-            "description": "The list of Power Apps.",
-            "items": {
-              "$ref": "#/types/powerplatform:index:AppSummary"
+        "java": {
+            "basePackage": "io.github.rpothin"
+        },
+        "nodejs": {
+            "packageName": "@rpothin/powerplatform"
+        },
+        "python": {
+            "packageName": "rpothin_powerplatform",
+            "requires": {
+                "pulumi": ">=3.0.0,<4.0.0"
             }
-          }
-        },
-        "required": [
-          "apps"
-        ]
-      }
+        }
     },
-    "powerplatform:index:getFlows": {
-      "description": "Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).",
-      "inputs": {
-        "properties": {
-          "environmentId": {
-            "type": "string",
-            "description": "The ID of the environment to list flows for."
-          },
-          "filter": {
-            "type": "string",
-            "description": "Additional OData $filter clause appended to the base 'category eq 5' filter with 'and'. Example: \"statecode eq 1\" to return only active flows."
-          },
-          "top": {
-            "type": "integer",
-            "description": "Maximum number of flows to return ($top). Use to limit large result sets."
-          },
-          "select": {
-            "type": "array",
-            "description": "Additional Dataverse workflow columns to include in the response, merged with the required columns (workflowid, name, statecode).",
-            "items": {
-              "type": "string"
-            }
-          }
+    "license": "MIT",
+    "logoUrl": "https://raw.githubusercontent.com/rpothin/pulumi-powerplatform/main/docs/logo.svg",
+    "name": "powerplatform",
+    "pluginDownloadURL": "github://api.github.com/rpothin",
+    "publisher": "rpothin",
+    "repository": "https://github.com/rpothin/pulumi-powerplatform",
+    "resources": {
+        "powerplatform:components:PocComponent": {
+            "description": "Phase 0 / Phase 2 POC component — validates the bidirectional construct bridge.\n\n    Accepts a ``label`` input and echoes it as ``labelOut``.\n    Also exposes a placeholder ``resourceId`` output following AVM conventions.",
+            "inputProperties": {
+                "enableTelemetry": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "label": {
+                    "plain": true,
+                    "type": "string"
+                }
+            },
+            "isComponent": true,
+            "properties": {
+                "labelOut": {
+                    "type": "string"
+                },
+                "resourceId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "labelOut",
+                "resourceId"
+            ],
+            "requiredInputs": [],
+            "type": "object"
         },
-        "required": [
-          "environmentId"
-        ]
-      },
-      "outputs": {
-        "properties": {
-          "flows": {
-            "type": "array",
-            "description": "The list of Cloud Flows.",
-            "items": {
-              "$ref": "#/types/powerplatform:index:FlowSummary"
-            }
-          },
-          "totalRowsCount": {
-            "type": "integer",
-            "description": "Total number of flows matching the query filter (from @odata.count). Zero when the count annotation is absent."
-          },
-          "totalRowsCountLimitExceeded": {
-            "type": "boolean",
-            "description": "True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded)."
-          }
+        "powerplatform:index:AdminManagementApplication": {
+            "description": "Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable — any change to applicationId triggers a replacement.",
+            "inputProperties": {
+                "applicationId": {
+                    "description": "The GUID of the service principal to register as a Power Platform admin management application. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "applicationId": {
+                    "description": "The GUID of the registered service principal.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "applicationId"
+            ],
+            "requiredInputs": [
+                "applicationId"
+            ]
         },
-        "required": [
-          "flows",
-          "totalRowsCount",
-          "totalRowsCountLimitExceeded"
-        ]
-      }
-    },
-    "powerplatform:index:getDataRecords": {
-      "description": "Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.",
-      "inputs": {
-        "properties": {
-          "environmentId": {
-            "type": "string",
-            "description": "The GUID of the Power Platform environment containing the Dataverse instance."
-          },
-          "entityCollection": {
-            "type": "string",
-            "description": "The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines)."
-          },
-          "apply": {
-            "type": "string",
-            "description": "OData $apply aggregation expression (e.g. \"aggregate(revenue with sum as revenue_sum)\")."
-          },
-          "filter": {
-            "type": "string",
-            "description": "OData $filter expression (e.g. \"name eq 'My Pipeline'\")."
-          },
-          "select": {
-            "type": "array",
-            "description": "List of column logical names to include in the response.",
-            "items": {
-              "type": "string"
-            }
-          },
-          "orderby": {
-            "type": "string",
-            "description": "OData $orderby expression (e.g. \"createdon desc\")."
-          },
-          "top": {
-            "type": "integer",
-            "description": "Maximum number of records to return ($top). Use to limit large result sets."
-          },
-          "expand": {
-            "type": "array",
-            "description": "List of navigation properties to expand in the response.",
-            "items": {
-              "$ref": "#/types/powerplatform:index:DataRecordsExpandParam"
-            }
-          }
+        "powerplatform:index:BillingPolicy": {
+            "description": "Manages a Power Platform billing policy. Billing policies control pay-as-you-go billing for Power Platform environments.",
+            "inputProperties": {
+                "billingInstrument": {
+                    "$ref": "#/types/powerplatform:index:BillingInstrument",
+                    "description": "The billing instrument (Azure subscription) details."
+                },
+                "location": {
+                    "description": "The geographic location for the billing policy (e.g., unitedstates, europe).",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the billing policy.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "The status of the billing policy: Enabled or Disabled.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "billingInstrument": {
+                    "$ref": "#/types/powerplatform:index:BillingInstrument",
+                    "description": "The billing instrument details."
+                },
+                "createdOn": {
+                    "description": "The timestamp when the billing policy was created.",
+                    "type": "string"
+                },
+                "lastModifiedOn": {
+                    "description": "The timestamp when the billing policy was last modified.",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "The geographic location of the billing policy.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the billing policy.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "The status of the billing policy.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "location"
+            ],
+            "requiredInputs": [
+                "name",
+                "location"
+            ]
         },
-        "required": [
-          "environmentId",
-          "entityCollection"
-        ]
-      },
-      "outputs": {
-        "properties": {
-          "records": {
-            "type": "array",
-            "description": "The list of matching Dataverse records. Each record is a map of column name to value.",
-            "items": {
-              "$ref": "pulumi.json#/Any"
-            }
-          },
-          "totalRowsCount": {
-            "type": "integer",
-            "description": "Total number of records matching the query filter (from @odata.count). Always 0 when the count annotation is absent or when `apply` is used (the count is not available in aggregation mode)."
-          },
-          "totalRowsCountLimitExceeded": {
-            "type": "boolean",
-            "description": "True when the total row count exceeded the Dataverse limit (@Microsoft.Dynamics.CRM.totalrecordcountlimitexceeded)."
-          }
+        "powerplatform:index:DataRecord": {
+            "description": "Manages a generic Dataverse table record via the OData Web API. Supports scalar columns, single-valued lookups (via @odata.bind), and many-to-many relationships (via $ref). Both environmentId and tableLogicalName are immutable — any change triggers resource replacement. Column values may be scalars (string/number/bool), lookup objects (DataRecordLookup), or lists of lookup objects for M2M relationships.",
+            "inputProperties": {
+                "columns": {
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    },
+                    "description": "Map of column logical name to value. Scalars (string/number/bool), null, DataRecordLookup objects, or lists of DataRecordLookup objects for M2M relationships.",
+                    "type": "object"
+                },
+                "disableOnDestroy": {
+                    "description": "When true, deactivate the record (statecode=1) before deleting it. Required for Dataverse tables that cannot be directly deleted while active (e.g. workflow definitions). Defaults to false.",
+                    "type": "boolean"
+                },
+                "environmentId": {
+                    "description": "The GUID of the Power Platform environment containing the Dataverse instance. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                },
+                "tableLogicalName": {
+                    "description": "The logical name of the Dataverse table (e.g. deploymentpipeline, account). Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "columns": {
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    },
+                    "description": "The column values stored on the record.",
+                    "type": "object"
+                },
+                "dataRecordId": {
+                    "description": "The GUID of the Dataverse record. Use this to reference the record in lookup or M2M column values of other DataRecord resources.",
+                    "type": "string"
+                },
+                "disableOnDestroy": {
+                    "description": "Whether to deactivate the record before deletion.",
+                    "type": "boolean"
+                },
+                "environmentId": {
+                    "description": "The GUID of the Power Platform environment.",
+                    "type": "string"
+                },
+                "tableLogicalName": {
+                    "description": "The logical name of the Dataverse table.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "environmentId",
+                "tableLogicalName",
+                "dataRecordId"
+            ],
+            "requiredInputs": [
+                "environmentId",
+                "tableLogicalName"
+            ]
         },
-        "required": [
-          "records",
-          "totalRowsCount",
-          "totalRowsCountLimitExceeded"
-        ]
-      }
-    }
-  },
-  "language": {
-    "nodejs": {
-      "packageName": "@rpothin/powerplatform"
+        "powerplatform:index:DlpPolicy": {
+            "description": "Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data. Note: Deletion removes all rule sets from the policy, as the SDK does not expose a direct policy delete endpoint.",
+            "inputProperties": {
+                "name": {
+                    "description": "The name of the DLP policy.",
+                    "type": "string"
+                },
+                "ruleSets": {
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    },
+                    "type": "array"
+                }
+            },
+            "properties": {
+                "lastModified": {
+                    "description": "The timestamp when the policy was last modified.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the DLP policy.",
+                    "type": "string"
+                },
+                "ruleSetCount": {
+                    "description": "The number of rule sets in the policy.",
+                    "type": "integer"
+                },
+                "ruleSets": {
+                    "description": "The rule sets that define the DLP policy rules.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:RuleSet"
+                    },
+                    "type": "array"
+                },
+                "tenantId": {
+                    "description": "The tenant ID that owns the policy.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "requiredInputs": [
+                "name"
+            ]
+        },
+        "powerplatform:index:EnterprisePolicyLink": {
+            "description": "Links an Azure enterprise policy to a Power Platform environment using an async POST/poll lifecycle. All properties are immutable — any change triggers a full replacement (delete-then-create). Supported policy types: NetworkInjection, Encryption, Identity.",
+            "inputProperties": {
+                "environmentId": {
+                    "description": "The GUID of the Power Platform environment to link the enterprise policy to. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                },
+                "policyType": {
+                    "description": "The type of enterprise policy to link. Must be one of: NetworkInjection, Encryption, Identity. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                },
+                "systemId": {
+                    "description": "The ARM resource ID of the enterprise policy. Expected format: /regions/{location}/providers/Microsoft.PowerPlatform/enterprisePolicies/{guid}. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "environmentId": {
+                    "description": "The GUID of the Power Platform environment.",
+                    "type": "string"
+                },
+                "policyType": {
+                    "description": "The type of enterprise policy. One of: NetworkInjection, Encryption, Identity.",
+                    "type": "string"
+                },
+                "systemId": {
+                    "description": "The ARM resource ID of the linked enterprise policy.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "environmentId",
+                "policyType",
+                "systemId"
+            ],
+            "requiredInputs": [
+                "environmentId",
+                "policyType",
+                "systemId"
+            ]
+        },
+        "powerplatform:index:Environment": {
+            "description": "Manages a Power Platform environment. Environments are containers for apps, flows, data, and other resources. Uses the BAP admin REST API for lifecycle management.",
+            "inputProperties": {
+                "allowBingSearch": {
+                    "description": "Allow Bing Search integration (AI generative features).",
+                    "type": "boolean"
+                },
+                "allowMovingDataAcrossRegions": {
+                    "description": "Allow data to move across geographic boundaries for Copilot features.",
+                    "type": "boolean"
+                },
+                "azureRegion": {
+                    "description": "Specific Azure region within the location geo (e.g. westus2). Immutable after creation.",
+                    "type": "string"
+                },
+                "billingPolicyId": {
+                    "description": "ID of the billing policy to link to this environment.",
+                    "type": "string"
+                },
+                "cadence": {
+                    "description": "Release wave cadence: Frequent or Moderate. Immutable after creation.",
+                    "type": "string"
+                },
+                "dataverse": {
+                    "$ref": "#/types/powerplatform:index:Dataverse",
+                    "description": "Dataverse database configuration. Presence triggers Dataverse provisioning."
+                },
+                "description": {
+                    "description": "A description of the environment.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "The display name of the environment.",
+                    "type": "string"
+                },
+                "enterprisePolicies": {
+                    "description": "Set of enterprise policies associated with the environment.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:EnterprisePolicy"
+                    },
+                    "type": "array"
+                },
+                "environmentGroupId": {
+                    "description": "ID of the environment group this environment belongs to.",
+                    "type": "string"
+                },
+                "environmentType": {
+                    "description": "The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.",
+                    "type": "string"
+                },
+                "linkedAppId": {
+                    "description": "GUID of the linked app.",
+                    "type": "string"
+                },
+                "linkedAppType": {
+                    "description": "Type of linked app: Canvas or ModelDriven.",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation.",
+                    "type": "string"
+                },
+                "ownerId": {
+                    "description": "AAD user or group GUID who owns the environment. Only valid for Developer environments.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "allowBingSearch": {
+                    "description": "Whether Bing Search integration is allowed.",
+                    "type": "boolean"
+                },
+                "allowMovingDataAcrossRegions": {
+                    "description": "Whether data can move across geographic boundaries for Copilot features.",
+                    "type": "boolean"
+                },
+                "azureRegion": {
+                    "description": "Specific Azure region within the location geo.",
+                    "type": "string"
+                },
+                "billingPolicyId": {
+                    "description": "ID of the billing policy linked to this environment.",
+                    "type": "string"
+                },
+                "cadence": {
+                    "description": "Release wave cadence: Frequent or Moderate.",
+                    "type": "string"
+                },
+                "createdTime": {
+                    "description": "The timestamp when the environment was created.",
+                    "type": "string"
+                },
+                "dataverse": {
+                    "$ref": "#/types/powerplatform:index:Dataverse",
+                    "description": "Dataverse database configuration. Presence triggers Dataverse provisioning."
+                },
+                "description": {
+                    "description": "The description of the environment.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "The display name of the environment.",
+                    "type": "string"
+                },
+                "enterprisePolicies": {
+                    "description": "Enterprise policies associated with the environment.",
+                    "items": {
+                        "$ref": "#/types/powerplatform:index:EnterprisePolicy"
+                    },
+                    "type": "array"
+                },
+                "environmentGroupId": {
+                    "description": "ID of the environment group.",
+                    "type": "string"
+                },
+                "environmentType": {
+                    "description": "The type (SKU) of the environment.",
+                    "type": "string"
+                },
+                "lastModifiedTime": {
+                    "description": "The timestamp when the environment was last modified.",
+                    "type": "string"
+                },
+                "linkedAppId": {
+                    "description": "GUID of the linked app.",
+                    "type": "string"
+                },
+                "linkedAppType": {
+                    "description": "Type of linked app: Canvas or ModelDriven.",
+                    "type": "string"
+                },
+                "linkedAppUrl": {
+                    "description": "URL of the linked app. Computed.",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "The geographic region of the environment.",
+                    "type": "string"
+                },
+                "ownerId": {
+                    "description": "AAD user or group GUID who owns the environment.",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "The current state of the environment (e.g., Ready, Preparing).",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "displayName",
+                "location",
+                "environmentType"
+            ],
+            "requiredInputs": [
+                "displayName",
+                "location",
+                "environmentType"
+            ]
+        },
+        "powerplatform:index:EnvironmentApplicationAdmin": {
+            "description": "Adds a service principal as System Administrator in a Dataverse-enabled Power Platform environment. Creates a systemuser record via the Dataverse Web API. Both environmentId and applicationId are immutable — any change triggers resource replacement.",
+            "inputProperties": {
+                "applicationId": {
+                    "description": "The GUID of the service principal (application) to add as System Administrator. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                },
+                "environmentId": {
+                    "description": "The GUID of the Power Platform environment. Must have a Dataverse instance. Immutable after creation.",
+                    "replaceOnChanges": true,
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "applicationId": {
+                    "description": "The GUID of the registered service principal.",
+                    "type": "string"
+                },
+                "environmentId": {
+                    "description": "The GUID of the Power Platform environment.",
+                    "type": "string"
+                },
+                "systemUserId": {
+                    "description": "The Dataverse systemuser record GUID for the registered application user.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "environmentId",
+                "applicationId",
+                "systemUserId"
+            ],
+            "requiredInputs": [
+                "environmentId",
+                "applicationId"
+            ]
+        },
+        "powerplatform:index:EnvironmentBackup": {
+            "description": "Creates a manual backup of a Power Platform environment. Backups are immutable — any change to inputs triggers replacement.",
+            "inputProperties": {
+                "environmentId": {
+                    "description": "The ID of the environment to back up.",
+                    "type": "string"
+                },
+                "label": {
+                    "description": "A descriptive label for the backup.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "backupExpiryDateTime": {
+                    "description": "The date and time when the backup expires.",
+                    "type": "string"
+                },
+                "backupPointDateTime": {
+                    "description": "The date and time when the backup was created.",
+                    "type": "string"
+                },
+                "environmentId": {
+                    "description": "The ID of the backed-up environment.",
+                    "type": "string"
+                },
+                "label": {
+                    "description": "The label for the backup.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "environmentId",
+                "label"
+            ],
+            "requiredInputs": [
+                "environmentId",
+                "label"
+            ]
+        },
+        "powerplatform:index:EnvironmentGroup": {
+            "description": "Manages a Power Platform environment group. Environment groups allow you to organize environments and apply policies at a group level.",
+            "inputProperties": {
+                "description": {
+                    "description": "A description of the environment group.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "The display name for the environment group.",
+                    "type": "string"
+                },
+                "parentGroupId": {
+                    "description": "The ID of the parent environment group, if this is a nested group.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "createdTime": {
+                    "description": "The timestamp when the group was created.",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "The description of the environment group.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "The display name of the environment group.",
+                    "type": "string"
+                },
+                "lastModifiedTime": {
+                    "description": "The timestamp when the group was last modified.",
+                    "type": "string"
+                },
+                "parentGroupId": {
+                    "description": "The ID of the parent environment group.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "displayName"
+            ],
+            "requiredInputs": [
+                "displayName"
+            ]
+        },
+        "powerplatform:index:EnvironmentSettings": {
+            "description": "Manages settings on a Power Platform environment. Settings are applied via PATCH to the BAP admin API. Deletion removes the resource from Pulumi state only (settings cannot be unset).",
+            "inputProperties": {
+                "allowApplicationUserAccess": {
+                    "description": "Whether service principal (application user) access is allowed.",
+                    "type": "boolean"
+                },
+                "allowMicrosoftTrustedServiceTags": {
+                    "description": "Whether Microsoft trusted Azure service tags are allowed for connectivity.",
+                    "type": "boolean"
+                },
+                "auditRetentionPeriodInDays": {
+                    "description": "Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.",
+                    "type": "integer"
+                },
+                "environmentId": {
+                    "description": "The ID of the environment to manage settings for. Immutable after creation.",
+                    "type": "string"
+                },
+                "isActivityLoggingEnabled": {
+                    "description": "Whether activity logging is enabled (true or false).",
+                    "type": "string"
+                },
+                "isAuditEnabled": {
+                    "description": "Whether auditing is enabled (true or false).",
+                    "type": "string"
+                },
+                "isReadAuditEnabled": {
+                    "description": "Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.",
+                    "type": "boolean"
+                },
+                "isUserAccessAuditEnabled": {
+                    "description": "Whether user access auditing is enabled (true or false).",
+                    "type": "string"
+                },
+                "maxUploadFileSize": {
+                    "description": "Maximum file upload size in bytes.",
+                    "type": "string"
+                },
+                "pluginTraceLogSetting": {
+                    "description": "Plugin trace log setting (Off, Exception, All).",
+                    "type": "string"
+                },
+                "powerAppsComponentFrameworkForCanvasApps": {
+                    "description": "Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.",
+                    "type": "boolean"
+                },
+                "reverseProxyIpAddresses": {
+                    "description": "Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.",
+                    "type": "string"
+                },
+                "showDashboardCardsInExpandedState": {
+                    "description": "Whether dashboard cards are shown in expanded state by default.",
+                    "type": "boolean"
+                }
+            },
+            "properties": {
+                "allowApplicationUserAccess": {
+                    "description": "Whether service principal (application user) access is allowed.",
+                    "type": "boolean"
+                },
+                "allowMicrosoftTrustedServiceTags": {
+                    "description": "Whether Microsoft trusted Azure service tags are allowed.",
+                    "type": "boolean"
+                },
+                "auditRetentionPeriodInDays": {
+                    "description": "Audit log retention period in days.",
+                    "type": "integer"
+                },
+                "environmentId": {
+                    "description": "The ID of the environment.",
+                    "type": "string"
+                },
+                "isActivityLoggingEnabled": {
+                    "description": "Whether activity logging is enabled.",
+                    "type": "string"
+                },
+                "isAuditEnabled": {
+                    "description": "Whether auditing is enabled.",
+                    "type": "string"
+                },
+                "isReadAuditEnabled": {
+                    "description": "Whether read auditing is enabled.",
+                    "type": "boolean"
+                },
+                "isUserAccessAuditEnabled": {
+                    "description": "Whether user access auditing is enabled.",
+                    "type": "string"
+                },
+                "maxUploadFileSize": {
+                    "description": "Maximum file upload size in bytes.",
+                    "type": "string"
+                },
+                "pluginTraceLogSetting": {
+                    "description": "Plugin trace log setting.",
+                    "type": "string"
+                },
+                "powerAppsComponentFrameworkForCanvasApps": {
+                    "description": "Whether PCF controls are enabled for canvas apps.",
+                    "type": "boolean"
+                },
+                "reverseProxyIpAddresses": {
+                    "description": "Allowed reverse proxy IP addresses or CIDR ranges.",
+                    "type": "string"
+                },
+                "showDashboardCardsInExpandedState": {
+                    "description": "Whether dashboard cards are shown in expanded state by default.",
+                    "type": "boolean"
+                }
+            },
+            "required": [
+                "environmentId"
+            ],
+            "requiredInputs": [
+                "environmentId"
+            ]
+        },
+        "powerplatform:index:IsvContract": {
+            "description": "Manages an ISV (Independent Software Vendor) contract for Power Platform licensing.",
+            "inputProperties": {
+                "geo": {
+                    "description": "The geographic region for the ISV contract (e.g., unitedstates, europe). Immutable after creation.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the ISV contract.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "The status of the ISV contract: Enabled or Disabled.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "createdOn": {
+                    "description": "The timestamp when the ISV contract was created.",
+                    "type": "string"
+                },
+                "geo": {
+                    "description": "The geographic region of the ISV contract.",
+                    "type": "string"
+                },
+                "lastModifiedOn": {
+                    "description": "The timestamp when the ISV contract was last modified.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the ISV contract.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "The status of the ISV contract.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "geo"
+            ],
+            "requiredInputs": [
+                "name",
+                "geo"
+            ]
+        },
+        "powerplatform:index:ManagedEnvironment": {
+            "description": "Enables managed environment governance on a Power Platform environment. Managed environments provide enhanced admin controls. Deleting this resource disables the managed environment setting.",
+            "inputProperties": {
+                "environmentId": {
+                    "description": "The ID of the Power Platform environment to manage.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "enabled": {
+                    "description": "Whether the managed environment is enabled.",
+                    "type": "boolean"
+                },
+                "environmentId": {
+                    "description": "The ID of the managed environment.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "environmentId",
+                "enabled"
+            ],
+            "requiredInputs": [
+                "environmentId"
+            ]
+        },
+        "powerplatform:index:RoleAssignment": {
+            "description": "Assigns a role to a principal (user, group, or service principal) at a specified scope. Role assignments are immutable — any change to inputs triggers replacement.",
+            "inputProperties": {
+                "principalObjectId": {
+                    "description": "The object ID of the principal (user, group, or service principal) to assign the role to.",
+                    "type": "string"
+                },
+                "principalType": {
+                    "description": "The type of the principal: User, Group, or ServicePrincipal.",
+                    "type": "string"
+                },
+                "roleDefinitionId": {
+                    "description": "The ID of the role definition to assign.",
+                    "type": "string"
+                },
+                "scope": {
+                    "description": "The scope of the role assignment (e.g., tenant, environment, or environment group).",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "createdOn": {
+                    "description": "The timestamp when the role assignment was created.",
+                    "type": "string"
+                },
+                "principalObjectId": {
+                    "description": "The object ID of the assigned principal.",
+                    "type": "string"
+                },
+                "principalType": {
+                    "description": "The type of the assigned principal.",
+                    "type": "string"
+                },
+                "roleDefinitionId": {
+                    "description": "The role definition ID.",
+                    "type": "string"
+                },
+                "scope": {
+                    "description": "The scope of the role assignment.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "principalObjectId",
+                "principalType",
+                "roleDefinitionId"
+            ],
+            "requiredInputs": [
+                "principalObjectId",
+                "principalType",
+                "roleDefinitionId"
+            ]
+        },
+        "powerplatform:index:TenantSettings": {
+            "description": "Manages tenant-level Power Platform settings used for governance and platform-wide controls.",
+            "inputProperties": {
+                "disableCapacityAllocationByEnvironmentAdmins": {
+                    "description": "Disable capacity allocation by environment admins.",
+                    "type": "boolean"
+                },
+                "disableEnvironmentCreationByNonAdminUsers": {
+                    "description": "Disable environment creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "disableNPSCommentsReachout": {
+                    "description": "Disable NPS comments reachout.",
+                    "type": "boolean"
+                },
+                "disableNewsletterSendout": {
+                    "description": "Disable newsletter sendout.",
+                    "type": "boolean"
+                },
+                "disablePortalsCreationByNonAdminUsers": {
+                    "description": "Disable Power Pages creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "disableSupportTicketsVisibleByAllUsers": {
+                    "description": "Disable support tickets visibility by all users.",
+                    "type": "boolean"
+                },
+                "disableSurveyFeedback": {
+                    "description": "Disable survey feedback.",
+                    "type": "boolean"
+                },
+                "disableTrialEnvironmentCreationByNonAdminUsers": {
+                    "description": "Disable trial environment creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "powerPlatform": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerPlatformSettings",
+                    "description": "Nested workload-specific tenant settings."
+                },
+                "walkMeOptOut": {
+                    "description": "Walk Me opt-out setting.",
+                    "type": "boolean"
+                }
+            },
+            "properties": {
+                "disableCapacityAllocationByEnvironmentAdmins": {
+                    "description": "Disable capacity allocation by environment admins.",
+                    "type": "boolean"
+                },
+                "disableEnvironmentCreationByNonAdminUsers": {
+                    "description": "Disable environment creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "disableNPSCommentsReachout": {
+                    "description": "Disable NPS comments reachout.",
+                    "type": "boolean"
+                },
+                "disableNewsletterSendout": {
+                    "description": "Disable newsletter sendout.",
+                    "type": "boolean"
+                },
+                "disablePortalsCreationByNonAdminUsers": {
+                    "description": "Disable Power Pages creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "disableSupportTicketsVisibleByAllUsers": {
+                    "description": "Disable support tickets visibility by all users.",
+                    "type": "boolean"
+                },
+                "disableSurveyFeedback": {
+                    "description": "Disable survey feedback.",
+                    "type": "boolean"
+                },
+                "disableTrialEnvironmentCreationByNonAdminUsers": {
+                    "description": "Disable trial environment creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "powerPlatform": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerPlatformSettings",
+                    "description": "Nested workload-specific tenant settings."
+                },
+                "tenantId": {
+                    "description": "The ID of the tenant.",
+                    "type": "string"
+                },
+                "walkMeOptOut": {
+                    "description": "Walk Me opt-out setting.",
+                    "type": "boolean"
+                }
+            },
+            "requiredInputs": []
+        }
     },
-    "python": {
-      "packageName": "rpothin_powerplatform",
-      "requires": {
-        "pulumi": ">=3.0.0,<4.0.0"
-      }
+    "types": {
+        "powerplatform:index:AppSummary": {
+            "description": "Summary information about a Power App.",
+            "properties": {
+                "displayName": {
+                    "description": "The display name of the app.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "The unique identifier of the app.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The internal name of the app.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:BillingInstrument": {
+            "description": "Azure billing instrument (subscription) details for a billing policy.",
+            "properties": {
+                "id": {
+                    "description": "The billing instrument identifier.",
+                    "type": "string"
+                },
+                "resourceGroup": {
+                    "description": "The Azure resource group within the subscription.",
+                    "type": "string"
+                },
+                "subscriptionId": {
+                    "description": "The Azure subscription ID.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:ConnectorSummary": {
+            "description": "Summary information about a Power Platform connector.",
+            "properties": {
+                "displayName": {
+                    "description": "The display name of the connector.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "The unique identifier of the connector.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The internal name of the connector.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "The type of the connector.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:DataRecordLookup": {
+            "description": "A reference to a related Dataverse record used as a lookup (single-valued) or many-to-many relationship value.",
+            "properties": {
+                "dataRecordId": {
+                    "description": "The GUID of the related record.",
+                    "type": "string"
+                },
+                "tableLogicalName": {
+                    "description": "The logical name of the related Dataverse table (e.g. systemuser, account, deploymentstage).",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "tableLogicalName",
+                "dataRecordId"
+            ],
+            "type": "object"
+        },
+        "powerplatform:index:DataRecordsExpandParam": {
+            "description": "OData $expand parameter for a navigation property in getDataRecords.",
+            "properties": {
+                "filter": {
+                    "description": "OData filter expression for the expanded entity.",
+                    "type": "string"
+                },
+                "navigationProperty": {
+                    "description": "The navigation property name to expand.",
+                    "type": "string"
+                },
+                "select": {
+                    "description": "Comma-separated list of columns to include for the expanded entity.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "navigationProperty"
+            ],
+            "type": "object"
+        },
+        "powerplatform:index:Dataverse": {
+            "description": "Configuration for the Dataverse database associated with a Power Platform environment.",
+            "properties": {
+                "administrationModeEnabled": {
+                    "description": "Whether the Dataverse instance is in administration mode.",
+                    "type": "boolean"
+                },
+                "backgroundOperationEnabled": {
+                    "description": "Whether background operations are enabled during administration mode.",
+                    "type": "boolean"
+                },
+                "currencyCode": {
+                    "description": "Currency code for the Dataverse database (e.g. USD). Immutable after creation.",
+                    "type": "string"
+                },
+                "domainName": {
+                    "description": "Domain prefix for the Dataverse instance URL.",
+                    "type": "string"
+                },
+                "languageCode": {
+                    "description": "Base language LCID (e.g. 1033). Immutable after creation.",
+                    "type": "number"
+                },
+                "organizationId": {
+                    "description": "Dataverse organization GUID. Computed.",
+                    "type": "string"
+                },
+                "securityGroupId": {
+                    "description": "AAD security group GUID restricting environment access.",
+                    "type": "string"
+                },
+                "templateMetadata": {
+                    "description": "JSON metadata for provisioning templates. Immutable after creation.",
+                    "type": "string"
+                },
+                "templates": {
+                    "description": "Provisioning templates (e.g. D365_Sales). Immutable after creation.",
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "uniqueName": {
+                    "description": "Dataverse unique name. Computed.",
+                    "type": "string"
+                },
+                "url": {
+                    "description": "URL of the Dataverse instance. Computed.",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Dataverse version string. Computed.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:EnterprisePolicy": {
+            "description": "An enterprise policy associated with a Power Platform environment.",
+            "properties": {
+                "id": {
+                    "description": "The resource ID of the policy.",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "Azure region of the policy.",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "Policy link status (e.g. Linked, Disabled).",
+                    "type": "string"
+                },
+                "systemId": {
+                    "description": "System-assigned ID of the policy.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Policy type (e.g. NetworkInjection, Encryption, Identity).",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:EnvironmentSummary": {
+            "description": "Summary information about a Power Platform environment.",
+            "properties": {
+                "azureRegion": {
+                    "description": "The Azure region of the environment.",
+                    "type": "string"
+                },
+                "dataverseId": {
+                    "description": "The Dataverse organization ID.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "The display name of the environment.",
+                    "type": "string"
+                },
+                "domainName": {
+                    "description": "The domain name of the Dataverse database.",
+                    "type": "string"
+                },
+                "environmentGroupId": {
+                    "description": "The environment group to which this environment belongs.",
+                    "type": "string"
+                },
+                "geo": {
+                    "description": "The geographical region of the environment.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "The unique identifier of the environment.",
+                    "type": "string"
+                },
+                "securityGroupId": {
+                    "description": "The security group that controls access.",
+                    "type": "string"
+                },
+                "state": {
+                    "description": "The current state of the environment.",
+                    "type": "string"
+                },
+                "tenantId": {
+                    "description": "The tenant that the environment belongs to.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "The type (SKU) of the environment.",
+                    "type": "string"
+                },
+                "url": {
+                    "description": "The URL of the Dataverse database.",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "The version of the Dataverse database.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:FlowSummary": {
+            "description": "Summary information about a Cloud Flow sourced from the Dataverse workflow table.",
+            "properties": {
+                "displayName": {
+                    "description": "The display name of the flow. Identical to name when sourced from Dataverse.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "The unique identifier (workflowid GUID) of the flow.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The display name of the flow (maps to the Dataverse workflow name attribute).",
+                    "type": "string"
+                },
+                "stateCode": {
+                    "description": "The state of the flow: 0=Draft/Off, 1=Activated/On, 2=Suspended.",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:RuleSet": {
+            "description": "A rule set for a DLP policy, defining data loss prevention rules.",
+            "properties": {
+                "id": {
+                    "description": "The unique identifier of the rule set.",
+                    "type": "string"
+                },
+                "inputs": {
+                    "additionalProperties": {
+                        "$ref": "pulumi.json#/Any"
+                    },
+                    "description": "The inputs for the rule set, which may vary based on the rule.",
+                    "type": "object"
+                },
+                "version": {
+                    "description": "The version of the rule set.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantCatalogSettings": {
+            "description": "Catalog settings.",
+            "properties": {
+                "powerCatalogAudienceSetting": {
+                    "description": "Power Catalog audience setting.",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantChampionsSettings": {
+            "description": "Champions settings.",
+            "properties": {
+                "disableChampionsInvitationReachout": {
+                    "description": "Disable champions invitation reachout.",
+                    "type": "boolean"
+                },
+                "disableSkillsMatchInvitationReachout": {
+                    "description": "Disable skills match invitation reachout.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantEnvironmentsSettings": {
+            "description": "Environment settings.",
+            "properties": {
+                "disablePreferredDataLocationForTeamsEnvironment": {
+                    "description": "Disable preferred data location for Teams environment creation.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantGovernancePolicySettings": {
+            "description": "Governance policy settings.",
+            "properties": {
+                "enableDesktopFlowDataPolicyManagement": {
+                    "description": "Enable desktop flow data policy management.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantGovernanceSettings": {
+            "description": "Governance settings.",
+            "properties": {
+                "disableAdminDigest": {
+                    "description": "Disable admin digest.",
+                    "type": "boolean"
+                },
+                "disableDeveloperEnvironmentCreationByNonAdminUsers": {
+                    "description": "Disable developer environment creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "enableDefaultEnvironmentRouting": {
+                    "description": "Enable default environment routing.",
+                    "type": "boolean"
+                },
+                "environmentRoutingAllMakers": {
+                    "description": "Route all makers to personal dev environments.",
+                    "type": "boolean"
+                },
+                "environmentRoutingTargetEnvironmentGroupId": {
+                    "description": "Target environment group for default environment routing.",
+                    "type": "string"
+                },
+                "environmentRoutingTargetSecurityGroupId": {
+                    "description": "Target security group for default environment routing.",
+                    "type": "string"
+                },
+                "policy": {
+                    "$ref": "#/types/powerplatform:index:TenantGovernancePolicySettings",
+                    "description": "Governance policy settings."
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantIntelligenceSettings": {
+            "description": "Intelligence settings.",
+            "properties": {
+                "disableCopilot": {
+                    "description": "Disable Copilot.",
+                    "type": "boolean"
+                },
+                "enableOpenAiBotPublishing": {
+                    "description": "Enable OpenAI bot publishing.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantLicensingSettings": {
+            "description": "Licensing settings.",
+            "properties": {
+                "disableBillingPolicyCreationByNonAdminUsers": {
+                    "description": "Disable billing policy creation by non-admin users.",
+                    "type": "boolean"
+                },
+                "disableUseOfUnassignedAIBuilderCredits": {
+                    "description": "Disable use of unassigned AI Builder credits.",
+                    "type": "boolean"
+                },
+                "enableTenantCapacityReportForEnvironmentAdmins": {
+                    "description": "Enable tenant capacity report for environment admins.",
+                    "type": "boolean"
+                },
+                "enableTenantLicensingReportForEnvironmentAdmins": {
+                    "description": "Enable tenant licensing report for environment admins.",
+                    "type": "boolean"
+                },
+                "storageCapacityConsumptionWarningThreshold": {
+                    "description": "Storage capacity consumption warning threshold.",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantModelExperimentationSettings": {
+            "description": "Model experimentation settings.",
+            "properties": {
+                "disableDataLogging": {
+                    "description": "Disable data logging.",
+                    "type": "boolean"
+                },
+                "enableModelDataSharing": {
+                    "description": "Enable model data sharing.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantPowerAppsSettings": {
+            "description": "Power Apps settings.",
+            "properties": {
+                "disableConnectionSharingWithEveryone": {
+                    "description": "Disable connection sharing with everyone.",
+                    "type": "boolean"
+                },
+                "disableCreateFromFigma": {
+                    "description": "Disable create from Figma.",
+                    "type": "boolean"
+                },
+                "disableCreateFromImage": {
+                    "description": "Disable create from image.",
+                    "type": "boolean"
+                },
+                "disableMakerMatch": {
+                    "description": "Disable maker match.",
+                    "type": "boolean"
+                },
+                "disableShareWithEveryone": {
+                    "description": "Disable share with everyone.",
+                    "type": "boolean"
+                },
+                "disableUnusedLicenseAssignment": {
+                    "description": "Disable unused license assignment.",
+                    "type": "boolean"
+                },
+                "enableGuestsToMake": {
+                    "description": "Enable guests to make apps.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantPowerAutomateSettings": {
+            "description": "Power Automate settings.",
+            "properties": {
+                "disableCopilot": {
+                    "description": "Disable Copilot for Power Automate.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantPowerPagesSettings": {
+            "description": "Power Pages settings.",
+            "properties": {},
+            "type": "object"
+        },
+        "powerplatform:index:TenantPowerPlatformSettings": {
+            "description": "Power Platform workload settings at tenant scope.",
+            "properties": {
+                "catalogSettings": {
+                    "$ref": "#/types/powerplatform:index:TenantCatalogSettings",
+                    "description": "Catalog settings."
+                },
+                "champions": {
+                    "$ref": "#/types/powerplatform:index:TenantChampionsSettings",
+                    "description": "Champions settings."
+                },
+                "environments": {
+                    "$ref": "#/types/powerplatform:index:TenantEnvironmentsSettings",
+                    "description": "Environment settings."
+                },
+                "governance": {
+                    "$ref": "#/types/powerplatform:index:TenantGovernanceSettings",
+                    "description": "Governance settings."
+                },
+                "intelligence": {
+                    "$ref": "#/types/powerplatform:index:TenantIntelligenceSettings",
+                    "description": "Intelligence settings."
+                },
+                "licensing": {
+                    "$ref": "#/types/powerplatform:index:TenantLicensingSettings",
+                    "description": "Licensing settings."
+                },
+                "modelExperimentation": {
+                    "$ref": "#/types/powerplatform:index:TenantModelExperimentationSettings",
+                    "description": "Model experimentation settings."
+                },
+                "powerApps": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerAppsSettings",
+                    "description": "Power Apps settings."
+                },
+                "powerAutomate": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerAutomateSettings",
+                    "description": "Power Automate settings."
+                },
+                "powerPages": {
+                    "$ref": "#/types/powerplatform:index:TenantPowerPagesSettings",
+                    "description": "Power Pages settings."
+                },
+                "search": {
+                    "$ref": "#/types/powerplatform:index:TenantSearchSettings",
+                    "description": "Search settings."
+                },
+                "teamsIntegration": {
+                    "$ref": "#/types/powerplatform:index:TenantTeamsIntegrationSettings",
+                    "description": "Teams integration settings."
+                },
+                "userManagementSettings": {
+                    "$ref": "#/types/powerplatform:index:TenantUserManagementSettings",
+                    "description": "User management settings."
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantSearchSettings": {
+            "description": "Search settings.",
+            "properties": {
+                "disableBingVideoSearch": {
+                    "description": "Disable Bing video search.",
+                    "type": "boolean"
+                },
+                "disableCommunitySearch": {
+                    "description": "Disable community search.",
+                    "type": "boolean"
+                },
+                "disableDocsSearch": {
+                    "description": "Disable docs search.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantTeamsIntegrationSettings": {
+            "description": "Teams integration settings.",
+            "properties": {
+                "shareWithColleaguesUserLimit": {
+                    "description": "Share with colleagues user limit.",
+                    "type": "integer"
+                }
+            },
+            "type": "object"
+        },
+        "powerplatform:index:TenantUserManagementSettings": {
+            "description": "User management settings.",
+            "properties": {
+                "enableDeleteDisabledUserInAllEnvironments": {
+                    "description": "Enable delete disabled user in all environments.",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        }
     },
-    "java": {
-      "basePackage": "io.github.rpothin"
-    },
-    "dotnet": {
-      "packageId": "Rpothin.Powerplatform"
-    }
-  }
+    "version": "0.0.0"
 }

@@ -7,7 +7,7 @@ import pulumi.runtime.mocks as mocks_module
 import pytest
 from pulumi.provider.experimental.property_value import Computed, PropertyValue
 from pulumi.provider.experimental.provider import ConstructRequest
-from rpothin_powerplatform.components.poc_component import COMPONENT_TYPE, PocComponent
+from rpothin_powerplatform.components.poc_component import COMPONENT_TYPE, PocComponent, PocComponentArgs
 from rpothin_powerplatform.construct_bridge import _make_output
 from rpothin_powerplatform.provider import PowerPlatformProvider
 
@@ -43,7 +43,7 @@ def provider():
 @pytest.mark.asyncio
 async def test_poc_component_echoes_label():
     """PocComponent.label_out resolves to the string passed as label."""
-    comp = PocComponent("test-poc", label="echo-me")
+    comp = PocComponent("test-poc", args=PocComponentArgs(label="echo-me"))
     result = await comp.label_out.future(with_unknowns=True)
     assert result == "echo-me"
 
@@ -52,7 +52,7 @@ async def test_poc_component_echoes_label():
 async def test_poc_component_secret_label():
     """Secret Output input → label_out is also secret."""
     secret_input = pulumi.Output.secret("my-secret")
-    comp = PocComponent("test-poc", label=secret_input)
+    comp = PocComponent("test-poc", args=PocComponentArgs(label=secret_input))
     is_secret = await comp.label_out._is_secret
     assert is_secret is True
 
@@ -66,7 +66,7 @@ async def test_poc_component_unknown_label():
         is_secret=False,
         dep_urns=frozenset(),
     )
-    comp = PocComponent("test-poc", label=unknown_input)
+    comp = PocComponent("test-poc", args=PocComponentArgs(label=unknown_input))
     value = await comp.label_out.future(with_unknowns=True)
     # When is_known is False the value is the UNKNOWN sentinel
     assert value is pulumi.UNKNOWN or value is None or not await comp.label_out._is_known
