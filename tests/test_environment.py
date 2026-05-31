@@ -10,7 +10,8 @@ from pulumi.provider.experimental.provider import (
     DiffRequest,
     PropertyDiffKind,
 )
-from rpothin_powerplatform.environment import EnvironmentDataverse, EnvironmentDataverseArgs
+from rpothin_powerplatform._inputs import DataverseArgs as EnvironmentDataverseArgs
+from rpothin_powerplatform.outputs import Dataverse as EnvironmentDataverse
 from rpothin_powerplatform.resources.environment import EnvironmentResource
 
 _URN = "urn:pulumi:test::test::powerplatform:index:Environment::my-env"

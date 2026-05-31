@@ -22,7 +22,15 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
 ]
-dependencies = ["pulumi>=3.0.0,<4.0.0"]
+dependencies = [
+    "pulumi>=3.0.0,<4.0.0",
+    "parver>=0.2.1",
+    "semver>=2.8.1",
+    "typing-extensions>=4.11,<5; python_version < '3.11'",
+]
+
+[tool.setuptools.package-data]
+rpothin_powerplatform = ["py.typed", "pulumi-plugin.json"]
 
 [project.urls]
 Homepage = "https://github.com/rpothin/pulumi-powerplatform"

@@ -65,16 +65,24 @@ jobs:
           curl -fsSL https://get.pulumi.com | sh -s -- --version 3.230.0
           echo "$HOME/.pulumi/bin" >> $GITHUB_PATH
 
-      - name: Verify non-Python SDKs are up to date
+      - name: Verify SDKs are up to date
         if: steps.schema_changed.outputs.schema_changed == 'true'
         run: |
           GEN_DIR=$(mktemp -d)
+          PY_BACKUP=$(mktemp -d)
+          cp sdk/python/pyproject.toml "$PY_BACKUP/pyproject.toml"
+
           pulumi package gen-sdk . --language nodejs --out "$GEN_DIR"
           pulumi package gen-sdk . --language go     --out "$GEN_DIR"
           pulumi package gen-sdk . --language dotnet --out "$GEN_DIR"
           pulumi package gen-sdk . --language java   --out "$GEN_DIR"
+          pulumi package gen-sdk . --language python --out "$GEN_DIR"
           bash ./scripts/normalize-dotnet-sdk.sh "$GEN_DIR/dotnet"
           python3 scripts/normalize-nodejs-sdk.py "$GEN_DIR/nodejs"
+          python3 scripts/normalize-python-sdk.py "$GEN_DIR/python"
+          # Restore pyproject.toml into the generated dir for the diff (it is
+          # manually maintained and not emitted by the generator).
+          cp "$PY_BACKUP/pyproject.toml" "$GEN_DIR/python/pyproject.toml"
           # Apply the same normalization on committed Node.js SDK before diff,
           # so formatting/order-only drift does not produce false negatives.
           python3 scripts/normalize-nodejs-sdk.py "sdk/nodejs"
@@ -88,7 +96,7 @@ jobs:
           python3 scripts/patch-java-pom-metadata.py --gradle-path "$GEN_DIR/java/build.gradle"
 
           STALE=""
-          for lang in nodejs go dotnet java; do
+          for lang in nodejs go dotnet java python; do
             if ! diff -rq --strip-trailing-cr "$GEN_DIR/$lang" "sdk/$lang" > /dev/null 2>&1; then
               echo "Detected differences for sdk/$lang:"
               diff -rq --strip-trailing-cr "$GEN_DIR/$lang" "sdk/$lang" || true
@@ -97,7 +105,7 @@ jobs:
           done
 
           if [ -n "$STALE" ]; then
-            echo "ERROR: The following non-Python SDKs are out of sync with schema.json:"
+            echo "ERROR: The following SDKs are out of sync with schema.json:"
             printf "$STALE\n"
             echo ""
             echo "Regenerate them with the helper script and commit the result (see AGENTS.md):"
@@ -108,7 +116,7 @@ jobs:
             exit 1
           fi
 
-          echo "All non-Python SDKs are in sync with schema.json."
+          echo "All SDKs are in sync with schema.json."
 
   schema-validate:
     runs-on: ubuntu-latest
