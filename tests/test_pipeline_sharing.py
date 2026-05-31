@@ -238,3 +238,22 @@ class TestPipelineSharingDelete:
                 timeout=300,
             )
         )
+
+    @pytest.mark.asyncio
+    async def test_delete_falls_back_to_resource_id_when_properties_empty(self, handler, mock_client, dv_mock):
+        """_resolve_ids must not raise AttributeError on DeleteRequest (no .inputs field)."""
+        mock_client.raw.request.return_value = _ENV_RESPONSE
+        dv_mock.request.return_value = {}
+
+        await handler.delete(
+            DeleteRequest(
+                urn=_URN,
+                resource_id=_RESOURCE_ID,
+                properties={},  # empty — forces fallback to resource_id split
+                timeout=300,
+            )
+        )
+
+        dv_mock.request.assert_awaited_once()
+        call_body = dv_mock.request.call_args.kwargs["body"]
+        assert call_body["Target"]["deploymentpipelineid"] == _PIPELINE_ID

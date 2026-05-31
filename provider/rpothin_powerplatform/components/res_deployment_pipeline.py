@@ -372,6 +372,12 @@ async def _construct_res_deployment_pipeline(
             )
         )
 
+    # Validate that branching inputs are concrete (not Computed) so the plan is deterministic.
+    for _branching_key in ("pipelineName", "devEnvironmentKey", "securityGroupId"):
+        _pv_raw = inputs.get(_branching_key)
+        if _pv_raw is not None and isinstance(_pv_raw.value, Computed):
+            raise ValueError(f"{_branching_key} must be known at plan time.")
+
     args = ResDeploymentPipelineArgs(
         host_environment_id=_pv("hostEnvironmentId"),
         pipeline_name=_pv_str_concrete("pipelineName") or "",

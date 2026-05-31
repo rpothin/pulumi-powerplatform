@@ -264,6 +264,14 @@ class TestResDeploymentPipelineValidation:
         with pytest.raises(ValueError, match="between 1 and 6"):
             ResDeploymentPipeline("bad", args=args)
 
+    async def test_rejects_computed_security_group_id(self):
+        from pulumi.provider.experimental.property_value import Computed
+
+        inputs = dict(TestConstructResDeploymentPipeline._inputs())
+        inputs["securityGroupId"] = PropertyValue(Computed())
+        with pytest.raises(ValueError, match="securityGroupId"):
+            await _construct_res_deployment_pipeline("pipe", inputs, opts=None)
+
 
 class TestResDeploymentPipelineSchemaSmoke:
     def test_analyzer_can_introspect_component(self):

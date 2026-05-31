@@ -220,9 +220,10 @@ def _normalized_access_mask(values: dict[str, PropertyValue]) -> str:
 
 
 def _resolve_ids(request: ReadRequest | DeleteRequest) -> tuple[str, str, str]:
-    env_id = _pv_str(request.properties.get(_ENV_PROP)) or _pv_str(request.inputs.get(_ENV_PROP))
-    pipeline_id = _pv_str(request.properties.get(_PIPELINE_PROP)) or _pv_str(request.inputs.get(_PIPELINE_PROP))
-    team_id = _pv_str(request.properties.get(_TEAM_PROP)) or _pv_str(request.inputs.get(_TEAM_PROP))
+    inputs = getattr(request, "inputs", {}) or {}
+    env_id = _pv_str(request.properties.get(_ENV_PROP)) or _pv_str(inputs.get(_ENV_PROP))
+    pipeline_id = _pv_str(request.properties.get(_PIPELINE_PROP)) or _pv_str(inputs.get(_PIPELINE_PROP))
+    team_id = _pv_str(request.properties.get(_TEAM_PROP)) or _pv_str(inputs.get(_TEAM_PROP))
     if env_id and pipeline_id and team_id:
         return env_id, pipeline_id, team_id
 
