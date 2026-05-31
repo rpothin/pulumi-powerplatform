@@ -288,6 +288,121 @@
             "requiredInputs": [],
             "type": "object"
         },
+        "powerplatform:components:ResEnvironment": {
+            "description": "AVM-aligned component that manages a Power Platform environment lifecycle.\n\n    Composes:\n\n    * :class:`~rpothin_powerplatform.Environment` — always created.\n    * :class:`~rpothin_powerplatform.ManagedEnvironment` — when\n      ``args.managed_environment_enabled`` is ``True``.\n    * :class:`~rpothin_powerplatform.EnvironmentSettings` — when any settings\n      field is provided.\n\n    All child resources inherit the parent component's provider configuration\n    through ``opts.providers`` / ``opts.provider`` so callers can supply an\n    explicit provider without repeating it for every child.",
+            "inputProperties": {
+                "allowBingSearch": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "allowMovingDataAcrossRegions": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "auditRetentionPeriodInDays": {
+                    "plain": true,
+                    "type": "integer"
+                },
+                "azureRegion": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "billingPolicyId": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "cadence": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "dataverse": {
+                    "$ref": "#/types/powerplatform:components:DataverseConfig",
+                    "plain": true
+                },
+                "description": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "displayName": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "enableTelemetry": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "environmentGroupId": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "environmentType": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "isAuditEnabled": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "isReadAuditEnabled": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "isUserAccessAuditEnabled": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "location": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "managedEnvironmentEnabled": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "maxUploadFileSize": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "pluginTraceLogSetting": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "showDashboardCardsInExpandedState": {
+                    "plain": true,
+                    "type": "boolean"
+                }
+            },
+            "isComponent": true,
+            "properties": {
+                "dataverseOrganizationId": {
+                    "type": "string"
+                },
+                "environmentDisplayName": {
+                    "type": "string"
+                },
+                "environmentUrl": {
+                    "type": "string"
+                },
+                "managedEnvironmentId": {
+                    "type": "string"
+                },
+                "resourceId": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "dataverseOrganizationId",
+                "environmentDisplayName",
+                "environmentUrl",
+                "managedEnvironmentId",
+                "resourceId"
+            ],
+            "requiredInputs": [
+                "displayName",
+                "location"
+            ],
+            "type": "object"
+        },
         "powerplatform:index:AdminManagementApplication": {
             "description": "Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable — any change to applicationId triggers a replacement.",
             "inputProperties": {
@@ -1134,6 +1249,48 @@
         }
     },
     "types": {
+        "powerplatform:components:DataverseConfig": {
+            "description": "Dataverse provisioning configuration.\n\n    Mirrors the ``var.dataverse`` object in the AVM ``res-environment`` module.\n    Passing a :class:`DataverseConfig` instance triggers Dataverse provisioning\n    on the underlying ``Environment`` resource.\n\n    Field names follow the AVM variable names (snake_case).  The component maps\n    them to the camelCase wire names expected by the Pulumi provider.\n    ",
+            "properties": {
+                "administrationModeEnabled": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "backgroundOperationEnabled": {
+                    "plain": true,
+                    "type": "boolean"
+                },
+                "currencyCode": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "domain": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "languageCode": {
+                    "plain": true,
+                    "type": "integer"
+                },
+                "securityGroupId": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "templateMetadata": {
+                    "plain": true,
+                    "type": "string"
+                },
+                "templates": {
+                    "items": {
+                        "plain": true,
+                        "type": "string"
+                    },
+                    "plain": true,
+                    "type": "array"
+                }
+            },
+            "type": "object"
+        },
         "powerplatform:index:AppSummary": {
             "description": "Summary information about a Power App.",
             "properties": {
