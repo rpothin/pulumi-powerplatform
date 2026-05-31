@@ -5,6 +5,12 @@ The Pulumi SDK generator creates setup.py with a hardcoded VERSION = "0.0.0"
 and no PEP 621 metadata. This project uses pyproject.toml for packaging
 instead, so setup.py is removed after generation.
 
+Note: the generated _utilities.py calls _get_semver_version() at module level
+(no try/except fallback). This requires parver>=0.2.1 and semver>=2.8.1 to be
+installed at import time. These packages are listed in the root pyproject.toml
+[project.optional-dependencies] dev section so that tests and CI satisfy the
+requirement via `pip install -e ".[dev]"`. Do not remove them from root dev deps.
+
 Usage:
   python3 scripts/normalize-python-sdk.py [sdk/python]   # default: sdk/python
 """

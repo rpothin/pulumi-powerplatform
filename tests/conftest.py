@@ -2,7 +2,7 @@
 that lack Windows Long Path support (mspp_management sub-packages cannot be
 installed there).  Has no effect when the real packages are present.
 
-Also extends rpothin_powerplatform.__path__ to expose the hand-crafted Python SDK
+Also extends rpothin_powerplatform.__path__ to expose the generated Python SDK
 modules (sdk/python/rpothin_powerplatform/) alongside the provider modules."""
 
 from __future__ import annotations
@@ -52,7 +52,7 @@ class _SdkStubFinder(MetaPathFinder):
 sys.meta_path.insert(0, _SdkStubFinder())
 
 # Import the provider package now (with stubs active) so we can extend its __path__
-# to also include the hand-crafted Python SDK modules.
+# to also include the generated Python SDK modules.
 import rpothin_powerplatform as _provider_pkg  # noqa: E402
 
 _sdk_pkg_dir = str(Path(__file__).parent.parent / "sdk" / "python" / "rpothin_powerplatform")

@@ -72,11 +72,11 @@ jobs:
           PY_BACKUP=$(mktemp -d)
           cp sdk/python/pyproject.toml "$PY_BACKUP/pyproject.toml"
 
+          pulumi package gen-sdk . --language python --out "$GEN_DIR"
           pulumi package gen-sdk . --language nodejs --out "$GEN_DIR"
           pulumi package gen-sdk . --language go     --out "$GEN_DIR"
           pulumi package gen-sdk . --language dotnet --out "$GEN_DIR"
           pulumi package gen-sdk . --language java   --out "$GEN_DIR"
-          pulumi package gen-sdk . --language python --out "$GEN_DIR"
           bash ./scripts/normalize-dotnet-sdk.sh "$GEN_DIR/dotnet"
           python3 scripts/normalize-nodejs-sdk.py "$GEN_DIR/nodejs"
           python3 scripts/normalize-python-sdk.py "$GEN_DIR/python"
