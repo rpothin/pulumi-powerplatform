@@ -68,14 +68,29 @@ class HttpError(Exception):
 
 
 def _is_retryable(exc: Exception) -> bool:
-    """Return True if the exception represents a retryable HTTP error (429 or 5xx)."""
+    """Return True if the exception represents a retryable HTTP error (429 or 5xx).
+
+    Handles both :class:`HttpError` (raw REST layer) and
+    :class:`kiota_abstractions.api_error.APIError` (governance/management SDK).
+    """
     if isinstance(exc, HttpError):
         return exc.status_code == 429 or 500 <= exc.status_code < 600
+    try:
+        from kiota_abstractions.api_error import APIError as _KiotaAPIError  # noqa: PLC0415
+        if isinstance(exc, _KiotaAPIError):
+            code = getattr(exc, "response_status_code", 0) or 0
+            return code == 429 or 500 <= code < 600
+    except ImportError:
+        pass
     return False
 
 
 def _get_retry_after(exc: Exception) -> Optional[float]:
-    """Extract Retry-After header value (in seconds) from an HttpError, if present."""
+    """Extract Retry-After header value (in seconds) from a retryable exception.
+
+    Handles both :class:`HttpError` and
+    :class:`kiota_abstractions.api_error.APIError`.
+    """
     if isinstance(exc, HttpError):
         retry_after = exc.headers.get("Retry-After") or exc.headers.get("retry-after")
         if retry_after is not None:
@@ -83,6 +98,19 @@ def _get_retry_after(exc: Exception) -> Optional[float]:
                 return float(retry_after)
             except ValueError:
                 return None
+    try:
+        from kiota_abstractions.api_error import APIError as _KiotaAPIError  # noqa: PLC0415
+        if isinstance(exc, _KiotaAPIError):
+            headers = getattr(exc, "response_headers", None)
+            if headers:
+                try:
+                    raw = headers.get("Retry-After") or headers.get("retry-after")
+                    if raw is not None:
+                        return float(raw)
+                except (AttributeError, TypeError, ValueError):
+                    pass
+    except ImportError:
+        pass
     return None
 
 
@@ -130,11 +158,12 @@ async def retry_with_backoff(
             else:
                 delay = base_delay * (2 ** attempt) + random.uniform(0, base_delay)
 
+            status = getattr(exc, "status_code", None) or getattr(exc, "response_status_code", "?")
             logger.warning(
                 "Retryable error (attempt %d/%d, status=%s): %s. Retrying in %.1fs.",
                 attempt + 1,
                 max_retries + 1,
-                getattr(exc, "status_code", "?"),
+                status,
                 exc,
                 delay,
             )

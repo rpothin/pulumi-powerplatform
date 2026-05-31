@@ -41,6 +41,6 @@ def rule_set_to_pv(rs: object) -> PropertyValue:
     rs_inputs = getattr(rs, "inputs", None)
     if rs_inputs is not None:
         additional = getattr(rs_inputs, "additional_data", None)
-        if additional:
+        if additional is not None:
             rs_map["inputs"] = PropertyValue(dict_to_pv_map(additional))
     return PropertyValue(rs_map)

@@ -200,3 +200,61 @@ async def test_correct_policy_id_passed_to_sdk():
     await fn.invoke(_make_request("exact-id-check"))
 
     client.sdk.governance.rule_based_policies.by_policy_id.assert_called_once_with("exact-id-check")
+
+
+@pytest.mark.asyncio
+async def test_empty_string_source_policy_id_raises():
+    """An empty sourcePolicyId string must raise ValueError."""
+    client = MagicMock(spec=PowerPlatformClient)
+    fn = GetDlpPolicyMigrationConfigFunction(client)
+
+    request = InvokeRequest(
+        tok="powerplatform:index:getDlpPolicyMigrationConfig",
+        args={"sourcePolicyId": PropertyValue("")},
+    )
+    with pytest.raises(ValueError, match="sourcePolicyId"):
+        await fn.invoke(request)
+
+
+@pytest.mark.asyncio
+async def test_whitespace_only_source_policy_id_raises():
+    """A whitespace-only sourcePolicyId must raise ValueError."""
+    client = MagicMock(spec=PowerPlatformClient)
+    fn = GetDlpPolicyMigrationConfigFunction(client)
+
+    request = InvokeRequest(
+        tok="powerplatform:index:getDlpPolicyMigrationConfig",
+        args={"sourcePolicyId": PropertyValue("   ")},
+    )
+    with pytest.raises(ValueError, match="sourcePolicyId"):
+        await fn.invoke(request)
+
+
+@pytest.mark.asyncio
+async def test_policy_with_none_name_raises():
+    """A policy whose name is None must raise RuntimeError (fail-fast)."""
+    policy = MagicMock()
+    policy.name = None
+    policy.rule_sets = []
+
+    client = MagicMock(spec=PowerPlatformClient)
+    client.sdk.governance.rule_based_policies.by_policy_id.return_value.get = AsyncMock(return_value=policy)
+
+    fn = GetDlpPolicyMigrationConfigFunction(client)
+    with pytest.raises(RuntimeError, match="no display name"):
+        await fn.invoke(_make_request("pol-123"))
+
+
+@pytest.mark.asyncio
+async def test_policy_with_empty_name_raises():
+    """A policy whose name is an empty string must raise RuntimeError (fail-fast)."""
+    policy = MagicMock()
+    policy.name = ""
+    policy.rule_sets = []
+
+    client = MagicMock(spec=PowerPlatformClient)
+    client.sdk.governance.rule_based_policies.by_policy_id.return_value.get = AsyncMock(return_value=policy)
+
+    fn = GetDlpPolicyMigrationConfigFunction(client)
+    with pytest.raises(RuntimeError, match="no display name"):
+        await fn.invoke(_make_request("pol-123"))

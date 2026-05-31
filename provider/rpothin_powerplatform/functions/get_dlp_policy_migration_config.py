@@ -48,7 +48,9 @@ class GetDlpPolicyMigrationConfigFunction:
         source_id_pv = args.get("sourcePolicyId")
         if source_id_pv is None or source_id_pv.value is None:
             raise ValueError("sourcePolicyId is required.")
-        source_policy_id = str(source_id_pv.value)
+        source_policy_id = str(source_id_pv.value).strip()
+        if not source_policy_id:
+            raise ValueError("sourcePolicyId must not be empty.")
 
         try:
             policy = await retry_with_backoff(
@@ -69,7 +71,11 @@ class GetDlpPolicyMigrationConfigFunction:
         for rs in getattr(policy, "rule_sets", None) or []:
             rule_set_pvs.append(rule_set_to_pv(rs))
 
-        display_name = getattr(policy, "name", None) or ""
+        display_name = getattr(policy, "name", None)
+        if not display_name:
+            raise RuntimeError(
+                f"DLP policy '{source_policy_id}' has no display name. Cannot produce migration config."
+            )
 
         return InvokeResponse(
             return_value={

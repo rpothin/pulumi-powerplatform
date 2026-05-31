@@ -192,3 +192,25 @@ async def test_last_modified_iso_format():
 
     p_map = response.return_value["policies"].value[0].value
     assert p_map["lastModified"].value == "2025-06-01T12:00:00+00:00"
+
+
+@pytest.mark.asyncio
+async def test_rule_set_with_empty_additional_data_preserved():
+    """An empty additional_data dict should be preserved in the output, not dropped."""
+    rs = _make_rule_set("RS-EMPTY", "1", additional_data={})
+    pol = _make_policy(rule_sets=[rs])
+
+    result_mock = MagicMock()
+    result_mock.value = [pol]
+
+    client = MagicMock(spec=PowerPlatformClient)
+    client.sdk.governance.rule_based_policies.get = AsyncMock(return_value=result_mock)
+
+    fn = GetDlpPoliciesFunction(client)
+    response = await fn.invoke(_make_request())
+
+    p_map = response.return_value["policies"].value[0].value
+    rs_map = p_map["ruleSets"].value[0].value
+    # Empty dict should be serialized as an empty PropertyValue map, not dropped
+    assert "inputs" in rs_map
+    assert rs_map["inputs"].value == {}
