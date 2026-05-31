@@ -163,6 +163,31 @@ class TestProtectedKeys:
         result = ms.merge_into_schema(base, generated)
         assert result["version"] == "0.0.1"
 
+    def test_merge_only_modifies_resources_and_types(self):
+        """merge_into_schema must never touch top-level keys other than resources/types.
+
+        The PROTECTED_KEYS guard in main() is advisory (WARNING); the real safety is
+        that merge_into_schema only updates resources and types.  This test catches
+        accidental extensions that merge other sections.
+        """
+        hostile = {
+            "resources": {},
+            "types": {},
+            "language": {"python": {"override": True}},
+            "config": {"variables": {"injected": {}}},
+            "functions": {"powerplatform:index:evil": {}},
+            "version": "9.9.9",
+            "dependencies": {"evil": "1.0.0"},
+            "pluginDownloadURL": "https://evil.example.com",
+        }
+        base = copy.deepcopy(_BASE_SCHEMA)
+        result = ms.merge_into_schema(base, hostile)
+        for key in ms.PROTECTED_KEYS:
+            assert result.get(key) == _BASE_SCHEMA.get(key), (
+                f"Key '{key}' was modified by merge_into_schema"
+            )
+        assert set(result.keys()) == set(_BASE_SCHEMA.keys())
+
 
 # ---------------------------------------------------------------------------
 # merge_into_schema: collision detection
@@ -316,3 +341,67 @@ class TestDryRunMode:
 
     def test_dump_schema_ends_with_newline(self):
         assert ms._dump_schema(_BASE_SCHEMA).endswith("\n")
+
+
+# ---------------------------------------------------------------------------
+# Check mode (--check flag)
+# ---------------------------------------------------------------------------
+
+
+class TestCheckMode:
+    """Tests for the --check flag: exit 0 when schema.json is up-to-date, 1 otherwise.
+
+    main() is called with SCHEMA_PATH, load_components_isolated, and analyze_components
+    monkeypatched so these tests do not require the real Pulumi Analyzer.
+    """
+
+    def test_check_passes_when_schema_already_merged(self, tmp_path, monkeypatch):
+        """--check exits 0 when schema.json already contains the generated components."""
+        merged = ms.merge_into_schema(copy.deepcopy(_BASE_SCHEMA), copy.deepcopy(_GENERATED_FRAGMENT))
+        tmp_schema = tmp_path / "schema.json"
+        tmp_schema.write_text(ms._dump_schema(merged), encoding="utf-8")
+
+        class _Sentinel:
+            pass
+
+        monkeypatch.setattr(ms, "SCHEMA_PATH", tmp_schema)
+        monkeypatch.setattr(ms, "load_components_isolated", lambda: [_Sentinel])
+        monkeypatch.setattr(ms, "analyze_components", lambda _: copy.deepcopy(_GENERATED_FRAGMENT))
+
+        assert ms.main(["--check"]) == 0
+
+    def test_check_fails_when_schema_is_stale(self, tmp_path, monkeypatch):
+        """--check exits 1 when schema.json is missing the generated components."""
+        tmp_schema = tmp_path / "schema.json"
+        tmp_schema.write_text(ms._dump_schema(copy.deepcopy(_BASE_SCHEMA)), encoding="utf-8")
+
+        class _Sentinel:
+            pass
+
+        monkeypatch.setattr(ms, "SCHEMA_PATH", tmp_schema)
+        monkeypatch.setattr(ms, "load_components_isolated", lambda: [_Sentinel])
+        monkeypatch.setattr(ms, "analyze_components", lambda _: copy.deepcopy(_GENERATED_FRAGMENT))
+
+        assert ms.main(["--check"]) == 1
+
+    def test_check_passes_with_no_components_and_clean_schema(self, tmp_path, monkeypatch):
+        """--check exits 0 when no components are registered and schema has none either."""
+        tmp_schema = tmp_path / "schema.json"
+        tmp_schema.write_text(ms._dump_schema(copy.deepcopy(_BASE_SCHEMA)), encoding="utf-8")
+
+        monkeypatch.setattr(ms, "SCHEMA_PATH", tmp_schema)
+        monkeypatch.setattr(ms, "load_components_isolated", lambda: [])
+
+        assert ms.main(["--check"]) == 0
+
+    def test_check_fails_with_no_components_but_stale_schema(self, tmp_path, monkeypatch):
+        """--check exits 1 when no components registered but schema still has old entries."""
+        stale_base = copy.deepcopy(_BASE_SCHEMA)
+        stale_base["resources"]["powerplatform:components:OldComponent"] = {"isComponent": True}
+        tmp_schema = tmp_path / "schema.json"
+        tmp_schema.write_text(ms._dump_schema(stale_base), encoding="utf-8")
+
+        monkeypatch.setattr(ms, "SCHEMA_PATH", tmp_schema)
+        monkeypatch.setattr(ms, "load_components_isolated", lambda: [])
+
+        assert ms.main(["--check"]) == 1

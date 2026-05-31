@@ -387,13 +387,13 @@ def main(argv: list[str] | None = None) -> int:
     print("Loading components in isolation…", file=sys.stderr)
     component_classes = load_components_isolated()
     if not component_classes:
-        print("No components registered — nothing to merge.", file=sys.stderr)
-        return 0
-    print(f"  Found {len(component_classes)} component(s): "
-          f"{[c.__name__ for c in component_classes]}", file=sys.stderr)
-
-    print("Analyzing component schema…", file=sys.stderr)
-    generated = analyze_components(component_classes)
+        print("No components registered — stripping any stale component entries.", file=sys.stderr)
+        generated: dict = {"resources": {}, "types": {}}
+    else:
+        print(f"  Found {len(component_classes)} component(s): "
+              f"{[c.__name__ for c in component_classes]}", file=sys.stderr)
+        print("Analyzing component schema…", file=sys.stderr)
+        generated = analyze_components(component_classes)
 
     print("Loading schema.json…", file=sys.stderr)
     base = _load_schema()

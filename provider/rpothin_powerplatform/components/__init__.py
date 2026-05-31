@@ -7,8 +7,18 @@ the provider's ``construct`` method without touching the CRUD/invoke handlers.
 Importing this package triggers all ``@register_component`` and
 ``@register_construct`` decorators, populating the schema-generation and
 runtime-dispatch registries in :mod:`._base`.
+
+Auto-discovery mirrors :func:`scripts.merge_schema.load_components_isolated`: every
+public ``.py`` module in this directory (not starting with ``_``) is imported so
+that adding a new component file is sufficient to register it for both schema
+generation and runtime dispatch — no manual listing required.
 """
 
-# Import all component modules to register them.  New components added here
-# automatically appear in both schema generation and runtime dispatch.
-from . import poc_component as _poc_component  # noqa: F401
+import importlib
+from pathlib import Path
+
+_here = Path(__file__).parent
+for _py_file in sorted(_here.glob("*.py")):
+    _stem = _py_file.stem
+    if not _stem.startswith("_"):
+        importlib.import_module(f".{_stem}", package=__name__)

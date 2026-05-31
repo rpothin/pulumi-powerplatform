@@ -12,7 +12,7 @@ Output direction (resolve_outputs):
 NOTE — Phase 0 scope: nested Output structures (e.g. Output[dict]) are not
 traversed recursively during output resolution.  Fully-resolved composite values
 and scalar Outputs are handled correctly.  Full nested-Output support is deferred
-to Phase 2+.
+to Phase 3+.
 """
 
 from __future__ import annotations
