@@ -519,3 +519,5 @@ export interface TenantUserManagementSettings {
     enableDeleteDisabledUserInAllEnvironments?: boolean;
 }
 
+export namespace components {
+}

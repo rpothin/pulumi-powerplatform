@@ -47,7 +47,8 @@ _utilities.register(
   "mod": "components",
   "fqn": "rpothin_powerplatform.components",
   "classes": {
-   "powerplatform:components:PocComponent": "PocComponent"
+   "powerplatform:components:PocComponent": "PocComponent",
+   "powerplatform:components:ResEnvironment": "ResEnvironment"
   }
  },
  {

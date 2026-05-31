@@ -10,6 +10,11 @@ export type PocComponent = import("./pocComponent").PocComponent;
 export const PocComponent: typeof import("./pocComponent").PocComponent = null as any;
 utilities.lazyLoad(exports, ["PocComponent"], () => require("./pocComponent"));
 
+export { ResEnvironmentArgs } from "./resEnvironment";
+export type ResEnvironment = import("./resEnvironment").ResEnvironment;
+export const ResEnvironment: typeof import("./resEnvironment").ResEnvironment = null as any;
+utilities.lazyLoad(exports, ["ResEnvironment"], () => require("./resEnvironment"));
+
 
 const _module = {
     version: utilities.getVersion(),
@@ -17,6 +22,8 @@ const _module = {
         switch (type) {
             case "powerplatform:components:PocComponent":
                 return new PocComponent(name, <any>undefined, { urn })
+            case "powerplatform:components:ResEnvironment":
+                return new ResEnvironment(name, <any>undefined, { urn })
             default:
                 throw new Error(`unknown resource type ${type}`);
         }

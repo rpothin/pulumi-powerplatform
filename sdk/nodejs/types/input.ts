@@ -434,3 +434,26 @@ export interface TenantUserManagementSettingsArgs {
      */
     enableDeleteDisabledUserInAllEnvironments?: pulumi.Input<boolean>;
 }
+export namespace components {
+    /**
+     * Dataverse provisioning configuration.
+     *
+     *     Mirrors the ``var.dataverse`` object in the AVM ``res-environment`` module.
+     *     Passing a :class:`DataverseConfig` instance triggers Dataverse provisioning
+     *     on the underlying ``Environment`` resource.
+     *
+     *     Field names follow the AVM variable names (snake_case).  The component maps
+     *     them to the camelCase wire names expected by the Pulumi provider.
+     *     
+     */
+    export interface DataverseConfigArgs {
+        administrationModeEnabled?: boolean;
+        backgroundOperationEnabled?: boolean;
+        currencyCode?: string;
+        domain?: string;
+        languageCode?: number;
+        securityGroupId?: string;
+        templateMetadata?: string;
+        templates?: string[];
+    }
+}
