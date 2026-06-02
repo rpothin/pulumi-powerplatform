@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from urllib.parse import urlparse
 
-from pulumi.provider.experimental.property_value import PropertyValue
+from pulumi.provider.experimental.property_value import Computed, PropertyValue
 from pulumi.provider.experimental.provider import (
     CheckFailure,
     CheckRequest,
@@ -53,8 +53,11 @@ class PipelineSharingResource:
         _normalize_guid(inputs, _PIPELINE_PROP, failures)
         _normalize_guid(inputs, _TEAM_PROP, failures)
 
-        access_mask = _pv_str(inputs.get(_ACCESS_MASK_PROP)) or _DEFAULT_ACCESS_MASK
-        inputs[_ACCESS_MASK_PROP] = PropertyValue(access_mask)
+        access_mask_pv = inputs.get(_ACCESS_MASK_PROP)
+        if access_mask_pv is None or not isinstance(access_mask_pv.value, Computed):
+            # Only apply the default when the value is known; preserve Computed as-is
+            access_mask = _pv_str(access_mask_pv) or _DEFAULT_ACCESS_MASK
+            inputs[_ACCESS_MASK_PROP] = PropertyValue(access_mask)
 
         return CheckResponse(inputs=inputs, failures=failures or None)
 
@@ -65,6 +68,10 @@ class PipelineSharingResource:
         detailed_diff: dict[str, PropertyDiff] = {}
 
         for prop in (_ENV_PROP, _PIPELINE_PROP, _TEAM_PROP):
+            new_pv = request.new_inputs.get(prop)
+            # Unknown during preview — skip comparison, validate at create time
+            if new_pv is not None and isinstance(new_pv.value, Computed):
+                continue
             old_value = _normalized_value(request.old_state, prop)
             new_value = _normalized_value(request.new_inputs, prop)
             if old_value != new_value:
@@ -75,15 +82,17 @@ class PipelineSharingResource:
                     input_diff=True,
                 )
 
-        old_access_mask = _normalized_access_mask(request.old_state)
-        new_access_mask = _normalized_access_mask(request.new_inputs)
-        if old_access_mask != new_access_mask:
-            diffs.append(_ACCESS_MASK_PROP)
-            replaces.append(_ACCESS_MASK_PROP)
-            detailed_diff[_ACCESS_MASK_PROP] = PropertyDiff(
-                kind=PropertyDiffKind.UPDATE_REPLACE,
-                input_diff=True,
-            )
+        new_access_pv = request.new_inputs.get(_ACCESS_MASK_PROP)
+        if new_access_pv is None or not isinstance(new_access_pv.value, Computed):
+            old_access_mask = _normalized_access_mask(request.old_state)
+            new_access_mask = _normalized_access_mask(request.new_inputs)
+            if old_access_mask != new_access_mask:
+                diffs.append(_ACCESS_MASK_PROP)
+                replaces.append(_ACCESS_MASK_PROP)
+                detailed_diff[_ACCESS_MASK_PROP] = PropertyDiff(
+                    kind=PropertyDiffKind.UPDATE_REPLACE,
+                    input_diff=True,
+                )
 
         return DiffResponse(
             changes=bool(diffs),
@@ -96,6 +105,26 @@ class PipelineSharingResource:
     async def create(self, request: CreateRequest) -> CreateResponse:
         """Grant team access to the deployment pipeline."""
         props = dict(request.properties)
+
+        if request.preview:
+            # Preserve Computed (unknown) values in outputs rather than stringifying them.
+            env_pv = props.get(_ENV_PROP, PropertyValue(None))
+            pipeline_pv = props.get(_PIPELINE_PROP, PropertyValue(None))
+            team_pv = props.get(_TEAM_PROP, PropertyValue(None))
+            access_mask_pv = props.get(_ACCESS_MASK_PROP)
+            if access_mask_pv is None or isinstance(access_mask_pv.value, Computed):
+                access_mask_pv = PropertyValue(_DEFAULT_ACCESS_MASK)
+            return CreateResponse(
+                resource_id="preview-id",
+                properties={
+                    _ENV_PROP: env_pv,
+                    _PIPELINE_PROP: pipeline_pv,
+                    _TEAM_PROP: team_pv,
+                    _ACCESS_MASK_PROP: access_mask_pv,
+                    _GRANTED_ACCESS_MASK_PROP: access_mask_pv,
+                },
+            )
+
         env_id = _pv_str(props.get(_ENV_PROP))
         pipeline_id = _pv_str(props.get(_PIPELINE_PROP))
         team_id = _pv_str(props.get(_TEAM_PROP))
@@ -109,9 +138,6 @@ class PipelineSharingResource:
             _ACCESS_MASK_PROP: PropertyValue(access_mask),
             _GRANTED_ACCESS_MASK_PROP: PropertyValue(access_mask),
         }
-
-        if request.preview:
-            return CreateResponse(resource_id="preview-id", properties=outputs)
 
         instance_url = await resolve_dataverse_url(self._client.raw, env_id)
         if not instance_url:
@@ -198,7 +224,14 @@ class PipelineSharingResource:
 
 
 def _normalize_guid(inputs: dict[str, PropertyValue], prop: str, failures: list[CheckFailure]) -> str | None:
-    value = _pv_str(inputs.get(prop))
+    value_pv = inputs.get(prop)
+    if value_pv is None:
+        failures.append(CheckFailure(property=prop, reason=f"{prop} is required and cannot be empty."))
+        return None
+    if isinstance(value_pv.value, Computed):
+        # Unknown during preview — defer GUID validation to create time
+        return None
+    value = _pv_str(value_pv)
     if not value:
         failures.append(CheckFailure(property=prop, reason=f"{prop} is required and cannot be empty."))
         return None

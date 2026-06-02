@@ -120,10 +120,15 @@ async def resolve_outputs(outputs: dict[str, Any]) -> dict[str, PropertyValue]:
 
 
 async def _output_to_pv(output: pulumi.Output) -> PropertyValue:
-    """Await a ``pulumi.Output`` and represent it as a ``PropertyValue``."""
-    # Use the public future(with_unknowns=True) to get the raw value including
-    # the UNKNOWN sentinel; fall back to private attrs for is_secret/resources
-    # since no public API exists for those.
+    """Await a ``pulumi.Output`` and represent it as a ``PropertyValue``.
+
+    .. note::
+        ``output._is_known``, ``output._is_secret``, and ``output._resources``
+        are **private** Pulumi internals with no public equivalents as of Pulumi
+        ≤ 3.x.  ``output.future(with_unknowns=True)`` is the only public path
+        to the raw value including the ``UNKNOWN`` sentinel.  Re-evaluate after
+        any Pulumi SDK major version upgrade.
+    """
     value = await output.future(with_unknowns=True)
     is_known: bool = await output._is_known
     is_secret: bool = await output._is_secret

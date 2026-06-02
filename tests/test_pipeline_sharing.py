@@ -5,7 +5,7 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pulumi.provider.experimental.property_value import PropertyValue
+from pulumi.provider.experimental.property_value import Computed, PropertyValue
 from pulumi.provider.experimental.provider import (
     CheckRequest,
     CreateRequest,
@@ -85,7 +85,40 @@ class TestPipelineSharingCheck:
         assert response.inputs["accessMask"].value == "ReadAccess"
 
     @pytest.mark.asyncio
-    async def test_check_rejects_missing_required_fields(self, handler):
+    async def test_check_passes_computed_pipeline_and_team_ids(self, handler):
+        """check() must not fail when pipelineId/teamId are Computed (unknown during preview)."""
+        response = await handler.check(
+            CheckRequest(
+                urn=_URN,
+                random_seed=b"",
+                old_inputs={},
+                new_inputs={
+                    "environmentId": PropertyValue(_ENV_ID),
+                    "pipelineId": PropertyValue(Computed()),
+                    "teamId": PropertyValue(Computed()),
+                },
+            )
+        )
+
+        assert response.failures is None
+
+    @pytest.mark.asyncio
+    async def test_check_preserves_computed_access_mask(self, handler):
+        """check() must preserve a Computed accessMask rather than replacing it with the default."""
+        response = await handler.check(
+            CheckRequest(
+                urn=_URN,
+                random_seed=b"",
+                old_inputs={},
+                new_inputs={
+                    **_PROPS,
+                    "accessMask": PropertyValue(Computed()),
+                },
+            )
+        )
+
+        assert response.failures is None
+        assert isinstance(response.inputs["accessMask"].value, Computed)
         response = await handler.check(
             CheckRequest(
                 urn=_URN,
@@ -103,7 +136,27 @@ class TestPipelineSharingCheck:
         }
 
 
-class TestPipelineSharingDiff:
+    @pytest.mark.asyncio
+    async def test_diff_skips_replace_when_new_ids_are_computed(self, handler):
+        """diff() must not force a replace when new pipelineId/teamId are Computed (preview)."""
+        response = await handler.diff(
+            DiffRequest(
+                urn=_URN,
+                resource_id=_RESOURCE_ID,
+                old_state={**_PROPS, "accessMask": PropertyValue("ReadAccess")},
+                new_inputs={
+                    "environmentId": PropertyValue(_ENV_ID),
+                    "pipelineId": PropertyValue(Computed()),
+                    "teamId": PropertyValue(Computed()),
+                    "accessMask": PropertyValue("ReadAccess"),
+                },
+                ignore_changes=[],
+            )
+        )
+
+        assert response.changes is False
+        assert not response.replaces
+
     @pytest.mark.asyncio
     async def test_diff_marks_all_inputs_replace_only(self, handler):
         response = await handler.diff(
@@ -122,7 +175,29 @@ class TestPipelineSharingDiff:
         assert response.detailed_diff["accessMask"].kind == PropertyDiffKind.UPDATE_REPLACE
 
 
-class TestPipelineSharingCreate:
+    @pytest.mark.asyncio
+    async def test_create_preview_preserves_computed_pipeline_and_team_ids(self, handler, mock_client):
+        """create(preview=True) must pass Computed values through to outputs, not stringify them."""
+        response = await handler.create(
+            CreateRequest(
+                urn=_URN,
+                properties={
+                    "environmentId": PropertyValue(_ENV_ID),
+                    "pipelineId": PropertyValue(Computed()),
+                    "teamId": PropertyValue(Computed()),
+                    "accessMask": PropertyValue("ReadAccess"),
+                },
+                timeout=300,
+                preview=True,
+            )
+        )
+
+        assert response.resource_id == "preview-id"
+        assert isinstance(response.properties["pipelineId"].value, Computed)
+        assert isinstance(response.properties["teamId"].value, Computed)
+        assert response.properties["grantedAccessMask"].value == "ReadAccess"
+        mock_client.raw.request.assert_not_awaited()
+
     @pytest.mark.asyncio
     async def test_create_preview_returns_preview_id(self, handler, mock_client):
         response = await handler.create(
