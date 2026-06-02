@@ -32,11 +32,17 @@ PY_BACKUP=$(mktemp -d)
 cp sdk/go/powerplatform/go.mod "$GO_BACKUP/go.mod"
 cp sdk/go/powerplatform/go.sum  "$GO_BACKUP/go.sum"
 cp sdk/python/pyproject.toml    "$PY_BACKUP/pyproject.toml"
+if [ -f sdk/python/README.md ]; then
+  cp sdk/python/README.md "$PY_BACKUP/README.md"
+fi
 
 restore_files() {
   cp "$GO_BACKUP/go.mod" sdk/go/powerplatform/go.mod || true
   cp "$GO_BACKUP/go.sum"  sdk/go/powerplatform/go.sum || true
   cp "$PY_BACKUP/pyproject.toml" sdk/python/pyproject.toml || true
+  if [ -f "$PY_BACKUP/README.md" ]; then
+    cp "$PY_BACKUP/README.md" sdk/python/README.md || true
+  fi
   rm -rf "$GO_BACKUP" "$PY_BACKUP"
 }
 trap restore_files EXIT

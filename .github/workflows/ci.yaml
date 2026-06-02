@@ -71,6 +71,9 @@ jobs:
           GEN_DIR=$(mktemp -d)
           PY_BACKUP=$(mktemp -d)
           cp sdk/python/pyproject.toml "$PY_BACKUP/pyproject.toml"
+          if [ -f sdk/python/README.md ]; then
+            cp sdk/python/README.md "$PY_BACKUP/README.md"
+          fi
 
           pulumi package gen-sdk . --language python --out "$GEN_DIR"
           pulumi package gen-sdk . --language nodejs --out "$GEN_DIR"
@@ -80,9 +83,12 @@ jobs:
           bash ./scripts/normalize-dotnet-sdk.sh "$GEN_DIR/dotnet"
           python3 scripts/normalize-nodejs-sdk.py "$GEN_DIR/nodejs"
           python3 scripts/normalize-python-sdk.py "$GEN_DIR/python"
-          # Restore pyproject.toml into the generated dir for the diff (it is
-          # manually maintained and not emitted by the generator).
+          # Restore manually maintained Python packaging files into the generated
+          # dir for the diff; pulumi package gen-sdk does not emit them.
           cp "$PY_BACKUP/pyproject.toml" "$GEN_DIR/python/pyproject.toml"
+          if [ -f "$PY_BACKUP/README.md" ]; then
+            cp "$PY_BACKUP/README.md" "$GEN_DIR/python/README.md"
+          fi
           # Apply the same normalization on committed Node.js SDK before diff,
           # so formatting/order-only drift does not produce false negatives.
           python3 scripts/normalize-nodejs-sdk.py "sdk/nodejs"

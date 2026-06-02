@@ -57,12 +57,16 @@ jobs:
           # go.mod and go.sum are manually maintained; pulumi package gen-sdk
           # overwrites the directory without recreating them. Save them first
           # so they survive the generation step and go mod tidy can run.
-          # pyproject.toml in sdk/python/ is also manually maintained.
+          # pyproject.toml and the top-level README in sdk/python/ are also
+          # manually maintained.
           GO_MOD_BACKUP=$(mktemp -d)
           PY_BACKUP=$(mktemp -d)
           cp sdk/go/powerplatform/go.mod "$GO_MOD_BACKUP/go.mod"
           cp sdk/go/powerplatform/go.sum  "$GO_MOD_BACKUP/go.sum"
           cp sdk/python/pyproject.toml    "$PY_BACKUP/pyproject.toml"
+          if [ -f sdk/python/README.md ]; then
+            cp sdk/python/README.md "$PY_BACKUP/README.md"
+          fi
 
           pulumi package gen-sdk . --language python --out sdk
           pulumi package gen-sdk . --language nodejs --out sdk
@@ -78,6 +82,9 @@ jobs:
           cp "$GO_MOD_BACKUP/go.mod" sdk/go/powerplatform/go.mod
           cp "$GO_MOD_BACKUP/go.sum"  sdk/go/powerplatform/go.sum
           cp "$PY_BACKUP/pyproject.toml" sdk/python/pyproject.toml
+          if [ -f "$PY_BACKUP/README.md" ]; then
+            cp "$PY_BACKUP/README.md" sdk/python/README.md
+          fi
 
           cd sdk/go/powerplatform && go mod tidy && cd -
 
