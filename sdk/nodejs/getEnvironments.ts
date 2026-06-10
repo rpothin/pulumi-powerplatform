@@ -51,9 +51,9 @@ export interface GetEnvironmentsOutputArgs {
     /**
      * An OData filter expression. Supported properties: dataverseId, type, geo, state, environmentGroupId, domainName.
      */
-    filter?: pulumi.Input<string | undefined>;
+    filter?: pulumi.Input<string>;
     /**
      * Maximum number of environments to return.
      */
-    top?: pulumi.Input<number | undefined>;
+    top?: pulumi.Input<number>;
 }

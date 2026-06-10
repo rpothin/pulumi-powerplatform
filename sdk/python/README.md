@@ -1,26 +1,8 @@
-# Pulumi Power Platform SDK
+# Pulumi SDK for Microsoft Power Platform
 
-The Pulumi Power Platform SDK allows you to manage [Microsoft Power Platform](https://powerplatform.microsoft.com/) resources using infrastructure as code.
+A Pulumi SDK for managing Microsoft Power Platform resources, including
+environments, DLP policies, tenant settings, deployment pipelines, and
+AVM-aligned component resources.
 
-## Installation
-
-```bash
-pip install rpothin-powerplatform
-```
-
-## Usage
-
-```python
-import rpothin_powerplatform as pp
-
-env = pp.Environment(
-    "dev",
-    display_name="Development",
-    location="unitedstates",
-    environment_type="Sandbox",
-)
-```
-
-## Documentation
-
-For full documentation, visit the [GitHub repository](https://github.com/rpothin/pulumi-powerplatform).
+For documentation and usage examples, see the
+[pulumi-powerplatform repository](https://github.com/rpothin/pulumi-powerplatform).

@@ -19,13 +19,18 @@ The provider supports:
 - **Environment Settings** — govern per-environment settings (audit, logging, etc.)
 - **Environment Backup** — manage environment backups
 - **Managed Environment** — enable/disable managed-environment governance
+- **Tenant Settings** — manage tenant-wide Power Platform settings
+- **Data Record** — manage Dataverse table rows used by advanced resources and components
 - **DLP Policy** — configure data loss prevention policies
 - **Billing Policy** — manage pay-as-you-go billing policies
+- **Pipeline Sharing** — share deployment pipelines with teams
 - **Role Assignment** — assign security roles to principals
 - **ISV Contract** — manage ISV contract resources
+- **Component Resources** — AVM-aligned modules for environments, DLP policies, tenant settings, and deployment pipelines
 
 Data-source functions are available for listing environments, connectors,
-apps, and flows.
+apps, flows, DLP policies, security roles, Dataverse records, and for
+generating DLP policy migration configurations.
 
 ## Example
 

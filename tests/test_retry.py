@@ -154,6 +154,75 @@ class TestRetryWithBackoff:
         fn.assert_awaited_once()
 
 
+class TestRetryWithBackoffAPIError:
+    """Tests that retry_with_backoff handles kiota APIError correctly."""
+
+    @staticmethod
+    def _make_api_error(status: int, message: str = "") -> object:
+        from kiota_abstractions.api_error import APIError
+        err = APIError()
+        err.response_status_code = status
+        err.message = message
+        return err
+
+    @pytest.mark.asyncio
+    async def test_retries_on_api_error_429(self):
+        sleep = AsyncMock()
+        fn = AsyncMock(
+            side_effect=[self._make_api_error(429, "rate limited"), "ok"],
+        )
+        result = await retry_with_backoff(fn, max_retries=3, base_delay=0.01, _sleep=sleep)
+        assert result == "ok"
+        assert fn.await_count == 2
+        sleep.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_retries_on_api_error_503(self):
+        sleep = AsyncMock()
+        fn = AsyncMock(
+            side_effect=[self._make_api_error(503, "unavailable"), "ok"],
+        )
+        result = await retry_with_backoff(fn, max_retries=3, base_delay=0.01, _sleep=sleep)
+        assert result == "ok"
+        assert fn.await_count == 2
+
+    @pytest.mark.asyncio
+    async def test_retries_on_api_error_500(self):
+        sleep = AsyncMock()
+        fn = AsyncMock(
+            side_effect=[self._make_api_error(500, "server error"), "ok"],
+        )
+        result = await retry_with_backoff(fn, max_retries=3, base_delay=0.01, _sleep=sleep)
+        assert result == "ok"
+        assert fn.await_count == 2
+
+    @pytest.mark.asyncio
+    async def test_does_not_retry_on_api_error_404(self):
+        from kiota_abstractions.api_error import APIError
+        fn = AsyncMock(side_effect=self._make_api_error(404, "not found"))
+        with pytest.raises(APIError):
+            await retry_with_backoff(fn, max_retries=3, base_delay=0.01)
+        fn.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_does_not_retry_on_api_error_403(self):
+        from kiota_abstractions.api_error import APIError
+        fn = AsyncMock(side_effect=self._make_api_error(403, "forbidden"))
+        with pytest.raises(APIError):
+            await retry_with_backoff(fn, max_retries=3, base_delay=0.01)
+        fn.assert_awaited_once()
+
+    @pytest.mark.asyncio
+    async def test_stops_after_max_retries_on_api_error(self):
+        from kiota_abstractions.api_error import APIError
+        sleep = AsyncMock()
+        fn = AsyncMock(side_effect=self._make_api_error(429, "rate limited"))
+        with pytest.raises(APIError):
+            await retry_with_backoff(fn, max_retries=3, base_delay=0.01, _sleep=sleep)
+        assert fn.await_count == 4
+        assert sleep.await_count == 3
+
+
 class TestHttpError:
     """Tests for the HttpError class."""
 

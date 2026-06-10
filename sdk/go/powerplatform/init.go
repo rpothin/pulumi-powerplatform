@@ -45,6 +45,8 @@ func (m *module) Construct(ctx *pulumi.Context, name, typ, urn string) (r pulumi
 		r = &IsvContract{}
 	case "powerplatform:index:ManagedEnvironment":
 		r = &ManagedEnvironment{}
+	case "powerplatform:index:PipelineSharing":
+		r = &PipelineSharing{}
 	case "powerplatform:index:RoleAssignment":
 		r = &RoleAssignment{}
 	case "powerplatform:index:TenantSettings":

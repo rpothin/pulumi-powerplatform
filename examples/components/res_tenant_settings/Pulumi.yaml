@@ -1,0 +1,3 @@
+name: res-tenant-settings-example
+runtime: python
+description: Example using the ResTenantSettings component to manage tenant-wide Power Platform settings.
