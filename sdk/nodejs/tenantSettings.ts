@@ -128,41 +128,41 @@ export interface TenantSettingsArgs {
     /**
      * Disable capacity allocation by environment admins.
      */
-    disableCapacityAllocationByEnvironmentAdmins?: pulumi.Input<boolean>;
+    disableCapacityAllocationByEnvironmentAdmins?: pulumi.Input<boolean | undefined>;
     /**
      * Disable environment creation by non-admin users.
      */
-    disableEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    disableEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean | undefined>;
     /**
      * Disable NPS comments reachout.
      */
-    disableNPSCommentsReachout?: pulumi.Input<boolean>;
+    disableNPSCommentsReachout?: pulumi.Input<boolean | undefined>;
     /**
      * Disable newsletter sendout.
      */
-    disableNewsletterSendout?: pulumi.Input<boolean>;
+    disableNewsletterSendout?: pulumi.Input<boolean | undefined>;
     /**
      * Disable Power Pages creation by non-admin users.
      */
-    disablePortalsCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    disablePortalsCreationByNonAdminUsers?: pulumi.Input<boolean | undefined>;
     /**
      * Disable support tickets visibility by all users.
      */
-    disableSupportTicketsVisibleByAllUsers?: pulumi.Input<boolean>;
+    disableSupportTicketsVisibleByAllUsers?: pulumi.Input<boolean | undefined>;
     /**
      * Disable survey feedback.
      */
-    disableSurveyFeedback?: pulumi.Input<boolean>;
+    disableSurveyFeedback?: pulumi.Input<boolean | undefined>;
     /**
      * Disable trial environment creation by non-admin users.
      */
-    disableTrialEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean>;
+    disableTrialEnvironmentCreationByNonAdminUsers?: pulumi.Input<boolean | undefined>;
     /**
      * Nested workload-specific tenant settings.
      */
-    powerPlatform?: pulumi.Input<inputs.TenantPowerPlatformSettingsArgs>;
+    powerPlatform?: pulumi.Input<inputs.TenantPowerPlatformSettingsArgs | undefined>;
     /**
      * Walk Me opt-out setting.
      */
-    walkMeOptOut?: pulumi.Input<boolean>;
+    walkMeOptOut?: pulumi.Input<boolean | undefined>;
 }

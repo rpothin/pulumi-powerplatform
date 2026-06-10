@@ -69,12 +69,12 @@ type ResDeploymentPipelineArgs struct {
 	EnableAiDeploymentNotes      *bool
 	EnableRedeployment           *bool
 	EnableTelemetry              *bool
-	Environments                 map[string]PipelineEnvironmentEntryArgs
+	Environments                 map[string]PipelineEnvironmentEntryInput
 	HostEnvironmentId            string
 	LifecycleState               *string
 	PipelineDescription          *string
 	PipelineName                 string
-	PipelineStages               []PipelineStageConfigArgs
+	PipelineStages               []PipelineStageConfigInput
 	RootBusinessUnitId           *string
 	SecurityGroupId              *string
 }

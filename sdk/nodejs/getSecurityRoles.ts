@@ -49,7 +49,7 @@ export interface GetSecurityRolesOutputArgs {
     /**
      * Optional business unit GUID to filter roles.
      */
-    businessUnitId?: pulumi.Input<string>;
+    businessUnitId?: pulumi.Input<string | undefined>;
     /**
      * Environment ID to query roles from.
      */

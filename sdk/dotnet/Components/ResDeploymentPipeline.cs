@@ -78,10 +78,10 @@ namespace Pulumi.Powerplatform.Components
         public bool? EnableTelemetry { get; set; }
 
         [Input("environments", required: true)]
-        private Dictionary<string, Inputs.PipelineEnvironmentEntryArgs>? _environments;
-        public Dictionary<string, Inputs.PipelineEnvironmentEntryArgs> Environments
+        private Dictionary<string, Input<Inputs.PipelineEnvironmentEntryArgs>>? _environments;
+        public Dictionary<string, Input<Inputs.PipelineEnvironmentEntryArgs>> Environments
         {
-            get => _environments ?? (_environments = new Dictionary<string, Inputs.PipelineEnvironmentEntryArgs>());
+            get => _environments ?? (_environments = new Dictionary<string, Input<Inputs.PipelineEnvironmentEntryArgs>>());
             set => _environments = value;
         }
 
@@ -98,10 +98,10 @@ namespace Pulumi.Powerplatform.Components
         public string PipelineName { get; set; } = null!;
 
         [Input("pipelineStages", required: true)]
-        private List<Inputs.PipelineStageConfigArgs>? _pipelineStages;
-        public List<Inputs.PipelineStageConfigArgs> PipelineStages
+        private List<Input<Inputs.PipelineStageConfigArgs>>? _pipelineStages;
+        public List<Input<Inputs.PipelineStageConfigArgs>> PipelineStages
         {
-            get => _pipelineStages ?? (_pipelineStages = new List<Inputs.PipelineStageConfigArgs>());
+            get => _pipelineStages ?? (_pipelineStages = new List<Input<Inputs.PipelineStageConfigArgs>>());
             set => _pipelineStages = value;
         }
 

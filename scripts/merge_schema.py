@@ -242,6 +242,27 @@ def rewrite_index_to_components(schema_fragment: dict) -> dict:
     return _rewrite_value(schema_fragment)  # type: ignore[return-value]
 
 
+def _drop_plain_on_ref_collections(value: object) -> object:
+    """Drop ``plain`` from ``items``/``additionalProperties`` that carry ``$ref``.
+
+    Pulumi's Go SDK generator can emit references to ``*Args`` helper types for
+    object refs nested inside arrays/maps while omitting the helper type
+    definitions when these nested schemas are marked ``plain``.  Removing the
+    nested ``plain`` markers preserves scalar ``plain`` usage while producing
+    valid generated Go SDKs.
+    """
+    if isinstance(value, dict):
+        cleaned = {k: _drop_plain_on_ref_collections(v) for k, v in value.items()}
+        for collection_key in ("items", "additionalProperties"):
+            collection = cleaned.get(collection_key)
+            if isinstance(collection, dict) and "$ref" in collection:
+                collection.pop("plain", None)
+        return cleaned
+    if isinstance(value, list):
+        return [_drop_plain_on_ref_collections(item) for item in value]
+    return value
+
+
 # ---------------------------------------------------------------------------
 # Merge logic
 # ---------------------------------------------------------------------------
@@ -337,7 +358,7 @@ def merge_into_schema(base: dict, generated: dict) -> dict:
     import copy
 
     base = copy.deepcopy(base)
-    generated = rewrite_index_to_components(generated)
+    generated = _drop_plain_on_ref_collections(rewrite_index_to_components(generated))
 
     base = _strip_existing_components(base)
     _validate_no_collision(base, generated)

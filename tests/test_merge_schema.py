@@ -107,6 +107,55 @@ class TestRewriteIndexToComponents:
         assert "powerplatform:components:PocComponent" in result["resources"]
 
 
+class TestDropPlainOnRefCollections:
+    def test_removes_plain_from_nested_ref_collections_only(self):
+        fragment = {
+            "resources": {
+                "powerplatform:index:PocComponent": {
+                    "inputProperties": {
+                        "environments": {
+                            "type": "object",
+                            "plain": True,
+                            "additionalProperties": {
+                                "$ref": "#/types/powerplatform:index:EnvEntry",
+                                "plain": True,
+                            },
+                        },
+                        "pipelineStages": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/types/powerplatform:index:StageConfig",
+                                "plain": True,
+                            },
+                        },
+                        "labels": {
+                            "type": "array",
+                            "items": {"type": "string", "plain": True},
+                        },
+                    }
+                }
+            }
+        }
+
+        result = ms._drop_plain_on_ref_collections(fragment)
+        env_additional = result["resources"]["powerplatform:index:PocComponent"]["inputProperties"][
+            "environments"
+        ]["additionalProperties"]
+        stage_items = result["resources"]["powerplatform:index:PocComponent"]["inputProperties"][
+            "pipelineStages"
+        ]["items"]
+        labels_items = result["resources"]["powerplatform:index:PocComponent"]["inputProperties"]["labels"][
+            "items"
+        ]
+
+        assert "plain" not in env_additional
+        assert "plain" not in stage_items
+        assert result["resources"]["powerplatform:index:PocComponent"]["inputProperties"]["environments"][
+            "plain"
+        ]
+        assert labels_items["plain"] is True
+
+
 # ---------------------------------------------------------------------------
 # merge_into_schema: idempotency
 # ---------------------------------------------------------------------------

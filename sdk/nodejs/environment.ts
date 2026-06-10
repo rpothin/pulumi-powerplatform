@@ -185,31 +185,31 @@ export interface EnvironmentArgs {
     /**
      * Allow Bing Search integration (AI generative features).
      */
-    allowBingSearch?: pulumi.Input<boolean>;
+    allowBingSearch?: pulumi.Input<boolean | undefined>;
     /**
      * Allow data to move across geographic boundaries for Copilot features.
      */
-    allowMovingDataAcrossRegions?: pulumi.Input<boolean>;
+    allowMovingDataAcrossRegions?: pulumi.Input<boolean | undefined>;
     /**
      * Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
      */
-    azureRegion?: pulumi.Input<string>;
+    azureRegion?: pulumi.Input<string | undefined>;
     /**
      * ID of the billing policy to link to this environment.
      */
-    billingPolicyId?: pulumi.Input<string>;
+    billingPolicyId?: pulumi.Input<string | undefined>;
     /**
      * Release wave cadence: Frequent or Moderate. Immutable after creation.
      */
-    cadence?: pulumi.Input<string>;
+    cadence?: pulumi.Input<string | undefined>;
     /**
      * Dataverse database configuration. Presence triggers Dataverse provisioning.
      */
-    dataverse?: pulumi.Input<inputs.DataverseArgs>;
+    dataverse?: pulumi.Input<inputs.DataverseArgs | undefined>;
     /**
      * A description of the environment.
      */
-    description?: pulumi.Input<string>;
+    description?: pulumi.Input<string | undefined>;
     /**
      * The display name of the environment.
      */
@@ -217,11 +217,11 @@ export interface EnvironmentArgs {
     /**
      * Set of enterprise policies associated with the environment.
      */
-    enterprisePolicies?: pulumi.Input<pulumi.Input<inputs.EnterprisePolicyArgs>[]>;
+    enterprisePolicies?: pulumi.Input<pulumi.Input<inputs.EnterprisePolicyArgs>[] | undefined>;
     /**
      * ID of the environment group this environment belongs to.
      */
-    environmentGroupId?: pulumi.Input<string>;
+    environmentGroupId?: pulumi.Input<string | undefined>;
     /**
      * The type (SKU) of the environment: Sandbox, Production, Trial, Developer, or Default. Immutable after creation.
      */
@@ -229,11 +229,11 @@ export interface EnvironmentArgs {
     /**
      * GUID of the linked app.
      */
-    linkedAppId?: pulumi.Input<string>;
+    linkedAppId?: pulumi.Input<string | undefined>;
     /**
      * Type of linked app: Canvas or ModelDriven.
      */
-    linkedAppType?: pulumi.Input<string>;
+    linkedAppType?: pulumi.Input<string | undefined>;
     /**
      * The geographic region for the environment (e.g., unitedstates, europe). Immutable after creation.
      */
@@ -241,5 +241,5 @@ export interface EnvironmentArgs {
     /**
      * AAD user or group GUID who owns the environment. Only valid for Developer environments.
      */
-    ownerId?: pulumi.Input<string>;
+    ownerId?: pulumi.Input<string | undefined>;
 }

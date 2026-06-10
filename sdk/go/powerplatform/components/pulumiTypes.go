@@ -281,6 +281,58 @@ type PipelineEnvironmentEntry struct {
 	Name string `pulumi:"name"`
 }
 
+// PipelineEnvironmentEntryInput is an input type that accepts PipelineEnvironmentEntryArgs and PipelineEnvironmentEntryOutput values.
+// You can construct a concrete instance of `PipelineEnvironmentEntryInput` via:
+//
+//	PipelineEnvironmentEntryArgs{...}
+type PipelineEnvironmentEntryInput interface {
+	pulumi.Input
+
+	ToPipelineEnvironmentEntryOutput() PipelineEnvironmentEntryOutput
+	ToPipelineEnvironmentEntryOutputWithContext(context.Context) PipelineEnvironmentEntryOutput
+}
+
+// One entry in the “environments“ map.
+type PipelineEnvironmentEntryArgs struct {
+	Id   string `pulumi:"id"`
+	Name string `pulumi:"name"`
+}
+
+func (PipelineEnvironmentEntryArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*PipelineEnvironmentEntry)(nil)).Elem()
+}
+
+func (i PipelineEnvironmentEntryArgs) ToPipelineEnvironmentEntryOutput() PipelineEnvironmentEntryOutput {
+	return i.ToPipelineEnvironmentEntryOutputWithContext(context.Background())
+}
+
+func (i PipelineEnvironmentEntryArgs) ToPipelineEnvironmentEntryOutputWithContext(ctx context.Context) PipelineEnvironmentEntryOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(PipelineEnvironmentEntryOutput)
+}
+
+// One entry in the “environments“ map.
+type PipelineEnvironmentEntryOutput struct{ *pulumi.OutputState }
+
+func (PipelineEnvironmentEntryOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*PipelineEnvironmentEntry)(nil)).Elem()
+}
+
+func (o PipelineEnvironmentEntryOutput) ToPipelineEnvironmentEntryOutput() PipelineEnvironmentEntryOutput {
+	return o
+}
+
+func (o PipelineEnvironmentEntryOutput) ToPipelineEnvironmentEntryOutputWithContext(ctx context.Context) PipelineEnvironmentEntryOutput {
+	return o
+}
+
+func (o PipelineEnvironmentEntryOutput) Id() pulumi.StringOutput {
+	return o.ApplyT(func(v PipelineEnvironmentEntry) string { return v.Id }).(pulumi.StringOutput)
+}
+
+func (o PipelineEnvironmentEntryOutput) Name() pulumi.StringOutput {
+	return o.ApplyT(func(v PipelineEnvironmentEntry) string { return v.Name }).(pulumi.StringOutput)
+}
+
 // Configuration for one deployment stage.
 type PipelineStageConfig struct {
 	DeploymentSpnClientId        *string `pulumi:"deploymentSpnClientId"`
@@ -292,9 +344,90 @@ type PipelineStageConfig struct {
 	UseDelegatedDeployment       *bool   `pulumi:"useDelegatedDeployment"`
 }
 
+// PipelineStageConfigInput is an input type that accepts PipelineStageConfigArgs and PipelineStageConfigOutput values.
+// You can construct a concrete instance of `PipelineStageConfigInput` via:
+//
+//	PipelineStageConfigArgs{...}
+type PipelineStageConfigInput interface {
+	pulumi.Input
+
+	ToPipelineStageConfigOutput() PipelineStageConfigOutput
+	ToPipelineStageConfigOutputWithContext(context.Context) PipelineStageConfigOutput
+}
+
+// Configuration for one deployment stage.
+type PipelineStageConfigArgs struct {
+	DeploymentSpnClientId        *string `pulumi:"deploymentSpnClientId"`
+	Description                  *string `pulumi:"description"`
+	EnvironmentKey               string  `pulumi:"environmentKey"`
+	IsSharingEnabled             *bool   `pulumi:"isSharingEnabled"`
+	RequirePredeploymentApproval *bool   `pulumi:"requirePredeploymentApproval"`
+	RequirePreexportApproval     *bool   `pulumi:"requirePreexportApproval"`
+	UseDelegatedDeployment       *bool   `pulumi:"useDelegatedDeployment"`
+}
+
+func (PipelineStageConfigArgs) ElementType() reflect.Type {
+	return reflect.TypeOf((*PipelineStageConfig)(nil)).Elem()
+}
+
+func (i PipelineStageConfigArgs) ToPipelineStageConfigOutput() PipelineStageConfigOutput {
+	return i.ToPipelineStageConfigOutputWithContext(context.Background())
+}
+
+func (i PipelineStageConfigArgs) ToPipelineStageConfigOutputWithContext(ctx context.Context) PipelineStageConfigOutput {
+	return pulumi.ToOutputWithContext(ctx, i).(PipelineStageConfigOutput)
+}
+
+// Configuration for one deployment stage.
+type PipelineStageConfigOutput struct{ *pulumi.OutputState }
+
+func (PipelineStageConfigOutput) ElementType() reflect.Type {
+	return reflect.TypeOf((*PipelineStageConfig)(nil)).Elem()
+}
+
+func (o PipelineStageConfigOutput) ToPipelineStageConfigOutput() PipelineStageConfigOutput {
+	return o
+}
+
+func (o PipelineStageConfigOutput) ToPipelineStageConfigOutputWithContext(ctx context.Context) PipelineStageConfigOutput {
+	return o
+}
+
+func (o PipelineStageConfigOutput) DeploymentSpnClientId() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v PipelineStageConfig) *string { return v.DeploymentSpnClientId }).(pulumi.StringPtrOutput)
+}
+
+func (o PipelineStageConfigOutput) Description() pulumi.StringPtrOutput {
+	return o.ApplyT(func(v PipelineStageConfig) *string { return v.Description }).(pulumi.StringPtrOutput)
+}
+
+func (o PipelineStageConfigOutput) EnvironmentKey() pulumi.StringOutput {
+	return o.ApplyT(func(v PipelineStageConfig) string { return v.EnvironmentKey }).(pulumi.StringOutput)
+}
+
+func (o PipelineStageConfigOutput) IsSharingEnabled() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v PipelineStageConfig) *bool { return v.IsSharingEnabled }).(pulumi.BoolPtrOutput)
+}
+
+func (o PipelineStageConfigOutput) RequirePredeploymentApproval() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v PipelineStageConfig) *bool { return v.RequirePredeploymentApproval }).(pulumi.BoolPtrOutput)
+}
+
+func (o PipelineStageConfigOutput) RequirePreexportApproval() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v PipelineStageConfig) *bool { return v.RequirePreexportApproval }).(pulumi.BoolPtrOutput)
+}
+
+func (o PipelineStageConfigOutput) UseDelegatedDeployment() pulumi.BoolPtrOutput {
+	return o.ApplyT(func(v PipelineStageConfig) *bool { return v.UseDelegatedDeployment }).(pulumi.BoolPtrOutput)
+}
+
 func init() {
 	pulumi.RegisterInputType(reflect.TypeOf((*DataverseConfigInput)(nil)).Elem(), DataverseConfigArgs{})
 	pulumi.RegisterInputType(reflect.TypeOf((*DataverseConfigPtrInput)(nil)).Elem(), DataverseConfigArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*PipelineEnvironmentEntryInput)(nil)).Elem(), PipelineEnvironmentEntryArgs{})
+	pulumi.RegisterInputType(reflect.TypeOf((*PipelineStageConfigInput)(nil)).Elem(), PipelineStageConfigArgs{})
 	pulumi.RegisterOutputType(DataverseConfigOutput{})
 	pulumi.RegisterOutputType(DataverseConfigPtrOutput{})
+	pulumi.RegisterOutputType(PipelineEnvironmentEntryOutput{})
+	pulumi.RegisterOutputType(PipelineStageConfigOutput{})
 }
