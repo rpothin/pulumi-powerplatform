@@ -11,7 +11,7 @@ All notable changes to this project are documented in this file.
   - `ResTenantSettings` (`powerplatform:components:ResTenantSettings`): composes `TenantSettings`
   - `ResDeploymentPipeline` (`powerplatform:components:ResDeploymentPipeline`): composes `DataRecord` instances for pipeline, stages, and team membership; links dev environment via `PipelineSharing`
 - **New resources**: `DataRecord`, `TenantSettings`, `ManagedEnvironment`, `EnvironmentSettings`, `PipelineSharing`, `EnterprisePolicyLink`, `AdminManagementApplication`, `EnvironmentApplicationAdmin`
-- **New functions**: `getDlpPolicies`, `getDlpPolicyMigrationConfig`, `getSecurityRoles`, `getDataRecords`
+- **New functions**: `getDlpPolicies`, `getDlpPolicyMigrationConfig`, `getSecurityRoles`
 - Component resource examples in `examples/components/`
 - Schema merge tooling (`scripts/merge_schema.py`) for embedding component schemas into the provider schema
 

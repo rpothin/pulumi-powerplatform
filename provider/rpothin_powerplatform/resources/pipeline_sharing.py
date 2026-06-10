@@ -96,7 +96,7 @@ class PipelineSharingResource:
 
         return DiffResponse(
             changes=bool(diffs),
-            delete_before_replace=True if diffs else None,
+            delete_before_replace=True if diffs else False,
             diffs=diffs,
             replaces=replaces or None,
             detailed_diff=detailed_diff or None,
@@ -164,6 +164,12 @@ class PipelineSharingResource:
         )
 
         return CreateResponse(resource_id=resource_id, properties=outputs)
+
+    async def update(self, request) -> None:
+        """Not supported — all property changes require replacement (see diff)."""
+        raise NotImplementedError(
+            "PipelineSharing is immutable; all changes require replacement."
+        )
 
     async def read(self, request: ReadRequest) -> ReadResponse:
         """Return stored state; this resource does not support drift detection."""

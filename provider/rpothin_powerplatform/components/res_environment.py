@@ -394,6 +394,10 @@ async def _construct_res_environment(
             v = inner.value
             if v is None or isinstance(v, Computed):
                 return None
+            # NOTE: is_secret and dependency metadata on individual Dataverse
+            # sub-fields are not propagated in this release (Phase 0 scope).
+            # If callers need to protect a field such as security_group_id,
+            # they should mark the entire parent `dataverse` input as a secret.
             return coerce(v) if coerce is not None else v
 
         def _dvscalar_list(k: str) -> Optional[list]:

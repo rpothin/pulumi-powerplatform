@@ -24,6 +24,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 dependencies = [
+    # WARNING: construct_bridge.py uses private Output internals (_is_known,
+    # _is_secret, _resources).  Review construct_bridge._output_to_pv()
+    # before upgrading pulumi — these may change in any minor release.
     "pulumi>=3.0.0",
     "powerplatform-management>=2.0.0",
     "azure-identity>=1.15.0",

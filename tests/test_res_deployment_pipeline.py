@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import json
 import sys
 from pathlib import Path
@@ -160,6 +161,11 @@ class TestConstructResDeploymentPipeline:
 
     async def test_construct_creates_expected_child_resources(self, pulumi_mocks):
         await _construct_res_deployment_pipeline("pipe", self._inputs(), opts=None)
+        # _PipelineSharingWrap has depends_on=[pipeline_record, team_record]; its
+        # mock registration is dispatched via async callbacks after the factory
+        # returns.  Yield to the event loop enough times to flush the chain.
+        for _ in range(20):
+            await asyncio.sleep(0)
 
         data_records = [r for r in pulumi_mocks.resources if r["type"] == "powerplatform:index:DataRecord"]
         sharing = [r for r in pulumi_mocks.resources if r["type"] == "powerplatform:index:PipelineSharing"]

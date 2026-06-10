@@ -126,8 +126,9 @@ async def _output_to_pv(output: pulumi.Output) -> PropertyValue:
         ``output._is_known``, ``output._is_secret``, and ``output._resources``
         are **private** Pulumi internals with no public equivalents as of Pulumi
         ≤ 3.x.  ``output.future(with_unknowns=True)`` is the only public path
-        to the raw value including the ``UNKNOWN`` sentinel.  Re-evaluate after
-        any Pulumi SDK major version upgrade.
+        to the raw value including the ``UNKNOWN`` sentinel.  These attributes
+        could change in any minor release without notice — re-evaluate whenever
+        the Pulumi SDK dependency is upgraded (see ``pyproject.toml`` pin comment).
     """
     value = await output.future(with_unknowns=True)
     is_known: bool = await output._is_known
