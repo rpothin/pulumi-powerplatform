@@ -20,18 +20,18 @@ __all__ = ['EnvironmentSettingsArgs', 'EnvironmentSettings']
 class EnvironmentSettingsArgs:
     def __init__(__self__, *,
                  environment_id: pulumi.Input[_builtins.str],
-                 allow_application_user_access: Optional[pulumi.Input[_builtins.bool]] = None,
-                 allow_microsoft_trusted_service_tags: Optional[pulumi.Input[_builtins.bool]] = None,
-                 audit_retention_period_in_days: Optional[pulumi.Input[_builtins.int]] = None,
-                 is_activity_logging_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_audit_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_read_audit_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
-                 is_user_access_audit_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 max_upload_file_size: Optional[pulumi.Input[_builtins.str]] = None,
-                 plugin_trace_log_setting: Optional[pulumi.Input[_builtins.str]] = None,
-                 power_apps_component_framework_for_canvas_apps: Optional[pulumi.Input[_builtins.bool]] = None,
-                 reverse_proxy_ip_addresses: Optional[pulumi.Input[_builtins.str]] = None,
-                 show_dashboard_cards_in_expanded_state: Optional[pulumi.Input[_builtins.bool]] = None):
+                 allow_application_user_access: pulumi.Input[Optional[_builtins.bool]] = None,
+                 allow_microsoft_trusted_service_tags: pulumi.Input[Optional[_builtins.bool]] = None,
+                 audit_retention_period_in_days: pulumi.Input[Optional[_builtins.int]] = None,
+                 is_activity_logging_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_audit_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_read_audit_enabled: pulumi.Input[Optional[_builtins.bool]] = None,
+                 is_user_access_audit_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 max_upload_file_size: pulumi.Input[Optional[_builtins.str]] = None,
+                 plugin_trace_log_setting: pulumi.Input[Optional[_builtins.str]] = None,
+                 power_apps_component_framework_for_canvas_apps: pulumi.Input[Optional[_builtins.bool]] = None,
+                 reverse_proxy_ip_addresses: pulumi.Input[Optional[_builtins.str]] = None,
+                 show_dashboard_cards_in_expanded_state: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         The set of arguments for constructing a EnvironmentSettings resource.
 
@@ -89,146 +89,146 @@ class EnvironmentSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="allowApplicationUserAccess")
-    def allow_application_user_access(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def allow_application_user_access(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether service principal (application user) access is allowed.
         """
         return pulumi.get(self, "allow_application_user_access")
 
     @allow_application_user_access.setter
-    def allow_application_user_access(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def allow_application_user_access(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "allow_application_user_access", value)
 
     @_builtins.property
     @pulumi.getter(name="allowMicrosoftTrustedServiceTags")
-    def allow_microsoft_trusted_service_tags(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def allow_microsoft_trusted_service_tags(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether Microsoft trusted Azure service tags are allowed for connectivity.
         """
         return pulumi.get(self, "allow_microsoft_trusted_service_tags")
 
     @allow_microsoft_trusted_service_tags.setter
-    def allow_microsoft_trusted_service_tags(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def allow_microsoft_trusted_service_tags(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "allow_microsoft_trusted_service_tags", value)
 
     @_builtins.property
     @pulumi.getter(name="auditRetentionPeriodInDays")
-    def audit_retention_period_in_days(self) -> Optional[pulumi.Input[_builtins.int]]:
+    def audit_retention_period_in_days(self) -> pulumi.Input[Optional[_builtins.int]]:
         """
         Audit log retention period in days. Use -1 for forever, or a value between 31 and 24855.
         """
         return pulumi.get(self, "audit_retention_period_in_days")
 
     @audit_retention_period_in_days.setter
-    def audit_retention_period_in_days(self, value: Optional[pulumi.Input[_builtins.int]]):
+    def audit_retention_period_in_days(self, value: pulumi.Input[Optional[_builtins.int]]):
         pulumi.set(self, "audit_retention_period_in_days", value)
 
     @_builtins.property
     @pulumi.getter(name="isActivityLoggingEnabled")
-    def is_activity_logging_enabled(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def is_activity_logging_enabled(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Whether activity logging is enabled (true or false).
         """
         return pulumi.get(self, "is_activity_logging_enabled")
 
     @is_activity_logging_enabled.setter
-    def is_activity_logging_enabled(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def is_activity_logging_enabled(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "is_activity_logging_enabled", value)
 
     @_builtins.property
     @pulumi.getter(name="isAuditEnabled")
-    def is_audit_enabled(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def is_audit_enabled(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Whether auditing is enabled (true or false).
         """
         return pulumi.get(self, "is_audit_enabled")
 
     @is_audit_enabled.setter
-    def is_audit_enabled(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def is_audit_enabled(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "is_audit_enabled", value)
 
     @_builtins.property
     @pulumi.getter(name="isReadAuditEnabled")
-    def is_read_audit_enabled(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def is_read_audit_enabled(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether read auditing is enabled (GDPR). Managed via Dataverse organizations table.
         """
         return pulumi.get(self, "is_read_audit_enabled")
 
     @is_read_audit_enabled.setter
-    def is_read_audit_enabled(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def is_read_audit_enabled(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "is_read_audit_enabled", value)
 
     @_builtins.property
     @pulumi.getter(name="isUserAccessAuditEnabled")
-    def is_user_access_audit_enabled(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def is_user_access_audit_enabled(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Whether user access auditing is enabled (true or false).
         """
         return pulumi.get(self, "is_user_access_audit_enabled")
 
     @is_user_access_audit_enabled.setter
-    def is_user_access_audit_enabled(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def is_user_access_audit_enabled(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "is_user_access_audit_enabled", value)
 
     @_builtins.property
     @pulumi.getter(name="maxUploadFileSize")
-    def max_upload_file_size(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def max_upload_file_size(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Maximum file upload size in bytes.
         """
         return pulumi.get(self, "max_upload_file_size")
 
     @max_upload_file_size.setter
-    def max_upload_file_size(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def max_upload_file_size(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "max_upload_file_size", value)
 
     @_builtins.property
     @pulumi.getter(name="pluginTraceLogSetting")
-    def plugin_trace_log_setting(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def plugin_trace_log_setting(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Plugin trace log setting (Off, Exception, All).
         """
         return pulumi.get(self, "plugin_trace_log_setting")
 
     @plugin_trace_log_setting.setter
-    def plugin_trace_log_setting(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def plugin_trace_log_setting(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "plugin_trace_log_setting", value)
 
     @_builtins.property
     @pulumi.getter(name="powerAppsComponentFrameworkForCanvasApps")
-    def power_apps_component_framework_for_canvas_apps(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def power_apps_component_framework_for_canvas_apps(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether Power Apps Component Framework (PCF) controls are enabled for canvas apps.
         """
         return pulumi.get(self, "power_apps_component_framework_for_canvas_apps")
 
     @power_apps_component_framework_for_canvas_apps.setter
-    def power_apps_component_framework_for_canvas_apps(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def power_apps_component_framework_for_canvas_apps(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "power_apps_component_framework_for_canvas_apps", value)
 
     @_builtins.property
     @pulumi.getter(name="reverseProxyIpAddresses")
-    def reverse_proxy_ip_addresses(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def reverse_proxy_ip_addresses(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Comma-separated list of allowed reverse proxy IP addresses or CIDR ranges.
         """
         return pulumi.get(self, "reverse_proxy_ip_addresses")
 
     @reverse_proxy_ip_addresses.setter
-    def reverse_proxy_ip_addresses(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def reverse_proxy_ip_addresses(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "reverse_proxy_ip_addresses", value)
 
     @_builtins.property
     @pulumi.getter(name="showDashboardCardsInExpandedState")
-    def show_dashboard_cards_in_expanded_state(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def show_dashboard_cards_in_expanded_state(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether dashboard cards are shown in expanded state by default.
         """
         return pulumi.get(self, "show_dashboard_cards_in_expanded_state")
 
     @show_dashboard_cards_in_expanded_state.setter
-    def show_dashboard_cards_in_expanded_state(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def show_dashboard_cards_in_expanded_state(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "show_dashboard_cards_in_expanded_state", value)
 
 
@@ -238,19 +238,19 @@ class EnvironmentSettings(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 allow_application_user_access: Optional[pulumi.Input[_builtins.bool]] = None,
-                 allow_microsoft_trusted_service_tags: Optional[pulumi.Input[_builtins.bool]] = None,
-                 audit_retention_period_in_days: Optional[pulumi.Input[_builtins.int]] = None,
-                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_activity_logging_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_audit_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_read_audit_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
-                 is_user_access_audit_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 max_upload_file_size: Optional[pulumi.Input[_builtins.str]] = None,
-                 plugin_trace_log_setting: Optional[pulumi.Input[_builtins.str]] = None,
-                 power_apps_component_framework_for_canvas_apps: Optional[pulumi.Input[_builtins.bool]] = None,
-                 reverse_proxy_ip_addresses: Optional[pulumi.Input[_builtins.str]] = None,
-                 show_dashboard_cards_in_expanded_state: Optional[pulumi.Input[_builtins.bool]] = None,
+                 allow_application_user_access: pulumi.Input[Optional[_builtins.bool]] = None,
+                 allow_microsoft_trusted_service_tags: pulumi.Input[Optional[_builtins.bool]] = None,
+                 audit_retention_period_in_days: pulumi.Input[Optional[_builtins.int]] = None,
+                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_activity_logging_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_audit_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_read_audit_enabled: pulumi.Input[Optional[_builtins.bool]] = None,
+                 is_user_access_audit_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 max_upload_file_size: pulumi.Input[Optional[_builtins.str]] = None,
+                 plugin_trace_log_setting: pulumi.Input[Optional[_builtins.str]] = None,
+                 power_apps_component_framework_for_canvas_apps: pulumi.Input[Optional[_builtins.bool]] = None,
+                 reverse_proxy_ip_addresses: pulumi.Input[Optional[_builtins.str]] = None,
+                 show_dashboard_cards_in_expanded_state: pulumi.Input[Optional[_builtins.bool]] = None,
                  __props__=None):
         """
         Manages settings on a Power Platform environment. Settings are applied via PATCH to the BAP admin API. Deletion removes the resource from Pulumi state only (settings cannot be unset).
@@ -297,19 +297,19 @@ class EnvironmentSettings(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 allow_application_user_access: Optional[pulumi.Input[_builtins.bool]] = None,
-                 allow_microsoft_trusted_service_tags: Optional[pulumi.Input[_builtins.bool]] = None,
-                 audit_retention_period_in_days: Optional[pulumi.Input[_builtins.int]] = None,
-                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_activity_logging_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_audit_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 is_read_audit_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
-                 is_user_access_audit_enabled: Optional[pulumi.Input[_builtins.str]] = None,
-                 max_upload_file_size: Optional[pulumi.Input[_builtins.str]] = None,
-                 plugin_trace_log_setting: Optional[pulumi.Input[_builtins.str]] = None,
-                 power_apps_component_framework_for_canvas_apps: Optional[pulumi.Input[_builtins.bool]] = None,
-                 reverse_proxy_ip_addresses: Optional[pulumi.Input[_builtins.str]] = None,
-                 show_dashboard_cards_in_expanded_state: Optional[pulumi.Input[_builtins.bool]] = None,
+                 allow_application_user_access: pulumi.Input[Optional[_builtins.bool]] = None,
+                 allow_microsoft_trusted_service_tags: pulumi.Input[Optional[_builtins.bool]] = None,
+                 audit_retention_period_in_days: pulumi.Input[Optional[_builtins.int]] = None,
+                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_activity_logging_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_audit_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 is_read_audit_enabled: pulumi.Input[Optional[_builtins.bool]] = None,
+                 is_user_access_audit_enabled: pulumi.Input[Optional[_builtins.str]] = None,
+                 max_upload_file_size: pulumi.Input[Optional[_builtins.str]] = None,
+                 plugin_trace_log_setting: pulumi.Input[Optional[_builtins.str]] = None,
+                 power_apps_component_framework_for_canvas_apps: pulumi.Input[Optional[_builtins.bool]] = None,
+                 reverse_proxy_ip_addresses: pulumi.Input[Optional[_builtins.str]] = None,
+                 show_dashboard_cards_in_expanded_state: pulumi.Input[Optional[_builtins.bool]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

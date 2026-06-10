@@ -109,14 +109,14 @@ def get_data_records(apply: Optional[_builtins.str] = None,
         records=pulumi.get(__ret__, 'records'),
         total_rows_count=pulumi.get(__ret__, 'total_rows_count'),
         total_rows_count_limit_exceeded=pulumi.get(__ret__, 'total_rows_count_limit_exceeded'))
-def get_data_records_output(apply: Optional[pulumi.Input[Optional[_builtins.str]]] = None,
-                            entity_collection: Optional[pulumi.Input[_builtins.str]] = None,
-                            environment_id: Optional[pulumi.Input[_builtins.str]] = None,
-                            expand: Optional[pulumi.Input[Optional[Sequence[Union['DataRecordsExpandParam', 'DataRecordsExpandParamDict']]]]] = None,
-                            filter: Optional[pulumi.Input[Optional[_builtins.str]]] = None,
-                            orderby: Optional[pulumi.Input[Optional[_builtins.str]]] = None,
-                            select: Optional[pulumi.Input[Optional[Sequence[_builtins.str]]]] = None,
-                            top: Optional[pulumi.Input[Optional[_builtins.int]]] = None,
+def get_data_records_output(apply: pulumi.Input[Optional[Optional[_builtins.str]]] = None,
+                            entity_collection: pulumi.Input[Optional[_builtins.str]] = None,
+                            environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                            expand: pulumi.Input[Optional[Optional[Sequence[Union['DataRecordsExpandParam', 'DataRecordsExpandParamDict']]]]] = None,
+                            filter: pulumi.Input[Optional[Optional[_builtins.str]]] = None,
+                            orderby: pulumi.Input[Optional[Optional[_builtins.str]]] = None,
+                            select: pulumi.Input[Optional[Optional[Sequence[_builtins.str]]]] = None,
+                            top: pulumi.Input[Optional[Optional[_builtins.int]]] = None,
                             opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetDataRecordsResult]:
     """
     Queries Dataverse records from a collection using OData filter, select, orderby, top, apply, and expand parameters. Returns the first page of matching records. Use the 'top' parameter to control result count for large tables.

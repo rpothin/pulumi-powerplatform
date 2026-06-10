@@ -21,10 +21,10 @@ __all__ = ['ResDeploymentPipelineArgs', 'ResDeploymentPipeline']
 class ResDeploymentPipelineArgs:
     def __init__(__self__, *,
                  dev_environment_key: _builtins.str,
-                 environments: Mapping[str, 'PipelineEnvironmentEntryArgs'],
+                 environments: Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']],
                  host_environment_id: _builtins.str,
                  pipeline_name: _builtins.str,
-                 pipeline_stages: Sequence['PipelineStageConfigArgs'],
+                 pipeline_stages: Sequence[pulumi.Input['PipelineStageConfigArgs']],
                  deployment_pipeline_user_role_id: Optional[_builtins.str] = None,
                  enable_ai_deployment_notes: Optional[_builtins.bool] = None,
                  enable_redeployment: Optional[_builtins.bool] = None,
@@ -69,11 +69,11 @@ class ResDeploymentPipelineArgs:
 
     @_builtins.property
     @pulumi.getter
-    def environments(self) -> Mapping[str, 'PipelineEnvironmentEntryArgs']:
+    def environments(self) -> Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']]:
         return pulumi.get(self, "environments")
 
     @environments.setter
-    def environments(self, value: Mapping[str, 'PipelineEnvironmentEntryArgs']):
+    def environments(self, value: Mapping[str, pulumi.Input['PipelineEnvironmentEntryArgs']]):
         pulumi.set(self, "environments", value)
 
     @_builtins.property
@@ -96,11 +96,11 @@ class ResDeploymentPipelineArgs:
 
     @_builtins.property
     @pulumi.getter(name="pipelineStages")
-    def pipeline_stages(self) -> Sequence['PipelineStageConfigArgs']:
+    def pipeline_stages(self) -> Sequence[pulumi.Input['PipelineStageConfigArgs']]:
         return pulumi.get(self, "pipeline_stages")
 
     @pipeline_stages.setter
-    def pipeline_stages(self, value: Sequence['PipelineStageConfigArgs']):
+    def pipeline_stages(self, value: Sequence[pulumi.Input['PipelineStageConfigArgs']]):
         pulumi.set(self, "pipeline_stages", value)
 
     @_builtins.property
@@ -187,12 +187,12 @@ class ResDeploymentPipeline(pulumi.ComponentResource):
                  enable_ai_deployment_notes: Optional[_builtins.bool] = None,
                  enable_redeployment: Optional[_builtins.bool] = None,
                  enable_telemetry: Optional[_builtins.bool] = None,
-                 environments: Optional[Mapping[str, Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]] = None,
+                 environments: Optional[Mapping[str, pulumi.Input[Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]]] = None,
                  host_environment_id: Optional[_builtins.str] = None,
                  lifecycle_state: Optional[_builtins.str] = None,
                  pipeline_description: Optional[_builtins.str] = None,
                  pipeline_name: Optional[_builtins.str] = None,
-                 pipeline_stages: Optional[Sequence[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]] = None,
+                 pipeline_stages: Optional[Sequence[pulumi.Input[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]]] = None,
                  root_business_unit_id: Optional[_builtins.str] = None,
                  security_group_id: Optional[_builtins.str] = None,
                  __props__=None):
@@ -233,12 +233,12 @@ class ResDeploymentPipeline(pulumi.ComponentResource):
                  enable_ai_deployment_notes: Optional[_builtins.bool] = None,
                  enable_redeployment: Optional[_builtins.bool] = None,
                  enable_telemetry: Optional[_builtins.bool] = None,
-                 environments: Optional[Mapping[str, Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]] = None,
+                 environments: Optional[Mapping[str, pulumi.Input[Union['PipelineEnvironmentEntryArgs', 'PipelineEnvironmentEntryArgsDict']]]] = None,
                  host_environment_id: Optional[_builtins.str] = None,
                  lifecycle_state: Optional[_builtins.str] = None,
                  pipeline_description: Optional[_builtins.str] = None,
                  pipeline_name: Optional[_builtins.str] = None,
-                 pipeline_stages: Optional[Sequence[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]] = None,
+                 pipeline_stages: Optional[Sequence[pulumi.Input[Union['PipelineStageConfigArgs', 'PipelineStageConfigArgsDict']]]] = None,
                  root_business_unit_id: Optional[_builtins.str] = None,
                  security_group_id: Optional[_builtins.str] = None,
                  __props__=None):

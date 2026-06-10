@@ -61,15 +61,15 @@ class BillingInstrumentArgsDict(TypedDict):
     """
     Azure billing instrument (subscription) details for a billing policy.
     """
-    id: NotRequired[pulumi.Input[_builtins.str]]
+    id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     The billing instrument identifier.
     """
-    resource_group: NotRequired[pulumi.Input[_builtins.str]]
+    resource_group: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     The Azure resource group within the subscription.
     """
-    subscription_id: NotRequired[pulumi.Input[_builtins.str]]
+    subscription_id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     The Azure subscription ID.
     """
@@ -77,9 +77,9 @@ class BillingInstrumentArgsDict(TypedDict):
 @pulumi.input_type
 class BillingInstrumentArgs:
     def __init__(__self__, *,
-                 id: Optional[pulumi.Input[_builtins.str]] = None,
-                 resource_group: Optional[pulumi.Input[_builtins.str]] = None,
-                 subscription_id: Optional[pulumi.Input[_builtins.str]] = None):
+                 id: pulumi.Input[Optional[_builtins.str]] = None,
+                 resource_group: pulumi.Input[Optional[_builtins.str]] = None,
+                 subscription_id: pulumi.Input[Optional[_builtins.str]] = None):
         """
         Azure billing instrument (subscription) details for a billing policy.
 
@@ -96,38 +96,38 @@ class BillingInstrumentArgs:
 
     @_builtins.property
     @pulumi.getter
-    def id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         The billing instrument identifier.
         """
         return pulumi.get(self, "id")
 
     @id.setter
-    def id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "id", value)
 
     @_builtins.property
     @pulumi.getter(name="resourceGroup")
-    def resource_group(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def resource_group(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         The Azure resource group within the subscription.
         """
         return pulumi.get(self, "resource_group")
 
     @resource_group.setter
-    def resource_group(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def resource_group(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "resource_group", value)
 
     @_builtins.property
     @pulumi.getter(name="subscriptionId")
-    def subscription_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def subscription_id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         The Azure subscription ID.
         """
         return pulumi.get(self, "subscription_id")
 
     @subscription_id.setter
-    def subscription_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def subscription_id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "subscription_id", value)
 
 
@@ -208,51 +208,51 @@ class DataverseArgsDict(TypedDict):
     """
     Configuration for the Dataverse database associated with a Power Platform environment.
     """
-    administration_mode_enabled: NotRequired[pulumi.Input[_builtins.bool]]
+    administration_mode_enabled: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Whether the Dataverse instance is in administration mode.
     """
-    background_operation_enabled: NotRequired[pulumi.Input[_builtins.bool]]
+    background_operation_enabled: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Whether background operations are enabled during administration mode.
     """
-    currency_code: NotRequired[pulumi.Input[_builtins.str]]
+    currency_code: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Currency code for the Dataverse database (e.g. USD). Immutable after creation.
     """
-    domain_name: NotRequired[pulumi.Input[_builtins.str]]
+    domain_name: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Domain prefix for the Dataverse instance URL.
     """
-    language_code: NotRequired[pulumi.Input[_builtins.float]]
+    language_code: NotRequired[pulumi.Input[Optional[_builtins.float]]]
     """
     Base language LCID (e.g. 1033). Immutable after creation.
     """
-    organization_id: NotRequired[pulumi.Input[_builtins.str]]
+    organization_id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Dataverse organization GUID. Computed.
     """
-    security_group_id: NotRequired[pulumi.Input[_builtins.str]]
+    security_group_id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     AAD security group GUID restricting environment access.
     """
-    template_metadata: NotRequired[pulumi.Input[_builtins.str]]
+    template_metadata: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     JSON metadata for provisioning templates. Immutable after creation.
     """
-    templates: NotRequired[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]
+    templates: NotRequired[pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]]]
     """
     Provisioning templates (e.g. D365_Sales). Immutable after creation.
     """
-    unique_name: NotRequired[pulumi.Input[_builtins.str]]
+    unique_name: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Dataverse unique name. Computed.
     """
-    url: NotRequired[pulumi.Input[_builtins.str]]
+    url: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     URL of the Dataverse instance. Computed.
     """
-    version: NotRequired[pulumi.Input[_builtins.str]]
+    version: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Dataverse version string. Computed.
     """
@@ -260,18 +260,18 @@ class DataverseArgsDict(TypedDict):
 @pulumi.input_type
 class DataverseArgs:
     def __init__(__self__, *,
-                 administration_mode_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
-                 background_operation_enabled: Optional[pulumi.Input[_builtins.bool]] = None,
-                 currency_code: Optional[pulumi.Input[_builtins.str]] = None,
-                 domain_name: Optional[pulumi.Input[_builtins.str]] = None,
-                 language_code: Optional[pulumi.Input[_builtins.float]] = None,
-                 organization_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 security_group_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 template_metadata: Optional[pulumi.Input[_builtins.str]] = None,
-                 templates: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]] = None,
-                 unique_name: Optional[pulumi.Input[_builtins.str]] = None,
-                 url: Optional[pulumi.Input[_builtins.str]] = None,
-                 version: Optional[pulumi.Input[_builtins.str]] = None):
+                 administration_mode_enabled: pulumi.Input[Optional[_builtins.bool]] = None,
+                 background_operation_enabled: pulumi.Input[Optional[_builtins.bool]] = None,
+                 currency_code: pulumi.Input[Optional[_builtins.str]] = None,
+                 domain_name: pulumi.Input[Optional[_builtins.str]] = None,
+                 language_code: pulumi.Input[Optional[_builtins.float]] = None,
+                 organization_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 security_group_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 template_metadata: pulumi.Input[Optional[_builtins.str]] = None,
+                 templates: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]] = None,
+                 unique_name: pulumi.Input[Optional[_builtins.str]] = None,
+                 url: pulumi.Input[Optional[_builtins.str]] = None,
+                 version: pulumi.Input[Optional[_builtins.str]] = None):
         """
         Configuration for the Dataverse database associated with a Power Platform environment.
 
@@ -315,146 +315,146 @@ class DataverseArgs:
 
     @_builtins.property
     @pulumi.getter(name="administrationModeEnabled")
-    def administration_mode_enabled(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def administration_mode_enabled(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether the Dataverse instance is in administration mode.
         """
         return pulumi.get(self, "administration_mode_enabled")
 
     @administration_mode_enabled.setter
-    def administration_mode_enabled(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def administration_mode_enabled(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "administration_mode_enabled", value)
 
     @_builtins.property
     @pulumi.getter(name="backgroundOperationEnabled")
-    def background_operation_enabled(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def background_operation_enabled(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Whether background operations are enabled during administration mode.
         """
         return pulumi.get(self, "background_operation_enabled")
 
     @background_operation_enabled.setter
-    def background_operation_enabled(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def background_operation_enabled(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "background_operation_enabled", value)
 
     @_builtins.property
     @pulumi.getter(name="currencyCode")
-    def currency_code(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def currency_code(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Currency code for the Dataverse database (e.g. USD). Immutable after creation.
         """
         return pulumi.get(self, "currency_code")
 
     @currency_code.setter
-    def currency_code(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def currency_code(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "currency_code", value)
 
     @_builtins.property
     @pulumi.getter(name="domainName")
-    def domain_name(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def domain_name(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Domain prefix for the Dataverse instance URL.
         """
         return pulumi.get(self, "domain_name")
 
     @domain_name.setter
-    def domain_name(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def domain_name(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "domain_name", value)
 
     @_builtins.property
     @pulumi.getter(name="languageCode")
-    def language_code(self) -> Optional[pulumi.Input[_builtins.float]]:
+    def language_code(self) -> pulumi.Input[Optional[_builtins.float]]:
         """
         Base language LCID (e.g. 1033). Immutable after creation.
         """
         return pulumi.get(self, "language_code")
 
     @language_code.setter
-    def language_code(self, value: Optional[pulumi.Input[_builtins.float]]):
+    def language_code(self, value: pulumi.Input[Optional[_builtins.float]]):
         pulumi.set(self, "language_code", value)
 
     @_builtins.property
     @pulumi.getter(name="organizationId")
-    def organization_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def organization_id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Dataverse organization GUID. Computed.
         """
         return pulumi.get(self, "organization_id")
 
     @organization_id.setter
-    def organization_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def organization_id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "organization_id", value)
 
     @_builtins.property
     @pulumi.getter(name="securityGroupId")
-    def security_group_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def security_group_id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         AAD security group GUID restricting environment access.
         """
         return pulumi.get(self, "security_group_id")
 
     @security_group_id.setter
-    def security_group_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def security_group_id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "security_group_id", value)
 
     @_builtins.property
     @pulumi.getter(name="templateMetadata")
-    def template_metadata(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def template_metadata(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         JSON metadata for provisioning templates. Immutable after creation.
         """
         return pulumi.get(self, "template_metadata")
 
     @template_metadata.setter
-    def template_metadata(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def template_metadata(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "template_metadata", value)
 
     @_builtins.property
     @pulumi.getter
-    def templates(self) -> Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]:
+    def templates(self) -> pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]]:
         """
         Provisioning templates (e.g. D365_Sales). Immutable after creation.
         """
         return pulumi.get(self, "templates")
 
     @templates.setter
-    def templates(self, value: Optional[pulumi.Input[Sequence[pulumi.Input[_builtins.str]]]]):
+    def templates(self, value: pulumi.Input[Optional[Sequence[pulumi.Input[_builtins.str]]]]):
         pulumi.set(self, "templates", value)
 
     @_builtins.property
     @pulumi.getter(name="uniqueName")
-    def unique_name(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def unique_name(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Dataverse unique name. Computed.
         """
         return pulumi.get(self, "unique_name")
 
     @unique_name.setter
-    def unique_name(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def unique_name(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "unique_name", value)
 
     @_builtins.property
     @pulumi.getter
-    def url(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def url(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         URL of the Dataverse instance. Computed.
         """
         return pulumi.get(self, "url")
 
     @url.setter
-    def url(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def url(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "url", value)
 
     @_builtins.property
     @pulumi.getter
-    def version(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def version(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Dataverse version string. Computed.
         """
         return pulumi.get(self, "version")
 
     @version.setter
-    def version(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def version(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "version", value)
 
 
@@ -462,23 +462,23 @@ class EnterprisePolicyArgsDict(TypedDict):
     """
     An enterprise policy associated with a Power Platform environment.
     """
-    id: NotRequired[pulumi.Input[_builtins.str]]
+    id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     The resource ID of the policy.
     """
-    location: NotRequired[pulumi.Input[_builtins.str]]
+    location: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Azure region of the policy.
     """
-    status: NotRequired[pulumi.Input[_builtins.str]]
+    status: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Policy link status (e.g. Linked, Disabled).
     """
-    system_id: NotRequired[pulumi.Input[_builtins.str]]
+    system_id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     System-assigned ID of the policy.
     """
-    type: NotRequired[pulumi.Input[_builtins.str]]
+    type: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Policy type (e.g. NetworkInjection, Encryption, Identity).
     """
@@ -486,11 +486,11 @@ class EnterprisePolicyArgsDict(TypedDict):
 @pulumi.input_type
 class EnterprisePolicyArgs:
     def __init__(__self__, *,
-                 id: Optional[pulumi.Input[_builtins.str]] = None,
-                 location: Optional[pulumi.Input[_builtins.str]] = None,
-                 status: Optional[pulumi.Input[_builtins.str]] = None,
-                 system_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 type: Optional[pulumi.Input[_builtins.str]] = None):
+                 id: pulumi.Input[Optional[_builtins.str]] = None,
+                 location: pulumi.Input[Optional[_builtins.str]] = None,
+                 status: pulumi.Input[Optional[_builtins.str]] = None,
+                 system_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 type: pulumi.Input[Optional[_builtins.str]] = None):
         """
         An enterprise policy associated with a Power Platform environment.
 
@@ -513,62 +513,62 @@ class EnterprisePolicyArgs:
 
     @_builtins.property
     @pulumi.getter
-    def id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         The resource ID of the policy.
         """
         return pulumi.get(self, "id")
 
     @id.setter
-    def id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "id", value)
 
     @_builtins.property
     @pulumi.getter
-    def location(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def location(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Azure region of the policy.
         """
         return pulumi.get(self, "location")
 
     @location.setter
-    def location(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def location(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "location", value)
 
     @_builtins.property
     @pulumi.getter
-    def status(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def status(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Policy link status (e.g. Linked, Disabled).
         """
         return pulumi.get(self, "status")
 
     @status.setter
-    def status(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def status(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "status", value)
 
     @_builtins.property
     @pulumi.getter(name="systemId")
-    def system_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def system_id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         System-assigned ID of the policy.
         """
         return pulumi.get(self, "system_id")
 
     @system_id.setter
-    def system_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def system_id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "system_id", value)
 
     @_builtins.property
     @pulumi.getter
-    def type(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def type(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Policy type (e.g. NetworkInjection, Encryption, Identity).
         """
         return pulumi.get(self, "type")
 
     @type.setter
-    def type(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def type(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "type", value)
 
 
@@ -576,15 +576,15 @@ class RuleSetArgsDict(TypedDict):
     """
     A rule set for a DLP policy, defining data loss prevention rules.
     """
-    id: NotRequired[pulumi.Input[_builtins.str]]
+    id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     The unique identifier of the rule set.
     """
-    inputs: NotRequired[pulumi.Input[Mapping[str, Any]]]
+    inputs: NotRequired[pulumi.Input[Optional[Mapping[str, Any]]]]
     """
     The inputs for the rule set, which may vary based on the rule.
     """
-    version: NotRequired[pulumi.Input[_builtins.str]]
+    version: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     The version of the rule set.
     """
@@ -592,9 +592,9 @@ class RuleSetArgsDict(TypedDict):
 @pulumi.input_type
 class RuleSetArgs:
     def __init__(__self__, *,
-                 id: Optional[pulumi.Input[_builtins.str]] = None,
-                 inputs: Optional[pulumi.Input[Mapping[str, Any]]] = None,
-                 version: Optional[pulumi.Input[_builtins.str]] = None):
+                 id: pulumi.Input[Optional[_builtins.str]] = None,
+                 inputs: pulumi.Input[Optional[Mapping[str, Any]]] = None,
+                 version: pulumi.Input[Optional[_builtins.str]] = None):
         """
         A rule set for a DLP policy, defining data loss prevention rules.
 
@@ -611,38 +611,38 @@ class RuleSetArgs:
 
     @_builtins.property
     @pulumi.getter
-    def id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         The unique identifier of the rule set.
         """
         return pulumi.get(self, "id")
 
     @id.setter
-    def id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "id", value)
 
     @_builtins.property
     @pulumi.getter
-    def inputs(self) -> Optional[pulumi.Input[Mapping[str, Any]]]:
+    def inputs(self) -> pulumi.Input[Optional[Mapping[str, Any]]]:
         """
         The inputs for the rule set, which may vary based on the rule.
         """
         return pulumi.get(self, "inputs")
 
     @inputs.setter
-    def inputs(self, value: Optional[pulumi.Input[Mapping[str, Any]]]):
+    def inputs(self, value: pulumi.Input[Optional[Mapping[str, Any]]]):
         pulumi.set(self, "inputs", value)
 
     @_builtins.property
     @pulumi.getter
-    def version(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def version(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         The version of the rule set.
         """
         return pulumi.get(self, "version")
 
     @version.setter
-    def version(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def version(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "version", value)
 
 
@@ -650,7 +650,7 @@ class TenantCatalogSettingsArgsDict(TypedDict):
     """
     Catalog settings.
     """
-    power_catalog_audience_setting: NotRequired[pulumi.Input[_builtins.str]]
+    power_catalog_audience_setting: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Power Catalog audience setting.
     """
@@ -658,7 +658,7 @@ class TenantCatalogSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantCatalogSettingsArgs:
     def __init__(__self__, *,
-                 power_catalog_audience_setting: Optional[pulumi.Input[_builtins.str]] = None):
+                 power_catalog_audience_setting: pulumi.Input[Optional[_builtins.str]] = None):
         """
         Catalog settings.
 
@@ -669,14 +669,14 @@ class TenantCatalogSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="powerCatalogAudienceSetting")
-    def power_catalog_audience_setting(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def power_catalog_audience_setting(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Power Catalog audience setting.
         """
         return pulumi.get(self, "power_catalog_audience_setting")
 
     @power_catalog_audience_setting.setter
-    def power_catalog_audience_setting(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def power_catalog_audience_setting(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "power_catalog_audience_setting", value)
 
 
@@ -684,11 +684,11 @@ class TenantChampionsSettingsArgsDict(TypedDict):
     """
     Champions settings.
     """
-    disable_champions_invitation_reachout: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_champions_invitation_reachout: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable champions invitation reachout.
     """
-    disable_skills_match_invitation_reachout: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_skills_match_invitation_reachout: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable skills match invitation reachout.
     """
@@ -696,8 +696,8 @@ class TenantChampionsSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantChampionsSettingsArgs:
     def __init__(__self__, *,
-                 disable_champions_invitation_reachout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_skills_match_invitation_reachout: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_champions_invitation_reachout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_skills_match_invitation_reachout: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Champions settings.
 
@@ -711,26 +711,26 @@ class TenantChampionsSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableChampionsInvitationReachout")
-    def disable_champions_invitation_reachout(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_champions_invitation_reachout(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable champions invitation reachout.
         """
         return pulumi.get(self, "disable_champions_invitation_reachout")
 
     @disable_champions_invitation_reachout.setter
-    def disable_champions_invitation_reachout(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_champions_invitation_reachout(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_champions_invitation_reachout", value)
 
     @_builtins.property
     @pulumi.getter(name="disableSkillsMatchInvitationReachout")
-    def disable_skills_match_invitation_reachout(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_skills_match_invitation_reachout(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable skills match invitation reachout.
         """
         return pulumi.get(self, "disable_skills_match_invitation_reachout")
 
     @disable_skills_match_invitation_reachout.setter
-    def disable_skills_match_invitation_reachout(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_skills_match_invitation_reachout(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_skills_match_invitation_reachout", value)
 
 
@@ -738,7 +738,7 @@ class TenantEnvironmentsSettingsArgsDict(TypedDict):
     """
     Environment settings.
     """
-    disable_preferred_data_location_for_teams_environment: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_preferred_data_location_for_teams_environment: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable preferred data location for Teams environment creation.
     """
@@ -746,7 +746,7 @@ class TenantEnvironmentsSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantEnvironmentsSettingsArgs:
     def __init__(__self__, *,
-                 disable_preferred_data_location_for_teams_environment: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_preferred_data_location_for_teams_environment: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Environment settings.
 
@@ -757,14 +757,14 @@ class TenantEnvironmentsSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disablePreferredDataLocationForTeamsEnvironment")
-    def disable_preferred_data_location_for_teams_environment(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_preferred_data_location_for_teams_environment(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable preferred data location for Teams environment creation.
         """
         return pulumi.get(self, "disable_preferred_data_location_for_teams_environment")
 
     @disable_preferred_data_location_for_teams_environment.setter
-    def disable_preferred_data_location_for_teams_environment(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_preferred_data_location_for_teams_environment(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_preferred_data_location_for_teams_environment", value)
 
 
@@ -772,7 +772,7 @@ class TenantGovernancePolicySettingsArgsDict(TypedDict):
     """
     Governance policy settings.
     """
-    enable_desktop_flow_data_policy_management: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_desktop_flow_data_policy_management: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable desktop flow data policy management.
     """
@@ -780,7 +780,7 @@ class TenantGovernancePolicySettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantGovernancePolicySettingsArgs:
     def __init__(__self__, *,
-                 enable_desktop_flow_data_policy_management: Optional[pulumi.Input[_builtins.bool]] = None):
+                 enable_desktop_flow_data_policy_management: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Governance policy settings.
 
@@ -791,14 +791,14 @@ class TenantGovernancePolicySettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="enableDesktopFlowDataPolicyManagement")
-    def enable_desktop_flow_data_policy_management(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_desktop_flow_data_policy_management(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable desktop flow data policy management.
         """
         return pulumi.get(self, "enable_desktop_flow_data_policy_management")
 
     @enable_desktop_flow_data_policy_management.setter
-    def enable_desktop_flow_data_policy_management(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_desktop_flow_data_policy_management(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_desktop_flow_data_policy_management", value)
 
 
@@ -806,31 +806,31 @@ class TenantGovernanceSettingsArgsDict(TypedDict):
     """
     Governance settings.
     """
-    disable_admin_digest: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_admin_digest: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable admin digest.
     """
-    disable_developer_environment_creation_by_non_admin_users: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_developer_environment_creation_by_non_admin_users: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable developer environment creation by non-admin users.
     """
-    enable_default_environment_routing: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_default_environment_routing: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable default environment routing.
     """
-    environment_routing_all_makers: NotRequired[pulumi.Input[_builtins.bool]]
+    environment_routing_all_makers: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Route all makers to personal dev environments.
     """
-    environment_routing_target_environment_group_id: NotRequired[pulumi.Input[_builtins.str]]
+    environment_routing_target_environment_group_id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Target environment group for default environment routing.
     """
-    environment_routing_target_security_group_id: NotRequired[pulumi.Input[_builtins.str]]
+    environment_routing_target_security_group_id: NotRequired[pulumi.Input[Optional[_builtins.str]]]
     """
     Target security group for default environment routing.
     """
-    policy: NotRequired[pulumi.Input['TenantGovernancePolicySettingsArgsDict']]
+    policy: NotRequired[pulumi.Input[Optional['TenantGovernancePolicySettingsArgsDict']]]
     """
     Governance policy settings.
     """
@@ -838,13 +838,13 @@ class TenantGovernanceSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantGovernanceSettingsArgs:
     def __init__(__self__, *,
-                 disable_admin_digest: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_developer_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 enable_default_environment_routing: Optional[pulumi.Input[_builtins.bool]] = None,
-                 environment_routing_all_makers: Optional[pulumi.Input[_builtins.bool]] = None,
-                 environment_routing_target_environment_group_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 environment_routing_target_security_group_id: Optional[pulumi.Input[_builtins.str]] = None,
-                 policy: Optional[pulumi.Input['TenantGovernancePolicySettingsArgs']] = None):
+                 disable_admin_digest: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_developer_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 enable_default_environment_routing: pulumi.Input[Optional[_builtins.bool]] = None,
+                 environment_routing_all_makers: pulumi.Input[Optional[_builtins.bool]] = None,
+                 environment_routing_target_environment_group_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 environment_routing_target_security_group_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 policy: pulumi.Input[Optional['TenantGovernancePolicySettingsArgs']] = None):
         """
         Governance settings.
 
@@ -873,86 +873,86 @@ class TenantGovernanceSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableAdminDigest")
-    def disable_admin_digest(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_admin_digest(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable admin digest.
         """
         return pulumi.get(self, "disable_admin_digest")
 
     @disable_admin_digest.setter
-    def disable_admin_digest(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_admin_digest(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_admin_digest", value)
 
     @_builtins.property
     @pulumi.getter(name="disableDeveloperEnvironmentCreationByNonAdminUsers")
-    def disable_developer_environment_creation_by_non_admin_users(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_developer_environment_creation_by_non_admin_users(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable developer environment creation by non-admin users.
         """
         return pulumi.get(self, "disable_developer_environment_creation_by_non_admin_users")
 
     @disable_developer_environment_creation_by_non_admin_users.setter
-    def disable_developer_environment_creation_by_non_admin_users(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_developer_environment_creation_by_non_admin_users(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_developer_environment_creation_by_non_admin_users", value)
 
     @_builtins.property
     @pulumi.getter(name="enableDefaultEnvironmentRouting")
-    def enable_default_environment_routing(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_default_environment_routing(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable default environment routing.
         """
         return pulumi.get(self, "enable_default_environment_routing")
 
     @enable_default_environment_routing.setter
-    def enable_default_environment_routing(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_default_environment_routing(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_default_environment_routing", value)
 
     @_builtins.property
     @pulumi.getter(name="environmentRoutingAllMakers")
-    def environment_routing_all_makers(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def environment_routing_all_makers(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Route all makers to personal dev environments.
         """
         return pulumi.get(self, "environment_routing_all_makers")
 
     @environment_routing_all_makers.setter
-    def environment_routing_all_makers(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def environment_routing_all_makers(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "environment_routing_all_makers", value)
 
     @_builtins.property
     @pulumi.getter(name="environmentRoutingTargetEnvironmentGroupId")
-    def environment_routing_target_environment_group_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def environment_routing_target_environment_group_id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Target environment group for default environment routing.
         """
         return pulumi.get(self, "environment_routing_target_environment_group_id")
 
     @environment_routing_target_environment_group_id.setter
-    def environment_routing_target_environment_group_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def environment_routing_target_environment_group_id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "environment_routing_target_environment_group_id", value)
 
     @_builtins.property
     @pulumi.getter(name="environmentRoutingTargetSecurityGroupId")
-    def environment_routing_target_security_group_id(self) -> Optional[pulumi.Input[_builtins.str]]:
+    def environment_routing_target_security_group_id(self) -> pulumi.Input[Optional[_builtins.str]]:
         """
         Target security group for default environment routing.
         """
         return pulumi.get(self, "environment_routing_target_security_group_id")
 
     @environment_routing_target_security_group_id.setter
-    def environment_routing_target_security_group_id(self, value: Optional[pulumi.Input[_builtins.str]]):
+    def environment_routing_target_security_group_id(self, value: pulumi.Input[Optional[_builtins.str]]):
         pulumi.set(self, "environment_routing_target_security_group_id", value)
 
     @_builtins.property
     @pulumi.getter
-    def policy(self) -> Optional[pulumi.Input['TenantGovernancePolicySettingsArgs']]:
+    def policy(self) -> pulumi.Input[Optional['TenantGovernancePolicySettingsArgs']]:
         """
         Governance policy settings.
         """
         return pulumi.get(self, "policy")
 
     @policy.setter
-    def policy(self, value: Optional[pulumi.Input['TenantGovernancePolicySettingsArgs']]):
+    def policy(self, value: pulumi.Input[Optional['TenantGovernancePolicySettingsArgs']]):
         pulumi.set(self, "policy", value)
 
 
@@ -960,11 +960,11 @@ class TenantIntelligenceSettingsArgsDict(TypedDict):
     """
     Intelligence settings.
     """
-    disable_copilot: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_copilot: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable Copilot.
     """
-    enable_open_ai_bot_publishing: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_open_ai_bot_publishing: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable OpenAI bot publishing.
     """
@@ -972,8 +972,8 @@ class TenantIntelligenceSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantIntelligenceSettingsArgs:
     def __init__(__self__, *,
-                 disable_copilot: Optional[pulumi.Input[_builtins.bool]] = None,
-                 enable_open_ai_bot_publishing: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_copilot: pulumi.Input[Optional[_builtins.bool]] = None,
+                 enable_open_ai_bot_publishing: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Intelligence settings.
 
@@ -987,26 +987,26 @@ class TenantIntelligenceSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableCopilot")
-    def disable_copilot(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_copilot(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable Copilot.
         """
         return pulumi.get(self, "disable_copilot")
 
     @disable_copilot.setter
-    def disable_copilot(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_copilot(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_copilot", value)
 
     @_builtins.property
     @pulumi.getter(name="enableOpenAiBotPublishing")
-    def enable_open_ai_bot_publishing(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_open_ai_bot_publishing(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable OpenAI bot publishing.
         """
         return pulumi.get(self, "enable_open_ai_bot_publishing")
 
     @enable_open_ai_bot_publishing.setter
-    def enable_open_ai_bot_publishing(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_open_ai_bot_publishing(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_open_ai_bot_publishing", value)
 
 
@@ -1014,23 +1014,23 @@ class TenantLicensingSettingsArgsDict(TypedDict):
     """
     Licensing settings.
     """
-    disable_billing_policy_creation_by_non_admin_users: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_billing_policy_creation_by_non_admin_users: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable billing policy creation by non-admin users.
     """
-    disable_use_of_unassigned_ai_builder_credits: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_use_of_unassigned_ai_builder_credits: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable use of unassigned AI Builder credits.
     """
-    enable_tenant_capacity_report_for_environment_admins: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_tenant_capacity_report_for_environment_admins: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable tenant capacity report for environment admins.
     """
-    enable_tenant_licensing_report_for_environment_admins: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_tenant_licensing_report_for_environment_admins: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable tenant licensing report for environment admins.
     """
-    storage_capacity_consumption_warning_threshold: NotRequired[pulumi.Input[_builtins.int]]
+    storage_capacity_consumption_warning_threshold: NotRequired[pulumi.Input[Optional[_builtins.int]]]
     """
     Storage capacity consumption warning threshold.
     """
@@ -1038,11 +1038,11 @@ class TenantLicensingSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantLicensingSettingsArgs:
     def __init__(__self__, *,
-                 disable_billing_policy_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_use_of_unassigned_ai_builder_credits: Optional[pulumi.Input[_builtins.bool]] = None,
-                 enable_tenant_capacity_report_for_environment_admins: Optional[pulumi.Input[_builtins.bool]] = None,
-                 enable_tenant_licensing_report_for_environment_admins: Optional[pulumi.Input[_builtins.bool]] = None,
-                 storage_capacity_consumption_warning_threshold: Optional[pulumi.Input[_builtins.int]] = None):
+                 disable_billing_policy_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_use_of_unassigned_ai_builder_credits: pulumi.Input[Optional[_builtins.bool]] = None,
+                 enable_tenant_capacity_report_for_environment_admins: pulumi.Input[Optional[_builtins.bool]] = None,
+                 enable_tenant_licensing_report_for_environment_admins: pulumi.Input[Optional[_builtins.bool]] = None,
+                 storage_capacity_consumption_warning_threshold: pulumi.Input[Optional[_builtins.int]] = None):
         """
         Licensing settings.
 
@@ -1065,62 +1065,62 @@ class TenantLicensingSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableBillingPolicyCreationByNonAdminUsers")
-    def disable_billing_policy_creation_by_non_admin_users(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_billing_policy_creation_by_non_admin_users(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable billing policy creation by non-admin users.
         """
         return pulumi.get(self, "disable_billing_policy_creation_by_non_admin_users")
 
     @disable_billing_policy_creation_by_non_admin_users.setter
-    def disable_billing_policy_creation_by_non_admin_users(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_billing_policy_creation_by_non_admin_users(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_billing_policy_creation_by_non_admin_users", value)
 
     @_builtins.property
     @pulumi.getter(name="disableUseOfUnassignedAIBuilderCredits")
-    def disable_use_of_unassigned_ai_builder_credits(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_use_of_unassigned_ai_builder_credits(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable use of unassigned AI Builder credits.
         """
         return pulumi.get(self, "disable_use_of_unassigned_ai_builder_credits")
 
     @disable_use_of_unassigned_ai_builder_credits.setter
-    def disable_use_of_unassigned_ai_builder_credits(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_use_of_unassigned_ai_builder_credits(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_use_of_unassigned_ai_builder_credits", value)
 
     @_builtins.property
     @pulumi.getter(name="enableTenantCapacityReportForEnvironmentAdmins")
-    def enable_tenant_capacity_report_for_environment_admins(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_tenant_capacity_report_for_environment_admins(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable tenant capacity report for environment admins.
         """
         return pulumi.get(self, "enable_tenant_capacity_report_for_environment_admins")
 
     @enable_tenant_capacity_report_for_environment_admins.setter
-    def enable_tenant_capacity_report_for_environment_admins(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_tenant_capacity_report_for_environment_admins(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_tenant_capacity_report_for_environment_admins", value)
 
     @_builtins.property
     @pulumi.getter(name="enableTenantLicensingReportForEnvironmentAdmins")
-    def enable_tenant_licensing_report_for_environment_admins(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_tenant_licensing_report_for_environment_admins(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable tenant licensing report for environment admins.
         """
         return pulumi.get(self, "enable_tenant_licensing_report_for_environment_admins")
 
     @enable_tenant_licensing_report_for_environment_admins.setter
-    def enable_tenant_licensing_report_for_environment_admins(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_tenant_licensing_report_for_environment_admins(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_tenant_licensing_report_for_environment_admins", value)
 
     @_builtins.property
     @pulumi.getter(name="storageCapacityConsumptionWarningThreshold")
-    def storage_capacity_consumption_warning_threshold(self) -> Optional[pulumi.Input[_builtins.int]]:
+    def storage_capacity_consumption_warning_threshold(self) -> pulumi.Input[Optional[_builtins.int]]:
         """
         Storage capacity consumption warning threshold.
         """
         return pulumi.get(self, "storage_capacity_consumption_warning_threshold")
 
     @storage_capacity_consumption_warning_threshold.setter
-    def storage_capacity_consumption_warning_threshold(self, value: Optional[pulumi.Input[_builtins.int]]):
+    def storage_capacity_consumption_warning_threshold(self, value: pulumi.Input[Optional[_builtins.int]]):
         pulumi.set(self, "storage_capacity_consumption_warning_threshold", value)
 
 
@@ -1128,11 +1128,11 @@ class TenantModelExperimentationSettingsArgsDict(TypedDict):
     """
     Model experimentation settings.
     """
-    disable_data_logging: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_data_logging: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable data logging.
     """
-    enable_model_data_sharing: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_model_data_sharing: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable model data sharing.
     """
@@ -1140,8 +1140,8 @@ class TenantModelExperimentationSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantModelExperimentationSettingsArgs:
     def __init__(__self__, *,
-                 disable_data_logging: Optional[pulumi.Input[_builtins.bool]] = None,
-                 enable_model_data_sharing: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_data_logging: pulumi.Input[Optional[_builtins.bool]] = None,
+                 enable_model_data_sharing: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Model experimentation settings.
 
@@ -1155,26 +1155,26 @@ class TenantModelExperimentationSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableDataLogging")
-    def disable_data_logging(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_data_logging(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable data logging.
         """
         return pulumi.get(self, "disable_data_logging")
 
     @disable_data_logging.setter
-    def disable_data_logging(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_data_logging(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_data_logging", value)
 
     @_builtins.property
     @pulumi.getter(name="enableModelDataSharing")
-    def enable_model_data_sharing(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_model_data_sharing(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable model data sharing.
         """
         return pulumi.get(self, "enable_model_data_sharing")
 
     @enable_model_data_sharing.setter
-    def enable_model_data_sharing(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_model_data_sharing(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_model_data_sharing", value)
 
 
@@ -1182,31 +1182,31 @@ class TenantPowerAppsSettingsArgsDict(TypedDict):
     """
     Power Apps settings.
     """
-    disable_connection_sharing_with_everyone: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_connection_sharing_with_everyone: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable connection sharing with everyone.
     """
-    disable_create_from_figma: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_create_from_figma: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable create from Figma.
     """
-    disable_create_from_image: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_create_from_image: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable create from image.
     """
-    disable_maker_match: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_maker_match: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable maker match.
     """
-    disable_share_with_everyone: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_share_with_everyone: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable share with everyone.
     """
-    disable_unused_license_assignment: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_unused_license_assignment: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable unused license assignment.
     """
-    enable_guests_to_make: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_guests_to_make: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable guests to make apps.
     """
@@ -1214,13 +1214,13 @@ class TenantPowerAppsSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantPowerAppsSettingsArgs:
     def __init__(__self__, *,
-                 disable_connection_sharing_with_everyone: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_create_from_figma: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_create_from_image: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_maker_match: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_share_with_everyone: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_unused_license_assignment: Optional[pulumi.Input[_builtins.bool]] = None,
-                 enable_guests_to_make: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_connection_sharing_with_everyone: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_create_from_figma: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_create_from_image: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_maker_match: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_share_with_everyone: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_unused_license_assignment: pulumi.Input[Optional[_builtins.bool]] = None,
+                 enable_guests_to_make: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Power Apps settings.
 
@@ -1249,86 +1249,86 @@ class TenantPowerAppsSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableConnectionSharingWithEveryone")
-    def disable_connection_sharing_with_everyone(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_connection_sharing_with_everyone(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable connection sharing with everyone.
         """
         return pulumi.get(self, "disable_connection_sharing_with_everyone")
 
     @disable_connection_sharing_with_everyone.setter
-    def disable_connection_sharing_with_everyone(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_connection_sharing_with_everyone(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_connection_sharing_with_everyone", value)
 
     @_builtins.property
     @pulumi.getter(name="disableCreateFromFigma")
-    def disable_create_from_figma(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_create_from_figma(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable create from Figma.
         """
         return pulumi.get(self, "disable_create_from_figma")
 
     @disable_create_from_figma.setter
-    def disable_create_from_figma(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_create_from_figma(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_create_from_figma", value)
 
     @_builtins.property
     @pulumi.getter(name="disableCreateFromImage")
-    def disable_create_from_image(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_create_from_image(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable create from image.
         """
         return pulumi.get(self, "disable_create_from_image")
 
     @disable_create_from_image.setter
-    def disable_create_from_image(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_create_from_image(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_create_from_image", value)
 
     @_builtins.property
     @pulumi.getter(name="disableMakerMatch")
-    def disable_maker_match(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_maker_match(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable maker match.
         """
         return pulumi.get(self, "disable_maker_match")
 
     @disable_maker_match.setter
-    def disable_maker_match(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_maker_match(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_maker_match", value)
 
     @_builtins.property
     @pulumi.getter(name="disableShareWithEveryone")
-    def disable_share_with_everyone(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_share_with_everyone(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable share with everyone.
         """
         return pulumi.get(self, "disable_share_with_everyone")
 
     @disable_share_with_everyone.setter
-    def disable_share_with_everyone(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_share_with_everyone(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_share_with_everyone", value)
 
     @_builtins.property
     @pulumi.getter(name="disableUnusedLicenseAssignment")
-    def disable_unused_license_assignment(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_unused_license_assignment(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable unused license assignment.
         """
         return pulumi.get(self, "disable_unused_license_assignment")
 
     @disable_unused_license_assignment.setter
-    def disable_unused_license_assignment(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_unused_license_assignment(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_unused_license_assignment", value)
 
     @_builtins.property
     @pulumi.getter(name="enableGuestsToMake")
-    def enable_guests_to_make(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_guests_to_make(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable guests to make apps.
         """
         return pulumi.get(self, "enable_guests_to_make")
 
     @enable_guests_to_make.setter
-    def enable_guests_to_make(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_guests_to_make(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_guests_to_make", value)
 
 
@@ -1336,7 +1336,7 @@ class TenantPowerAutomateSettingsArgsDict(TypedDict):
     """
     Power Automate settings.
     """
-    disable_copilot: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_copilot: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable Copilot for Power Automate.
     """
@@ -1344,7 +1344,7 @@ class TenantPowerAutomateSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantPowerAutomateSettingsArgs:
     def __init__(__self__, *,
-                 disable_copilot: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_copilot: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Power Automate settings.
 
@@ -1355,14 +1355,14 @@ class TenantPowerAutomateSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableCopilot")
-    def disable_copilot(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_copilot(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable Copilot for Power Automate.
         """
         return pulumi.get(self, "disable_copilot")
 
     @disable_copilot.setter
-    def disable_copilot(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_copilot(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_copilot", value)
 
 
@@ -1385,55 +1385,55 @@ class TenantPowerPlatformSettingsArgsDict(TypedDict):
     """
     Power Platform workload settings at tenant scope.
     """
-    catalog_settings: NotRequired[pulumi.Input['TenantCatalogSettingsArgsDict']]
+    catalog_settings: NotRequired[pulumi.Input[Optional['TenantCatalogSettingsArgsDict']]]
     """
     Catalog settings.
     """
-    champions: NotRequired[pulumi.Input['TenantChampionsSettingsArgsDict']]
+    champions: NotRequired[pulumi.Input[Optional['TenantChampionsSettingsArgsDict']]]
     """
     Champions settings.
     """
-    environments: NotRequired[pulumi.Input['TenantEnvironmentsSettingsArgsDict']]
+    environments: NotRequired[pulumi.Input[Optional['TenantEnvironmentsSettingsArgsDict']]]
     """
     Environment settings.
     """
-    governance: NotRequired[pulumi.Input['TenantGovernanceSettingsArgsDict']]
+    governance: NotRequired[pulumi.Input[Optional['TenantGovernanceSettingsArgsDict']]]
     """
     Governance settings.
     """
-    intelligence: NotRequired[pulumi.Input['TenantIntelligenceSettingsArgsDict']]
+    intelligence: NotRequired[pulumi.Input[Optional['TenantIntelligenceSettingsArgsDict']]]
     """
     Intelligence settings.
     """
-    licensing: NotRequired[pulumi.Input['TenantLicensingSettingsArgsDict']]
+    licensing: NotRequired[pulumi.Input[Optional['TenantLicensingSettingsArgsDict']]]
     """
     Licensing settings.
     """
-    model_experimentation: NotRequired[pulumi.Input['TenantModelExperimentationSettingsArgsDict']]
+    model_experimentation: NotRequired[pulumi.Input[Optional['TenantModelExperimentationSettingsArgsDict']]]
     """
     Model experimentation settings.
     """
-    power_apps: NotRequired[pulumi.Input['TenantPowerAppsSettingsArgsDict']]
+    power_apps: NotRequired[pulumi.Input[Optional['TenantPowerAppsSettingsArgsDict']]]
     """
     Power Apps settings.
     """
-    power_automate: NotRequired[pulumi.Input['TenantPowerAutomateSettingsArgsDict']]
+    power_automate: NotRequired[pulumi.Input[Optional['TenantPowerAutomateSettingsArgsDict']]]
     """
     Power Automate settings.
     """
-    power_pages: NotRequired[pulumi.Input['TenantPowerPagesSettingsArgsDict']]
+    power_pages: NotRequired[pulumi.Input[Optional['TenantPowerPagesSettingsArgsDict']]]
     """
     Power Pages settings.
     """
-    search: NotRequired[pulumi.Input['TenantSearchSettingsArgsDict']]
+    search: NotRequired[pulumi.Input[Optional['TenantSearchSettingsArgsDict']]]
     """
     Search settings.
     """
-    teams_integration: NotRequired[pulumi.Input['TenantTeamsIntegrationSettingsArgsDict']]
+    teams_integration: NotRequired[pulumi.Input[Optional['TenantTeamsIntegrationSettingsArgsDict']]]
     """
     Teams integration settings.
     """
-    user_management_settings: NotRequired[pulumi.Input['TenantUserManagementSettingsArgsDict']]
+    user_management_settings: NotRequired[pulumi.Input[Optional['TenantUserManagementSettingsArgsDict']]]
     """
     User management settings.
     """
@@ -1441,19 +1441,19 @@ class TenantPowerPlatformSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantPowerPlatformSettingsArgs:
     def __init__(__self__, *,
-                 catalog_settings: Optional[pulumi.Input['TenantCatalogSettingsArgs']] = None,
-                 champions: Optional[pulumi.Input['TenantChampionsSettingsArgs']] = None,
-                 environments: Optional[pulumi.Input['TenantEnvironmentsSettingsArgs']] = None,
-                 governance: Optional[pulumi.Input['TenantGovernanceSettingsArgs']] = None,
-                 intelligence: Optional[pulumi.Input['TenantIntelligenceSettingsArgs']] = None,
-                 licensing: Optional[pulumi.Input['TenantLicensingSettingsArgs']] = None,
-                 model_experimentation: Optional[pulumi.Input['TenantModelExperimentationSettingsArgs']] = None,
-                 power_apps: Optional[pulumi.Input['TenantPowerAppsSettingsArgs']] = None,
-                 power_automate: Optional[pulumi.Input['TenantPowerAutomateSettingsArgs']] = None,
-                 power_pages: Optional[pulumi.Input['TenantPowerPagesSettingsArgs']] = None,
-                 search: Optional[pulumi.Input['TenantSearchSettingsArgs']] = None,
-                 teams_integration: Optional[pulumi.Input['TenantTeamsIntegrationSettingsArgs']] = None,
-                 user_management_settings: Optional[pulumi.Input['TenantUserManagementSettingsArgs']] = None):
+                 catalog_settings: pulumi.Input[Optional['TenantCatalogSettingsArgs']] = None,
+                 champions: pulumi.Input[Optional['TenantChampionsSettingsArgs']] = None,
+                 environments: pulumi.Input[Optional['TenantEnvironmentsSettingsArgs']] = None,
+                 governance: pulumi.Input[Optional['TenantGovernanceSettingsArgs']] = None,
+                 intelligence: pulumi.Input[Optional['TenantIntelligenceSettingsArgs']] = None,
+                 licensing: pulumi.Input[Optional['TenantLicensingSettingsArgs']] = None,
+                 model_experimentation: pulumi.Input[Optional['TenantModelExperimentationSettingsArgs']] = None,
+                 power_apps: pulumi.Input[Optional['TenantPowerAppsSettingsArgs']] = None,
+                 power_automate: pulumi.Input[Optional['TenantPowerAutomateSettingsArgs']] = None,
+                 power_pages: pulumi.Input[Optional['TenantPowerPagesSettingsArgs']] = None,
+                 search: pulumi.Input[Optional['TenantSearchSettingsArgs']] = None,
+                 teams_integration: pulumi.Input[Optional['TenantTeamsIntegrationSettingsArgs']] = None,
+                 user_management_settings: pulumi.Input[Optional['TenantUserManagementSettingsArgs']] = None):
         """
         Power Platform workload settings at tenant scope.
 
@@ -1500,158 +1500,158 @@ class TenantPowerPlatformSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="catalogSettings")
-    def catalog_settings(self) -> Optional[pulumi.Input['TenantCatalogSettingsArgs']]:
+    def catalog_settings(self) -> pulumi.Input[Optional['TenantCatalogSettingsArgs']]:
         """
         Catalog settings.
         """
         return pulumi.get(self, "catalog_settings")
 
     @catalog_settings.setter
-    def catalog_settings(self, value: Optional[pulumi.Input['TenantCatalogSettingsArgs']]):
+    def catalog_settings(self, value: pulumi.Input[Optional['TenantCatalogSettingsArgs']]):
         pulumi.set(self, "catalog_settings", value)
 
     @_builtins.property
     @pulumi.getter
-    def champions(self) -> Optional[pulumi.Input['TenantChampionsSettingsArgs']]:
+    def champions(self) -> pulumi.Input[Optional['TenantChampionsSettingsArgs']]:
         """
         Champions settings.
         """
         return pulumi.get(self, "champions")
 
     @champions.setter
-    def champions(self, value: Optional[pulumi.Input['TenantChampionsSettingsArgs']]):
+    def champions(self, value: pulumi.Input[Optional['TenantChampionsSettingsArgs']]):
         pulumi.set(self, "champions", value)
 
     @_builtins.property
     @pulumi.getter
-    def environments(self) -> Optional[pulumi.Input['TenantEnvironmentsSettingsArgs']]:
+    def environments(self) -> pulumi.Input[Optional['TenantEnvironmentsSettingsArgs']]:
         """
         Environment settings.
         """
         return pulumi.get(self, "environments")
 
     @environments.setter
-    def environments(self, value: Optional[pulumi.Input['TenantEnvironmentsSettingsArgs']]):
+    def environments(self, value: pulumi.Input[Optional['TenantEnvironmentsSettingsArgs']]):
         pulumi.set(self, "environments", value)
 
     @_builtins.property
     @pulumi.getter
-    def governance(self) -> Optional[pulumi.Input['TenantGovernanceSettingsArgs']]:
+    def governance(self) -> pulumi.Input[Optional['TenantGovernanceSettingsArgs']]:
         """
         Governance settings.
         """
         return pulumi.get(self, "governance")
 
     @governance.setter
-    def governance(self, value: Optional[pulumi.Input['TenantGovernanceSettingsArgs']]):
+    def governance(self, value: pulumi.Input[Optional['TenantGovernanceSettingsArgs']]):
         pulumi.set(self, "governance", value)
 
     @_builtins.property
     @pulumi.getter
-    def intelligence(self) -> Optional[pulumi.Input['TenantIntelligenceSettingsArgs']]:
+    def intelligence(self) -> pulumi.Input[Optional['TenantIntelligenceSettingsArgs']]:
         """
         Intelligence settings.
         """
         return pulumi.get(self, "intelligence")
 
     @intelligence.setter
-    def intelligence(self, value: Optional[pulumi.Input['TenantIntelligenceSettingsArgs']]):
+    def intelligence(self, value: pulumi.Input[Optional['TenantIntelligenceSettingsArgs']]):
         pulumi.set(self, "intelligence", value)
 
     @_builtins.property
     @pulumi.getter
-    def licensing(self) -> Optional[pulumi.Input['TenantLicensingSettingsArgs']]:
+    def licensing(self) -> pulumi.Input[Optional['TenantLicensingSettingsArgs']]:
         """
         Licensing settings.
         """
         return pulumi.get(self, "licensing")
 
     @licensing.setter
-    def licensing(self, value: Optional[pulumi.Input['TenantLicensingSettingsArgs']]):
+    def licensing(self, value: pulumi.Input[Optional['TenantLicensingSettingsArgs']]):
         pulumi.set(self, "licensing", value)
 
     @_builtins.property
     @pulumi.getter(name="modelExperimentation")
-    def model_experimentation(self) -> Optional[pulumi.Input['TenantModelExperimentationSettingsArgs']]:
+    def model_experimentation(self) -> pulumi.Input[Optional['TenantModelExperimentationSettingsArgs']]:
         """
         Model experimentation settings.
         """
         return pulumi.get(self, "model_experimentation")
 
     @model_experimentation.setter
-    def model_experimentation(self, value: Optional[pulumi.Input['TenantModelExperimentationSettingsArgs']]):
+    def model_experimentation(self, value: pulumi.Input[Optional['TenantModelExperimentationSettingsArgs']]):
         pulumi.set(self, "model_experimentation", value)
 
     @_builtins.property
     @pulumi.getter(name="powerApps")
-    def power_apps(self) -> Optional[pulumi.Input['TenantPowerAppsSettingsArgs']]:
+    def power_apps(self) -> pulumi.Input[Optional['TenantPowerAppsSettingsArgs']]:
         """
         Power Apps settings.
         """
         return pulumi.get(self, "power_apps")
 
     @power_apps.setter
-    def power_apps(self, value: Optional[pulumi.Input['TenantPowerAppsSettingsArgs']]):
+    def power_apps(self, value: pulumi.Input[Optional['TenantPowerAppsSettingsArgs']]):
         pulumi.set(self, "power_apps", value)
 
     @_builtins.property
     @pulumi.getter(name="powerAutomate")
-    def power_automate(self) -> Optional[pulumi.Input['TenantPowerAutomateSettingsArgs']]:
+    def power_automate(self) -> pulumi.Input[Optional['TenantPowerAutomateSettingsArgs']]:
         """
         Power Automate settings.
         """
         return pulumi.get(self, "power_automate")
 
     @power_automate.setter
-    def power_automate(self, value: Optional[pulumi.Input['TenantPowerAutomateSettingsArgs']]):
+    def power_automate(self, value: pulumi.Input[Optional['TenantPowerAutomateSettingsArgs']]):
         pulumi.set(self, "power_automate", value)
 
     @_builtins.property
     @pulumi.getter(name="powerPages")
-    def power_pages(self) -> Optional[pulumi.Input['TenantPowerPagesSettingsArgs']]:
+    def power_pages(self) -> pulumi.Input[Optional['TenantPowerPagesSettingsArgs']]:
         """
         Power Pages settings.
         """
         return pulumi.get(self, "power_pages")
 
     @power_pages.setter
-    def power_pages(self, value: Optional[pulumi.Input['TenantPowerPagesSettingsArgs']]):
+    def power_pages(self, value: pulumi.Input[Optional['TenantPowerPagesSettingsArgs']]):
         pulumi.set(self, "power_pages", value)
 
     @_builtins.property
     @pulumi.getter
-    def search(self) -> Optional[pulumi.Input['TenantSearchSettingsArgs']]:
+    def search(self) -> pulumi.Input[Optional['TenantSearchSettingsArgs']]:
         """
         Search settings.
         """
         return pulumi.get(self, "search")
 
     @search.setter
-    def search(self, value: Optional[pulumi.Input['TenantSearchSettingsArgs']]):
+    def search(self, value: pulumi.Input[Optional['TenantSearchSettingsArgs']]):
         pulumi.set(self, "search", value)
 
     @_builtins.property
     @pulumi.getter(name="teamsIntegration")
-    def teams_integration(self) -> Optional[pulumi.Input['TenantTeamsIntegrationSettingsArgs']]:
+    def teams_integration(self) -> pulumi.Input[Optional['TenantTeamsIntegrationSettingsArgs']]:
         """
         Teams integration settings.
         """
         return pulumi.get(self, "teams_integration")
 
     @teams_integration.setter
-    def teams_integration(self, value: Optional[pulumi.Input['TenantTeamsIntegrationSettingsArgs']]):
+    def teams_integration(self, value: pulumi.Input[Optional['TenantTeamsIntegrationSettingsArgs']]):
         pulumi.set(self, "teams_integration", value)
 
     @_builtins.property
     @pulumi.getter(name="userManagementSettings")
-    def user_management_settings(self) -> Optional[pulumi.Input['TenantUserManagementSettingsArgs']]:
+    def user_management_settings(self) -> pulumi.Input[Optional['TenantUserManagementSettingsArgs']]:
         """
         User management settings.
         """
         return pulumi.get(self, "user_management_settings")
 
     @user_management_settings.setter
-    def user_management_settings(self, value: Optional[pulumi.Input['TenantUserManagementSettingsArgs']]):
+    def user_management_settings(self, value: pulumi.Input[Optional['TenantUserManagementSettingsArgs']]):
         pulumi.set(self, "user_management_settings", value)
 
 
@@ -1659,15 +1659,15 @@ class TenantSearchSettingsArgsDict(TypedDict):
     """
     Search settings.
     """
-    disable_bing_video_search: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_bing_video_search: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable Bing video search.
     """
-    disable_community_search: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_community_search: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable community search.
     """
-    disable_docs_search: NotRequired[pulumi.Input[_builtins.bool]]
+    disable_docs_search: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Disable docs search.
     """
@@ -1675,9 +1675,9 @@ class TenantSearchSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantSearchSettingsArgs:
     def __init__(__self__, *,
-                 disable_bing_video_search: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_community_search: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_docs_search: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_bing_video_search: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_community_search: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_docs_search: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         Search settings.
 
@@ -1694,38 +1694,38 @@ class TenantSearchSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableBingVideoSearch")
-    def disable_bing_video_search(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_bing_video_search(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable Bing video search.
         """
         return pulumi.get(self, "disable_bing_video_search")
 
     @disable_bing_video_search.setter
-    def disable_bing_video_search(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_bing_video_search(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_bing_video_search", value)
 
     @_builtins.property
     @pulumi.getter(name="disableCommunitySearch")
-    def disable_community_search(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_community_search(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable community search.
         """
         return pulumi.get(self, "disable_community_search")
 
     @disable_community_search.setter
-    def disable_community_search(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_community_search(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_community_search", value)
 
     @_builtins.property
     @pulumi.getter(name="disableDocsSearch")
-    def disable_docs_search(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_docs_search(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable docs search.
         """
         return pulumi.get(self, "disable_docs_search")
 
     @disable_docs_search.setter
-    def disable_docs_search(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_docs_search(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_docs_search", value)
 
 
@@ -1733,7 +1733,7 @@ class TenantTeamsIntegrationSettingsArgsDict(TypedDict):
     """
     Teams integration settings.
     """
-    share_with_colleagues_user_limit: NotRequired[pulumi.Input[_builtins.int]]
+    share_with_colleagues_user_limit: NotRequired[pulumi.Input[Optional[_builtins.int]]]
     """
     Share with colleagues user limit.
     """
@@ -1741,7 +1741,7 @@ class TenantTeamsIntegrationSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantTeamsIntegrationSettingsArgs:
     def __init__(__self__, *,
-                 share_with_colleagues_user_limit: Optional[pulumi.Input[_builtins.int]] = None):
+                 share_with_colleagues_user_limit: pulumi.Input[Optional[_builtins.int]] = None):
         """
         Teams integration settings.
 
@@ -1752,14 +1752,14 @@ class TenantTeamsIntegrationSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="shareWithColleaguesUserLimit")
-    def share_with_colleagues_user_limit(self) -> Optional[pulumi.Input[_builtins.int]]:
+    def share_with_colleagues_user_limit(self) -> pulumi.Input[Optional[_builtins.int]]:
         """
         Share with colleagues user limit.
         """
         return pulumi.get(self, "share_with_colleagues_user_limit")
 
     @share_with_colleagues_user_limit.setter
-    def share_with_colleagues_user_limit(self, value: Optional[pulumi.Input[_builtins.int]]):
+    def share_with_colleagues_user_limit(self, value: pulumi.Input[Optional[_builtins.int]]):
         pulumi.set(self, "share_with_colleagues_user_limit", value)
 
 
@@ -1767,7 +1767,7 @@ class TenantUserManagementSettingsArgsDict(TypedDict):
     """
     User management settings.
     """
-    enable_delete_disabled_user_in_all_environments: NotRequired[pulumi.Input[_builtins.bool]]
+    enable_delete_disabled_user_in_all_environments: NotRequired[pulumi.Input[Optional[_builtins.bool]]]
     """
     Enable delete disabled user in all environments.
     """
@@ -1775,7 +1775,7 @@ class TenantUserManagementSettingsArgsDict(TypedDict):
 @pulumi.input_type
 class TenantUserManagementSettingsArgs:
     def __init__(__self__, *,
-                 enable_delete_disabled_user_in_all_environments: Optional[pulumi.Input[_builtins.bool]] = None):
+                 enable_delete_disabled_user_in_all_environments: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         User management settings.
 
@@ -1786,14 +1786,14 @@ class TenantUserManagementSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="enableDeleteDisabledUserInAllEnvironments")
-    def enable_delete_disabled_user_in_all_environments(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def enable_delete_disabled_user_in_all_environments(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Enable delete disabled user in all environments.
         """
         return pulumi.get(self, "enable_delete_disabled_user_in_all_environments")
 
     @enable_delete_disabled_user_in_all_environments.setter
-    def enable_delete_disabled_user_in_all_environments(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def enable_delete_disabled_user_in_all_environments(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "enable_delete_disabled_user_in_all_environments", value)
 
 

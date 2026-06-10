@@ -65,8 +65,8 @@ def get_security_roles(business_unit_id: Optional[_builtins.str] = None,
 
     return AwaitableGetSecurityRolesResult(
         security_roles=pulumi.get(__ret__, 'security_roles'))
-def get_security_roles_output(business_unit_id: Optional[pulumi.Input[Optional[_builtins.str]]] = None,
-                              environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+def get_security_roles_output(business_unit_id: pulumi.Input[Optional[Optional[_builtins.str]]] = None,
+                              environment_id: pulumi.Input[Optional[_builtins.str]] = None,
                               opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetSecurityRolesResult]:
     """
     Fetches Dataverse security roles from a Power Platform environment.

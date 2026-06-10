@@ -21,16 +21,16 @@ __all__ = ['TenantSettingsArgs', 'TenantSettings']
 @pulumi.input_type
 class TenantSettingsArgs:
     def __init__(__self__, *,
-                 disable_capacity_allocation_by_environment_admins: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_nps_comments_reachout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_newsletter_sendout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_portals_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_support_tickets_visible_by_all_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_survey_feedback: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_trial_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 power_platform: Optional[pulumi.Input['TenantPowerPlatformSettingsArgs']] = None,
-                 walk_me_opt_out: Optional[pulumi.Input[_builtins.bool]] = None):
+                 disable_capacity_allocation_by_environment_admins: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_nps_comments_reachout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_newsletter_sendout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_portals_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_support_tickets_visible_by_all_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_survey_feedback: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_trial_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 power_platform: pulumi.Input[Optional['TenantPowerPlatformSettingsArgs']] = None,
+                 walk_me_opt_out: pulumi.Input[Optional[_builtins.bool]] = None):
         """
         The set of arguments for constructing a TenantSettings resource.
 
@@ -68,122 +68,122 @@ class TenantSettingsArgs:
 
     @_builtins.property
     @pulumi.getter(name="disableCapacityAllocationByEnvironmentAdmins")
-    def disable_capacity_allocation_by_environment_admins(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_capacity_allocation_by_environment_admins(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable capacity allocation by environment admins.
         """
         return pulumi.get(self, "disable_capacity_allocation_by_environment_admins")
 
     @disable_capacity_allocation_by_environment_admins.setter
-    def disable_capacity_allocation_by_environment_admins(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_capacity_allocation_by_environment_admins(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_capacity_allocation_by_environment_admins", value)
 
     @_builtins.property
     @pulumi.getter(name="disableEnvironmentCreationByNonAdminUsers")
-    def disable_environment_creation_by_non_admin_users(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_environment_creation_by_non_admin_users(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable environment creation by non-admin users.
         """
         return pulumi.get(self, "disable_environment_creation_by_non_admin_users")
 
     @disable_environment_creation_by_non_admin_users.setter
-    def disable_environment_creation_by_non_admin_users(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_environment_creation_by_non_admin_users(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_environment_creation_by_non_admin_users", value)
 
     @_builtins.property
     @pulumi.getter(name="disableNPSCommentsReachout")
-    def disable_nps_comments_reachout(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_nps_comments_reachout(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable NPS comments reachout.
         """
         return pulumi.get(self, "disable_nps_comments_reachout")
 
     @disable_nps_comments_reachout.setter
-    def disable_nps_comments_reachout(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_nps_comments_reachout(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_nps_comments_reachout", value)
 
     @_builtins.property
     @pulumi.getter(name="disableNewsletterSendout")
-    def disable_newsletter_sendout(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_newsletter_sendout(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable newsletter sendout.
         """
         return pulumi.get(self, "disable_newsletter_sendout")
 
     @disable_newsletter_sendout.setter
-    def disable_newsletter_sendout(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_newsletter_sendout(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_newsletter_sendout", value)
 
     @_builtins.property
     @pulumi.getter(name="disablePortalsCreationByNonAdminUsers")
-    def disable_portals_creation_by_non_admin_users(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_portals_creation_by_non_admin_users(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable Power Pages creation by non-admin users.
         """
         return pulumi.get(self, "disable_portals_creation_by_non_admin_users")
 
     @disable_portals_creation_by_non_admin_users.setter
-    def disable_portals_creation_by_non_admin_users(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_portals_creation_by_non_admin_users(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_portals_creation_by_non_admin_users", value)
 
     @_builtins.property
     @pulumi.getter(name="disableSupportTicketsVisibleByAllUsers")
-    def disable_support_tickets_visible_by_all_users(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_support_tickets_visible_by_all_users(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable support tickets visibility by all users.
         """
         return pulumi.get(self, "disable_support_tickets_visible_by_all_users")
 
     @disable_support_tickets_visible_by_all_users.setter
-    def disable_support_tickets_visible_by_all_users(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_support_tickets_visible_by_all_users(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_support_tickets_visible_by_all_users", value)
 
     @_builtins.property
     @pulumi.getter(name="disableSurveyFeedback")
-    def disable_survey_feedback(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_survey_feedback(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable survey feedback.
         """
         return pulumi.get(self, "disable_survey_feedback")
 
     @disable_survey_feedback.setter
-    def disable_survey_feedback(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_survey_feedback(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_survey_feedback", value)
 
     @_builtins.property
     @pulumi.getter(name="disableTrialEnvironmentCreationByNonAdminUsers")
-    def disable_trial_environment_creation_by_non_admin_users(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def disable_trial_environment_creation_by_non_admin_users(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Disable trial environment creation by non-admin users.
         """
         return pulumi.get(self, "disable_trial_environment_creation_by_non_admin_users")
 
     @disable_trial_environment_creation_by_non_admin_users.setter
-    def disable_trial_environment_creation_by_non_admin_users(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def disable_trial_environment_creation_by_non_admin_users(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "disable_trial_environment_creation_by_non_admin_users", value)
 
     @_builtins.property
     @pulumi.getter(name="powerPlatform")
-    def power_platform(self) -> Optional[pulumi.Input['TenantPowerPlatformSettingsArgs']]:
+    def power_platform(self) -> pulumi.Input[Optional['TenantPowerPlatformSettingsArgs']]:
         """
         Nested workload-specific tenant settings.
         """
         return pulumi.get(self, "power_platform")
 
     @power_platform.setter
-    def power_platform(self, value: Optional[pulumi.Input['TenantPowerPlatformSettingsArgs']]):
+    def power_platform(self, value: pulumi.Input[Optional['TenantPowerPlatformSettingsArgs']]):
         pulumi.set(self, "power_platform", value)
 
     @_builtins.property
     @pulumi.getter(name="walkMeOptOut")
-    def walk_me_opt_out(self) -> Optional[pulumi.Input[_builtins.bool]]:
+    def walk_me_opt_out(self) -> pulumi.Input[Optional[_builtins.bool]]:
         """
         Walk Me opt-out setting.
         """
         return pulumi.get(self, "walk_me_opt_out")
 
     @walk_me_opt_out.setter
-    def walk_me_opt_out(self, value: Optional[pulumi.Input[_builtins.bool]]):
+    def walk_me_opt_out(self, value: pulumi.Input[Optional[_builtins.bool]]):
         pulumi.set(self, "walk_me_opt_out", value)
 
 
@@ -193,16 +193,16 @@ class TenantSettings(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 disable_capacity_allocation_by_environment_admins: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_nps_comments_reachout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_newsletter_sendout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_portals_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_support_tickets_visible_by_all_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_survey_feedback: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_trial_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 power_platform: Optional[pulumi.Input[Union['TenantPowerPlatformSettingsArgs', 'TenantPowerPlatformSettingsArgsDict']]] = None,
-                 walk_me_opt_out: Optional[pulumi.Input[_builtins.bool]] = None,
+                 disable_capacity_allocation_by_environment_admins: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_nps_comments_reachout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_newsletter_sendout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_portals_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_support_tickets_visible_by_all_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_survey_feedback: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_trial_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 power_platform: pulumi.Input[Optional[Union['TenantPowerPlatformSettingsArgs', 'TenantPowerPlatformSettingsArgsDict']]] = None,
+                 walk_me_opt_out: pulumi.Input[Optional[_builtins.bool]] = None,
                  __props__=None):
         """
         Manages tenant-level Power Platform settings used for governance and platform-wide controls.
@@ -246,16 +246,16 @@ class TenantSettings(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 disable_capacity_allocation_by_environment_admins: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_nps_comments_reachout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_newsletter_sendout: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_portals_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_support_tickets_visible_by_all_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_survey_feedback: Optional[pulumi.Input[_builtins.bool]] = None,
-                 disable_trial_environment_creation_by_non_admin_users: Optional[pulumi.Input[_builtins.bool]] = None,
-                 power_platform: Optional[pulumi.Input[Union['TenantPowerPlatformSettingsArgs', 'TenantPowerPlatformSettingsArgsDict']]] = None,
-                 walk_me_opt_out: Optional[pulumi.Input[_builtins.bool]] = None,
+                 disable_capacity_allocation_by_environment_admins: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_nps_comments_reachout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_newsletter_sendout: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_portals_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_support_tickets_visible_by_all_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_survey_feedback: pulumi.Input[Optional[_builtins.bool]] = None,
+                 disable_trial_environment_creation_by_non_admin_users: pulumi.Input[Optional[_builtins.bool]] = None,
+                 power_platform: pulumi.Input[Optional[Union['TenantPowerPlatformSettingsArgs', 'TenantPowerPlatformSettingsArgsDict']]] = None,
+                 walk_me_opt_out: pulumi.Input[Optional[_builtins.bool]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

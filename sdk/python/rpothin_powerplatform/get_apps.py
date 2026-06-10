@@ -62,7 +62,7 @@ def get_apps(environment_id: Optional[_builtins.str] = None,
 
     return AwaitableGetAppsResult(
         apps=pulumi.get(__ret__, 'apps'))
-def get_apps_output(environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+def get_apps_output(environment_id: pulumi.Input[Optional[_builtins.str]] = None,
                     opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetAppsResult]:
     """
     Lists Power Apps in a Power Platform environment.

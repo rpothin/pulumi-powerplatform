@@ -62,7 +62,7 @@ def get_connectors(environment_id: Optional[_builtins.str] = None,
 
     return AwaitableGetConnectorsResult(
         connectors=pulumi.get(__ret__, 'connectors'))
-def get_connectors_output(environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+def get_connectors_output(environment_id: pulumi.Input[Optional[_builtins.str]] = None,
                           opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetConnectorsResult]:
     """
     Lists connectors available in a Power Platform environment.

@@ -65,8 +65,8 @@ def get_environments(filter: Optional[_builtins.str] = None,
 
     return AwaitableGetEnvironmentsResult(
         environments=pulumi.get(__ret__, 'environments'))
-def get_environments_output(filter: Optional[pulumi.Input[Optional[_builtins.str]]] = None,
-                            top: Optional[pulumi.Input[Optional[_builtins.int]]] = None,
+def get_environments_output(filter: pulumi.Input[Optional[Optional[_builtins.str]]] = None,
+                            top: pulumi.Input[Optional[Optional[_builtins.int]]] = None,
                             opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetEnvironmentsResult]:
     """
     Retrieves a list of Power Platform environments available for the authenticated user.

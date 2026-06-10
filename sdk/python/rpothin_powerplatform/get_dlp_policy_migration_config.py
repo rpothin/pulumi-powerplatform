@@ -88,7 +88,7 @@ def get_dlp_policy_migration_config(source_policy_id: Optional[_builtins.str] = 
         display_name=pulumi.get(__ret__, 'display_name'),
         name=pulumi.get(__ret__, 'name'),
         rule_sets=pulumi.get(__ret__, 'rule_sets'))
-def get_dlp_policy_migration_config_output(source_policy_id: Optional[pulumi.Input[_builtins.str]] = None,
+def get_dlp_policy_migration_config_output(source_policy_id: pulumi.Input[Optional[_builtins.str]] = None,
                                            opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetDlpPolicyMigrationConfigResult]:
     """
     Reads an existing DLP policy by ID and returns its configuration ready for use with ResDlpPolicy or powerplatform:index:DlpPolicy. This function is the Pulumi equivalent of the utl-dlppolicy-replicator Terraform module. It is advisory-only: no enforcement or reclassification is applied.

@@ -97,10 +97,10 @@ def get_flows(environment_id: Optional[_builtins.str] = None,
         flows=pulumi.get(__ret__, 'flows'),
         total_rows_count=pulumi.get(__ret__, 'total_rows_count'),
         total_rows_count_limit_exceeded=pulumi.get(__ret__, 'total_rows_count_limit_exceeded'))
-def get_flows_output(environment_id: Optional[pulumi.Input[_builtins.str]] = None,
-                     filter: Optional[pulumi.Input[Optional[_builtins.str]]] = None,
-                     select: Optional[pulumi.Input[Optional[Sequence[_builtins.str]]]] = None,
-                     top: Optional[pulumi.Input[Optional[_builtins.int]]] = None,
+def get_flows_output(environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                     filter: pulumi.Input[Optional[Optional[_builtins.str]]] = None,
+                     select: pulumi.Input[Optional[Optional[Sequence[_builtins.str]]]] = None,
+                     top: pulumi.Input[Optional[Optional[_builtins.int]]] = None,
                      opts: Optional[Union[pulumi.InvokeOptions, pulumi.InvokeOutputOptions]] = None) -> pulumi.Output[GetFlowsResult]:
     """
     Lists Cloud Flows in a Power Platform environment by querying the Dataverse workflow table (category=5). This approach works with service principal credentials and does not require a per-user Power Automate license. Returns the first page of results; use the 'top' parameter to control page size. Note: the service principal must be an Application User with read access to the workflow entity in Dataverse, and will see all flows visible to that principal (not a user-scoped view).
