@@ -20,8 +20,8 @@ __all__ = ['EnvironmentGroupArgs', 'EnvironmentGroup']
 class EnvironmentGroupArgs:
     def __init__(__self__, *,
                  display_name: pulumi.Input[_builtins.str],
-                 description: pulumi.Input[Optional[_builtins.str]] = None,
-                 parent_group_id: pulumi.Input[Optional[_builtins.str]] = None):
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 parent_group_id: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a EnvironmentGroup resource.
 
@@ -49,26 +49,26 @@ class EnvironmentGroupArgs:
 
     @_builtins.property
     @pulumi.getter
-    def description(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def description(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         A description of the environment group.
         """
         return pulumi.get(self, "description")
 
     @description.setter
-    def description(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def description(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "description", value)
 
     @_builtins.property
     @pulumi.getter(name="parentGroupId")
-    def parent_group_id(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def parent_group_id(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         The ID of the parent environment group, if this is a nested group.
         """
         return pulumi.get(self, "parent_group_id")
 
     @parent_group_id.setter
-    def parent_group_id(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def parent_group_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "parent_group_id", value)
 
 
@@ -78,9 +78,9 @@ class EnvironmentGroup(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 description: pulumi.Input[Optional[_builtins.str]] = None,
-                 display_name: pulumi.Input[Optional[_builtins.str]] = None,
-                 parent_group_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 display_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 parent_group_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages a Power Platform environment group. Environment groups allow you to organize environments and apply policies at a group level.
@@ -117,9 +117,9 @@ class EnvironmentGroup(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 description: pulumi.Input[Optional[_builtins.str]] = None,
-                 display_name: pulumi.Input[Optional[_builtins.str]] = None,
-                 parent_group_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 display_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 parent_group_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

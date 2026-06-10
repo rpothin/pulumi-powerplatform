@@ -23,8 +23,8 @@ class BillingPolicyArgs:
     def __init__(__self__, *,
                  location: pulumi.Input[_builtins.str],
                  name: pulumi.Input[_builtins.str],
-                 billing_instrument: pulumi.Input[Optional['BillingInstrumentArgs']] = None,
-                 status: pulumi.Input[Optional[_builtins.str]] = None):
+                 billing_instrument: Optional[pulumi.Input['BillingInstrumentArgs']] = None,
+                 status: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a BillingPolicy resource.
 
@@ -66,26 +66,26 @@ class BillingPolicyArgs:
 
     @_builtins.property
     @pulumi.getter(name="billingInstrument")
-    def billing_instrument(self) -> pulumi.Input[Optional['BillingInstrumentArgs']]:
+    def billing_instrument(self) -> Optional[pulumi.Input['BillingInstrumentArgs']]:
         """
         The billing instrument (Azure subscription) details.
         """
         return pulumi.get(self, "billing_instrument")
 
     @billing_instrument.setter
-    def billing_instrument(self, value: pulumi.Input[Optional['BillingInstrumentArgs']]):
+    def billing_instrument(self, value: Optional[pulumi.Input['BillingInstrumentArgs']]):
         pulumi.set(self, "billing_instrument", value)
 
     @_builtins.property
     @pulumi.getter
-    def status(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def status(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         The status of the billing policy: Enabled or Disabled.
         """
         return pulumi.get(self, "status")
 
     @status.setter
-    def status(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def status(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "status", value)
 
 
@@ -95,10 +95,10 @@ class BillingPolicy(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 billing_instrument: pulumi.Input[Optional[Union['BillingInstrumentArgs', 'BillingInstrumentArgsDict']]] = None,
-                 location: pulumi.Input[Optional[_builtins.str]] = None,
-                 name: pulumi.Input[Optional[_builtins.str]] = None,
-                 status: pulumi.Input[Optional[_builtins.str]] = None,
+                 billing_instrument: Optional[pulumi.Input[Union['BillingInstrumentArgs', 'BillingInstrumentArgsDict']]] = None,
+                 location: Optional[pulumi.Input[_builtins.str]] = None,
+                 name: Optional[pulumi.Input[_builtins.str]] = None,
+                 status: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages a Power Platform billing policy. Billing policies control pay-as-you-go billing for Power Platform environments.
@@ -136,10 +136,10 @@ class BillingPolicy(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 billing_instrument: pulumi.Input[Optional[Union['BillingInstrumentArgs', 'BillingInstrumentArgsDict']]] = None,
-                 location: pulumi.Input[Optional[_builtins.str]] = None,
-                 name: pulumi.Input[Optional[_builtins.str]] = None,
-                 status: pulumi.Input[Optional[_builtins.str]] = None,
+                 billing_instrument: Optional[pulumi.Input[Union['BillingInstrumentArgs', 'BillingInstrumentArgsDict']]] = None,
+                 location: Optional[pulumi.Input[_builtins.str]] = None,
+                 name: Optional[pulumi.Input[_builtins.str]] = None,
+                 status: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

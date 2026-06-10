@@ -46,7 +46,7 @@ class AdminManagementApplication(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 application_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 application_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Registers a service principal as a Power Platform admin management application. This is a prerequisite for managing environment application administrators. The resource is fully immutable — any change to applicationId triggers a replacement.
@@ -81,7 +81,7 @@ class AdminManagementApplication(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 application_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 application_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

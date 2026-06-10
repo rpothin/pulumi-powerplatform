@@ -24,18 +24,18 @@ class EnvironmentArgs:
                  display_name: pulumi.Input[_builtins.str],
                  environment_type: pulumi.Input[_builtins.str],
                  location: pulumi.Input[_builtins.str],
-                 allow_bing_search: pulumi.Input[Optional[_builtins.bool]] = None,
-                 allow_moving_data_across_regions: pulumi.Input[Optional[_builtins.bool]] = None,
-                 azure_region: pulumi.Input[Optional[_builtins.str]] = None,
-                 billing_policy_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 cadence: pulumi.Input[Optional[_builtins.str]] = None,
-                 dataverse: pulumi.Input[Optional['DataverseArgs']] = None,
-                 description: pulumi.Input[Optional[_builtins.str]] = None,
-                 enterprise_policies: pulumi.Input[Optional[Sequence[pulumi.Input['EnterprisePolicyArgs']]]] = None,
-                 environment_group_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 linked_app_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 linked_app_type: pulumi.Input[Optional[_builtins.str]] = None,
-                 owner_id: pulumi.Input[Optional[_builtins.str]] = None):
+                 allow_bing_search: Optional[pulumi.Input[_builtins.bool]] = None,
+                 allow_moving_data_across_regions: Optional[pulumi.Input[_builtins.bool]] = None,
+                 azure_region: Optional[pulumi.Input[_builtins.str]] = None,
+                 billing_policy_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 cadence: Optional[pulumi.Input[_builtins.str]] = None,
+                 dataverse: Optional[pulumi.Input['DataverseArgs']] = None,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 enterprise_policies: Optional[pulumi.Input[Sequence[pulumi.Input['EnterprisePolicyArgs']]]] = None,
+                 environment_group_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 linked_app_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 linked_app_type: Optional[pulumi.Input[_builtins.str]] = None,
+                 owner_id: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a Environment resource.
 
@@ -121,146 +121,146 @@ class EnvironmentArgs:
 
     @_builtins.property
     @pulumi.getter(name="allowBingSearch")
-    def allow_bing_search(self) -> pulumi.Input[Optional[_builtins.bool]]:
+    def allow_bing_search(self) -> Optional[pulumi.Input[_builtins.bool]]:
         """
         Allow Bing Search integration (AI generative features).
         """
         return pulumi.get(self, "allow_bing_search")
 
     @allow_bing_search.setter
-    def allow_bing_search(self, value: pulumi.Input[Optional[_builtins.bool]]):
+    def allow_bing_search(self, value: Optional[pulumi.Input[_builtins.bool]]):
         pulumi.set(self, "allow_bing_search", value)
 
     @_builtins.property
     @pulumi.getter(name="allowMovingDataAcrossRegions")
-    def allow_moving_data_across_regions(self) -> pulumi.Input[Optional[_builtins.bool]]:
+    def allow_moving_data_across_regions(self) -> Optional[pulumi.Input[_builtins.bool]]:
         """
         Allow data to move across geographic boundaries for Copilot features.
         """
         return pulumi.get(self, "allow_moving_data_across_regions")
 
     @allow_moving_data_across_regions.setter
-    def allow_moving_data_across_regions(self, value: pulumi.Input[Optional[_builtins.bool]]):
+    def allow_moving_data_across_regions(self, value: Optional[pulumi.Input[_builtins.bool]]):
         pulumi.set(self, "allow_moving_data_across_regions", value)
 
     @_builtins.property
     @pulumi.getter(name="azureRegion")
-    def azure_region(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def azure_region(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         Specific Azure region within the location geo (e.g. westus2). Immutable after creation.
         """
         return pulumi.get(self, "azure_region")
 
     @azure_region.setter
-    def azure_region(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def azure_region(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "azure_region", value)
 
     @_builtins.property
     @pulumi.getter(name="billingPolicyId")
-    def billing_policy_id(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def billing_policy_id(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         ID of the billing policy to link to this environment.
         """
         return pulumi.get(self, "billing_policy_id")
 
     @billing_policy_id.setter
-    def billing_policy_id(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def billing_policy_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "billing_policy_id", value)
 
     @_builtins.property
     @pulumi.getter
-    def cadence(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def cadence(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         Release wave cadence: Frequent or Moderate. Immutable after creation.
         """
         return pulumi.get(self, "cadence")
 
     @cadence.setter
-    def cadence(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def cadence(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "cadence", value)
 
     @_builtins.property
     @pulumi.getter
-    def dataverse(self) -> pulumi.Input[Optional['DataverseArgs']]:
+    def dataverse(self) -> Optional[pulumi.Input['DataverseArgs']]:
         """
         Dataverse database configuration. Presence triggers Dataverse provisioning.
         """
         return pulumi.get(self, "dataverse")
 
     @dataverse.setter
-    def dataverse(self, value: pulumi.Input[Optional['DataverseArgs']]):
+    def dataverse(self, value: Optional[pulumi.Input['DataverseArgs']]):
         pulumi.set(self, "dataverse", value)
 
     @_builtins.property
     @pulumi.getter
-    def description(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def description(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         A description of the environment.
         """
         return pulumi.get(self, "description")
 
     @description.setter
-    def description(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def description(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "description", value)
 
     @_builtins.property
     @pulumi.getter(name="enterprisePolicies")
-    def enterprise_policies(self) -> pulumi.Input[Optional[Sequence[pulumi.Input['EnterprisePolicyArgs']]]]:
+    def enterprise_policies(self) -> Optional[pulumi.Input[Sequence[pulumi.Input['EnterprisePolicyArgs']]]]:
         """
         Set of enterprise policies associated with the environment.
         """
         return pulumi.get(self, "enterprise_policies")
 
     @enterprise_policies.setter
-    def enterprise_policies(self, value: pulumi.Input[Optional[Sequence[pulumi.Input['EnterprisePolicyArgs']]]]):
+    def enterprise_policies(self, value: Optional[pulumi.Input[Sequence[pulumi.Input['EnterprisePolicyArgs']]]]):
         pulumi.set(self, "enterprise_policies", value)
 
     @_builtins.property
     @pulumi.getter(name="environmentGroupId")
-    def environment_group_id(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def environment_group_id(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         ID of the environment group this environment belongs to.
         """
         return pulumi.get(self, "environment_group_id")
 
     @environment_group_id.setter
-    def environment_group_id(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def environment_group_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "environment_group_id", value)
 
     @_builtins.property
     @pulumi.getter(name="linkedAppId")
-    def linked_app_id(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def linked_app_id(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         GUID of the linked app.
         """
         return pulumi.get(self, "linked_app_id")
 
     @linked_app_id.setter
-    def linked_app_id(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def linked_app_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "linked_app_id", value)
 
     @_builtins.property
     @pulumi.getter(name="linkedAppType")
-    def linked_app_type(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def linked_app_type(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         Type of linked app: Canvas or ModelDriven.
         """
         return pulumi.get(self, "linked_app_type")
 
     @linked_app_type.setter
-    def linked_app_type(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def linked_app_type(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "linked_app_type", value)
 
     @_builtins.property
     @pulumi.getter(name="ownerId")
-    def owner_id(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def owner_id(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         AAD user or group GUID who owns the environment. Only valid for Developer environments.
         """
         return pulumi.get(self, "owner_id")
 
     @owner_id.setter
-    def owner_id(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def owner_id(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "owner_id", value)
 
 
@@ -270,21 +270,21 @@ class Environment(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 allow_bing_search: pulumi.Input[Optional[_builtins.bool]] = None,
-                 allow_moving_data_across_regions: pulumi.Input[Optional[_builtins.bool]] = None,
-                 azure_region: pulumi.Input[Optional[_builtins.str]] = None,
-                 billing_policy_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 cadence: pulumi.Input[Optional[_builtins.str]] = None,
-                 dataverse: pulumi.Input[Optional[Union['DataverseArgs', 'DataverseArgsDict']]] = None,
-                 description: pulumi.Input[Optional[_builtins.str]] = None,
-                 display_name: pulumi.Input[Optional[_builtins.str]] = None,
-                 enterprise_policies: pulumi.Input[Optional[Sequence[pulumi.Input[Union['EnterprisePolicyArgs', 'EnterprisePolicyArgsDict']]]]] = None,
-                 environment_group_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 environment_type: pulumi.Input[Optional[_builtins.str]] = None,
-                 linked_app_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 linked_app_type: pulumi.Input[Optional[_builtins.str]] = None,
-                 location: pulumi.Input[Optional[_builtins.str]] = None,
-                 owner_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 allow_bing_search: Optional[pulumi.Input[_builtins.bool]] = None,
+                 allow_moving_data_across_regions: Optional[pulumi.Input[_builtins.bool]] = None,
+                 azure_region: Optional[pulumi.Input[_builtins.str]] = None,
+                 billing_policy_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 cadence: Optional[pulumi.Input[_builtins.str]] = None,
+                 dataverse: Optional[pulumi.Input[Union['DataverseArgs', 'DataverseArgsDict']]] = None,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 display_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 enterprise_policies: Optional[pulumi.Input[Sequence[pulumi.Input[Union['EnterprisePolicyArgs', 'EnterprisePolicyArgsDict']]]]] = None,
+                 environment_group_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 environment_type: Optional[pulumi.Input[_builtins.str]] = None,
+                 linked_app_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 linked_app_type: Optional[pulumi.Input[_builtins.str]] = None,
+                 location: Optional[pulumi.Input[_builtins.str]] = None,
+                 owner_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages a Power Platform environment. Environments are containers for apps, flows, data, and other resources. Uses the BAP admin REST API for lifecycle management.
@@ -333,21 +333,21 @@ class Environment(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 allow_bing_search: pulumi.Input[Optional[_builtins.bool]] = None,
-                 allow_moving_data_across_regions: pulumi.Input[Optional[_builtins.bool]] = None,
-                 azure_region: pulumi.Input[Optional[_builtins.str]] = None,
-                 billing_policy_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 cadence: pulumi.Input[Optional[_builtins.str]] = None,
-                 dataverse: pulumi.Input[Optional[Union['DataverseArgs', 'DataverseArgsDict']]] = None,
-                 description: pulumi.Input[Optional[_builtins.str]] = None,
-                 display_name: pulumi.Input[Optional[_builtins.str]] = None,
-                 enterprise_policies: pulumi.Input[Optional[Sequence[pulumi.Input[Union['EnterprisePolicyArgs', 'EnterprisePolicyArgsDict']]]]] = None,
-                 environment_group_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 environment_type: pulumi.Input[Optional[_builtins.str]] = None,
-                 linked_app_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 linked_app_type: pulumi.Input[Optional[_builtins.str]] = None,
-                 location: pulumi.Input[Optional[_builtins.str]] = None,
-                 owner_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 allow_bing_search: Optional[pulumi.Input[_builtins.bool]] = None,
+                 allow_moving_data_across_regions: Optional[pulumi.Input[_builtins.bool]] = None,
+                 azure_region: Optional[pulumi.Input[_builtins.str]] = None,
+                 billing_policy_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 cadence: Optional[pulumi.Input[_builtins.str]] = None,
+                 dataverse: Optional[pulumi.Input[Union['DataverseArgs', 'DataverseArgsDict']]] = None,
+                 description: Optional[pulumi.Input[_builtins.str]] = None,
+                 display_name: Optional[pulumi.Input[_builtins.str]] = None,
+                 enterprise_policies: Optional[pulumi.Input[Sequence[pulumi.Input[Union['EnterprisePolicyArgs', 'EnterprisePolicyArgsDict']]]]] = None,
+                 environment_group_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 environment_type: Optional[pulumi.Input[_builtins.str]] = None,
+                 linked_app_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 linked_app_type: Optional[pulumi.Input[_builtins.str]] = None,
+                 location: Optional[pulumi.Input[_builtins.str]] = None,
+                 owner_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

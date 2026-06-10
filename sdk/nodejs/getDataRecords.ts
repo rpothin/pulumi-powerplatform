@@ -93,7 +93,7 @@ export interface GetDataRecordsOutputArgs {
     /**
      * OData $apply aggregation expression (e.g. "aggregate(revenue with sum as revenue_sum)").
      */
-    apply?: pulumi.Input<string | undefined>;
+    apply?: pulumi.Input<string>;
     /**
      * The plural OData collection name for the Dataverse table to query (e.g. accounts, deploymentpipelines).
      */
@@ -105,21 +105,21 @@ export interface GetDataRecordsOutputArgs {
     /**
      * List of navigation properties to expand in the response.
      */
-    expand?: pulumi.Input<pulumi.Input<inputs.DataRecordsExpandParamArgs>[] | undefined>;
+    expand?: pulumi.Input<pulumi.Input<inputs.DataRecordsExpandParamArgs>[]>;
     /**
      * OData $filter expression (e.g. "name eq 'My Pipeline'").
      */
-    filter?: pulumi.Input<string | undefined>;
+    filter?: pulumi.Input<string>;
     /**
      * OData $orderby expression (e.g. "createdon desc").
      */
-    orderby?: pulumi.Input<string | undefined>;
+    orderby?: pulumi.Input<string>;
     /**
      * List of column logical names to include in the response.
      */
-    select?: pulumi.Input<pulumi.Input<string>[] | undefined>;
+    select?: pulumi.Input<pulumi.Input<string>[]>;
     /**
      * Maximum number of records to return ($top). Use to limit large result sets.
      */
-    top?: pulumi.Input<number | undefined>;
+    top?: pulumi.Input<number>;
 }

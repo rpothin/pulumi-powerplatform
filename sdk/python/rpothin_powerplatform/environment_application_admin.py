@@ -61,8 +61,8 @@ class EnvironmentApplicationAdmin(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 application_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 application_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Adds a service principal as System Administrator in a Dataverse-enabled Power Platform environment. Creates a systemuser record via the Dataverse Web API. Both environmentId and applicationId are immutable — any change triggers resource replacement.
@@ -98,8 +98,8 @@ class EnvironmentApplicationAdmin(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 application_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 application_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

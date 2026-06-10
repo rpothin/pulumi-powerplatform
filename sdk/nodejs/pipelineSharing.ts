@@ -101,7 +101,7 @@ export interface PipelineSharingArgs {
     /**
      * Access mask. Default: ReadAccess.
      */
-    accessMask?: pulumi.Input<string | undefined>;
+    accessMask?: pulumi.Input<string>;
     /**
      * Host environment ID.
      */

@@ -104,5 +104,5 @@ export interface IsvContractArgs {
     /**
      * The status of the ISV contract: Enabled or Disabled.
      */
-    status?: pulumi.Input<string | undefined>;
+    status?: pulumi.Input<string>;
 }

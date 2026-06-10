@@ -22,7 +22,7 @@ __all__ = ['DlpPolicyArgs', 'DlpPolicy']
 class DlpPolicyArgs:
     def __init__(__self__, *,
                  name: pulumi.Input[_builtins.str],
-                 rule_sets: pulumi.Input[Optional[Sequence[pulumi.Input['RuleSetArgs']]]] = None):
+                 rule_sets: Optional[pulumi.Input[Sequence[pulumi.Input['RuleSetArgs']]]] = None):
         """
         The set of arguments for constructing a DlpPolicy resource.
 
@@ -47,14 +47,14 @@ class DlpPolicyArgs:
 
     @_builtins.property
     @pulumi.getter(name="ruleSets")
-    def rule_sets(self) -> pulumi.Input[Optional[Sequence[pulumi.Input['RuleSetArgs']]]]:
+    def rule_sets(self) -> Optional[pulumi.Input[Sequence[pulumi.Input['RuleSetArgs']]]]:
         """
         The rule sets that define the DLP policy rules.
         """
         return pulumi.get(self, "rule_sets")
 
     @rule_sets.setter
-    def rule_sets(self, value: pulumi.Input[Optional[Sequence[pulumi.Input['RuleSetArgs']]]]):
+    def rule_sets(self, value: Optional[pulumi.Input[Sequence[pulumi.Input['RuleSetArgs']]]]):
         pulumi.set(self, "rule_sets", value)
 
 
@@ -64,8 +64,8 @@ class DlpPolicy(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 name: pulumi.Input[Optional[_builtins.str]] = None,
-                 rule_sets: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RuleSetArgs', 'RuleSetArgsDict']]]]] = None,
+                 name: Optional[pulumi.Input[_builtins.str]] = None,
+                 rule_sets: Optional[pulumi.Input[Sequence[pulumi.Input[Union['RuleSetArgs', 'RuleSetArgsDict']]]]] = None,
                  __props__=None):
         """
         Manages a Power Platform Data Loss Prevention (DLP) policy. DLP policies define rules to control how connectors can share data. Note: Deletion removes all rule sets from the policy, as the SDK does not expose a direct policy delete endpoint.
@@ -101,8 +101,8 @@ class DlpPolicy(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 name: pulumi.Input[Optional[_builtins.str]] = None,
-                 rule_sets: pulumi.Input[Optional[Sequence[pulumi.Input[Union['RuleSetArgs', 'RuleSetArgsDict']]]]] = None,
+                 name: Optional[pulumi.Input[_builtins.str]] = None,
+                 rule_sets: Optional[pulumi.Input[Sequence[pulumi.Input[Union['RuleSetArgs', 'RuleSetArgsDict']]]]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

@@ -21,8 +21,8 @@ class DataRecordArgs:
     def __init__(__self__, *,
                  environment_id: pulumi.Input[_builtins.str],
                  table_logical_name: pulumi.Input[_builtins.str],
-                 columns: pulumi.Input[Optional[Mapping[str, Any]]] = None,
-                 disable_on_destroy: pulumi.Input[Optional[_builtins.bool]] = None):
+                 columns: Optional[pulumi.Input[Mapping[str, Any]]] = None,
+                 disable_on_destroy: Optional[pulumi.Input[_builtins.bool]] = None):
         """
         The set of arguments for constructing a DataRecord resource.
 
@@ -64,26 +64,26 @@ class DataRecordArgs:
 
     @_builtins.property
     @pulumi.getter
-    def columns(self) -> pulumi.Input[Optional[Mapping[str, Any]]]:
+    def columns(self) -> Optional[pulumi.Input[Mapping[str, Any]]]:
         """
         Map of column logical name to value. Scalars (string/number/bool), null, DataRecordLookup objects, or lists of DataRecordLookup objects for M2M relationships.
         """
         return pulumi.get(self, "columns")
 
     @columns.setter
-    def columns(self, value: pulumi.Input[Optional[Mapping[str, Any]]]):
+    def columns(self, value: Optional[pulumi.Input[Mapping[str, Any]]]):
         pulumi.set(self, "columns", value)
 
     @_builtins.property
     @pulumi.getter(name="disableOnDestroy")
-    def disable_on_destroy(self) -> pulumi.Input[Optional[_builtins.bool]]:
+    def disable_on_destroy(self) -> Optional[pulumi.Input[_builtins.bool]]:
         """
         When true, deactivate the record (statecode=1) before deleting it. Required for Dataverse tables that cannot be directly deleted while active (e.g. workflow definitions). Defaults to false.
         """
         return pulumi.get(self, "disable_on_destroy")
 
     @disable_on_destroy.setter
-    def disable_on_destroy(self, value: pulumi.Input[Optional[_builtins.bool]]):
+    def disable_on_destroy(self, value: Optional[pulumi.Input[_builtins.bool]]):
         pulumi.set(self, "disable_on_destroy", value)
 
 
@@ -93,10 +93,10 @@ class DataRecord(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 columns: pulumi.Input[Optional[Mapping[str, Any]]] = None,
-                 disable_on_destroy: pulumi.Input[Optional[_builtins.bool]] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 table_logical_name: pulumi.Input[Optional[_builtins.str]] = None,
+                 columns: Optional[pulumi.Input[Mapping[str, Any]]] = None,
+                 disable_on_destroy: Optional[pulumi.Input[_builtins.bool]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 table_logical_name: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Manages a generic Dataverse table record via the OData Web API. Supports scalar columns, single-valued lookups (via @odata.bind), and many-to-many relationships (via $ref). Both environmentId and tableLogicalName are immutable — any change triggers resource replacement. Column values may be scalars (string/number/bool), lookup objects (DataRecordLookup), or lists of lookup objects for M2M relationships.
@@ -134,10 +134,10 @@ class DataRecord(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 columns: pulumi.Input[Optional[Mapping[str, Any]]] = None,
-                 disable_on_destroy: pulumi.Input[Optional[_builtins.bool]] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 table_logical_name: pulumi.Input[Optional[_builtins.str]] = None,
+                 columns: Optional[pulumi.Input[Mapping[str, Any]]] = None,
+                 disable_on_destroy: Optional[pulumi.Input[_builtins.bool]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 table_logical_name: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

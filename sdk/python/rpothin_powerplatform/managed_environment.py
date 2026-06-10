@@ -46,7 +46,7 @@ class ManagedEnvironment(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Enables managed environment governance on a Power Platform environment. Managed environments provide enhanced admin controls. Deleting this resource disables the managed environment setting.
@@ -81,7 +81,7 @@ class ManagedEnvironment(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):

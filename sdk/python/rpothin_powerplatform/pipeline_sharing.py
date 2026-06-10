@@ -22,7 +22,7 @@ class PipelineSharingArgs:
                  environment_id: pulumi.Input[_builtins.str],
                  pipeline_id: pulumi.Input[_builtins.str],
                  team_id: pulumi.Input[_builtins.str],
-                 access_mask: pulumi.Input[Optional[_builtins.str]] = None):
+                 access_mask: Optional[pulumi.Input[_builtins.str]] = None):
         """
         The set of arguments for constructing a PipelineSharing resource.
 
@@ -75,14 +75,14 @@ class PipelineSharingArgs:
 
     @_builtins.property
     @pulumi.getter(name="accessMask")
-    def access_mask(self) -> pulumi.Input[Optional[_builtins.str]]:
+    def access_mask(self) -> Optional[pulumi.Input[_builtins.str]]:
         """
         Access mask. Default: ReadAccess.
         """
         return pulumi.get(self, "access_mask")
 
     @access_mask.setter
-    def access_mask(self, value: pulumi.Input[Optional[_builtins.str]]):
+    def access_mask(self, value: Optional[pulumi.Input[_builtins.str]]):
         pulumi.set(self, "access_mask", value)
 
 
@@ -92,10 +92,10 @@ class PipelineSharing(pulumi.CustomResource):
     def __init__(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 access_mask: pulumi.Input[Optional[_builtins.str]] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 pipeline_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 team_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 access_mask: Optional[pulumi.Input[_builtins.str]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 pipeline_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 team_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         """
         Grants read access to a Dataverse deployment pipeline for a team.
@@ -137,10 +137,10 @@ class PipelineSharing(pulumi.CustomResource):
     def _internal_init(__self__,
                  resource_name: str,
                  opts: Optional[pulumi.ResourceOptions] = None,
-                 access_mask: pulumi.Input[Optional[_builtins.str]] = None,
-                 environment_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 pipeline_id: pulumi.Input[Optional[_builtins.str]] = None,
-                 team_id: pulumi.Input[Optional[_builtins.str]] = None,
+                 access_mask: Optional[pulumi.Input[_builtins.str]] = None,
+                 environment_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 pipeline_id: Optional[pulumi.Input[_builtins.str]] = None,
+                 team_id: Optional[pulumi.Input[_builtins.str]] = None,
                  __props__=None):
         opts = pulumi.ResourceOptions.merge(_utilities.get_resource_opts_defaults(), opts)
         if not isinstance(opts, pulumi.ResourceOptions):
