@@ -375,8 +375,7 @@
                 },
                 "environments": {
                     "additionalProperties": {
-                        "$ref": "#/types/powerplatform:components:PipelineEnvironmentEntry",
-                        "plain": true
+                        "$ref": "#/types/powerplatform:components:PipelineEnvironmentEntry"
                     },
                     "plain": true,
                     "type": "object"
@@ -399,8 +398,7 @@
                 },
                 "pipelineStages": {
                     "items": {
-                        "$ref": "#/types/powerplatform:components:PipelineStageConfig",
-                        "plain": true
+                        "$ref": "#/types/powerplatform:components:PipelineStageConfig"
                     },
                     "plain": true,
                     "type": "array"

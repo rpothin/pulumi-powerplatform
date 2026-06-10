@@ -97,12 +97,12 @@ export interface ResDeploymentPipelineArgs {
     enableAiDeploymentNotes?: boolean;
     enableRedeployment?: boolean;
     enableTelemetry?: boolean;
-    environments: {[key: string]: inputs.components.PipelineEnvironmentEntryArgs};
+    environments: {[key: string]: pulumi.Input<inputs.components.PipelineEnvironmentEntryArgs>};
     hostEnvironmentId: string;
     lifecycleState?: string;
     pipelineDescription?: string;
     pipelineName: string;
-    pipelineStages: inputs.components.PipelineStageConfigArgs[];
+    pipelineStages: pulumi.Input<inputs.components.PipelineStageConfigArgs>[];
     rootBusinessUnitId?: string;
     securityGroupId?: string;
 }
