@@ -21,6 +21,8 @@ __all__ = [
     'DataRecordsExpandParamDict',
     'DataverseArgs',
     'DataverseArgsDict',
+    'EnvironmentDataverseArgs',
+    'EnvironmentDataverseArgsDict',
     'EnterprisePolicyArgs',
     'EnterprisePolicyArgsDict',
     'RuleSetArgs',
@@ -1797,3 +1799,8 @@ class TenantUserManagementSettingsArgs:
         pulumi.set(self, "enable_delete_disabled_user_in_all_environments", value)
 
 
+
+
+# Backward-compatibility aliases — EnvironmentDataverseArgs was renamed to DataverseArgs in v0.4.0
+EnvironmentDataverseArgs = DataverseArgs
+EnvironmentDataverseArgsDict = DataverseArgsDict
