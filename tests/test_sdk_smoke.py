@@ -204,6 +204,31 @@ class TestSdkInputsStructure:
     def test_has_dataverse_args(self):
         assert "DataverseArgs" in _ast_class_names(SDK_DIR / "_inputs.py")
 
+    def test_environment_dataverse_args_alias(self):
+        """EnvironmentDataverseArgs must be importable as a backward-compat alias."""
+        import rpothin_powerplatform._inputs as m
+        assert hasattr(m, "EnvironmentDataverseArgs"), (
+            "EnvironmentDataverseArgs backward-compat alias missing from _inputs.py"
+        )
+        assert hasattr(m, "EnvironmentDataverseArgsDict"), (
+            "EnvironmentDataverseArgsDict backward-compat alias missing from _inputs.py"
+        )
+        assert m.EnvironmentDataverseArgs is m.DataverseArgs
+        assert m.EnvironmentDataverseArgsDict is m.DataverseArgsDict
+
+    def test_environment_dataverse_args_exported(self):
+        """SDK __init__.py must re-export _inputs via 'from ._inputs import *',
+        which ensures EnvironmentDataverseArgs is accessible as pp.EnvironmentDataverseArgs
+        in a real user installation (where only sdk/python/ is present)."""
+        src = (SDK_DIR / "__init__.py").read_text(encoding="utf-8")
+        assert "from ._inputs import *" in src, (
+            "sdk/__init__.py must have 'from ._inputs import *' to export EnvironmentDataverseArgs"
+        )
+        import rpothin_powerplatform._inputs as m
+        assert "EnvironmentDataverseArgs" in m.__all__, (
+            "EnvironmentDataverseArgs must be listed in _inputs.__all__"
+        )
+
 
 class TestSdkOutputsStructure:
     """outputs.py must contain Dataverse (the generated name)."""

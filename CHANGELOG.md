@@ -4,6 +4,70 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+## [0.4.1] — Backward-compatibility patch for v0.4.0
+
+### Fixed
+
+#### `EnvironmentDataverseArgs` backward-compatibility alias restored
+
+`sdk/python/rpothin_powerplatform/_inputs.py` now re-exports
+`EnvironmentDataverseArgs` and `EnvironmentDataverseArgsDict` as aliases for
+`DataverseArgs` and `DataverseArgsDict` respectively.
+
+Code that was using the pre-v0.4.0 name continues to work without any changes:
+
+```python
+# Still works in v0.4.1+
+dataverse_block = pp.EnvironmentDataverseArgs(
+    currency_code="USD",
+    language_code=1033,
+    ...
+)
+```
+
+### Migration guide for `get_*` invoke functions (breaking change from v0.4.0)
+
+The five `get_*` invoke functions (`get_environments`, `get_connectors`,
+`get_apps`, `get_flows`, `get_data_records`) now return **typed result objects**
+instead of plain dicts. This is standard Pulumi SDK behavior; property access
+replaces subscript access:
+
+| Function | Old pattern (broken since v0.4.0) | New pattern |
+|---|---|---|
+| `get_environments()` | `result["environments"]` | `result.environments` |
+| `get_connectors()` | `result["connectors"]` | `result.connectors` |
+| `get_apps()` | `result["apps"]` | `result.apps` |
+| `get_flows()` | `result["flows"]` | `result.flows` |
+| `get_data_records()` | `result.value["records"]` | `result.records` |
+
+Example migration:
+
+```python
+# Before (v0.3.x / hand-maintained SDK)
+result = await get_environments()
+envs = result["environments"]
+
+# After (v0.4.0+ / generated SDK)
+result = await get_environments()
+envs = result.environments
+```
+
+For `get_data_records`, the `.value` wrapper no longer exists:
+
+```python
+# Before
+result = await get_data_records(environment_id=..., entity_collection=...)
+records = result.value["records"]
+
+# After
+result = await get_data_records(environment_id=..., entity_collection=...)
+records = result.records
+```
+
+---
+
+## [Unreleased — v0.4.0 changes]
+
 ### Added
 - **Component Resources** (AVM-aligned multi-language Pulumi component resources):
   - `ResEnvironment` (`powerplatform:components:ResEnvironment`): composes `Environment`, `ManagedEnvironment`, `EnvironmentSettings`
