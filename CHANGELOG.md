@@ -4,6 +4,32 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Added
+
+#### Node.js SDK: `./components` subpath export
+
+`sdk/nodejs/package.json` now declares an `exports` map so the component
+resources can be imported directly from a `components` subpath, in addition
+to the existing full-package import:
+
+```ts
+// New: deep import
+import { ResEnvironment } from "@rpothin/powerplatform/components";
+
+// Still works: full-package import
+import * as pp from "@rpothin/powerplatform";
+pp.components.ResEnvironment;
+```
+
+This is purely additive — the `main`/`types` root entry points are
+unchanged, so existing imports of `@rpothin/powerplatform` continue to work
+without modification.
+
+> [!NOTE]
+> `scripts/normalize-nodejs-sdk.py` now injects this `exports` field into the
+> generated `sdk/nodejs/package.json` alongside the existing `main`/`types`/
+> `files` fields, so it survives future SDK regeneration.
+
 ## [0.4.1] — Backward-compatibility patch for v0.4.0
 
 ### Fixed
