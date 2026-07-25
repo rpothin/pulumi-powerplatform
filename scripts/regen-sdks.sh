@@ -54,6 +54,7 @@ pulumi package gen-sdk . --language dotnet --out sdk
 pulumi package gen-sdk . --language java   --out sdk
 
 python3 scripts/patch-java-pom-metadata.py
+python3 scripts/patch-java-nexus-plugin.py
 bash scripts/normalize-dotnet-sdk.sh sdk/dotnet
 python3 scripts/normalize-nodejs-sdk.py sdk/nodejs
 python3 scripts/normalize-python-sdk.py sdk/python
