@@ -281,7 +281,22 @@ class PowerPlatformProvider(Provider):
     # ---- Internal helpers ----
 
     def _handler_for_type(self, resource_type: str):
-        """Return the appropriate resource handler for the given type token."""
+        """Return the appropriate resource handler for the given type token.
+
+        Child resources created inside a ``remote=True`` ComponentResource's
+        server-side ``construct()`` call (e.g. the AVM components under
+        ``rpothin_powerplatform.components``) are round-tripped back to this
+        same provider process for Check/Diff/Create/Read/Update/Delete. When
+        that happens the engine reports a composite, ``$``-joined qualified
+        type — ``ParentComponentToken$ChildToken`` (for example
+        ``powerplatform:components:ResEnvironment$powerplatform:index:Environment``)
+        — instead of the plain child token. This mirrors how Pulumi's own SDK
+        extracts a resource's type from its URN (see ``pulumi.urn._parse_urn``,
+        which does ``qualified_type.split("$")[-1]``). Normalize by taking the
+        last ``$``-delimited segment before doing the lookup so both plain and
+        composite tokens resolve to the correct handler.
+        """
+        resource_type = resource_type.rsplit("$", 1)[-1]
         handlers = {
             _ADMIN_MANAGEMENT_APPLICATION: self._admin_mgmt_app,
             _DATA_RECORD: self._data_record,

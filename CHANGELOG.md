@@ -4,6 +4,46 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+#### AVM components (`ResEnvironment`, `ResDlpPolicy`, `ResTenantSettings`, `ResDeploymentPipeline`): child-resource CRUD dispatch failed with `NotImplementedError`
+
+`PowerPlatformProvider._handler_for_type()` did an exact dict lookup against
+plain resource-type tokens (e.g. `powerplatform:index:Environment`). This
+works for top-level custom resources, but the four AVM components run their
+entire `construct()` server-side and internally instantiate plain child
+custom resources (e.g. `Environment`, `DlpPolicy`, `TenantSettings`,
+`DataRecord`, `PipelineSharing`). When the engine round-trips those children
+back into the same provider process for Check/Diff/Create/Read/Update/Delete,
+it reports a composite, `$`-joined qualified type —
+`ParentComponentToken$ChildResourceToken` (e.g.
+`powerplatform:components:ResEnvironment$powerplatform:index:Environment`) —
+instead of the plain child token, because `CreateRequest.type` (and its
+Check/Diff/Read/Update siblings) derive from the request URN via Pulumi's
+`_extract_type()` helper, which — unlike `pulumi.urn._parse_urn` — does not
+strip the qualified-type prefix. The dict lookup on that composite string
+always missed, so `create()`/`update()`/`delete()` raised
+`NotImplementedError(f"... not implemented for resource type: {request.type}")`
+immediately on every `pulumi preview`/`pulumi up`, breaking all four
+components in every language SDK.
+
+`_handler_for_type()` now normalizes the incoming type by taking the last
+`$`-delimited segment (`resource_type.rsplit("$", 1)[-1]`) before doing the
+lookup — mirroring the same convention Pulumi's own SDK uses in
+`pulumi.urn._parse_urn`. Since `check`, `diff`, `create`, `read`, `update`,
+and `delete` all route through `_handler_for_type()`, this single fix
+restores correct dispatch across the board for both plain and composite
+tokens.
+
+Discovered via live end-to-end component tests in the separate
+[`rpothin/pulumi-powerplatform-test`](https://github.com/rpothin/pulumi-powerplatform-test)
+harness repo
+([CI run 30140749814](https://github.com/rpothin/pulumi-powerplatform-test/actions/runs/30140749814)),
+which failed identically across the Python, TypeScript, Go, .NET, and Java
+SDK matrix jobs for `ResEnvironment` and `ResDlpPolicy` — a systemic,
+100%-reproducible bug affecting v0.4.0/v0.4.1 and current `main`, not a
+flaky or environment-specific failure.
+
 ### Added
 
 #### Node.js SDK: `./components` subpath export
