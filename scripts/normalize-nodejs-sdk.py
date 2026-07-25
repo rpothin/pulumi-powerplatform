@@ -47,6 +47,23 @@ for key, value in pkg.items():
         updated["main"] = "bin/index.js"
         updated["types"] = "bin/index.d.ts"
         updated["files"] = ["bin"]
+        # Explicit subpath exports so deep imports (e.g. the component
+        # resources under bin/components/) resolve under Node's
+        # package-exports resolution, in addition to the classic
+        # main/types entry points above for older tooling. "." and
+        # "./package.json" must be listed explicitly: once "exports" is
+        # present, Node blocks any subpath that isn't declared here.
+        updated["exports"] = {
+            ".": {
+                "types": "./bin/index.d.ts",
+                "default": "./bin/index.js",
+            },
+            "./components": {
+                "types": "./bin/components/index.d.ts",
+                "default": "./bin/components/index.js",
+            },
+            "./package.json": "./package.json",
+        }
 
 if "dependencies" in canonical_pkg:
     updated["dependencies"] = canonical_pkg["dependencies"]
