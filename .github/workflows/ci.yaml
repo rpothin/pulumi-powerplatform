@@ -100,6 +100,8 @@ jobs:
 
           # Patch Java POM metadata (pulumi-java-gen generates empty placeholder strings)
           python3 scripts/patch-java-pom-metadata.py --gradle-path "$GEN_DIR/java/build.gradle"
+          # Swap the Maven Central publish plugin (legacy OSSRH staging API -> Central Portal)
+          python3 scripts/patch-java-nexus-plugin.py --gradle-path "$GEN_DIR/java/build.gradle"
 
           STALE=""
           for lang in nodejs go dotnet java python; do
