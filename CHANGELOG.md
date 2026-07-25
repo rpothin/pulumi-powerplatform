@@ -6,6 +6,52 @@ All notable changes to this project are documented in this file.
 
 ### Fixed
 
+#### AVM components (`ResEnvironment`, `ResDlpPolicy`, `ResTenantSettings`, `ResDeploymentPipeline`): every `pulumi preview`/dry-run crashed with `Unsupported value type: ... Computed`
+
+Immediately after the fix above (released as v0.4.3) resolved the child-resource
+dispatch bug, live end-to-end component tests in the
+[`rpothin/pulumi-powerplatform-test`](https://github.com/rpothin/pulumi-powerplatform-test)
+harness repo surfaced a second, distinct crash
+([CI run 30142354558](https://github.com/rpothin/pulumi-powerplatform-test/actions/runs/30142354558)):
+every `pulumi preview` (and the dry-run pass inside every `pulumi up`) for
+`ResEnvironment` failed with `Unexpected <class 'Exception'>: Unsupported value
+type: <class 'pulumi.provider.experimental.property_value.Computed'>` while the
+provider server marshaled `ConstructResponse.state`.
+
+`construct_bridge.py`'s `_output_to_pv()` represented an unknown component
+output (e.g. a child resource's `id`, and anything derived from it such as
+`resourceId`, which is *always* unknown during preview) as
+`PropertyValue(Computed(), ...)`. That construction itself is valid —
+`PropertyValue.__init__`, `PropertyValue.type`, and the SDK's own
+`PropertyValue.computed()` static constructor all accept/produce a bare
+`Computed()` value — but `PropertyValue.marshal()` has no branch for
+`Computed` in its nested `marshal_value()` helper; it falls through to
+`raise ValueError(f"Unsupported value type: {type(value)}")`. This is a
+genuine gap in the installed `pulumi==3.230.0` Python SDK (confirmed still
+present on the `pulumi/pulumi` `master` branch as of this writing, so bumping
+the pinned `pulumi` dependency would not have helped), not a misuse on our
+part. Since `ConstructResponse.state` is marshaled via
+`PropertyValue.marshal_map()` on every real `construct()` RPC call, this made
+the bug 100%-reproducible on every preview for all four AVM components, in
+every language, because they all share this `construct_bridge.py` plumbing.
+
+`_output_to_pv()` now represents an unknown output using
+`pulumi.runtime.rpc.UNKNOWN` — the same well-known sentinel GUID string
+(`"04da6b54-80e4-46f7-96ec-b56ff0331ba9"`) that Pulumi's classic
+(non-experimental) marshaling path has always used to tell the engine "this
+value is computed" — wrapped in an ordinary string `PropertyValue`, instead of
+a bare `Computed()`. A plain string marshals successfully today and produces
+the same wire representation the engine already knows how to interpret as
+unknown, regardless of which SDK-side code path produced it. The input
+direction (`pv_to_input`, which still legitimately handles `Computed()`
+values arriving from the engine) is unaffected and unchanged.
+
+Only `res-environment` failed so far in the harness repo's CI; the other
+three components (`ResDlpPolicy`, `ResTenantSettings`,
+`ResDeploymentPipeline`) share the exact same `construct_bridge.py` output
+plumbing and should be fixed by this same change, but that has not yet been
+confirmed via a live/dry preview run of those specific components.
+
 #### AVM components (`ResEnvironment`, `ResDlpPolicy`, `ResTenantSettings`, `ResDeploymentPipeline`): child-resource CRUD dispatch failed with `NotImplementedError`
 
 `PowerPlatformProvider._handler_for_type()` did an exact dict lookup against

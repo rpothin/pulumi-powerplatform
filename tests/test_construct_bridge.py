@@ -6,6 +6,7 @@ from collections.abc import Mapping, Sequence
 
 import pulumi
 import pulumi.runtime.mocks as mocks_module
+import pulumi.runtime.rpc
 import pytest
 from pulumi.provider.experimental.property_value import Computed, PropertyValue
 from rpothin_powerplatform.construct_bridge import (
@@ -194,7 +195,17 @@ async def test_resolve_outputs_secret_output():
 
 @pytest.mark.asyncio
 async def test_resolve_outputs_unknown_output():
-    """Unknown Output (preview) → PropertyValue wrapping Computed()."""
+    """Unknown Output (preview) → PropertyValue wrapping the wire UNKNOWN sentinel.
+
+    Regression test for a bug where `_output_to_pv` returned
+    `PropertyValue(Computed(), ...)`. `PropertyValue(Computed()).marshal()`
+    unconditionally raises `ValueError: Unsupported value type: ... Computed`
+    in the installed (and current upstream) Pulumi SDK, so *every*
+    `pulumi preview`/dry-run pass crashed for a component with an unknown
+    output. The fix uses the classic `pulumi.runtime.rpc.UNKNOWN` sentinel
+    string instead, which marshals successfully — asserted below by actually
+    calling `.marshal()`, not just inspecting `.value`.
+    """
     unknown_out = _make_output(
         pulumi.UNKNOWN,
         is_known=False,
@@ -203,7 +214,33 @@ async def test_resolve_outputs_unknown_output():
     )
     state = await resolve_outputs({"out": unknown_out})
     pv = state["out"]
-    assert isinstance(pv.value, Computed)
+    assert not isinstance(pv.value, Computed)
+    assert pv.value == pulumi.runtime.rpc.UNKNOWN
+
+    # The actual regression: this must not raise.
+    marshaled = pv.marshal()
+    assert marshaled.string_value == pulumi.runtime.rpc.UNKNOWN
+
+
+@pytest.mark.asyncio
+async def test_resolve_outputs_unknown_output_secret_and_deps_marshal():
+    """Unknown + secret + dependency-carrying output marshals successfully too."""
+    dep_urn = "urn:pulumi:stack::proj::powerplatform:index:Environment::dep-env"
+    unknown_out = _make_output(
+        pulumi.UNKNOWN,
+        is_known=False,
+        is_secret=True,
+        dep_urns=frozenset({dep_urn}),
+    )
+    state = await resolve_outputs({"out": unknown_out})
+    pv = state["out"]
+    assert pv.is_secret is True
+    assert dep_urn in pv.dependencies
+
+    # Must not raise despite carrying secret + dependency metadata alongside
+    # the unknown sentinel.
+    marshaled = pv.marshal()
+    assert marshaled.HasField("struct_value")
 
 
 @pytest.mark.asyncio
@@ -272,11 +309,22 @@ async def test_round_trip_secret():
 
 @pytest.mark.asyncio
 async def test_round_trip_unknown():
-    """Computed PV → Output → PV preserves unknownness (Computed value)."""
+    """Computed PV (input) → unknown Output → resolved output PV marshals fine.
+
+    The *input* direction still legitimately produces `Computed()` PVs (that
+    part of the SDK's type system works fine — only `.marshal()` is broken).
+    What matters for this regression is that once such a value round-trips
+    through an Output and back out via `resolve_outputs` (the *output*
+    direction), the result no longer carries a bare `Computed()` and marshals
+    successfully.
+    """
     pv_in = PropertyValue(Computed())
     out = pv_to_input(pv_in)
     state = await resolve_outputs({"v": out})
-    assert isinstance(state["v"].value, Computed)
+    pv_out = state["v"]
+    assert not isinstance(pv_out.value, Computed)
+    marshaled = pv_out.marshal()
+    assert marshaled.string_value == pulumi.runtime.rpc.UNKNOWN
 
 
 @pytest.mark.asyncio
