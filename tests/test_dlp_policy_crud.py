@@ -179,6 +179,133 @@ class TestDlpPolicyDelete:
         mock_client.sdk.governance.rule_sets.by_rule_set_id.assert_called_with("rs-1")
 
 
+class _FakeQueryParameters:
+    """Minimal stand-in for a kiota-generated ``...QueryParameters`` dataclass.
+
+    Real ``mspp_management`` submodules may be replaced with ``MagicMock`` stubs
+    by tests/conftest.py's ``_SdkStubFinder`` on environments without Windows
+    Long Path support (or simply on first import within a pytest session, since
+    the finder does not distinguish "unavailable" from "not yet imported").
+    Calling a bare ``MagicMock`` class with ``api_version=...`` does *not*
+    record that value on an attribute, so asserting on it would be meaningless
+    in that scenario. These tests instead monkeypatch the request-builder
+    classes referenced by ``dlp_policy.py`` with these real (non-mock) classes,
+    so the ``api_version`` kwarg is genuinely captured regardless of which
+    environment the suite runs in.
+    """
+
+    def __init__(self, api_version: str | None = None, **_kwargs: object) -> None:
+        self.api_version = api_version
+
+
+class _FakeRuleBasedPoliciesRequestBuilder:
+    RuleBasedPoliciesRequestBuilderPostQueryParameters = _FakeQueryParameters
+
+
+class _FakeWithPolicyItemRequestBuilder:
+    WithPolicyItemRequestBuilderGetQueryParameters = _FakeQueryParameters
+    WithPolicyItemRequestBuilderPutQueryParameters = _FakeQueryParameters
+
+
+class _FakeWithRuleSetItemRequestBuilder:
+    WithRuleSetItemRequestBuilderDeleteQueryParameters = _FakeQueryParameters
+
+
+@pytest.fixture(autouse=True)
+def _fake_request_builders(monkeypatch):
+    """Ensure api_version assertions exercise real (non-mock) dataclass behavior."""
+    import rpothin_powerplatform.resources.dlp_policy as dlp_policy_module
+
+    monkeypatch.setattr(dlp_policy_module, "RuleBasedPoliciesRequestBuilder", _FakeRuleBasedPoliciesRequestBuilder)
+    monkeypatch.setattr(dlp_policy_module, "WithPolicyItemRequestBuilder", _FakeWithPolicyItemRequestBuilder)
+    monkeypatch.setattr(dlp_policy_module, "WithRuleSetItemRequestBuilder", _FakeWithRuleSetItemRequestBuilder)
+
+
+class TestDlpPolicyApiVersion:
+    """Regression tests: every governance/DLP SDK call must pass the required
+    api-version query parameter (previously omitted entirely, causing a real
+    HTTP 400 in live CI end-to-end testing)."""
+
+    _API_VERSION = "2024-10-01"
+
+    @pytest.mark.asyncio
+    async def test_create_passes_api_version(self, handler, mock_client):
+        mock_client.sdk.governance.rule_based_policies.post.return_value = _fake_policy()
+
+        request = CreateRequest(
+            urn=_URN,
+            properties={"name": PropertyValue("Test Policy")},
+            timeout=300,
+            preview=False,
+        )
+        await handler.create(request)
+
+        _, kwargs = mock_client.sdk.governance.rule_based_policies.post.call_args
+        config = kwargs["request_configuration"]
+        assert config.query_parameters.api_version == self._API_VERSION
+
+    @pytest.mark.asyncio
+    async def test_read_passes_api_version(self, handler, mock_client):
+        by_id = mock_client.sdk.governance.rule_based_policies.by_policy_id.return_value
+        by_id.get = AsyncMock(return_value=_fake_policy())
+
+        request = ReadRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            properties={},
+            inputs={},
+        )
+        await handler.read(request)
+
+        _, kwargs = by_id.get.call_args
+        config = kwargs["request_configuration"]
+        assert config.query_parameters.api_version == self._API_VERSION
+
+    @pytest.mark.asyncio
+    async def test_update_passes_api_version_on_put_and_reread(self, handler, mock_client):
+        by_id = mock_client.sdk.governance.rule_based_policies.by_policy_id.return_value
+        by_id.put = AsyncMock(return_value=None)
+        by_id.get = AsyncMock(return_value=_fake_policy(name="Updated Policy"))
+
+        request = UpdateRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            olds={"name": PropertyValue("Test Policy")},
+            news={"name": PropertyValue("Updated Policy")},
+            timeout=300,
+            ignore_changes=[],
+            preview=False,
+        )
+        await handler.update(request)
+
+        _, put_kwargs = by_id.put.call_args
+        assert put_kwargs["request_configuration"].query_parameters.api_version == self._API_VERSION
+        _, get_kwargs = by_id.get.call_args
+        assert get_kwargs["request_configuration"].query_parameters.api_version == self._API_VERSION
+
+    @pytest.mark.asyncio
+    async def test_delete_passes_api_version_on_get_and_rule_set_delete(self, handler, mock_client):
+        policy = _fake_policy()
+        by_policy = mock_client.sdk.governance.rule_based_policies.by_policy_id.return_value
+        by_policy.get = AsyncMock(return_value=policy)
+
+        by_rs = mock_client.sdk.governance.rule_sets.by_rule_set_id.return_value
+        by_rs.delete = AsyncMock(return_value=None)
+
+        request = DeleteRequest(
+            urn=_URN,
+            resource_id=_FAKE_ID,
+            properties={},
+            timeout=300,
+        )
+        await handler.delete(request)
+
+        _, get_kwargs = by_policy.get.call_args
+        assert get_kwargs["request_configuration"].query_parameters.api_version == self._API_VERSION
+        _, delete_kwargs = by_rs.delete.call_args
+        assert delete_kwargs["request_configuration"].query_parameters.api_version == self._API_VERSION
+
+
 class TestDlpPolicyDiffDeepEquality:
     """Tests for deep PropertyValue equality in diff (rule sets sub-field change)."""
 
