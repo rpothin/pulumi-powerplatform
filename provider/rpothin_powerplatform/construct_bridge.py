@@ -13,6 +13,33 @@ NOTE — Phase 0 scope: nested Output structures (e.g. Output[dict]) are not
 traversed recursively during output resolution.  Fully-resolved composite values
 and scalar Outputs are handled correctly.  Full nested-Output support is deferred
 to Phase 3+.
+
+NOTE — unknown/computed *outputs* are not represented via ``Computed()``:
+    As of ``pulumi==3.230.0`` (and confirmed still true on the ``pulumi/pulumi``
+    ``master`` branch as of this writing), ``PropertyValue(Computed()).marshal()``
+    unconditionally raises ``ValueError: Unsupported value type: ... Computed``.
+    ``PropertyValue.__init__``/``PropertyValue.type``/``PropertyValue.computed()``
+    all accept/produce a bare ``Computed()`` value, but the nested
+    ``marshal_value()`` helper inside ``PropertyValue.marshal()`` has no branch
+    for it — it is a genuine gap in the installed (and current upstream) Pulumi
+    Python SDK, not a misuse on our part. Since ``ConstructResponse.state`` is
+    marshaled via ``PropertyValue.marshal_map()`` on every ``construct()`` call,
+    returning a ``Computed()``-valued output crashes *every* preview for a
+    component with an unknown output (e.g. a child resource's ``id`` during
+    ``pulumi preview``/the dry-run pass of ``pulumi up``).
+
+    ``_output_to_pv`` therefore represents an unknown output using
+    ``pulumi.runtime.rpc.UNKNOWN`` — the same well-known sentinel GUID string
+    (``"04da6b54-80e4-46f7-96ec-b56ff0331ba9"``) that Pulumi's *classic*
+    (non-experimental) marshaling path (``pulumi.runtime.rpc.serialize_property``)
+    has always used to tell the engine "this value is computed" — wrapped in an
+    ordinary string ``PropertyValue``. This marshals successfully today (a plain
+    string is a supported ``marshal_value()`` branch) and produces the exact
+    same wire bytes (`struct_pb2.Value(string_value=UNKNOWN)`) the engine already
+    knows how to interpret as "unknown" for any resource-property protobuf
+    struct, regardless of which Pulumi SDK marshaling path produced it. Revisit
+    this workaround once upstream ships a real ``Computed`` branch in
+    ``marshal_value()``.
 """
 
 from __future__ import annotations
@@ -23,6 +50,7 @@ from typing import Any
 
 import pulumi
 import pulumi.resource
+import pulumi.runtime.rpc
 from pulumi.provider.experimental.property_value import Computed, PropertyValue
 
 # ---------------------------------------------------------------------------
@@ -143,7 +171,14 @@ async def _output_to_pv(output: pulumi.Output) -> PropertyValue:
         urns = frozenset()
 
     if not is_known:
-        return PropertyValue(Computed(), is_secret=is_secret, dependencies=urns)
+        # NOT `PropertyValue(Computed(), ...)`: see the module-level NOTE above —
+        # `PropertyValue(Computed()).marshal()` unconditionally raises in the
+        # installed (and current upstream) Pulumi SDK. Use the classic wire-level
+        # "unknown" sentinel string instead, which marshals successfully and is
+        # recognized by the engine identically.
+        return PropertyValue(
+            pulumi.runtime.rpc.UNKNOWN, is_secret=is_secret, dependencies=urns
+        )
 
     return PropertyValue(
         _python_value_to_pv_value(value),
