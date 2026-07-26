@@ -4,6 +4,35 @@ All notable changes to this project are documented in this file.
 
 ## [Unreleased]
 
+### Documentation
+
+#### Documented the Entra ID directory role required by `getDlpPolicies`
+
+Re-testing the four new AVM component resources and three new invoke
+functions from v0.4.0/v0.4.1 across the
+[`rpothin/pulumi-powerplatform-test`](https://github.com/rpothin/pulumi-powerplatform-test)
+harness's 5-language matrix surfaced a `403 Forbidden` on
+`powerplatform:index:getDlpPolicies` — even after the api-version fix in
+#80 — using a service principal that worked fine for every other operation
+in the provider, including full `DlpPolicy` CRUD, `getSecurityRoles`, and
+`getDlpPolicyMigrationConfig`.
+
+Root cause: `getDlpPolicies` calls the governance API's tenant-wide "list
+all DLP policies" endpoint, which — unlike every other DLP-related
+operation, all of which operate on a single policy by ID — requires the
+service principal's Azure AD app registration to hold the **Power Platform
+Administrator** Microsoft Entra ID directory role as an active assignment.
+Simply registering the app via `pac admin application register` (which the
+existing "Prerequisites" section implicitly assumed was sufficient) does
+not grant this. This was confirmed live: granting the role resolved the
+403 immediately, with a full green re-run across all 132 CI jobs
+([run 30183032568](https://github.com/rpothin/pulumi-powerplatform-test/actions/runs/30183032568)).
+
+`docs/installation-configuration.md` now documents this requirement
+explicitly, including how it differs from a standard application-user
+registration and how to grant it. This is a documentation-only change;
+no provider code or schema changed.
+
 ### Fixed
 
 #### AVM components (`ResEnvironment`, `ResDlpPolicy`, `ResTenantSettings`, `ResDeploymentPipeline`): every `pulumi preview`/dry-run crashed with `Unsupported value type: ... Computed`
