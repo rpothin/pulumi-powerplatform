@@ -4,6 +4,16 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
+from kiota_abstractions.base_request_configuration import RequestConfiguration
+from mspp_management.governance.rule_based_policies.item.with_policy_item_request_builder import (
+    WithPolicyItemRequestBuilder,
+)
+from mspp_management.governance.rule_based_policies.rule_based_policies_request_builder import (
+    RuleBasedPoliciesRequestBuilder,
+)
+from mspp_management.governance.rule_sets.item.with_rule_set_item_request_builder import (
+    WithRuleSetItemRequestBuilder,
+)
 from mspp_management.models.policy import Policy
 from mspp_management.models.policy_request import PolicyRequest
 from mspp_management.models.rule_set import RuleSet
@@ -30,6 +40,11 @@ from rpothin_powerplatform.client import PowerPlatformClient
 from rpothin_powerplatform.utils import pv_str as _pv_str
 from rpothin_powerplatform.utils import pv_to_comparable as _pv_to_comparable
 from rpothin_powerplatform.utils import retry_with_backoff
+
+# The Power Platform governance/ruleBasedPolicies and governance/ruleSets APIs
+# require an explicit api-version query parameter on every call (see
+# get_dlp_policies.py for the full explanation and the docs link).
+_API_VERSION = "2024-10-01"
 
 
 def _pv_to_rule_sets(pv: Optional[PropertyValue]) -> Optional[list[RuleSet]]:
@@ -137,7 +152,16 @@ class DlpPolicyResource:
         body.name = _pv_str(props.get("name"))
         body.rule_sets = _pv_to_rule_sets(props.get("ruleSets"))
 
-        result = await retry_with_backoff(lambda: self._client.sdk.governance.rule_based_policies.post(body))
+        result = await retry_with_backoff(
+            lambda: self._client.sdk.governance.rule_based_policies.post(
+                body,
+                request_configuration=RequestConfiguration(
+                    query_parameters=RuleBasedPoliciesRequestBuilder.RuleBasedPoliciesRequestBuilderPostQueryParameters(
+                        api_version=_API_VERSION,
+                    )
+                ),
+            )
+        )
         if result is None:
             raise RuntimeError("Failed to create DLP policy: API returned no result.")
 
@@ -151,7 +175,13 @@ class DlpPolicyResource:
         """Read the current state of a DLP policy."""
         policy_id = request.resource_id
         result = await retry_with_backoff(
-            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get(
+                request_configuration=RequestConfiguration(
+                    query_parameters=WithPolicyItemRequestBuilder.WithPolicyItemRequestBuilderGetQueryParameters(
+                        api_version=_API_VERSION,
+                    )
+                )
+            )
         )
 
         if result is None:
@@ -174,12 +204,25 @@ class DlpPolicyResource:
         body.rule_sets = _pv_to_rule_sets(props.get("ruleSets"))
 
         await retry_with_backoff(
-            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).put(body)
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).put(
+                body,
+                request_configuration=RequestConfiguration(
+                    query_parameters=WithPolicyItemRequestBuilder.WithPolicyItemRequestBuilderPutQueryParameters(
+                        api_version=_API_VERSION,
+                    )
+                ),
+            )
         )
 
         # Re-read to get the authoritative state after update.
         result = await retry_with_backoff(
-            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get(
+                request_configuration=RequestConfiguration(
+                    query_parameters=WithPolicyItemRequestBuilder.WithPolicyItemRequestBuilderGetQueryParameters(
+                        api_version=_API_VERSION,
+                    )
+                )
+            )
         )
         if result is None:
             raise RuntimeError(f"Failed to read DLP policy {policy_id} after update.")
@@ -198,7 +241,13 @@ class DlpPolicyResource:
 
         # Read the policy to get its rule sets.
         policy = await retry_with_backoff(
-            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get()
+            lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(policy_id).get(
+                request_configuration=RequestConfiguration(
+                    query_parameters=WithPolicyItemRequestBuilder.WithPolicyItemRequestBuilderGetQueryParameters(
+                        api_version=_API_VERSION,
+                    )
+                )
+            )
         )
         if policy is None:
             return  # Already gone.
@@ -208,7 +257,13 @@ class DlpPolicyResource:
             for rs in policy.rule_sets:
                 if rs.id:
                     await retry_with_backoff(
-                        lambda _id=rs.id: self._client.sdk.governance.rule_sets.by_rule_set_id(_id).delete()
+                        lambda _id=rs.id: self._client.sdk.governance.rule_sets.by_rule_set_id(_id).delete(
+                            request_configuration=RequestConfiguration(
+                                query_parameters=WithRuleSetItemRequestBuilder.WithRuleSetItemRequestBuilderDeleteQueryParameters(
+                                    api_version=_API_VERSION,
+                                )
+                            )
+                        )
                     )
 
 

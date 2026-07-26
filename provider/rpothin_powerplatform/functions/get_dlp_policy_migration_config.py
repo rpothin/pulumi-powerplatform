@@ -3,6 +3,10 @@
 from __future__ import annotations
 
 from kiota_abstractions.api_error import APIError
+from kiota_abstractions.base_request_configuration import RequestConfiguration
+from mspp_management.governance.rule_based_policies.item.with_policy_item_request_builder import (
+    WithPolicyItemRequestBuilder,
+)
 from pulumi.provider.experimental.property_value import PropertyValue
 from pulumi.provider.experimental.provider import (
     InvokeRequest,
@@ -12,6 +16,10 @@ from pulumi.provider.experimental.provider import (
 from rpothin_powerplatform.client import PowerPlatformClient
 from rpothin_powerplatform.functions._dlp_helpers import rule_set_to_pv
 from rpothin_powerplatform.utils import retry_with_backoff
+
+# See the matching comment in get_dlp_policies.py: this API requires an
+# explicit api-version query parameter on every call.
+_API_VERSION = "2024-10-01"
 
 
 class GetDlpPolicyMigrationConfigFunction:
@@ -54,12 +62,20 @@ class GetDlpPolicyMigrationConfigFunction:
 
         try:
             policy = await retry_with_backoff(
-                lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(source_policy_id).get()
+                lambda: self._client.sdk.governance.rule_based_policies.by_policy_id(
+                    source_policy_id
+                ).get(
+                    request_configuration=RequestConfiguration(
+                        query_parameters=WithPolicyItemRequestBuilder.WithPolicyItemRequestBuilderGetQueryParameters(
+                            api_version=_API_VERSION,
+                        )
+                    )
+                )
             )
         except APIError as e:
             raise RuntimeError(
                 f"getDlpPolicyMigrationConfig failed with status {e.response_status_code}: {e.message}. "
-                f"Response body: {getattr(e, 'response_body', 'unavailable')}"
+                f"Response headers: {dict(e.response_headers) if e.response_headers else 'unavailable'}"
             ) from e
 
         if policy is None:

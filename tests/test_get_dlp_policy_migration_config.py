@@ -127,6 +127,49 @@ async def test_api_error_raises_runtime_error():
         await fn.invoke(_make_request("pol-999"))
 
 
+class _FakeQueryParameters:
+    """Real (non-mock) stand-in for WithPolicyItemRequestBuilderGetQueryParameters.
+
+    See the matching class docstring in test_get_dlp_policies.py for why this
+    is needed rather than asserting directly against the (possibly stubbed)
+    real SDK class.
+    """
+
+    def __init__(self, api_version: str | None = None, **_kwargs: object) -> None:
+        self.api_version = api_version
+
+
+class _FakeWithPolicyItemRequestBuilder:
+    WithPolicyItemRequestBuilderGetQueryParameters = _FakeQueryParameters
+
+
+@pytest.fixture(autouse=True)
+def _fake_request_builder(monkeypatch):
+    import rpothin_powerplatform.functions.get_dlp_policy_migration_config as module
+
+    monkeypatch.setattr(module, "WithPolicyItemRequestBuilder", _FakeWithPolicyItemRequestBuilder)
+
+
+@pytest.mark.asyncio
+async def test_invoke_passes_required_api_version_query_parameter():
+    """Regression test: the governance ruleBasedPolicies/{id} endpoint requires an
+    explicit api-version query parameter that was previously omitted entirely,
+    causing a real HTTP 400 in live CI."""
+    policy = _make_policy("Source Policy")
+
+    client = MagicMock(spec=PowerPlatformClient)
+    client.sdk.governance.rule_based_policies.by_policy_id.return_value.get = AsyncMock(return_value=policy)
+
+    fn = GetDlpPolicyMigrationConfigFunction(client)
+    await fn.invoke(_make_request("pol-123"))
+
+    get_mock = client.sdk.governance.rule_based_policies.by_policy_id.return_value.get
+    get_mock.assert_called_once()
+    _, kwargs = get_mock.call_args
+    config = kwargs["request_configuration"]
+    assert config.query_parameters.api_version == "2024-10-01"
+
+
 @pytest.mark.asyncio
 async def test_nested_rule_set_inputs_preserved():
     """Nested additional_data in ruleSets.inputs round-trips through PropertyValue correctly."""

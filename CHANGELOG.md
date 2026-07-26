@@ -52,6 +52,45 @@ three components (`ResDlpPolicy`, `ResTenantSettings`,
 plumbing and should be fixed by this same change, but that has not yet been
 confirmed via a live/dry preview run of those specific components.
 
+#### `getDlpPolicies`, `getDlpPolicyMigrationConfig`, and the `DlpPolicy` resource's governance API calls failed with real HTTP 400 "The query parameters are invalid"
+
+Confirmed in live end-to-end CI (all 5 language SDKs) against v0.4.3, calling
+`getDlpPolicies` with zero inputs (per its contract — no required inputs):
+
+```
+Provider[...].Invoke(powerplatform:index:getDlpPolicies) failed: Unexpected <class 'RuntimeError'>: getDlpPolicies failed with status 400: The server returned an unexpected status code and no error class is registered for this code 400. Response body: unavailable
+```
+
+The Power Platform governance `ruleBasedPolicies`/`ruleSets` REST API requires
+an explicit `api-version` query parameter on every call — confirmed via the
+[official Microsoft Learn docs](https://learn.microsoft.com/en-us/rest/api/power-platform/governance/rule-based-policies/list-rule-based-policies),
+which document `2024-10-01` as the only valid value. `get_dlp_policies.py`
+called the underlying kiota-generated `governance.rule_based_policies.get()`
+method with no query parameters at all, so the service rejected every call
+with a 400. The same root cause was also present (though never previously
+exercised live, since a separate `pulumi preview`-blocking bug crashed every
+preview before real apply-time CRUD could run) in
+`get_dlp_policy_migration_config.py` and in every governance call made by the
+`DlpPolicy` resource (`create`/`read`/`update`/`delete`).
+
+All governance/DLP call sites now build an explicit `RequestConfiguration`
+with `api_version="2024-10-01"`, matching the existing convention already used
+by `get_apps.py`, `get_connectors.py`, and `get_environments.py`.
+
+Separately, the error-handling code in all three files referenced a
+`response_body` attribute that does not exist on `kiota_abstractions.APIError`
+(it only has `message`/`response_status_code`/`response_headers`) — for
+status codes with no registered error class (like this endpoint's 400),
+kiota's `HttpxRequestAdapter.throw_failed_responses()` never reads the raw
+response body at all, so it is genuinely unavailable through this SDK code
+path. Error messages now surface `response_headers` instead (e.g. a
+correlation/request ID), which is real diagnostic information actually
+captured by the SDK.
+
+Discovered via live end-to-end component tests in the same
+`rpothin/pulumi-powerplatform-test` harness repo, re-run against v0.4.3 after
+PR #78.
+
 #### AVM components (`ResEnvironment`, `ResDlpPolicy`, `ResTenantSettings`, `ResDeploymentPipeline`): child-resource CRUD dispatch failed with `NotImplementedError`
 
 `PowerPlatformProvider._handler_for_type()` did an exact dict lookup against

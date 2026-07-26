@@ -176,6 +176,81 @@ async def test_api_error_raises_runtime_error():
 
 
 @pytest.mark.asyncio
+async def test_api_error_surfaces_response_headers_not_dead_attribute():
+    """The error message must not reference the nonexistent APIError.response_body
+    attribute; it should surface response_headers instead (regression test for the
+    real-world HTTP 400 seen in live CI, where `response_body` always silently
+    evaluated to 'unavailable')."""
+    from kiota_abstractions.api_error import APIError
+
+    err = APIError()
+    err.response_status_code = 400
+    err.message = "The query parameters are invalid."
+    err.response_headers = {"x-ms-correlation-id": "abc-123"}
+
+    client = MagicMock(spec=PowerPlatformClient)
+    client.sdk.governance.rule_based_policies.get = AsyncMock(side_effect=err)
+
+    fn = GetDlpPoliciesFunction(client)
+    with pytest.raises(RuntimeError) as exc_info:
+        await fn.invoke(_make_request())
+
+    message = str(exc_info.value)
+    assert "400" in message
+    assert "query parameters are invalid" in message
+    assert "abc-123" in message
+    assert "Response body" not in message
+
+
+class _FakeQueryParameters:
+    """Real (non-mock) stand-in for RuleBasedPoliciesRequestBuilderGetQueryParameters.
+
+    tests/conftest.py's ``_SdkStubFinder`` replaces ``mspp_management`` submodules
+    with ``MagicMock`` on first import within a pytest session (used on
+    environments lacking Windows Long Path support). Calling a bare MagicMock
+    class with ``api_version=...`` does not actually record that value on an
+    attribute, so this module-level function is monkeypatched with a real class
+    to make the assertion meaningful regardless of environment.
+    """
+
+    def __init__(self, api_version: str | None = None, **_kwargs: object) -> None:
+        self.api_version = api_version
+
+
+class _FakeRuleBasedPoliciesRequestBuilder:
+    RuleBasedPoliciesRequestBuilderGetQueryParameters = _FakeQueryParameters
+
+
+@pytest.fixture(autouse=True)
+def _fake_request_builder(monkeypatch):
+    import rpothin_powerplatform.functions.get_dlp_policies as get_dlp_policies_module
+
+    monkeypatch.setattr(
+        get_dlp_policies_module, "RuleBasedPoliciesRequestBuilder", _FakeRuleBasedPoliciesRequestBuilder
+    )
+
+
+@pytest.mark.asyncio
+async def test_invoke_passes_required_api_version_query_parameter():
+    """Regression test for the real HTTP 400 seen in live CI: the governance
+    ruleBasedPolicies endpoint requires an explicit api-version query parameter
+    that was previously omitted entirely."""
+    result_mock = MagicMock()
+    result_mock.value = []
+
+    client = MagicMock(spec=PowerPlatformClient)
+    client.sdk.governance.rule_based_policies.get = AsyncMock(return_value=result_mock)
+
+    fn = GetDlpPoliciesFunction(client)
+    await fn.invoke(_make_request())
+
+    client.sdk.governance.rule_based_policies.get.assert_called_once()
+    _, kwargs = client.sdk.governance.rule_based_policies.get.call_args
+    config = kwargs["request_configuration"]
+    assert config.query_parameters.api_version == "2024-10-01"
+
+
+@pytest.mark.asyncio
 async def test_last_modified_iso_format():
     """lastModified is serialized as an ISO 8601 string."""
     dt = datetime(2025, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
