@@ -69,6 +69,7 @@ class RawApiClient:
         *,
         body: Optional[dict[str, Any]] = None,
         api_version: Optional[str] = "2023-06-01",
+        query_params: Optional[dict[str, Any]] = None,
         extra_headers: Optional[dict[str, str]] = None,
         return_headers: bool = False,
     ) -> Any:
@@ -85,6 +86,8 @@ class RawApiClient:
             Optional JSON body for POST/PUT/PATCH requests.
         api_version:
             ``api-version`` query parameter. Pass ``None`` to omit it.
+        query_params:
+            Additional query parameters to include in the request.
         extra_headers:
             Additional request headers to merge with the default headers.
         return_headers:
@@ -116,6 +119,8 @@ class RawApiClient:
             if extra_headers:
                 headers.update(extra_headers)
             params = {"api-version": api_version} if api_version else {}
+            if query_params:
+                params.update({key: value for key, value in query_params.items() if value is not None})
 
             response = await client.request(
                 method,

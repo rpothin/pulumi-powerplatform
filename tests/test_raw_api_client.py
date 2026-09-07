@@ -184,6 +184,33 @@ class TestRawApiClientRequest:
         assert "api-version" not in call_kwargs[1]["params"]
 
     @pytest.mark.asyncio
+    async def test_additional_query_params_are_sent(self):
+        """Additional query parameters should be merged with api-version."""
+        client = RawApiClient(token_provider=_fake_credential(), base_url="https://test.local")
+        fake_response = httpx.Response(
+            200,
+            json={"value": []},
+            request=httpx.Request("GET", "https://test.local/path"),
+        )
+
+        with patch.object(client, "_get_http") as mock_get_http:
+            mock_http = AsyncMock()
+            mock_http.request.return_value = fake_response
+            mock_get_http.return_value = mock_http
+
+            await client.request(
+                "GET",
+                "/path",
+                query_params={"$filter": "state eq 'Ready'", "$top": 10, "ignored": None},
+            )
+
+        assert mock_http.request.call_args.kwargs["params"] == {
+            "api-version": "2023-06-01",
+            "$filter": "state eq 'Ready'",
+            "$top": 10,
+        }
+
+    @pytest.mark.asyncio
     async def test_empty_body_returns_none(self):
         """A 200 response with empty content should return None."""
         cred = _fake_credential()
