@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import Optional
 
 from kiota_abstractions.api_error import APIError
@@ -16,8 +17,11 @@ from pulumi.provider.experimental.provider import (
 )
 
 from rpothin_powerplatform.client import PowerPlatformClient
+from rpothin_powerplatform.utils import HttpError
 
 _API_VERSION = "2024-10-01"
+_BAP_API_VERSION = "2021-04-01"
+_BAP_ENVIRONMENTS_PATH = "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments"
 
 
 class GetEnvironmentsFunction:
@@ -51,44 +55,88 @@ class GetEnvironmentsFunction:
         try:
             result = await self._client.sdk.environmentmanagement.environments.get(request_configuration=config)
         except APIError as e:
-            raise RuntimeError(
-                f"getEnvironments failed with status {e.response_status_code}: {e.message}. "
-                f"Response body: {getattr(e, 'response_body', 'unavailable')}"
-            ) from e
+            if _is_unauthorized_app_error(e):
+                try:
+                    result = await self._client.raw.request(
+                        "GET",
+                        _BAP_ENVIRONMENTS_PATH,
+                        api_version=_BAP_API_VERSION,
+                        query_params={"$filter": odata_filter, "$top": top},
+                    )
+                except HttpError as fallback_error:
+                    raise RuntimeError(
+                        f"getEnvironments failed with status {e.response_status_code}: {e.message}. "
+                        f"Response body: {getattr(e, 'response_body', 'unavailable')}. "
+                        f"BAP fallback failed with status {fallback_error.status_code}: {fallback_error}"
+                    ) from fallback_error
+            else:
+                raise RuntimeError(
+                    f"getEnvironments failed with status {e.response_status_code}: {e.message}. "
+                    f"Response body: {getattr(e, 'response_body', 'unavailable')}"
+                ) from e
 
         env_list: list[PropertyValue] = []
-        if result and result.value:
-            for env in result.value:
-                env_map: dict[str, PropertyValue] = {}
-                if env.id is not None:
-                    env_map["id"] = PropertyValue(env.id)
-                if env.display_name is not None:
-                    env_map["displayName"] = PropertyValue(env.display_name)
-                if env.domain_name is not None:
-                    env_map["domainName"] = PropertyValue(env.domain_name)
-                if env.state is not None:
-                    env_map["state"] = PropertyValue(env.state)
-                if env.type is not None:
-                    env_map["type"] = PropertyValue(env.type)
-                if env.url is not None:
-                    env_map["url"] = PropertyValue(env.url)
-                if env.geo is not None:
-                    env_map["geo"] = PropertyValue(env.geo)
-                if env.azure_region is not None:
-                    env_map["azureRegion"] = PropertyValue(env.azure_region)
-                if env.security_group_id is not None:
-                    env_map["securityGroupId"] = PropertyValue(env.security_group_id)
-                if env.tenant_id is not None:
-                    env_map["tenantId"] = PropertyValue(env.tenant_id)
-                if env.environment_group_id is not None:
-                    env_map["environmentGroupId"] = PropertyValue(env.environment_group_id)
-                if env.dataverse_id is not None:
-                    env_map["dataverseId"] = PropertyValue(env.dataverse_id)
-                if env.version is not None:
-                    env_map["version"] = PropertyValue(env.version)
-
-                env_list.append(PropertyValue(env_map))
+        environments = result.value if not isinstance(result, dict) and result else (result or {}).get("value")
+        if environments:
+            for env in environments:
+                env_list.append(PropertyValue(_environment_map(env)))
 
         return InvokeResponse(
             return_value={"environments": PropertyValue(env_list)},
         )
+
+
+def _is_unauthorized_app_error(error: APIError) -> bool:
+    """Return whether the SDK response is the known authorized-app rejection."""
+    if error.response_status_code != 403:
+        return False
+    body = getattr(error, "response_body", None)
+    if isinstance(body, str):
+        try:
+            body = json.loads(body)
+        except json.JSONDecodeError:
+            return False
+    return (
+        isinstance(body, dict)
+        and body.get("code") == "ForbiddenAccess"
+        and "Caller is not an authorized app" in str(body.get("message", ""))
+    )
+
+
+def _environment_map(env: object) -> dict[str, PropertyValue]:
+    """Map either SDK or BAP environment data to the invoke output contract."""
+    if isinstance(env, dict):
+        properties = env.get("properties") or {}
+        linked = properties.get("linkedEnvironmentMetadata") or {}
+        values = {
+            "id": env.get("id") or env.get("name"),
+            "displayName": properties.get("displayName"),
+            "domainName": linked.get("domainName") or properties.get("domainName"),
+            "state": properties.get("state") or properties.get("states"),
+            "type": properties.get("environmentType") or properties.get("environmentSku"),
+            "url": linked.get("instanceUrl") or properties.get("instanceUrl"),
+            "geo": properties.get("geo") or env.get("location"),
+            "azureRegion": properties.get("azureRegion") or env.get("location"),
+            "securityGroupId": properties.get("securityGroupId"),
+            "tenantId": linked.get("tenantId") or properties.get("tenantId"),
+            "environmentGroupId": properties.get("environmentGroupId"),
+            "dataverseId": linked.get("uniqueName") or properties.get("dataverseId"),
+            "version": linked.get("version") or properties.get("version"),
+        }
+    else:
+        values = {
+            "id": getattr(env, "id", None),
+            "displayName": getattr(env, "display_name", None),
+            "domainName": getattr(env, "domain_name", None),
+            "state": getattr(env, "state", None),
+            "type": getattr(env, "type", None),
+            "url": getattr(env, "url", None),
+            "geo": getattr(env, "geo", None),
+            "azureRegion": getattr(env, "azure_region", None),
+            "securityGroupId": getattr(env, "security_group_id", None),
+            "tenantId": getattr(env, "tenant_id", None),
+            "environmentGroupId": getattr(env, "environment_group_id", None),
+            "dataverseId": getattr(env, "dataverse_id", None),
+            "version": getattr(env, "version", None),
+        }
+    return {key: PropertyValue(value) for key, value in values.items() if value is not None}
