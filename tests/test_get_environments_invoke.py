@@ -157,7 +157,17 @@ class TestGetEnvironmentsInvoke:
         )
 
     @pytest.mark.asyncio
-    async def test_bap_states_mapping_is_normalized_to_management_state(self):
+    @pytest.mark.parametrize(
+        ("states", "expected_state"),
+        [
+            (
+                {"management": {"id": "Ready"}, "runtime": {"id": "Enabled"}},
+                "Ready",
+            ),
+            ({"runtime": {"id": "Enabled"}}, "Enabled"),
+        ],
+    )
+    async def test_bap_states_mapping_is_normalized_to_management_state(self, states, expected_state):
         client = _mock_client()
         api_err = APIError(message="Forbidden", response_status_code=403)
         api_err.response_body = {
@@ -171,7 +181,7 @@ class TestGetEnvironmentsInvoke:
                     "name": "env-1",
                     "properties": {
                         "displayName": "Dev",
-                        "states": {"management": "Ready", "runtime": "Enabled"},
+                        "states": states,
                     },
                 }
             ]
@@ -182,7 +192,7 @@ class TestGetEnvironmentsInvoke:
         )
 
         env = response.return_value["environments"].value[0].value
-        assert env["state"].value == "Ready"
+        assert env["state"].value == expected_state
 
     @pytest.mark.asyncio
     async def test_kiota_bodyless_403_falls_back_to_bap(self):

@@ -117,9 +117,12 @@ def _environment_map(env: object) -> dict[str, PropertyValue]:
         linked = properties.get("linkedEnvironmentMetadata") or {}
         states = properties.get("states")
         if isinstance(states, dict):
-            state = states.get("management") or states.get("runtime")
+            state = _normalize_state(states.get("management"))
+            if not state:
+                state = _normalize_state(states.get("runtime"))
         else:
             state = properties.get("state") or states
+            state = _normalize_state(state)
         values = {
             "id": env.get("id") or env.get("name"),
             "displayName": properties.get("displayName"),
@@ -140,7 +143,7 @@ def _environment_map(env: object) -> dict[str, PropertyValue]:
             "id": getattr(env, "id", None),
             "displayName": getattr(env, "display_name", None),
             "domainName": getattr(env, "domain_name", None),
-            "state": getattr(env, "state", None),
+            "state": _normalize_state(getattr(env, "state", None)),
             "type": getattr(env, "type", None),
             "url": getattr(env, "url", None),
             "geo": getattr(env, "geo", None),
@@ -152,3 +155,10 @@ def _environment_map(env: object) -> dict[str, PropertyValue]:
             "version": getattr(env, "version", None),
         }
     return {key: PropertyValue(value) for key, value in values.items() if value is not None}
+
+
+def _normalize_state(state: object) -> object:
+    """Extract a scalar state from either a BAP state object or scalar value."""
+    if isinstance(state, dict):
+        return state.get("id") or state.get("state")
+    return state
