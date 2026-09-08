@@ -110,6 +110,7 @@ jobs:
           VERSION="${VERSION#v}"
           sed -i "s/0\.0\.0/$VERSION/g" schema.json
           sed -i "s/0\.0\.0/$VERSION/g" pyproject.toml
+          sed -i "s/0\.0\.0/$VERSION/g" provider/rpothin_powerplatform/__main__.py
 
       - name: Create plugin archive
         run: |

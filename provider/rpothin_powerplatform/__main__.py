@@ -6,7 +6,7 @@ from pulumi.provider.experimental.server import main as serve
 
 from rpothin_powerplatform.provider import PowerPlatformProvider
 
-VERSION = "0.1.0"
+VERSION = "0.0.0"
 
 
 def main():
