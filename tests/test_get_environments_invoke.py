@@ -157,6 +157,41 @@ class TestGetEnvironmentsInvoke:
         )
 
     @pytest.mark.asyncio
+    async def test_kiota_bodyless_403_falls_back_to_bap(self):
+        """Kiota omits response_body for unregistered HTTP error statuses."""
+        client = _mock_client()
+        client.sdk.environmentmanagement.environments.get.side_effect = APIError(
+            message="The server returned an unexpected status code and no error class is registered for this code 403",
+            response_status_code=403,
+        )
+        client.raw.request.return_value = {"value": []}
+
+        response = await GetEnvironmentsFunction(client).invoke(
+            InvokeRequest(tok="powerplatform:index:getEnvironments", args={})
+        )
+
+        assert len(response.return_value["environments"].value) == 0
+        client.raw.request.assert_awaited_once_with(
+            "GET",
+            "/providers/Microsoft.BusinessAppPlatform/scopes/admin/environments",
+            api_version="2021-04-01",
+            query_params={"$filter": None, "$top": None},
+        )
+
+    @pytest.mark.asyncio
+    async def test_unrelated_bodyless_403_does_not_fall_back(self):
+        client = _mock_client()
+        api_err = APIError(message="Access denied by policy", response_status_code=403)
+        client.sdk.environmentmanagement.environments.get.side_effect = api_err
+
+        with pytest.raises(RuntimeError, match="403"):
+            await GetEnvironmentsFunction(client).invoke(
+                InvokeRequest(tok="powerplatform:index:getEnvironments", args={})
+            )
+
+        client.raw.request.assert_not_awaited()
+
+    @pytest.mark.asyncio
     async def test_other_api_error_does_not_fall_back(self):
         client = _mock_client()
         api_err = APIError(message="Forbidden", response_status_code=403)
