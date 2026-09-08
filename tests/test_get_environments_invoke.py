@@ -157,6 +157,34 @@ class TestGetEnvironmentsInvoke:
         )
 
     @pytest.mark.asyncio
+    async def test_bap_states_mapping_is_normalized_to_management_state(self):
+        client = _mock_client()
+        api_err = APIError(message="Forbidden", response_status_code=403)
+        api_err.response_body = {
+            "code": "ForbiddenAccess",
+            "message": "Caller is not an authorized app",
+        }
+        client.sdk.environmentmanagement.environments.get.side_effect = api_err
+        client.raw.request.return_value = {
+            "value": [
+                {
+                    "name": "env-1",
+                    "properties": {
+                        "displayName": "Dev",
+                        "states": {"management": "Ready", "runtime": "Enabled"},
+                    },
+                }
+            ]
+        }
+
+        response = await GetEnvironmentsFunction(client).invoke(
+            InvokeRequest(tok="powerplatform:index:getEnvironments", args={})
+        )
+
+        env = response.return_value["environments"].value[0].value
+        assert env["state"].value == "Ready"
+
+    @pytest.mark.asyncio
     async def test_kiota_bodyless_403_falls_back_to_bap(self):
         """Kiota omits response_body for unregistered HTTP error statuses."""
         client = _mock_client()
