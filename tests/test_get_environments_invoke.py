@@ -179,6 +179,19 @@ class TestGetEnvironmentsInvoke:
         )
 
     @pytest.mark.asyncio
+    async def test_unrelated_bodyless_403_does_not_fall_back(self):
+        client = _mock_client()
+        api_err = APIError(message="Access denied by policy", response_status_code=403)
+        client.sdk.environmentmanagement.environments.get.side_effect = api_err
+
+        with pytest.raises(RuntimeError, match="403"):
+            await GetEnvironmentsFunction(client).invoke(
+                InvokeRequest(tok="powerplatform:index:getEnvironments", args={})
+            )
+
+        client.raw.request.assert_not_awaited()
+
+    @pytest.mark.asyncio
     async def test_other_api_error_does_not_fall_back(self):
         client = _mock_client()
         api_err = APIError(message="Forbidden", response_status_code=403)

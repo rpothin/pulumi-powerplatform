@@ -98,9 +98,11 @@ def _is_unauthorized_app_error(error: APIError) -> bool:
             return False
     if body is None:
         # Kiota's APIError does not retain the raw response body when the
-        # status has no registered error class. For this endpoint, a 403 is
-        # the authorized-app rejection that the BAP endpoint can service.
-        return True
+        # status has no registered error class. Restrict the fallback to that
+        # exact response shape so unrelated authorization failures remain
+        # visible to the caller.
+        message = str(error.message or "").lower()
+        return "no error class is registered" in message and "403" in message
     return (
         isinstance(body, dict)
         and body.get("code") == "ForbiddenAccess"
