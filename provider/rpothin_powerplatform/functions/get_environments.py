@@ -115,11 +115,16 @@ def _environment_map(env: object) -> dict[str, PropertyValue]:
     if isinstance(env, dict):
         properties = env.get("properties") or {}
         linked = properties.get("linkedEnvironmentMetadata") or {}
+        states = properties.get("states")
+        if isinstance(states, dict):
+            state = states.get("management") or states.get("runtime")
+        else:
+            state = properties.get("state") or states
         values = {
             "id": env.get("id") or env.get("name"),
             "displayName": properties.get("displayName"),
             "domainName": linked.get("domainName") or properties.get("domainName"),
-            "state": properties.get("state") or properties.get("states"),
+            "state": state,
             "type": properties.get("environmentType") or properties.get("environmentSku"),
             "url": linked.get("instanceUrl") or properties.get("instanceUrl"),
             "geo": properties.get("geo") or env.get("location"),
